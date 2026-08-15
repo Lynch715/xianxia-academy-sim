@@ -154,7 +154,46 @@ const MEASURE = `(() => {
       }
     }
 
-    // 5. 转屏：同一个页面里改视口，验证布局真的跟着换
+    // 5. 活动选择弹窗：只有操作行能吸底，选完要自动退回日程
+    if (Math.min(d.w, d.h) <= 500 && !d.land) {
+      await page.evaluate(`(() => { G.UI.mobileTab = 'right'; G.UI.render(); return true; })()`);
+      await page.waitForTimeout(80);
+      await page.evaluate(`document.querySelector('.slot').click()`);
+      await page.waitForTimeout(150);
+
+      const picker = await page.evaluate(`(() => {
+        const modal = document.querySelector('.modal');
+        if (!modal) return { open: false };
+        const sticky = [...modal.querySelectorAll('*')]
+          .filter(e => getComputedStyle(e).position === 'sticky')
+          .map(e => e.className);
+        return { open: true, sticky, rows: modal.querySelectorAll('.btn-row').length };
+      })()`);
+
+      if (!picker.open) {
+        fail(d.name + ' · 活动选择', '点格子没弹出选择表');
+      } else {
+        // 正文里那些分类按钮行绝不能吸底，否则往下滚时会一层层糊在屏幕上
+        const bad = picker.sticky.filter(c => !/\bmodal-actions\b/.test(c));
+        if (bad.length) {
+          fail(d.name + ' · 活动选择', `正文里有 ${bad.length} 行被吸底了：${bad.join(' / ')}`);
+        }
+        const closed = await page.evaluate(`(() => {
+          const b = [...document.querySelectorAll('.modal .btn')].find(x => x.textContent.includes('悬赏'));
+          if (!b) return 'no-btn';
+          b.click();
+          return true;
+        })()`);
+        await page.waitForTimeout(200);
+        if (closed === 'no-btn') {
+          fail(d.name + ' · 活动选择', '选择表里找不到悬赏按钮');
+        } else if (await page.evaluate(`!!document.querySelector('.modal')`)) {
+          fail(d.name + ' · 活动选择', '选完活动后弹窗没关，没退回日程');
+        }
+      }
+    }
+
+    // 6. 转屏：同一个页面里改视口，验证布局真的跟着换
     const other = d.land
       ? { width: d.h, height: d.w }
       : { width: Math.max(d.h, d.w), height: Math.min(d.h, d.w) };

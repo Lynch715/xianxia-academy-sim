@@ -123,7 +123,10 @@
         h('h3', title),
         sub ? h('.sub', sub) : null,
         body,
-        actions ? h('.btn-row', { style: { marginTop: '20px', justifyContent: 'flex-end' } },
+        // 这一行必须单独一个类。手机上它是吸底的，而弹窗正文里也到处是
+        // .btn-row（活动选择器每个分类都是一行按钮），只按 .modal .btn-row
+        // 选的话每一组都会吸底，往下滚时旧的那几行会一直糊在屏幕上。
+        actions ? h('.btn-row.modal-actions', { style: { marginTop: '20px', justifyContent: 'flex-end' } },
           ...actions.map(a => h('button.btn' + (a.primary ? '.primary' : ''), {
             onclick: () => { const r = a.onClick && a.onClick(); if (r !== false) close(); }
           }, a.label))

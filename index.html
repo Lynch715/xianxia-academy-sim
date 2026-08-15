@@ -354,7 +354,13 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); }
     content: ''; display: block; width: 36px; height: 4px; margin: -6px auto 14px;
     background: var(--line); border-radius: 2px;
   }
-  .modal .btn-row { position: sticky; bottom: 0; background: var(--paper); padding-top: 10px; }
+  /* 只有弹窗自己那排操作键吸底。正文里的 .btn-row 不能碰——
+     活动选择器每个分类都是一行按钮，全吸底就会层层糊在屏幕上。 */
+  .modal > .modal-actions {
+    position: sticky; bottom: 0; z-index: 1;
+    background: var(--paper); padding-top: 10px;
+    box-shadow: 0 -8px 12px -8px rgba(43,43,43,.18);
+  }
 }
 @keyframes sheet-up { from { transform: translateY(14%); opacity: .6 } to { transform: none; opacity: 1 } }
 
@@ -6701,7 +6707,10 @@ ${turns.join('\n')}
         h('h3', title),
         sub ? h('.sub', sub) : null,
         body,
-        actions ? h('.btn-row', { style: { marginTop: '20px', justifyContent: 'flex-end' } },
+        // 这一行必须单独一个类。手机上它是吸底的，而弹窗正文里也到处是
+        // .btn-row（活动选择器每个分类都是一行按钮），只按 .modal .btn-row
+        // 选的话每一组都会吸底，往下滚时旧的那几行会一直糊在屏幕上。
+        actions ? h('.btn-row.modal-actions', { style: { marginTop: '20px', justifyContent: 'flex-end' } },
           ...actions.map(a => h('button.btn' + (a.primary ? '.primary' : ''), {
             onclick: () => { const r = a.onClick && a.onClick(); if (r !== false) close(); }
           }, a.label))
@@ -6942,8 +6951,12 @@ ${turns.join('\n')}
         body.appendChild(h('.panel-title', { style: { marginTop: '16px' } }, title));
         body.appendChild(h('.btn-row', ...btns.filter(Boolean)));
       };
+      // 选完就该退回日程。之前只调 onSet 不关弹窗，格子在背后其实已经
+      // 填好了，屏幕上却还是那张选择表，看着像点了没反应。
+      let modal = null;
+      const pick = entry => { if (modal) modal.close(); onSet(entry); };
       const btn = (label, entry, title) =>
-        h('button.btn', { onclick: () => onSet(entry), title: title || '' }, label);
+        h('button.btn', { onclick: () => pick(entry), title: title || '' }, label);
 
       if (s.player.role === 'student') {
         const courses = s.academy.courses.required.concat(s.academy.courses.elective);
@@ -7030,11 +7043,12 @@ ${turns.join('\n')}
       }
 
       body.appendChild(h('.btn-row', { style: { marginTop: '18px' } },
-        h('button.btn.ghost', { onclick: () => onSet(null) }, '空着这个时段')));
+        h('button.btn.ghost', { onclick: () => pick(null) }, '空着这个时段')));
 
-      return G.Theme.modal(
+      modal = G.Theme.modal(
         `${G.Time.DAY_LABEL[day - 1]} · ${G.Time.PHASE_LABEL[phase]}`,
         '选择这个时段做什么', body, [{ label: '取消' }]);
+      return modal;
     }
   };
 

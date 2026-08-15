@@ -325,7 +325,13 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); }
     content: ''; display: block; width: 36px; height: 4px; margin: -6px auto 14px;
     background: var(--line); border-radius: 2px;
   }
-  .modal .btn-row { position: sticky; bottom: 0; background: var(--paper); padding-top: 10px; }
+  /* 只有弹窗自己那排操作键吸底。正文里的 .btn-row 不能碰——
+     活动选择器每个分类都是一行按钮，全吸底就会层层糊在屏幕上。 */
+  .modal > .modal-actions {
+    position: sticky; bottom: 0; z-index: 1;
+    background: var(--paper); padding-top: 10px;
+    box-shadow: 0 -8px 12px -8px rgba(43,43,43,.18);
+  }
 }
 @keyframes sheet-up { from { transform: translateY(14%); opacity: .6 } to { transform: none; opacity: 1 } }
 

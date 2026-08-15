@@ -213,8 +213,12 @@
         body.appendChild(h('.panel-title', { style: { marginTop: '16px' } }, title));
         body.appendChild(h('.btn-row', ...btns.filter(Boolean)));
       };
+      // 选完就该退回日程。之前只调 onSet 不关弹窗，格子在背后其实已经
+      // 填好了，屏幕上却还是那张选择表，看着像点了没反应。
+      let modal = null;
+      const pick = entry => { if (modal) modal.close(); onSet(entry); };
       const btn = (label, entry, title) =>
-        h('button.btn', { onclick: () => onSet(entry), title: title || '' }, label);
+        h('button.btn', { onclick: () => pick(entry), title: title || '' }, label);
 
       if (s.player.role === 'student') {
         const courses = s.academy.courses.required.concat(s.academy.courses.elective);
@@ -301,11 +305,12 @@
       }
 
       body.appendChild(h('.btn-row', { style: { marginTop: '18px' } },
-        h('button.btn.ghost', { onclick: () => onSet(null) }, '空着这个时段')));
+        h('button.btn.ghost', { onclick: () => pick(null) }, '空着这个时段')));
 
-      return G.Theme.modal(
+      modal = G.Theme.modal(
         `${G.Time.DAY_LABEL[day - 1]} · ${G.Time.PHASE_LABEL[phase]}`,
         '选择这个时段做什么', body, [{ label: '取消' }]);
+      return modal;
     }
   };
 

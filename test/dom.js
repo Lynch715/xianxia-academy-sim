@@ -85,6 +85,31 @@ setTimeout(async () => {
     q('.modal-mask').remove();
   });
 
+  step('选完活动自动退回日程', () => {
+    qa('.col-right .slot')[2].click();
+    const pick = qa('.modal .btn').find(b => b.textContent.includes('休息'));
+    if (!pick) throw new Error('选择表里没有「休息」');
+    pick.click();
+    // 选完不关弹窗的话，格子在背后已经填上了，屏幕上还是那张表，像点了没反应
+    if (q('.modal')) throw new Error('选完活动后弹窗没关');
+    const filled = qa('.col-right .slot')[2].textContent;
+    if (!filled || filled === '—') throw new Error('格子没写上活动：' + JSON.stringify(filled));
+  });
+
+  step('弹窗里只有操作行会吸底', () => {
+    qa('.col-right .slot')[3].click();
+    const modal = q('.modal');
+    if (!modal) throw new Error('弹窗没开');
+    const rows = [...modal.querySelectorAll('.btn-row')];
+    if (rows.length < 3) throw new Error('选择表里的分类行太少，测不出问题');
+    // jsdom 不算样式，这里退一步只验类名约定：正文里的行不许带 modal-actions
+    const mislabelled = rows.filter(r => r.classList.contains('modal-actions'));
+    if (mislabelled.length !== 1) {
+      throw new Error(`带 modal-actions 的行有 ${mislabelled.length} 个，应当只有操作行那一个`);
+    }
+    q('.modal-mask').remove();
+  });
+
   const s = G.State.current;
   let evCount = 0;
   try {
