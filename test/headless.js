@@ -529,12 +529,67 @@ function providerConfig(G) {
   check(G.LLM.endpoint() === 'https://api.deepseek.com/chat/completions',
         `DeepSeek 端点不对：${G.LLM.endpoint()}`);
 
+  // 心魔关、结局这些场景走 important 通道，必须真的换成加强模型
+  G.LLM.config.provider = 'deepseek';
+  G.LLM.config.model = G.LLM.PROVIDERS.deepseek.model;
+  G.LLM.config.modelImportant = G.LLM.PROVIDERS.deepseek.modelPro;
+  G.LLM.config.useImportantModel = true;
+  const pro = G.LLM.body('系统', '正文', { important: true }).model;
+  const flash = G.LLM.body('系统', '正文', {}).model;
+  check(pro === 'deepseek-v4-pro', `重要场景没用上加强模型：${pro}`);
+  check(flash === 'deepseek-v4-flash', `平常叙事不该用加强模型：${flash}`);
+  // 关掉开关就该退回平常模型，否则那个勾没有意义
+  G.LLM.config.useImportantModel = false;
+  check(G.LLM.body('系统', '正文', { important: true }).model === 'deepseek-v4-flash',
+        '关掉「重要场景用高级模型」后仍在用加强模型');
+
   // 别的服务商不认识 thinking 字段，发过去可能 400
   G.LLM.config.provider = 'openai';
   G.LLM.config.baseURL = '';
   check(!('thinking' in G.LLM.body('系统', '正文', {})), 'thinking 字段漏给了非 DeepSeek 服务商');
 
   Object.assign(G.LLM.config, save);
+}
+
+/* 老配置迁移。
+ * 改默认值救不了已经玩过的人——load() 是拿存档覆盖默认值的，存档里
+ * 那份旧值永远赢。所以这里专门验一遍"打开老档会不会自动补上"。 */
+function configMigration(G) {
+  const realRead = G.Save.readConfig, realWrite = G.Save.writeConfig;
+  const snapshot = { ...G.LLM.config };
+
+  const run = stored => {
+    let written = null;
+    G.Save.readConfig = () => ({ llm: stored });
+    G.Save.writeConfig = c => { written = c; };
+    Object.assign(G.LLM.config, snapshot);
+    const out = G.LLM.load();
+    return { out: { ...out }, written };
+  };
+
+  // 老档：模型名已下线、加强模型留空、地址还是 /v1
+  const old = run({
+    provider: 'deepseek', apiKey: 'sk-x', model: 'deepseek-chat',
+    modelImportant: '', useImportantModel: false,
+    baseURL: 'https://api.deepseek.com/v1'
+  });
+  check(old.out.model === 'deepseek-v4-flash', `老模型名没迁移：${old.out.model}`);
+  check(old.out.modelImportant === 'deepseek-v4-pro', `加强模型没自动补上：${old.out.modelImportant}`);
+  check(old.out.useImportantModel === true, '加强模型的开关没打开');
+  check(old.out.baseURL === 'https://api.deepseek.com', `地址没迁移：${old.out.baseURL}`);
+  check(old.written !== null, '迁移之后没有写回存档，下次打开还要再迁一遍');
+
+  // 已经是新版且玩家自己清空了加强模型 —— 不许再覆盖回去
+  const kept = run({
+    provider: 'deepseek', apiKey: 'sk-x', model: 'deepseek-v4-flash',
+    modelImportant: '', useImportantModel: false, baseURL: '', cfgVersion: 2
+  });
+  check(kept.out.modelImportant === '', '玩家清空的加强模型又被强行填了回去');
+  check(kept.out.useImportantModel === false, '玩家关掉的开关又被强行打开');
+
+  G.Save.readConfig = realRead;
+  G.Save.writeConfig = realWrite;
+  Object.assign(G.LLM.config, snapshot);
 }
 
 // ---------- 上下文规模 ----------
@@ -768,7 +823,9 @@ console.log(`  自定义解析　${failures.some(f => f.includes('自定义')) ?
 injectionGuard(G, s);
 console.log(`  白名单防护　${failures.some(f => f.includes('白名单') || f.includes('夹紧') || f.includes('过滤')) ? '失败' : '通过'}`);
 providerConfig(G);
-console.log(`  服务商配置　${Object.keys(G.LLM.PROVIDERS).length} 家，DeepSeek 默认 ${G.LLM.PROVIDERS.deepseek.model}（已关思考模式）`);
+console.log(`  服务商配置　${Object.keys(G.LLM.PROVIDERS).length} 家，DeepSeek 平时 ${G.LLM.PROVIDERS.deepseek.model}、要紧处 ${G.LLM.PROVIDERS.deepseek.modelPro}`);
+configMigration(G);
+console.log(`  老配置迁移　退役模型名、接口地址、加强模型三项均自动补齐`);
 const ctxLen = contextSize(G, s);
 console.log(`  上下文规模　${ctxLen} 字 ≈ ${Math.round(ctxLen * 0.9)} token`);
 

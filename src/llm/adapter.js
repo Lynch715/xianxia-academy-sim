@@ -40,7 +40,8 @@
       temperature: 0.85,
       maxTokens: 4000,
       narrateLength: 1800,
-      enabled: false
+      enabled: false,
+      cfgVersion: 2
     },
 
     get configured() { return !!(this.config.apiKey && this.config.model); },
@@ -55,11 +56,18 @@
       'deepseek-r1':       'deepseek-v4-pro'
     },
 
+    /* 配置版本号。改默认值救不了老玩家——load() 是拿存档覆盖默认值的，
+     * 存档里那份旧值永远赢。要动已有配置就得在这里加一次性迁移，
+     * 并把版本号推上去，免得反复覆盖玩家自己的调整。 */
+    CONFIG_VERSION: 2,
+
     load() {
       const cfg = G.Save.readConfig();
-      if (cfg.llm) Object.assign(this.config, cfg.llm);
+      const saved = cfg.llm || null;
+      if (saved) Object.assign(this.config, saved);
 
       let migrated = false;
+
       for (const key of ['model', 'modelImportant']) {
         const now = this.RETIRED[this.config[key]];
         if (now) { this.config[key] = now; migrated = true; }
@@ -67,6 +75,22 @@
       // 旧版把 DeepSeek 的地址写成了 .../v1，现在官方文档给的是根域名
       if (this.config.provider === 'deepseek' && /^https:\/\/api\.deepseek\.com\/v1\/?$/.test(this.config.baseURL)) {
         this.config.baseURL = PROVIDERS.deepseek.baseURL;
+        migrated = true;
+      }
+
+      // v2：加强模型从「默认留空、默认关闭」改成默认填好并打开。
+      // 只对版本号还没跟上的老配置补一次，之后玩家清空了就是清空了。
+      if (saved && (saved.cfgVersion || 0) < 2) {
+        const p = PROVIDERS[this.config.provider];
+        if (p && p.modelPro && !this.config.modelImportant) {
+          this.config.modelImportant = p.modelPro;
+          this.config.useImportantModel = true;
+        }
+        migrated = true;
+      }
+
+      if (this.config.cfgVersion !== this.CONFIG_VERSION) {
+        this.config.cfgVersion = this.CONFIG_VERSION;
         migrated = true;
       }
       if (migrated) this.save();

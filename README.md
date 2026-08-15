@@ -14,7 +14,11 @@ node build.js          # 拼接 src/ → index.html
 
 想接入模型：进游戏后点右上角「设置」，选服务商、填 API 密钥。密钥只存在浏览器 localStorage，代码里没有任何上报逻辑。
 
-各家的默认模型集中写在 `src/llm/adapter.js` 的 `PROVIDERS` 里（DeepSeek 用 `deepseek-v4-flash`，关键场景 `deepseek-v4-pro`），换模型改那一处就够，UI 不再重复一份。已下线的模型名列在 `LLM.RETIRED` 里，老配置在载入时自动迁移——不然浏览器里存着 `deepseek-chat` 的人一开局就是 400，而报错只说"模型不存在"，很难想到是旧存档。
+各家的默认模型集中写在 `src/llm/adapter.js` 的 `PROVIDERS` 里，每家两个：`model` 平时叙事用，`modelPro` 给要紧场景（DeepSeek 对应 `deepseek-v4-flash` 和 `deepseek-v4-pro`）。换模型改那一处就够，UI 不再重复一份。
+
+**哪些算要紧场景**：心魔关、结局尾声，以及事件本身标了 `important` 的（突破、暗线揭晓这类）。走的是 `call(..., { important: true })`，在 `body()` 里换成 `modelImportant`。设置面板中「重要场景使用高级模型」那个勾控制它，勾掉就全程用平常模型。
+
+**改默认值救不了老玩家。** `load()` 是拿存档覆盖默认值的，存档里那份旧值永远赢——所以调默认值必须配一次性迁移，靠 `cfgVersion` 控制只补一次，之后玩家自己清空了就是清空了。已下线的模型名列在 `LLM.RETIRED` 里同理，不然浏览器里存着 `deepseek-chat` 的人一开局就是 400，而报错只说"模型不存在"，很难想到是旧配置。
 
 DeepSeek V4 的思考模式默认开着，适配层会显式关掉：写小说不需要它先推理一遍，而且思考模式下 `temperature` 会被忽略（叙事变平淡），思维链走的是 `reasoning_content` 字段而非 `content`，流式输出会表现成"转半天没字、然后突然一大段"。
 
