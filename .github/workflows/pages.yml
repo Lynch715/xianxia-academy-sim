@@ -34,8 +34,9 @@ jobs:
 
       - name: 装测试依赖
         run: |
-          npm install --no-save jsdom
-          python3 -m pip install --quiet pillow   # test/viewport.js 要用它验图标格式
+          npm install --no-save jsdom playwright
+          npx playwright install --with-deps chromium   # test/render.js 要真浏览器量排版
+          python3 -m pip install --quiet pillow         # test/viewport.js 要用它验图标格式
 
       - name: 构建
         run: node build.js
@@ -51,6 +52,9 @@ jobs:
 
       - name: 移动端视口
         run: node test/viewport.js
+
+      - name: 真机排版（Chromium）
+        run: node test/render.js
 
       - name: 收拾要发布的文件
         run: |

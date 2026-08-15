@@ -20,6 +20,7 @@ const dom = new JSDOM(html, {
 });
 
 const { window } = dom;
+require('./_jsdom').installMatchMedia(window);
 window.fetch = () => Promise.reject(new Error('测试环境禁用网络'));
 
 function q(sel) { return window.document.querySelector(sel); }

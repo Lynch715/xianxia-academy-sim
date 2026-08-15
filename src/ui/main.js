@@ -14,28 +14,50 @@
     currentScene: 'scene_main_plaza',
     currentActors: [],
 
-    /** 横屏手机：宽高比横过来且高度很矮。平板横屏不算，它走三栏。 */
-    isLandscapePhone() {
-      return window.innerWidth > window.innerHeight && window.innerHeight <= 540;
+    /* 横屏手机的判定条件，和 theme.css 里那条媒体查询逐字一致。
+     *
+     * 早期版本用 innerWidth > innerHeight && innerHeight <= 540 自己算，
+     * 有两个毛病：一是 iOS 在 orientationchange 触发时这两个值还是旧的，
+     * 二是它和 CSS 各算各的，一旦哪天改了断点就会对不上——CSS 已经换成
+     * 横屏布局了，JS 还以为在竖屏，标签文案和布局互相打架。
+     * 交给 matchMedia，浏览器算什么我们就跟什么，永远不可能不一致。 */
+    MQ_LANDSCAPE: '(orientation: landscape) and (max-height: 540px)',
+
+    mql() {
+      if (!this._mql) {
+        this._mql = window.matchMedia
+          ? window.matchMedia(this.MQ_LANDSCAPE)
+          // 极老的浏览器和无头环境没有 matchMedia，退回自己算。
+          // 这里的条件必须和 MQ_LANDSCAPE 保持一致。
+          : { get matches() { return window.innerWidth > window.innerHeight && window.innerHeight <= 540; } };
+      }
+      return this._mql;
     },
+
+    isLandscapePhone() { return this.mql().matches; },
 
     /** 转屏后要重排：竖屏的底部标签栏和横屏的竖排导轨不是同一套 DOM 语义 */
     watchOrientation() {
       let last = this.isLandscapePhone();
       let timer = null;
-      const onChange = () => {
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-          const now = this.isLandscapePhone();
-          if (now === last) return;
-          last = now;
-          // 横屏默认展开日程（主栏本来就在），竖屏默认停在叙事
-          this.mobileTab = now ? 'right' : 'main';
-          if (G.State.current && !G.State.current.ended && !this.running) this.render();
-        }, 180);
+      const apply = () => {
+        const now = this.isLandscapePhone();
+        if (now === last) return;
+        last = now;
+        // 横屏默认展开日程（主栏本来就在），竖屏默认停在叙事
+        this.mobileTab = now ? 'right' : 'main';
+        if (G.State.current && !G.State.current.ended && !this.running) this.render();
       };
-      window.addEventListener('resize', onChange);
-      window.addEventListener('orientationchange', onChange);
+      const debounced = () => { clearTimeout(timer); timer = setTimeout(apply, 180); };
+
+      const m = this.mql();
+      // change 事件由浏览器在媒体查询真正翻转时发，不存在读到旧尺寸的问题
+      if (m.addEventListener) m.addEventListener('change', apply);
+      else if (m.addListener) m.addListener(apply);          // 老 Safari
+
+      // 兜底：地址栏收起、分屏拖动这些不翻转方向但会改尺寸的情况
+      window.addEventListener('resize', debounced);
+      window.addEventListener('orientationchange', debounced);
     },
 
     boot(root) {
@@ -97,7 +119,10 @@
       const main = h('.col.col-main', this.topbar(s), stage, narrWrap);
       this.mainEl = { stage, narrWrap, main };
 
-      const layout = h('.layout' + (this.mobileTab !== 'main' ? '.tab-' + this.mobileTab : ''),
+      // 分页类要一直挂着。早期版本在 main 时省略了这个类，结果 CSS 里
+      // 的 .layout.tab-main（横屏「专注」收起侧栏）永远匹配不上，横屏
+      // 看叙事时右边会空出三成宽的白栏。
+      const layout = h('.layout.tab-' + this.mobileTab,
         h('.col.col-left', G.Panels.left(s)),
         main,
         h('.col.col-right', G.Panels.right(s, this.rightView,

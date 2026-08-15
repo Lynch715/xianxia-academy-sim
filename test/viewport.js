@@ -182,7 +182,16 @@ const VIEWPORTS = [
 
 const dom = new JSDOM(html, { runScripts: 'dangerously', pretendToBeVisual: true, url: 'http://localhost/' });
 const w = dom.window;
+require('./_jsdom').installMatchMedia(w);
 w.fetch = () => Promise.reject(new Error('测试环境禁用网络'));
+
+/** 改视口并像浏览器那样把 change 发出去 */
+function setViewport(width, height) {
+  Object.defineProperty(w, 'innerWidth', { value: width, configurable: true });
+  Object.defineProperty(w, 'innerHeight', { value: height, configurable: true });
+  const m = w.G && w.G.UI && w.G.UI._mql;
+  if (m && m._fire) m._fire();
+}
 
 setTimeout(() => {
   const G = w.G;
@@ -201,8 +210,7 @@ setTimeout(() => {
   console.log('\n各机型布局');
   for (const v of VIEWPORTS) {
     try {
-      Object.defineProperty(w, 'innerWidth', { value: v.w, configurable: true });
-      Object.defineProperty(w, 'innerHeight', { value: v.h, configurable: true });
+      setViewport(v.w, v.h);
 
       const isLand = G.UI.isLandscapePhone();
       if (isLand !== v.land) {
@@ -215,6 +223,10 @@ setTimeout(() => {
       const layout = w.document.querySelector('.layout');
       const tabs = w.document.querySelector('.mobile-tabs');
       if (!layout) throw new Error('主布局没渲染出来');
+      // 分页类必须一直挂着，.layout.tab-main 这条规则要靠它才生效
+      if (!layout.classList.contains('tab-' + G.UI.mobileTab)) {
+        throw new Error(`.layout 缺少 tab-${G.UI.mobileTab}（现有 "${layout.className}"）`);
+      }
       if (!tabs || tabs.children.length !== 3) throw new Error('标签栏不是三个键');
 
       // 横屏中间键应该是「专注」，竖屏是「叙事」
@@ -237,8 +249,7 @@ setTimeout(() => {
   step('反复转屏后存档与界面都还在', () => {
     for (let i = 0; i < 6; i++) {
       const land = i % 2 === 0;
-      Object.defineProperty(w, 'innerWidth', { value: land ? 852 : 393, configurable: true });
-      Object.defineProperty(w, 'innerHeight', { value: land ? 393 : 852, configurable: true });
+      setViewport(land ? 852 : 393, land ? 393 : 852);
       G.UI.mobileTab = land ? 'right' : 'main';
       G.UI.render();
     }
@@ -247,8 +258,7 @@ setTimeout(() => {
   });
 
   step('三个标签都能点，且不报错', () => {
-    Object.defineProperty(w, 'innerWidth', { value: 393, configurable: true });
-    Object.defineProperty(w, 'innerHeight', { value: 852, configurable: true });
+    setViewport(393, 852);
     G.UI.render();
     for (let i = 0; i < 3; i++) {
       const t = w.document.querySelectorAll('.mobile-tabs button')[i];

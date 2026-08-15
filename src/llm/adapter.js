@@ -33,8 +33,10 @@
       baseURL: '',
       apiKey: '',
       model: 'deepseek-v4-flash',
-      modelImportant: '',       // 重要场景用的高级模型，留空则同上
-      useImportantModel: false,
+      // 心魔关、结局这类场景值得用好模型：一局下来也就十几次，
+      // 但正是玩家会截图发出去的那几段。默认就填上并打开。
+      modelImportant: 'deepseek-v4-pro',
+      useImportantModel: true,
       temperature: 0.85,
       maxTokens: 4000,
       narrateLength: 1800,

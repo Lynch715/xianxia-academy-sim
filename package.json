@@ -5,11 +5,12 @@
   "private": true,
   "scripts": {
     "build": "node build.js",
-    "test": "node test/headless.js 240 && node test/balance.js && node test/dom.js && node test/viewport.js",
+    "test": "node test/headless.js 240 && node test/balance.js && node test/dom.js && node test/viewport.js && node test/render.js",
     "icons": "python3 tools/make_icons.py"
   },
   "devDependencies": {
-    "jsdom": "^24.0.0"
+    "jsdom": "^24.0.0",
+    "playwright": "^1.62.1"
   },
   "license": "MIT"
 }
