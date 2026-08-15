@@ -506,6 +506,37 @@ function injectionGuard(G, s) {
   check(v.violatesRules === false, 'violatesRules 非布尔值应视为 false');
 }
 
+// ---------- 服务商配置 ----------
+function providerConfig(G) {
+  for (const [k, p] of Object.entries(G.LLM.PROVIDERS)) {
+    if (k === 'custom') continue;
+    check(!!p.baseURL, `${k} 没有默认地址`);
+    check(!!p.model, `${k} 没有默认模型`);
+    check(!/^https?:\/\/.*\/$/.test(p.baseURL), `${k} 的地址尾部多了斜杠：${p.baseURL}`);
+  }
+
+  // 退役的模型名必须能自动迁移——老配置存在浏览器里，不迁移就是开局 400
+  for (const [old, now] of Object.entries(G.LLM.RETIRED)) {
+    check(!!now && now !== old, `${old} 的迁移目标无效`);
+  }
+
+  // DeepSeek V4 默认开思考模式，必须显式关掉
+  const save = { ...G.LLM.config };
+  G.LLM.config.provider = 'deepseek';
+  G.LLM.config.model = G.LLM.PROVIDERS.deepseek.model;
+  const dsBody = G.LLM.body('系统', '正文', {});
+  check(dsBody.thinking && dsBody.thinking.type === 'disabled', 'DeepSeek 请求没有关闭思考模式');
+  check(G.LLM.endpoint() === 'https://api.deepseek.com/chat/completions',
+        `DeepSeek 端点不对：${G.LLM.endpoint()}`);
+
+  // 别的服务商不认识 thinking 字段，发过去可能 400
+  G.LLM.config.provider = 'openai';
+  G.LLM.config.baseURL = '';
+  check(!('thinking' in G.LLM.body('系统', '正文', {})), 'thinking 字段漏给了非 DeepSeek 服务商');
+
+  Object.assign(G.LLM.config, save);
+}
+
 // ---------- 上下文规模 ----------
 function contextSize(G, s) {
   const payload = {
@@ -736,6 +767,8 @@ customAction(G, s);
 console.log(`  自定义解析　${failures.some(f => f.includes('自定义')) ? '失败' : '通过'}`);
 injectionGuard(G, s);
 console.log(`  白名单防护　${failures.some(f => f.includes('白名单') || f.includes('夹紧') || f.includes('过滤')) ? '失败' : '通过'}`);
+providerConfig(G);
+console.log(`  服务商配置　${Object.keys(G.LLM.PROVIDERS).length} 家，DeepSeek 默认 ${G.LLM.PROVIDERS.deepseek.model}（已关思考模式）`);
 const ctxLen = contextSize(G, s);
 console.log(`  上下文规模　${ctxLen} 字 ≈ ${Math.round(ctxLen * 0.9)} token`);
 

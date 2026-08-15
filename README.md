@@ -14,6 +14,10 @@ node build.js          # 拼接 src/ → index.html
 
 想接入模型：进游戏后点右上角「设置」，选服务商、填 API 密钥。密钥只存在浏览器 localStorage，代码里没有任何上报逻辑。
 
+各家的默认模型集中写在 `src/llm/adapter.js` 的 `PROVIDERS` 里（DeepSeek 用 `deepseek-v4-flash`，关键场景 `deepseek-v4-pro`），换模型改那一处就够，UI 不再重复一份。已下线的模型名列在 `LLM.RETIRED` 里，老配置在载入时自动迁移——不然浏览器里存着 `deepseek-chat` 的人一开局就是 400，而报错只说"模型不存在"，很难想到是旧存档。
+
+DeepSeek V4 的思考模式默认开着，适配层会显式关掉：写小说不需要它先推理一遍，而且思考模式下 `temperature` 会被忽略（叙事变平淡），思维链走的是 `reasoning_content` 字段而非 `content`，流式输出会表现成"转半天没字、然后突然一大段"。
+
 ## 测试
 
 ```bash

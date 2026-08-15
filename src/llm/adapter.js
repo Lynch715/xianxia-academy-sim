@@ -5,13 +5,25 @@
 (function (G) {
   'use strict';
 
+  /* 各家默认模型集中放在这里，别散到 UI 里去——模型名换得比什么都勤，
+   * 上一版把 'deepseek-chat' 同时写死在这里和 panels.js，改的时候漏了一处。
+   *   model    平时叙事用，便宜够用
+   *   modelPro 关键场景（心魔关、结局）用，留空表示没有更好的可选 */
   const PROVIDERS = {
-    openai:    { name: 'OpenAI 兼容', baseURL: 'https://api.openai.com/v1',            style: 'openai' },
-    anthropic: { name: 'Anthropic',   baseURL: 'https://api.anthropic.com/v1',         style: 'anthropic' },
-    deepseek:  { name: 'DeepSeek',    baseURL: 'https://api.deepseek.com/v1',          style: 'openai' },
-    moonshot:  { name: '月之暗面',    baseURL: 'https://api.moonshot.cn/v1',           style: 'openai' },
-    zhipu:     { name: '智谱',        baseURL: 'https://open.bigmodel.cn/api/paas/v4', style: 'openai' },
-    custom:    { name: '自定义中转',  baseURL: '',                                     style: 'openai' }
+    openai:    { name: 'OpenAI 兼容', baseURL: 'https://api.openai.com/v1',            style: 'openai',
+                 model: 'gpt-4o-mini', modelPro: 'gpt-4o' },
+    anthropic: { name: 'Anthropic',   baseURL: 'https://api.anthropic.com/v1',         style: 'anthropic',
+                 model: 'claude-haiku-4-5-20251001', modelPro: 'claude-sonnet-4-5' },
+    // DeepSeek V4 起模型名改成了 v4-flash / v4-pro，旧的 deepseek-chat 已经不认。
+    // 思考模式默认开着，对写小说没用还烧钱，在 body() 里显式关掉。
+    deepseek:  { name: 'DeepSeek',    baseURL: 'https://api.deepseek.com',             style: 'openai',
+                 model: 'deepseek-v4-flash', modelPro: 'deepseek-v4-pro', noThink: true },
+    moonshot:  { name: '月之暗面',    baseURL: 'https://api.moonshot.cn/v1',           style: 'openai',
+                 model: 'moonshot-v1-8k', modelPro: 'moonshot-v1-32k' },
+    zhipu:     { name: '智谱',        baseURL: 'https://open.bigmodel.cn/api/paas/v4', style: 'openai',
+                 model: 'glm-4-flash', modelPro: 'glm-4-plus' },
+    custom:    { name: '自定义中转',  baseURL: '',                                     style: 'openai',
+                 model: '', modelPro: '' }
   };
 
   const LLM = {
@@ -20,7 +32,7 @@
       provider: 'deepseek',
       baseURL: '',
       apiKey: '',
-      model: 'deepseek-chat',
+      model: 'deepseek-v4-flash',
       modelImportant: '',       // 重要场景用的高级模型，留空则同上
       useImportantModel: false,
       temperature: 0.85,
@@ -31,9 +43,32 @@
 
     get configured() { return !!(this.config.apiKey && this.config.model); },
 
+    /* 已经下线的模型名 → 现在的对应型号。
+     * 老玩家的浏览器里存着旧配置，不迁移的话打开就是 400，
+     * 而且报错信息只说"模型不存在"，很难联想到是存档里的旧值。 */
+    RETIRED: {
+      'deepseek-chat':     'deepseek-v4-flash',
+      'deepseek-reasoner': 'deepseek-v4-pro',
+      'deepseek-v3':       'deepseek-v4-flash',
+      'deepseek-r1':       'deepseek-v4-pro'
+    },
+
     load() {
       const cfg = G.Save.readConfig();
       if (cfg.llm) Object.assign(this.config, cfg.llm);
+
+      let migrated = false;
+      for (const key of ['model', 'modelImportant']) {
+        const now = this.RETIRED[this.config[key]];
+        if (now) { this.config[key] = now; migrated = true; }
+      }
+      // 旧版把 DeepSeek 的地址写成了 .../v1，现在官方文档给的是根域名
+      if (this.config.provider === 'deepseek' && /^https:\/\/api\.deepseek\.com\/v1\/?$/.test(this.config.baseURL)) {
+        this.config.baseURL = PROVIDERS.deepseek.baseURL;
+        migrated = true;
+      }
+      if (migrated) this.save();
+
       return this.config;
     },
 
@@ -84,7 +119,7 @@
           stream: !!opts?.stream
         };
       }
-      return {
+      const body = {
         model, max_tokens: maxTokens, temperature: temp,
         messages: [
           ...(system ? [{ role: 'system', content: system }] : []),
@@ -92,6 +127,16 @@
         ],
         stream: !!opts?.stream
       };
+
+      /* DeepSeek V4 默认开着思考模式，对我们是纯负担：
+       *   · 思考模式下 temperature 被忽略，叙事会变得平淡
+       *   · 思维链走的是 reasoning_content 字段，我们的流式解析只读 content，
+       *     表现为"转了半天圈没有字，然后突然一大段"
+       *   · 按 token 计费，写小说不需要它先推理一遍
+       * 所以显式关掉。这个字段其他厂商不认，只对 noThink 的服务商发。 */
+      if (p.noThink) body.thinking = { type: 'disabled' };
+
+      return body;
     },
 
     // ---------- 底层调用 ----------

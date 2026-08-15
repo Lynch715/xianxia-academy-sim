@@ -343,9 +343,9 @@
           const p = G.LLM.PROVIDERS[cfg.provider];
           baseInput.value = p.baseURL;
           cfg.baseURL = p.baseURL;
-          if (cfg.provider === 'deepseek') modelInput.value = cfg.model = 'deepseek-chat';
-          if (cfg.provider === 'anthropic') modelInput.value = cfg.model = 'claude-haiku-4-5-20251001';
-          if (cfg.provider === 'openai') modelInput.value = cfg.model = 'gpt-4o-mini';
+          // 模型名一律取自 PROVIDERS，这里不要再写死一份
+          if (p.model) modelInput.value = cfg.model = p.model;
+          if (p.modelPro) impInput.value = cfg.modelImportant = p.modelPro;
         }
       }, ...Object.keys(G.LLM.PROVIDERS).map(k =>
         h_('option', { value: k, selected: cfg.provider === k }, G.LLM.PROVIDERS[k].name)));
