@@ -1,0 +1,1444 @@
+[
+  {
+    "id": "evt_yunshu_reading",
+    "category": "storyline",
+    "weight": 28,
+    "scene": "scene_library_interior",
+    "actors": [
+      "npc_yunshu"
+    ],
+    "cooldown": 13,
+    "important": true,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "flags": [
+        "yunshu_deal"
+      ],
+      "minWeek": 20
+    },
+    "seed": "你按约定来替云舒读书。今天她挑的是一册院志。你读到第三十六页末尾，翻过去——第三十七页是空的，纸边有撕过的毛口。你停住了。她在对面说：「接着读。」",
+    "facts": [
+      "院志第三十七页被撕掉了",
+      "云舒让你接着读"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "接着往下读，不提这一页",
+        "reason": 14,
+        "check": {
+          "attr": "xin",
+          "difficulty": 35
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你从第三十八页读了下去。读了一个时辰，她忽然打断你：「你刚才停了三息。」她的手放在膝上，「三百年了，停在那儿的人只有四个。前三个都追着问了。」她顿了顿，「你是第一个不问的。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 15,
+                "trust": 20,
+                "note": "你没有追问那一页"
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 12,
+                "clue": "柳眠烟的醉话"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你读了下去。她一直没说什么。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 8,
+                "trust": 10
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 5
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "读完了这一册。什么也没发生。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 4,
+                "trust": 4
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你的声音有点抖，读串了两行。她让你重读。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你读得心不在焉，错了七处。她合上了书：「今天到这儿。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -4,
+                "trust": -3
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "问她这一页去哪了",
+        "reason": 2,
+        "check": {
+          "attr": "shi",
+          "difficulty": 58
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "「被撕了。」她说得很平常，「三百年前那年冬天，一个晚上，全院所有本子上的这一页都不见了。」她的手指在空白处摸了一遍，「有人做事很干净。但他忘了一件事——我读书不用眼睛。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 8,
+                "trust": 15
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 20,
+                "clue": "旧院志缺页"
+              },
+              {
+                "type": "flag",
+                "key": "yunshu_told_page"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "「被撕了。」她说完就不再开口，只是让你接着读。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 8,
+                "clue": "旧院志缺页"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "她没有回答。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "她的手停在书页上，很久没动。「读下一页。」她说。那天她再没跟你说过别的话。",
+            "effects": [
+              {
+                "type": "relation",
+                "trust": -5
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "她合上书站了起来。「有些书，读到缺页就该停了。」她扶着书架走开，走得很慢，「这话是替你好。」此后半年，她没再叫你来读书。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -10,
+                "trust": -12
+              },
+              {
+                "type": "flag",
+                "key": "yunshu_deal",
+                "value": false
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "把那一页的位置默记下来，回头自己查",
+        "reason": 8,
+        "check": {
+          "attr": "shen",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把前后两页的内容都背了下来。回宿舍后一对照——第三十六页末尾讲的是院主闭关，第三十八页开头已经是「代院主视事」。中间那一页，装的是三百年。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 16,
+                "clue": "旧院志缺页"
+              },
+              {
+                "type": "attr",
+                "key": "shen",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你记住了大概。缺的那部分确实关键。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 8,
+                "clue": "旧院志缺页"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你记岔了几处，回去对不上。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 3
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "读到一半你走神了，被她听出来。",
+            "effects": [
+              {
+                "type": "relation",
+                "trust": -3
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "「你在数页码。」她说。你的心跳了一下。她没有再说什么，但那天之后她换了读的书。",
+            "effects": [
+              {
+                "type": "relation",
+                "trust": -8
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_liu_drunk_talk",
+    "category": "storyline",
+    "weight": 24,
+    "scene": "scene_baiyi",
+    "actors": [
+      "npc_liumianyan"
+    ],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "relations": {
+        "npc_liumianyan": {
+          "trust": [
+            55,
+            100
+          ]
+        }
+      },
+      "notFlags": [
+        "liu_drunk_told"
+      ],
+      "minWeek": 44
+    },
+    "seed": "柳眠烟今天喝得比平时多。第三坛见底的时候，她忽然说起了一个人——她没说名字，只说「那个人」。「那个人教我弹琴的时候说，弹到哪里停下来，比弹到哪里更要紧。」她笑了一声，「他自己倒好，说停就停了。」",
+    "facts": [
+      "柳眠烟醉后提起了一个没有名字的人",
+      "她说那人'说停就停了'"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "静静听她说完",
+        "reason": 16,
+        "check": {
+          "attr": "xin",
+          "difficulty": 40
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "她说了很久。断断续续，前后不搭。但你拼出了大概——三百年前的那个冬天，有一个人在闭关前一夜找过她，托她保管一样东西，然后就再没出来。「他说三个月。」她把空坛推开，「我等了三百年。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 14,
+                "trust": 22,
+                "bond": 18,
+                "note": "她醉后说了三百年前的事"
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 25,
+                "clue": "柳眠烟的醉话"
+              },
+              {
+                "type": "flag",
+                "key": "liu_drunk_told"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "她说了些零碎的。你听懂了一半。",
+            "effects": [
+              {
+                "type": "relation",
+                "trust": 12,
+                "bond": 8
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 12,
+                "clue": "柳眠烟的醉话"
+              },
+              {
+                "type": "flag",
+                "key": "liu_drunk_told"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "她说着说着就睡着了。你把披风盖在她身上，走了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 6,
+                "trust": 5
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 4
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "她忽然清醒过来，看了你一眼：「我刚才说什么了？」你说没什么。她说：「那就好。」",
+            "effects": [
+              {
+                "type": "relation",
+                "trust": 3
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "她整个人一僵，酒醒了大半。「你听了多少。」她的声音第一次这么冷。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -8,
+                "trust": -10
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "问那个人是谁",
+        "reason": -6,
+        "check": {
+          "attr": "shi",
+          "difficulty": 62
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "她盯着你看了很久，久到你以为她要发火。然后她说了一个名字。那个名字你在院志上见过——三百年前那位失踪的院主。她说完就把脸埋进臂弯里，肩膀在抖，但没有声音。",
+            "effects": [
+              {
+                "type": "relation",
+                "trust": 18,
+                "bond": 20
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 30,
+                "clue": "柳眠烟的醉话"
+              },
+              {
+                "type": "flag",
+                "key": "liu_drunk_told"
+              },
+              {
+                "type": "flag",
+                "key": "know_ex_head_name"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "「一个死人。」她说，「或者不是。我也不知道。」",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 14,
+                "clue": "柳眠烟的醉话"
+              },
+              {
+                "type": "flag",
+                "key": "liu_drunk_told"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "她摆摆手：「不重要了。」",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 5
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "她笑了：「你这孩子，问得太急。」她把酒坛推给你，「喝一口，就当没听见。」",
+            "effects": [
+              {
+                "type": "relation",
+                "trust": -4
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "她慢慢坐直了。「你今天来，是为了问这个？」这句话说得极轻，但你听得后背发凉。她没有再喝，也没有再看你。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -15,
+                "trust": -18,
+                "note": "她以为你是有备而来"
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "guilt",
+                "npc": "npc_liumianyan"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "扶她回去，什么都不问",
+        "reason": 12,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你把她扶到里间。她迷迷糊糊地说了句「你像他」，然后就睡了。第二天她见了你，什么也没提，只是往你手里塞了一小坛酒——是她自己藏的那种。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 12,
+                "trust": 14,
+                "bond": 10,
+                "note": "你扶她回去，什么也没问"
+              },
+              {
+                "type": "item",
+                "id": "mingjiu",
+                "value": 1
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 6
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_su_forbidden_pill",
+    "category": "storyline",
+    "weight": 22,
+    "scene": "scene_danxia",
+    "actors": [
+      "npc_sumuhan"
+    ],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "relations": {
+        "npc_sumuhan": {
+          "trust": [
+            60,
+            100
+          ]
+        }
+      },
+      "notFlags": [
+        "su_pill_seen"
+      ],
+      "minWeek": 56
+    },
+    "seed": "苏暮寒让你帮忙搬一批药材去地下丙字库。走到最里面时，你看见墙角有一扇小门，门上贴着三道封条，最上面那道的墨色已经发灰——至少一百年没动过。她注意到你在看，停下脚步：「那个不用管。」",
+    "facts": [
+      "丹霞院地下有一扇封了上百年的门",
+      "苏暮寒让你别管"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "点头，接着搬东西",
+        "reason": 12,
+        "check": {
+          "attr": "xin",
+          "difficulty": 30
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你什么也没问。搬完最后一趟，她忽然在门口说：「里面封着一炉丹。」她背对着你，「一百二十年前，我十九岁。我以为我能改掉一个人的灵根。」她推门出去，「结果我改掉的是那个人。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 12,
+                "trust": 22,
+                "note": "她主动说了那炉禁丹"
+              },
+              {
+                "type": "storyline",
+                "key": "rootSecret",
+                "value": 22,
+                "clue": "禁丹残渣"
+              },
+              {
+                "type": "flag",
+                "key": "su_pill_seen"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你没问。她看了你一眼，说了句「你比我想的沉得住气」。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 8,
+                "trust": 12
+              },
+              {
+                "type": "storyline",
+                "key": "rootSecret",
+                "value": 8
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "搬完了。她道了谢，你走了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 4,
+                "trust": 4
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你的眼神在那扇门上多停了两息。她把灯挡了一下。",
+            "effects": [
+              {
+                "type": "relation",
+                "trust": -2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你搬东西时撞掉了一坛药引，碎在门口。她蹲下去收拾了很久，一句话没说。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -6,
+                "trust": -4
+              },
+              {
+                "type": "stone",
+                "value": -60,
+                "noScale": true
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "问她那扇门后面是什么",
+        "reason": 0,
+        "check": {
+          "attr": "shi",
+          "difficulty": 60
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "她放下手里的东西，很直接地说：「一炉禁丹。改灵根的。」她看着你，「你现在知道了。往后有人问起，你就说不知道——不是替我，是替你自己。」",
+            "effects": [
+              {
+                "type": "relation",
+                "trust": 18
+              },
+              {
+                "type": "storyline",
+                "key": "rootSecret",
+                "value": 26,
+                "clue": "禁丹残渣"
+              },
+              {
+                "type": "flag",
+                "key": "su_pill_seen"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "「一炉失败的丹。」她说完就走了。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "rootSecret",
+                "value": 12,
+                "clue": "禁丹残渣"
+              },
+              {
+                "type": "flag",
+                "key": "su_pill_seen"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "她没有回答，只是加快了脚步。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "rootSecret",
+                "value": 4
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "她的声音硬了：「我说了不用管。」这是你第一次听她提高声音。",
+            "effects": [
+              {
+                "type": "relation",
+                "trust": -8
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "她转过身来，第一次正眼看你，看了很久。「你从哪里听说的。」不是问句。那天之后，丙字库的钥匙换了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -12,
+                "trust": -15
+              },
+              {
+                "type": "flag",
+                "key": "su_wary"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "夜里再回来看",
+        "reason": -14,
+        "check": {
+          "attr": "shen",
+          "difficulty": 72
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "封条底下有一层薄薄的粉末，是丹渣。你用纸包了一点。转身要走时，你在门缝里看见了一行刻字——刻得很浅，像是用指甲：「非其罪」。三个字。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "rootSecret",
+                "value": 28,
+                "clue": "禁丹残渣"
+              },
+              {
+                "type": "flag",
+                "key": "su_pill_seen"
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "guilt",
+                "note": "丙字库那一夜"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你取到了一点丹渣。什么也没惊动。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "rootSecret",
+                "value": 15,
+                "clue": "禁丹残渣"
+              },
+              {
+                "type": "demon",
+                "value": 3,
+                "source": "guilt"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "门封得太严，什么也弄不到。你原路退了出去。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": 2,
+                "source": "guilt"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你碰到了封条上的禁制。虽然没响，但第二天封条明显被人重新贴过。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "su_wary"
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "guilt"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "禁制响了。灯亮起来的时候，苏暮寒站在楼梯口。她什么也没说，只是看着你。那种眼神你以前没见过——不是愤怒，是失望，而且是对自己的。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -25,
+                "trust": -30,
+                "note": "她在丙字库门口抓住了你"
+              },
+              {
+                "type": "conduct",
+                "value": -8
+              },
+              {
+                "type": "contribution",
+                "value": -80
+              },
+              {
+                "type": "demon",
+                "value": 12,
+                "source": "guilt",
+                "note": "丙字库门口她看你的那一眼",
+                "npc": "npc_sumuhan"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_zhong_letter",
+    "category": "storyline",
+    "weight": 20,
+    "scene": "scene_mingde",
+    "actors": [
+      "npc_zhonglihen"
+    ],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "storyline": {
+        "mole": {
+          "unlocked": true
+        }
+      },
+      "notFlags": [
+        "zhong_letter_found"
+      ],
+      "minWeek": 66
+    },
+    "seed": "钟离衡让你把一摞卷宗送去执事堂。走到半路，最上面那本滑了下来，散了一地。你蹲下去收拾时，从夹层里掉出一封信——没有封皮，只有落款处一个朱印。那个印你见过：赤焰宗的宗徽。",
+    "facts": [
+      "钟离衡的卷宗里夹着一封赤焰宗来信",
+      "信没有封皮"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "原样夹回去，当作没看见",
+        "reason": 8,
+        "check": {
+          "attr": "xin",
+          "difficulty": 40
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把信夹回原处，位置分毫不差。送到执事堂时，钟离衡正好在那里。他接过卷宗，随手翻了翻，然后抬眼看你，笑了一下：「辛苦。」你不知道那一笑是什么意思。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 6,
+                "awe": 8
+              },
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 8
+              },
+              {
+                "type": "flag",
+                "key": "zhong_letter_found"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你夹了回去。这事就这么过去了。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 5
+              },
+              {
+                "type": "flag",
+                "key": "zhong_letter_found"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你夹回去了，位置差了一点。你不确定他会不会看出来。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 3
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你的手在抖，信被折出了一道新痕。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "zhong_suspects"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你夹错了位置。三天后钟离衡「顺路」问你那天路上有没有掉什么东西。你说没有。他点点头：「那就好。」",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "zhong_suspects"
+              },
+              {
+                "type": "relation",
+                "awe": 12
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "repress",
+                "note": "钟离衡那句'那就好'"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "看信",
+        "reason": -6,
+        "check": {
+          "attr": "shen",
+          "difficulty": 62
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "信很短。内容是回绝——赤焰宗要一份东西，写信的人明确拒绝了，措辞很硬。落款日期是三个月前，正是赤焰宗叫阵之前。你把信原样夹回去，手心全是汗。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 25,
+                "clue": "钟离衡的密信"
+              },
+              {
+                "type": "flag",
+                "key": "zhong_letter_found"
+              },
+              {
+                "type": "flag",
+                "key": "zhong_innocent_clue"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你看清了几行。是往来公文的口气，不像密谋，但也说不清。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 14,
+                "clue": "钟离衡的密信"
+              },
+              {
+                "type": "flag",
+                "key": "zhong_letter_found"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "字太潦草，只认出「不可」两个字。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 6
+              },
+              {
+                "type": "flag",
+                "key": "zhong_letter_found"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "有人从廊那头过来。你慌忙把信塞回去，位置全乱了。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 8
+              },
+              {
+                "type": "flag",
+                "key": "zhong_suspects"
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "repress"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "「地上凉。」钟离衡的声音在你头顶响起。你不知道他站了多久。他弯腰把信捡起来，拍了拍灰，重新夹好：「卷宗要拿稳。」他的笑一直没变。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -10,
+                "awe": 20
+              },
+              {
+                "type": "flag",
+                "key": "zhong_suspects"
+              },
+              {
+                "type": "flag",
+                "key": "zhong_letter_found"
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "repress",
+                "note": "他弯腰捡信时你的心跳"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "把信交给白鹿卿",
+        "reason": 4,
+        "check": {
+          "attr": "shi",
+          "difficulty": 55
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "白鹿卿看完，脸色一点没变。「知道了。」她把信收进袖中，「这件事你没做过，也没见过。」停了停，「记住，你是我的人这句话，我不会说第二遍。」",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_bailuqing",
+                "favor": 18,
+                "trust": 12,
+                "note": "你把信交给了她"
+              },
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 20,
+                "clue": "白鹿卿家族档案"
+              },
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 12
+              },
+              {
+                "type": "flag",
+                "key": "zhong_letter_found"
+              },
+              {
+                "type": "flag",
+                "key": "bai_ally"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "她收下了，说会处理。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_bailuqing",
+                "favor": 10,
+                "trust": 6
+              },
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 12
+              },
+              {
+                "type": "flag",
+                "key": "zhong_letter_found"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "她看了一眼就还给你：「这是公文往来。你搞错了。」",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "zhong_letter_found"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "她皱了眉：「你私拆了在任教习的文书？」",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -5
+              },
+              {
+                "type": "relation",
+                "npc": "npc_bailuqing",
+                "favor": -6
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "第二天钟离衡在讲堂上讲了一节课，题目是「诬告」。他全程没有看你一眼。散课后秦九思拿着册子在门口等你。",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -10
+              },
+              {
+                "type": "contribution",
+                "value": -60
+              },
+              {
+                "type": "relation",
+                "npc": "npc_zhonglihen",
+                "favor": -20,
+                "awe": 18,
+                "note": "你把信捅了出去"
+              },
+              {
+                "type": "flag",
+                "key": "zhong_hostile"
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "grudge",
+                "npc": "npc_zhonglihen",
+                "note": "那节讲诬告的课"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_pei_reveal",
+    "category": "storyline",
+    "weight": 22,
+    "scene": "scene_tianji",
+    "actors": [
+      "npc_peiwuyou"
+    ],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "storyline": {
+        "seal": {
+          "unlocked": true,
+          "minProgress": 35
+        }
+      },
+      "relations": {
+        "npc_peiwuyou": {
+          "trust": [
+            50,
+            100
+          ]
+        }
+      },
+      "notFlags": [
+        "pei_revealed"
+      ],
+      "minWeek": 72
+    },
+    "seed": "裴无忧半夜把你叫到观星台。他手里没有卦钱，只有一张图——整座青霄山脉的灵脉走向，用朱砂标了七个点。「七个。」他说，「三年前是四个。」他抬头看你，脸上没有一点平时的笑，「我不是天机院的人。我是被送进来看着这个的。」",
+    "facts": [
+      "裴无忧承认自己是被送进学院的",
+      "灵脉异常点从四个增加到七个"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "问他是谁送他来的",
+        "reason": 10,
+        "check": {
+          "attr": "shi",
+          "difficulty": 58
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "「我不知道。」他说，「我八岁那年，有人把我放在山门口，留了一封信，说等我能看懂星象了，就去数灵脉的点。」他把图折起来，「我数了十四年。你是第一个我告诉的人。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 18,
+                "trust": 25,
+                "bond": 20,
+                "note": "他把身世告诉了你",
+                "openRomance": true
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 25,
+                "clue": "裴无忧的卦象"
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 10
+              },
+              {
+                "type": "flag",
+                "key": "pei_revealed"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "「不知道。」他说得很快，「这不重要。重要的是七个点。」",
+            "effects": [
+              {
+                "type": "relation",
+                "trust": 12,
+                "bond": 8
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 15,
+                "clue": "裴无忧的卦象"
+              },
+              {
+                "type": "flag",
+                "key": "pei_revealed"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他把话岔开了，只谈灵脉。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 8
+              },
+              {
+                "type": "flag",
+                "key": "pei_revealed"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "他笑了一下——那个熟悉的笑又回来了。「问这个做什么。」",
+            "effects": [
+              {
+                "type": "relation",
+                "trust": -4
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 5
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "他忽然警觉起来：「你为什么想知道这个？」那一刻你意识到，他这十四年是怎么过的。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -8,
+                "trust": -12
+              },
+              {
+                "type": "flag",
+                "key": "pei_wary"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "问第七个点在哪",
+        "reason": 14,
+        "check": {
+          "attr": "shen",
+          "difficulty": 55
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "他把图摊开，手指落在最中间那个点上。「灵墟。」他说，「其他六个都在往这里靠。」他抬起头，「你上次说后山地脉在动，动的方向就是这里。」两个人对着那张图看了很久，谁也没有说下一句。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 12,
+                "trust": 18,
+                "bond": 14
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 28,
+                "clue": "灵脉走向图"
+              },
+              {
+                "type": "flag",
+                "key": "pei_revealed"
+              },
+              {
+                "type": "flag",
+                "key": "lingxu_permit"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他指了指图上灵墟的位置。「往这里靠。」",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 16,
+                "clue": "灵脉走向图"
+              },
+              {
+                "type": "relation",
+                "trust": 10
+              },
+              {
+                "type": "flag",
+                "key": "pei_revealed"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他说还在推。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 8
+              },
+              {
+                "type": "flag",
+                "key": "pei_revealed"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "他摇头：「知道了对你没好处。」",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 4
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "他把图收了：「我说得太多了。」这次他是真的走了，连招呼都没打。",
+            "effects": [
+              {
+                "type": "relation",
+                "trust": -10
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "告诉他你也在查这件事",
+        "reason": 16,
+        "check": {
+          "attr": "xin",
+          "difficulty": 45
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把自己知道的都说了。他听完，很久没有说话。然后他做了一件事——把那张图撕成两半，一半递给你。「从今天起两个人查。」他说，「一个人查了十四年，我快撑不住了。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 20,
+                "trust": 28,
+                "bond": 25,
+                "note": "你们把图分成了两半",
+                "openRomance": true
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 30,
+                "clue": "灵脉走向图"
+              },
+              {
+                "type": "flag",
+                "key": "pei_revealed"
+              },
+              {
+                "type": "flag",
+                "key": "pei_ally"
+              },
+              {
+                "type": "flag",
+                "key": "lingxu_permit"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他听完点了点头：「那就一起。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 12,
+                "trust": 16,
+                "bond": 12
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 18,
+                "clue": "灵脉走向图"
+              },
+              {
+                "type": "flag",
+                "key": "pei_revealed"
+              },
+              {
+                "type": "flag",
+                "key": "pei_ally"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他听了，没说答应也没说不答应。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 10
+              },
+              {
+                "type": "flag",
+                "key": "pei_revealed"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "「你查这个做什么。」他反问，「你有你自己的日子过。」",
+            "effects": [
+              {
+                "type": "relation",
+                "trust": 4
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 5
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你说漏了一件不该说的事——那是别人托付给你的。他的表情变了：「这话是谁跟你说的？」你答不上来。",
+            "effects": [
+              {
+                "type": "relation",
+                "trust": -10
+              },
+              {
+                "type": "relation",
+                "npc": "npc_liumianyan",
+                "trust": -12,
+                "note": "你把她的话说了出去"
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "guilt",
+                "note": "观星台上说漏的那句话"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+]

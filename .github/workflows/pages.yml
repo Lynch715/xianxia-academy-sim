@@ -1,0 +1,74 @@
+# 部署到 GitHub Pages
+#
+# 每次推 main：先跑全套测试，再用 src/ 重新构建 index.html，然后部署。
+# 之所以在 CI 里重新构建而不是直接发仓库里那份，是因为 index.html 是
+# 构建产物——只要有人改了 src/ 忘了跑 build.js，线上就会和源码对不上。
+# 让 CI 来生成，这种漂移就不可能发生。
+
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同时只跑一个部署；新的推送不打断正在进行的那次
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 装测试依赖
+        run: |
+          npm install --no-save jsdom
+          python3 -m pip install --quiet pillow   # test/viewport.js 要用它验图标格式
+
+      - name: 构建
+        run: node build.js
+
+      - name: 引擎对拍（240 周）
+        run: node test/headless.js 240
+
+      - name: 平衡对照
+        run: node test/balance.js
+
+      - name: 界面冒烟
+        run: node test/dom.js
+
+      - name: 移动端视口
+        run: node test/viewport.js
+
+      - name: 收拾要发布的文件
+        run: |
+          mkdir -p _site
+          cp index.html manifest.webmanifest .nojekyll _site/
+          cp -r assets _site/
+          du -sh _site
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

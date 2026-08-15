@@ -1,0 +1,1906 @@
+[
+  {
+    "id": "evt_disciple_gift",
+    "category": "teach",
+    "weight": 28,
+    "scene": "scene_mingde",
+    "actors": [],
+    "cooldown": 13,
+    "conditions": {
+      "role": [
+        "teacher"
+      ],
+      "minWeek": 6
+    },
+    "variants": [
+      {
+        "seed": "散课后有个弟子留了下来，手里攥着个布包，攥了半天才递过来。里面是一小罐蜜饯——山下坊市最便宜的那种。「家里寄来的，」他说，「我……我吃不完。」他显然一口都还没吃。",
+        "facts": [
+          "有弟子送了你一罐蜜饯",
+          "他自己一口没吃"
+        ]
+      },
+      {
+        "seed": "案上多了一支笔。不是好笔，杆是竹的，毛也秃了小半。压在笔下的纸条只有四个字：谢教习。没有落款。你想了半天，想不出是谁——这一届你带的每个弟子，字都不长这样。",
+        "facts": [
+          "案上出现一支来历不明的旧笔",
+          "字条只有四个字，没有落款"
+        ]
+      }
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "收下，郑重道谢",
+        "reason": 14,
+        "check": {
+          "attr": "jiao",
+          "difficulty": 30
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你收下了，而且很正式地道了谢——像收长辈的礼那样。他愣住了，然后耳朵一点点红起来，转身跑掉的时候差点撞到门框。\n\n那天之后他上课坐第一排。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "closest",
+                "affinity": 14,
+                "pressure": -6,
+                "exp": 40,
+                "counts": true
+              },
+              {
+                "type": "attr",
+                "key": "jiao",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你收下了，道了谢。他很高兴。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "closest",
+                "affinity": 8,
+                "pressure": -3,
+                "exp": 20
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你收下了。他鞠了个躬就走了。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "random",
+                "affinity": 4
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你道谢的口气太像客套。他脸上的光暗了一点。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "closest",
+                "affinity": -2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你正在批课业，头也没抬地说了句「放那儿吧」。等你想起来抬头，人已经不在了。\n\n那罐蜜饯在案上放了三个月。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "closest",
+                "affinity": -10,
+                "pressure": 6
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "guilt",
+                "note": "案上那罐放了三个月的蜜饯"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "退回去，告诉他师徒之间不兴这个",
+        "reason": 6,
+        "check": {
+          "attr": "xin",
+          "difficulty": 45
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把布包推回去，说了句：「你留着吃。等你哪天真出息了，请我喝一顿好的。」\n\n他把布包抱在怀里，用力点了点头。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "closest",
+                "affinity": 10,
+                "pressure": -4
+              },
+              {
+                "type": "attr",
+                "key": "de",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他有点失望，但也懂了。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "closest",
+                "affinity": 3
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他把东西拿回去了。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "他抱着布包站了很久才走。你隐约觉得自己说重了。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "closest",
+                "affinity": -5
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你把话说成了「以后别做这种事」。他应了一声「是」，从此再没在课后留下来过。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "closest",
+                "affinity": -14,
+                "pressure": 8
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "收下，然后回赠他一样更用得上的",
+        "reason": 16,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你收了蜜饯，转身从架上取下一册自己抄的注解——那是你花了三年一句句写下来的，全院只有这一本。\n\n「这个你拿去。」\n\n他接过去的时候手在抖。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "weakest",
+                "affinity": 16,
+                "exp": 120,
+                "pressure": -8,
+                "counts": true
+              },
+              {
+                "type": "reputation",
+                "value": 2
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_disciple_cheat",
+    "category": "teach",
+    "weight": 26,
+    "scene": "scene_mingde",
+    "actors": [
+      "npc_qinjiusi"
+    ],
+    "cooldown": 20,
+    "important": true,
+    "conditions": {
+      "role": [
+        "teacher"
+      ],
+      "minWeek": 20
+    },
+    "seed": "月考的卷子里有两份雷同。不是抄袭那么简单——连错的地方都一模一样，包括一处只有你讲错过一次的地方。\n\n两份卷子，一份是你名下压力最大的那个，一份是隔壁院的。秦九思还没看到这两份。你手上还有时间。",
+    "facts": [
+      "两份卷子雷同，其中一份是你的弟子",
+      "纠察还没发现",
+      "你手上还有时间"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "先私下问清楚",
+        "reason": 14,
+        "check": {
+          "attr": "ren",
+          "difficulty": 48
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把人叫来，没有拍桌子，只问了一句：「你自己说。」\n\n他站了半炷香，然后哭了。不是因为被抓，是因为他已经连着三个月每晚只睡两个时辰，怎么也追不上。抄的那份，是他唯一想得出的办法。\n\n你把卷子撕了，重新出了一份题，让他当着你的面重做。做到天亮。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "stressed",
+                "affinity": 20,
+                "pressure": -30,
+                "exp": 60,
+                "counts": true
+              },
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": 1
+              },
+              {
+                "type": "flag",
+                "key": "covered_cheat"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他承认了。你压下了这件事，罚他重做。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "stressed",
+                "affinity": 12,
+                "pressure": -18
+              },
+              {
+                "type": "flag",
+                "key": "covered_cheat"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他一口咬定是巧合。你没有证据，只能作罢。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "stressed",
+                "pressure": 5
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "他矢口否认，态度还很硬。你压不住火，说了几句重话。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "stressed",
+                "affinity": -10,
+                "pressure": 12
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "谈话被隔壁院的人听去了。第二天两份卷子都摆到了执事堂，你被问为什么知情不报。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -6
+              },
+              {
+                "type": "relation",
+                "npc": "npc_qinjiusi",
+                "favor": -12
+              },
+              {
+                "type": "disciple",
+                "pick": "stressed",
+                "pressure": 20,
+                "affinity": -8
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "按院规交给秦九思",
+        "reason": 10,
+        "check": {
+          "attr": "xue",
+          "difficulty": 35
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把两份卷子并排交了上去，附了一页说明，连自己讲错那处也写了进去。\n\n秦九思看完，抬头看你：「教习把自己也写进去了。」你说该写。他在册子上记了一笔，然后说：「处分照章，但我会写明教习主动上报。」",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_qinjiusi",
+                "favor": 18,
+                "trust": 15,
+                "note": "你连自己讲错的地方也写了进去"
+              },
+              {
+                "type": "reputation",
+                "value": 5
+              },
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": 8
+              },
+              {
+                "type": "disciple",
+                "pick": "stressed",
+                "affinity": -12,
+                "pressure": 15
+              }
+            ]
+          },
+          "good": {
+            "narrative": "交上去了。处分下来，那孩子记了大过。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_qinjiusi",
+                "favor": 10
+              },
+              {
+                "type": "reputation",
+                "value": 2
+              },
+              {
+                "type": "disciple",
+                "pick": "stressed",
+                "affinity": -15,
+                "pressure": 18
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "按规矩办了。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_qinjiusi",
+                "favor": 5
+              },
+              {
+                "type": "disciple",
+                "pick": "stressed",
+                "affinity": -15,
+                "pressure": 20
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "处分比你预想的重。那孩子被停课一学期。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "stressed",
+                "affinity": -22,
+                "pressure": 28
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "guilt"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "那孩子被劝退了。走的那天他没有来道别。\n\n三个月后你才知道，他家里就等着他这个功名。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "stressed",
+                "broken": true
+              },
+              {
+                "type": "demon",
+                "value": 16,
+                "source": "guilt",
+                "note": "被你送上去的那份卷子"
+              },
+              {
+                "type": "reputation",
+                "value": -3
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "当没看见",
+        "reason": -10,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你把两份卷子分开放，中间隔了七八份别人的。\n\n这件事没有人再提起。但从那以后，每次月考你都要多看那孩子两眼——不是怀疑，是别的什么。你自己也说不清。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "ignored_cheat"
+              },
+              {
+                "type": "disciple",
+                "pick": "stressed",
+                "pressure": 8
+              },
+              {
+                "type": "demon",
+                "value": 10,
+                "source": "guilt",
+                "note": "那两份被你分开放的卷子"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_research_setback",
+    "category": "teach",
+    "weight": 26,
+    "scene": "scene_danxia",
+    "actors": [
+      "npc_sumuhan"
+    ],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "teacher"
+      ],
+      "minWeek": 30,
+      "notFlags": [
+        "research_rebuilt"
+      ]
+    },
+    "seed": "推演到第三十七次，还是不通。\n\n你把纸铺了一地，从头核对，发现问题出在最初那个假设上——那是你三年前定下的，后面所有东西都架在它上面。要改，就是全推倒。\n\n窗外天已经亮了。",
+    "facts": [
+      "研究卡在了最初的假设上",
+      "要改就是全部推倒重来"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "推倒重来",
+        "reason": 12,
+        "check": {
+          "attr": "xue",
+          "difficulty": 58
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把三年的稿子捆起来，塞进箱底，然后铺开一张新纸。\n\n从头开始那天你写了整整一夜。第二天苏暮寒来还书，看见满地的废稿，站了很久，什么也没问，只是把手里那本书放下就走了。\n\n那本书正好是你需要的。",
+            "effects": [
+              {
+                "type": "faculty",
+                "papers": 0
+              },
+              {
+                "type": "attr",
+                "key": "xue",
+                "value": 1
+              },
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": 12,
+                "trust": 10,
+                "note": "她把那本书放下就走了"
+              },
+              {
+                "type": "flag",
+                "key": "research_rebuilt"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你推倒重来了。进度回退，但方向对了。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "xue",
+                "value": 1
+              },
+              {
+                "type": "flag",
+                "key": "research_rebuilt"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "推倒了，但新的框架一时搭不起来。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "推倒之后你才发现，原来的假设虽然有问题，但至少能往前走。现在两头不着。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "inferior"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你在书房里坐了七天。第八天，你把新稿也撕了。\n\n那一季的教学评价，是你任教以来最难看的一次。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": 10,
+                "source": "inferior",
+                "note": "那七天"
+              },
+              {
+                "type": "reputation",
+                "value": -4
+              },
+              {
+                "type": "faculty",
+                "duties": -2
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "去请教苏暮寒",
+        "reason": 14,
+        "check": {
+          "attr": "shi",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "她听你说完，沉默了很久，然后问：「你那个假设，是自己推的，还是书上抄的？」\n\n你说是书上抄的。\n\n「那就对了。」她转身从架子最高处抽下一册，「这本书写错了。一百二十年前我也照着它错过一次。」",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": 18,
+                "trust": 18,
+                "note": "她说一百二十年前她也错过一次"
+              },
+              {
+                "type": "attr",
+                "key": "xue",
+                "value": 1
+              },
+              {
+                "type": "storyline",
+                "key": "rootSecret",
+                "value": 8
+              },
+              {
+                "type": "flag",
+                "key": "research_rebuilt"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "她指出了一处关键的错。方向清楚了。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": 10,
+                "trust": 8
+              },
+              {
+                "type": "flag",
+                "key": "research_rebuilt"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "她说这不是她的领域，帮不上。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": 3
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你说得太急，她皱了皱眉：「你先自己想清楚要问什么。」",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": -3
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你把她的一句反问听成了嘲讽，回了一句不该回的话。她愣了一下，然后很平静地说：「那你自己慢慢想。」\n\n此后两年，你们没有再谈过学问。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": -18,
+                "trust": -15
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "grudge",
+                "npc": "npc_sumuhan"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "绕过去，先把能出的成果出了",
+        "reason": -6,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你把有问题的那一段绕开，只写能站得住的部分。成书很快，反响也不错。\n\n只有你自己知道那本书的第四章是空的——你用了三页漂亮话把它填过去了。\n\n没有人看出来。至少目前没有。",
+            "effects": [
+              {
+                "type": "faculty",
+                "papers": 1
+              },
+              {
+                "type": "reputation",
+                "value": 6
+              },
+              {
+                "type": "contribution",
+                "value": 120
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "guilt",
+                "note": "那本书的第四章"
+              },
+              {
+                "type": "flag",
+                "key": "hollow_paper"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_old_disciple_returns",
+    "category": "teach",
+    "weight": 22,
+    "scene": "scene_main_plaza",
+    "actors": [],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "teacher"
+      ],
+      "minWeek": 90
+    },
+    "seed": "山门口有人在等你。\n\n是你带出去的第一届弟子里的一个，现在已经是某个宗门的执事了，身上的衣服比你的贵十倍。他见到你就跪下了，磕得很实。\n\n「教习，」他说，「我来还债。」",
+    "facts": [
+      "早年的弟子回来了",
+      "他现在已经出人头地",
+      "他说是来还债的"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "扶起来，问他这些年过得怎么样",
+        "reason": 16,
+        "check": {
+          "attr": "de",
+          "difficulty": 35
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把他扶起来，什么债不债的一句没接，只问这些年过得怎么样。\n\n他说了一个时辰。说他刚出去那两年多难，说他有次差点死在外面，说他撑不住的时候总想起你那句「不出错比出彩难」。\n\n临走他留下一箱灵石，说是给院里寒门弟子的，不许说是他给的。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 10
+              },
+              {
+                "type": "stone",
+                "value": 800,
+                "noScale": true
+              },
+              {
+                "type": "attr",
+                "key": "de",
+                "value": 1
+              },
+              {
+                "type": "flag",
+                "key": "old_disciple_returned"
+              },
+              {
+                "type": "demon",
+                "value": -8,
+                "source": "clear"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你们聊了很久。他走的时候留了一笔钱给院里。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 6
+              },
+              {
+                "type": "stone",
+                "value": 400,
+                "noScale": true
+              },
+              {
+                "type": "flag",
+                "key": "old_disciple_returned"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你们聊了几句场面话。他留了礼就走了。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 3
+              },
+              {
+                "type": "stone",
+                "value": 200,
+                "noScale": true
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你一时想不起他的名字。他看出来了，笑着说没关系。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 1
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "guilt",
+                "note": "你没能叫出他的名字"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你不但没想起他，还把他认成了另一届的另一个人。\n\n他愣了很久，然后说：「教习记不得也正常。」他把礼放下就走了，走得很快。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "guilt",
+                "note": "山门口那次认错人"
+              },
+              {
+                "type": "reputation",
+                "value": -2
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "问他能不能回来讲一堂课",
+        "reason": 14,
+        "check": {
+          "attr": "shi",
+          "difficulty": 45
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "他讲了整整一天，讲的全是外面的事——宗门怎么坑人、契约怎么看、什么时候该跑。全院的弟子挤在门口听。\n\n这一堂课，比你讲一年都有用。散场时他对你说：「教习，我讲的这些您教不了。但您教了我别的。」",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 12
+              },
+              {
+                "type": "contribution",
+                "value": 150
+              },
+              {
+                "type": "disciple",
+                "pick": "random",
+                "exp": 150,
+                "affinity": 8,
+                "noScale": true
+              },
+              {
+                "type": "flag",
+                "key": "old_disciple_returned"
+              },
+              {
+                "type": "attr",
+                "key": "jiao",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他讲了半天，弟子们听得很入神。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 6
+              },
+              {
+                "type": "contribution",
+                "value": 60
+              },
+              {
+                "type": "disciple",
+                "pick": "random",
+                "exp": 80
+              },
+              {
+                "type": "flag",
+                "key": "old_disciple_returned"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他推说事忙，改日再来。改日一直没来。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 2
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "他讲得磕磕绊绊，底下有人打哈欠。他自己也知道，讲完就走了。",
+            "effects": []
+          },
+          "terrible": {
+            "narrative": "他在课上说了几句对学院很不客气的话。台下一片安静。\n\n第二天院首找你谈了话。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -6
+              },
+              {
+                "type": "relation",
+                "npc": "npc_guchangqing",
+                "favor": -8
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "说不必还债，回去好好过日子",
+        "reason": 12,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你说：「没有债。当年那是我的事。」\n\n他抬起头看了你很久，然后重新磕了一个，起身走了。\n\n三个月后学院收到一笔匿名捐赠，数目大得方砚拿着单子的手都在抖。落款处只有一个字：谢。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 8
+              },
+              {
+                "type": "stone",
+                "value": 600,
+                "noScale": true
+              },
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": 10
+              },
+              {
+                "type": "flag",
+                "key": "old_disciple_returned"
+              },
+              {
+                "type": "attr",
+                "key": "de",
+                "value": 1
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_peer_poach",
+    "category": "teach",
+    "weight": 24,
+    "scene": "scene_baiyi",
+    "actors": [
+      "npc_liumianyan"
+    ],
+    "cooldown": 23,
+    "conditions": {
+      "role": [
+        "teacher"
+      ],
+      "minWeek": 40
+    },
+    "seed": "你名下资质最好的那个弟子，被别的教习看上了。\n\n柳眠烟是来通气的，不是来抢的——她把话说得很直：「那孩子在你这儿学不到他该学的。」她喝了一口酒，「我说的是实话，不是抬杠。」",
+    "facts": [
+      "最好的弟子被别的教习相中",
+      "柳眠烟说他在你这儿学不到该学的"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "让他自己选",
+        "reason": 16,
+        "check": {
+          "attr": "de",
+          "difficulty": 45
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把两条路摆在他面前，一条条说清楚，包括跟着你会错过什么。\n\n他听完，选了留下。\n\n「为什么。」你问。\n\n「因为您把该说的都说了。」他说，「没人会跟一个藏私的人学东西。」",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "best",
+                "affinity": 22,
+                "exp": 100,
+                "pressure": -8,
+                "counts": true
+              },
+              {
+                "type": "attr",
+                "key": "de",
+                "value": 1
+              },
+              {
+                "type": "relation",
+                "npc": "npc_liumianyan",
+                "favor": 12,
+                "trust": 10
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他选了留下。你们都心知肚明这一关过了。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "best",
+                "affinity": 12,
+                "exp": 40
+              },
+              {
+                "type": "relation",
+                "npc": "npc_liumianyan",
+                "favor": 6
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他犹豫了很久，最后还是留下了。但那个犹豫你记住了。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "best",
+                "affinity": 4
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "他走了。柳眠烟没有得意，只说了句「我会好好教他」。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "best",
+                "affinity": -20
+              },
+              {
+                "type": "relation",
+                "npc": "npc_liumianyan",
+                "favor": 5
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "inferior"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "他走了，而且是在你把话说得很难听之后走的。\n\n半年后他在术业赛上拿了头名。你在看台上，从头看到尾。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "best",
+                "affinity": -30
+              },
+              {
+                "type": "demon",
+                "value": 12,
+                "source": "inferior",
+                "note": "看台上那半个时辰"
+              },
+              {
+                "type": "reputation",
+                "value": -4
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "不放。他是你的弟子",
+        "reason": -4,
+        "check": {
+          "attr": "sheng",
+          "difficulty": 55
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你说不放，理由摆得很硬——你已经为他备了三年的课，路铺到哪儿你比谁都清楚。\n\n柳眠烟听完，把酒杯放下：「行。那你可得教到那个份上。」她走了，没有再提。\n\n你知道这句话是压在你身上的。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "best",
+                "affinity": 8,
+                "exp": 60
+              },
+              {
+                "type": "flag",
+                "key": "kept_best_disciple"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_liumianyan",
+                "awe": 8
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你留住了他。柳眠烟耸耸肩就走了。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "best",
+                "affinity": 4
+              },
+              {
+                "type": "flag",
+                "key": "kept_best_disciple"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "留是留住了，但那孩子知道了这件事。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "best",
+                "affinity": -4,
+                "pressure": 6
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你护得太紧，反而让那孩子觉得自己被当成了东西。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "best",
+                "affinity": -12,
+                "pressure": 12
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "这事传了出去。全院都在说你压着弟子不放。\n\n那孩子后来还是走了，走之前说了句：「我不是您的功劳。」",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "best",
+                "affinity": -25
+              },
+              {
+                "type": "reputation",
+                "value": -8
+              },
+              {
+                "type": "relation",
+                "npc": "npc_liumianyan",
+                "favor": -8
+              },
+              {
+                "type": "demon",
+                "value": 10,
+                "source": "guilt",
+                "note": "那句'我不是您的功劳'"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "主动送过去，但求她带好",
+        "reason": 10,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你亲自把人送到百艺院，把这三年的课业记录一并交了过去，厚厚一摞。\n\n柳眠烟翻了两页，抬头看你：「你记这么细？」\n\n你说记的是他每次卡在哪儿。\n\n她把册子收好，破天荒地正经了一次：「放心。」",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "best",
+                "affinity": 15,
+                "exp": 80
+              },
+              {
+                "type": "relation",
+                "npc": "npc_liumianyan",
+                "favor": 20,
+                "trust": 18,
+                "note": "你把三年的课业记录一并交了过去"
+              },
+              {
+                "type": "reputation",
+                "value": 5
+              },
+              {
+                "type": "attr",
+                "key": "de",
+                "value": 1
+              },
+              {
+                "type": "flag",
+                "key": "gave_best_disciple"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_teach_outreach",
+    "category": "teach",
+    "weight": 22,
+    "scene": "scene_market",
+    "actors": [
+      "npc_bailuqing"
+    ],
+    "cooldown": 20,
+    "conditions": {
+      "role": [
+        "teacher"
+      ],
+      "minWeek": 34
+    },
+    "variants": [
+      {
+        "seed": "白鹿卿点了你的名：下个月去星落书院讲一堂课，代表云霄。\n\n「他们会挑刺，」她说得很直白，「你要是讲砸了，丢的不是你的脸。」",
+        "facts": [
+          "你被派去星落书院讲学",
+          "白鹿卿明说了讲砸了丢的是学院的脸"
+        ]
+      },
+      {
+        "seed": "学院要采购一批稀缺灵材，白鹿卿让你跟着去。「你懂行，」她说，「而且你不会被人几句话绕进去。」\n\n她顿了顿：「至少我希望不会。」",
+        "facts": [
+          "你被派去采购稀缺灵材",
+          "白鹿卿说你懂行"
+        ]
+      }
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "接下，认真准备",
+        "reason": 14,
+        "check": {
+          "attr": "xue",
+          "difficulty": 55
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你准备了整整一个月。\n\n结果超出所有人的预期——星落书院的院首散场后特地来找你，问能不能把讲稿留一份。白鹿卿在回程的车上看了你一路，最后说了句：「下次还你去。」\n\n从她嘴里，这是很重的话。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 12
+              },
+              {
+                "type": "contribution",
+                "value": 150
+              },
+              {
+                "type": "relation",
+                "npc": "npc_bailuqing",
+                "favor": 18,
+                "trust": 12,
+                "note": "她说下次还你去"
+              },
+              {
+                "type": "attr",
+                "key": "sheng",
+                "value": 1
+              },
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 8
+              }
+            ]
+          },
+          "good": {
+            "narrative": "办得不错。学院的面子保住了，还多了一分。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 6
+              },
+              {
+                "type": "contribution",
+                "value": 80
+              },
+              {
+                "type": "relation",
+                "npc": "npc_bailuqing",
+                "favor": 8
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "中规中矩。没出彩，也没出错。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 2
+              },
+              {
+                "type": "contribution",
+                "value": 30
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "有几处被对方问住了。回来的路上白鹿卿一句话没说。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -3
+              },
+              {
+                "type": "relation",
+                "npc": "npc_bailuqing",
+                "favor": -6
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你在人家的地盘上，被一个还没结丹的年轻人当众问倒了。\n\n消息比你先回到山上。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -8
+              },
+              {
+                "type": "relation",
+                "npc": "npc_bailuqing",
+                "favor": -12
+              },
+              {
+                "type": "demon",
+                "value": 10,
+                "source": "inferior",
+                "note": "星落书院那一问"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "接下，但带上自己最好的弟子同去",
+        "reason": 12,
+        "check": {
+          "attr": "jiao",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把弟子带上了，中途还让他上台说了一段。\n\n他紧张得声音发抖，但说完了。散场后星落书院的人围着他问东问西，你站在远处看着。\n\n回程时他一路没睡，眼睛还亮着。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 8
+              },
+              {
+                "type": "contribution",
+                "value": 100
+              },
+              {
+                "type": "disciple",
+                "pick": "best",
+                "exp": 200,
+                "affinity": 20,
+                "pressure": -6,
+                "counts": true
+              },
+              {
+                "type": "attr",
+                "key": "jiao",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "弟子长了见识，你也办成了事。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 5
+              },
+              {
+                "type": "disciple",
+                "pick": "best",
+                "exp": 100,
+                "affinity": 10
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "事办完了。弟子全程没说上话。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 2
+              },
+              {
+                "type": "disciple",
+                "pick": "best",
+                "exp": 40
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "弟子在人家面前怯了场。回来的路上他一直低着头。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "best",
+                "pressure": 15,
+                "affinity": -4
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "弟子被对方的人几句话激了，当场应了一场比试，输得很难看。\n\n那件事他记了很多年。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "best",
+                "pressure": 25,
+                "affinity": -10
+              },
+              {
+                "type": "reputation",
+                "value": -5
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "推掉。你手上的事更要紧",
+        "reason": 2,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你推了。白鹿卿只说了两个字：「知道。」\n\n后来去的是钟离衡。他回来那天全院都在说他讲得多好。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_bailuqing",
+                "favor": -8
+              },
+              {
+                "type": "relation",
+                "npc": "npc_zhonglihen",
+                "awe": 6
+              },
+              {
+                "type": "faculty",
+                "prepared": 2
+              },
+              {
+                "type": "demon",
+                "value": 3,
+                "source": "inferior"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_class_disaster",
+    "category": "teach",
+    "weight": 24,
+    "scene": "scene_jianyuan",
+    "actors": [],
+    "cooldown": 15,
+    "conditions": {
+      "role": [
+        "teacher"
+      ],
+      "minWeek": 16
+    },
+    "seed": "演示到一半，术法失控了。\n\n不是大事故——灵气窜出去撞在梁上，掉了一片瓦，没伤到人。但满堂三十几双眼睛都看着，而那术法是你演示过上百遍的。\n\n你自己心里清楚是怎么回事：这几天没睡好。",
+    "facts": [
+      "课堂演示时术法失控",
+      "没伤到人，但全堂都看见了",
+      "原因是你自己状态不好"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "当场承认是自己的问题",
+        "reason": 16,
+        "check": {
+          "attr": "xin",
+          "difficulty": 38
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把手放下，说：「刚才那一下，是我的错。我这几天没休息好，不该带着这个状态上台。」\n\n堂上安静了两息，然后有个弟子举手问：「教习，那这种情况下该怎么收势？」\n\n你笑了。这堂课后半段讲的就是这个。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 5
+              },
+              {
+                "type": "attr",
+                "key": "jiao",
+                "value": 1
+              },
+              {
+                "type": "contribution",
+                "value": 40
+              },
+              {
+                "type": "disciple",
+                "pick": "random",
+                "affinity": 10,
+                "exp": 60
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你承认了。弟子们反倒更专注了。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 2
+              },
+              {
+                "type": "disciple",
+                "pick": "random",
+                "affinity": 5
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你说了句抱歉，课接着上。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "你的解释有点乱，后半堂课气氛一直很僵。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你越说越像在找借口。散课后有人在廊下学你的话。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -5
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "inferior"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "顺势把它讲成一个教学案例",
+        "reason": 10,
+        "check": {
+          "attr": "xue",
+          "difficulty": 52
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你没有停，反而把失控的那一瞬拆开讲了半个时辰——灵气为什么会从那个位置窜出去，如果当时不收会怎样，收的话要用哪一处经脉。\n\n这堂课后来被弟子们私下叫作「掉瓦那一课」。很多年后还有人提起。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 8
+              },
+              {
+                "type": "contribution",
+                "value": 60
+              },
+              {
+                "type": "attr",
+                "key": "xue",
+                "value": 1
+              },
+              {
+                "type": "disciple",
+                "pick": "random",
+                "exp": 100,
+                "affinity": 8
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你把它讲成了案例。效果不错。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 4
+              },
+              {
+                "type": "disciple",
+                "pick": "random",
+                "exp": 50
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "讲是讲了，但底下没几个人听懂。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": 10
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你讲得太深，反而把简单的事搞复杂了。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你为了圆这个案例，演示了第二遍。\n\n第二遍炸得比第一遍厉害。这次有人受了轻伤。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -8
+              },
+              {
+                "type": "disciple",
+                "pick": "random",
+                "pressure": 12,
+                "affinity": -6
+              },
+              {
+                "type": "conduct",
+                "value": -4
+              },
+              {
+                "type": "demon",
+                "value": 10,
+                "source": "guilt",
+                "note": "为了圆场演示的第二遍"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "含糊过去，接着往下讲",
+        "reason": -8,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你说了句「无妨」，接着往下讲。\n\n后半堂课讲得很流畅，流畅到有点假。散课时你注意到，前排那几个平时最爱提问的，今天一句话都没说。",
+            "effects": [
+              {
+                "type": "disciple",
+                "pick": "random",
+                "affinity": -6
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "repress",
+                "note": "掉了那片瓦之后的半堂课"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_disciple_graduate",
+    "category": "teach",
+    "weight": 30,
+    "scene": "scene_main_plaza",
+    "actors": [],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "teacher"
+      ],
+      "minWeek": 120
+    },
+    "seed": "毕业典礼。\n\n你带的这一批要走了。台上一个个念名字，念到你名下那几个的时候，你发现自己记得他们每个人刚来时的样子——谁怕出错，谁爱抢答，谁总是坐最后一排。\n\n典礼散了，有几个没走，站在台阶下面等你。",
+    "facts": [
+      "你带的这一批弟子毕业了",
+      "有几个在台阶下等你"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "跟他们一个个说句话",
+        "reason": 16,
+        "check": {
+          "attr": "jiao",
+          "difficulty": 40
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你没有讲大道理，只是对每个人说了一句他自己的事——那个总坐最后一排的，你说「你其实一直在听」；那个爱抢答的，你说「以后先想三息再开口」。\n\n说到第四个的时候，那孩子哭了。\n\n他们走下山门的时候回头看了很多次。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 10
+              },
+              {
+                "type": "attr",
+                "key": "jiao",
+                "value": 1
+              },
+              {
+                "type": "flag",
+                "key": "farewell_done"
+              },
+              {
+                "type": "demon",
+                "value": -10,
+                "source": "clear"
+              },
+              {
+                "type": "contribution",
+                "value": 100
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你跟每个人都说了几句。他们走得很郑重。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 6
+              },
+              {
+                "type": "flag",
+                "key": "farewell_done"
+              },
+              {
+                "type": "demon",
+                "value": -5,
+                "source": "clear"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你说了些勉励的话。他们道了谢就走了。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 3
+              },
+              {
+                "type": "flag",
+                "key": "farewell_done"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你说得太官样。有个孩子的表情你看懂了。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "farewell_done"
+              },
+              {
+                "type": "demon",
+                "value": 3,
+                "source": "guilt"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你临时被叫去处理别的事，回来时台阶下已经没人了。\n\n那几个人的名字，后来你想了很久才想全。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "farewell_done"
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "guilt",
+                "note": "空掉的那级台阶"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "把自己的心得整理一份给他们",
+        "reason": 12,
+        "check": {
+          "attr": "xue",
+          "difficulty": 45
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你熬了三个通宵，把这些年的心得整理成册，一人一份，每份后面还附了一页专门写给他的。\n\n很多年后，这几册东西在九州各处被翻烂了。有人照着它教出了自己的弟子。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 12
+              },
+              {
+                "type": "faculty",
+                "papers": 1
+              },
+              {
+                "type": "attr",
+                "key": "xue",
+                "value": 1
+              },
+              {
+                "type": "flag",
+                "key": "farewell_done"
+              },
+              {
+                "type": "flag",
+                "key": "legacy_notes"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你整理了一份心得给他们。他们收得很珍重。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 6
+              },
+              {
+                "type": "flag",
+                "key": "farewell_done"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你抄了几页要点给他们。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 2
+              },
+              {
+                "type": "flag",
+                "key": "farewell_done"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "东西整理到一半，典礼就散了。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "farewell_done"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你写了很多，多到没人看得完。后来听说有人把它垫了桌脚。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "farewell_done"
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "inferior"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "什么也不说，站在那儿看他们走",
+        "reason": 10,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你站在台阶上，看他们一个个走下去。\n\n没有人回头的时候你才发现自己一直没动。风把院旗吹得猎猎响。\n\n九月还会有新的三百个人上来。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "xin",
+                "value": 1
+              },
+              {
+                "type": "flag",
+                "key": "farewell_done"
+              },
+              {
+                "type": "demon",
+                "value": -6,
+                "source": "clear"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+]

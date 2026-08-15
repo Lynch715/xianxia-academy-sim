@@ -1,0 +1,1795 @@
+[
+  {
+    "id": "evt_framed",
+    "category": "crisis",
+    "weight": 16,
+    "scene": "scene_mingde",
+    "actors": [
+      "npc_qinjiusi",
+      "npc_zhonglihen"
+    ],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "notFlags": [
+        "framed_resolved"
+      ],
+      "minWeek": 82
+    },
+    "seed": "执事堂的传唤来得毫无预兆。藏经阁三层丢了一册玄级功法，登记簿上最后一个借阅的名字是你——但你从没借过那本书。秦九思把簿子推到你面前，那一行字迹跟你的很像，像到你自己看了都愣了一下。钟离衡坐在旁边，手里端着茶，一句话没说。",
+    "facts": [
+      "藏经阁失窃，登记簿上是你的名字",
+      "字迹被人模仿过",
+      "你确实没有借过那本书"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "当场指出字迹是伪造的",
+        "reason": 12,
+        "check": {
+          "attr": "shen",
+          "difficulty": 60
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你指着那一撇：「我写这个字，从来不出头。」秦九思拿过簿子，对着光看了很久，然后翻出你以前交的课业，一页页比。半个时辰后他抬起头，对钟离衡说：「不是他。」钟离衡放下茶盏：「那就查是谁。」",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_qinjiusi",
+                "favor": 16,
+                "trust": 15,
+                "note": "他亲手查清了你是被诬的"
+              },
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 15
+              },
+              {
+                "type": "flag",
+                "key": "framed_resolved"
+              },
+              {
+                "type": "reputation",
+                "value": 4
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你的辩解有理有据。秦九思暂时压下了处分，说要再查。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_qinjiusi",
+                "favor": 8,
+                "trust": 8
+              },
+              {
+                "type": "flag",
+                "key": "framed_resolved"
+              },
+              {
+                "type": "conduct",
+                "value": -2
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你说不出决定性的证据。案子悬着，你也悬着。",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -5
+              },
+              {
+                "type": "flag",
+                "key": "framed_pending"
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "repress",
+                "note": "那本你没借过的书"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你越辩越像在狡辩。记大过一次，通报全院。",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -10
+              },
+              {
+                "type": "contribution",
+                "value": -100
+              },
+              {
+                "type": "reputation",
+                "value": -6
+              },
+              {
+                "type": "flag",
+                "key": "framed_pending"
+              },
+              {
+                "type": "demon",
+                "value": 10,
+                "source": "grudge",
+                "note": "被诬的那本功法"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你情绪失控，拍了桌子。秦九思在册子上又添了一笔。钟离衡终于开口了，很温和：「按院规，人赃并获且拒不认罪的，是要劝退的。」",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -15
+              },
+              {
+                "type": "reputation",
+                "value": -10
+              },
+              {
+                "type": "flag",
+                "key": "expelled_pending"
+              },
+              {
+                "type": "demon",
+                "value": 15,
+                "source": "grudge",
+                "note": "执事堂里那一拍"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "请裴无忧帮忙查这件事",
+        "reason": 14,
+        "check": {
+          "attr": "shi",
+          "difficulty": 52
+        },
+        "reasonIf": [
+          {
+            "flag": "pei_ally",
+            "value": 8
+          }
+        ],
+        "outcomes": {
+          "perfect": {
+            "narrative": "裴无忧只用了三天。他把一张纸拍在执事堂的桌上——是那本功法在山下坊市的转手记录，买家的落款他也查到了。「不是他。」他指着你，然后转向钟离衡，「不过这条线，教习要不要往下查？」满室安静。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_peiwuyou",
+                "favor": 18,
+                "trust": 15,
+                "bond": 12,
+                "note": "他三天替你洗清了嫌疑"
+              },
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 25,
+                "clue": "外敌的行军路线"
+              },
+              {
+                "type": "flag",
+                "key": "framed_resolved"
+              },
+              {
+                "type": "reputation",
+                "value": 6
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他查到了些线索，够洗清你，但不够抓人。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_peiwuyou",
+                "favor": 10,
+                "trust": 8
+              },
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 12
+              },
+              {
+                "type": "flag",
+                "key": "framed_resolved"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他摊手：「这次真查不出来。」",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -5
+              },
+              {
+                "type": "flag",
+                "key": "framed_pending"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "他查了，但线索指向的方向让他闭了嘴。「这件事我帮不了你。」他说这话的时候没看你。",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -8
+              },
+              {
+                "type": "relation",
+                "npc": "npc_peiwuyou",
+                "trust": -5
+              },
+              {
+                "type": "flag",
+                "key": "framed_pending"
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "repress"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "他去查了，结果把自己也牵扯了进来。两个人一起被记了过。他从执事堂出来时对你笑：「早知道就不管了。」但你知道他不是这个意思。",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -12
+              },
+              {
+                "type": "relation",
+                "npc": "npc_peiwuyou",
+                "favor": 8,
+                "bond": 10
+              },
+              {
+                "type": "flag",
+                "key": "expelled_pending"
+              },
+              {
+                "type": "demon",
+                "value": 10,
+                "source": "guilt",
+                "npc": "npc_peiwuyou"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "认下来，换一个从轻发落",
+        "reason": -12,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你说了「是我」。秦九思的笔停在半空，很久才落下去。散堂后他在门外拦住你，第一次没有引条文：「你为什么要认。」你没有回答。他站在那里，看着你走远。",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -12
+              },
+              {
+                "type": "contribution",
+                "value": -150
+              },
+              {
+                "type": "reputation",
+                "value": -8
+              },
+              {
+                "type": "relation",
+                "npc": "npc_qinjiusi",
+                "favor": -5,
+                "trust": 10,
+                "note": "他不明白你为什么要认"
+              },
+              {
+                "type": "flag",
+                "key": "framed_confessed"
+              },
+              {
+                "type": "demon",
+                "value": 20,
+                "source": "guilt",
+                "note": "你替人认下的那件事"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "D",
+        "text": "找沈惊澜作证——那天你和他在一起",
+        "reason": 16,
+        "check": {
+          "attr": "shi",
+          "difficulty": 40
+        },
+        "reasonIf": [
+          {
+            "flag": "shen_deadline_known",
+            "value": 6
+          }
+        ],
+        "outcomes": {
+          "perfect": {
+            "narrative": "沈惊澜来了。他站在堂中，只说了三句话：那日申时到亥时，此人与我在剑渊院练剑场。我可以对天道盟誓。若有半句虚言，废我剑心。说完他就站在那里，等着。没有人再问第二句。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_shenjinglan",
+                "favor": 20,
+                "trust": 22,
+                "bond": 25,
+                "note": "他当堂为你作了誓",
+                "openRomance": true
+              },
+              {
+                "type": "flag",
+                "key": "framed_resolved"
+              },
+              {
+                "type": "reputation",
+                "value": 5
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他作了证。案子撤了。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_shenjinglan",
+                "favor": 12,
+                "bond": 12
+              },
+              {
+                "type": "flag",
+                "key": "framed_resolved"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他的证词只能覆盖一半的时辰。案子悬着。",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -4
+              },
+              {
+                "type": "flag",
+                "key": "framed_pending"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_shenjinglan",
+                "favor": 6
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "那天他不在院里。你记错了日子。",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -8
+              },
+              {
+                "type": "flag",
+                "key": "framed_pending"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "他来了，但被问到细节时答不上来——因为你说的那个时辰，他确实不在。「作伪证。」秦九思写下这三个字时，手在抖。两个人一起被记了大过。",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -15
+              },
+              {
+                "type": "relation",
+                "npc": "npc_shenjinglan",
+                "favor": -10,
+                "trust": -15,
+                "note": "你让他替你说了谎"
+              },
+              {
+                "type": "flag",
+                "key": "expelled_pending"
+              },
+              {
+                "type": "demon",
+                "value": 15,
+                "source": "guilt",
+                "npc": "npc_shenjinglan"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "chainNext": {
+      "on": [
+        "bad",
+        "terrible"
+      ],
+      "eventId": "evt_expulsion_hearing",
+      "delayWeeks": 3
+    }
+  },
+  {
+    "id": "evt_expulsion_hearing",
+    "category": "crisis",
+    "chainOnly": true,
+    "scene": "scene_headmaster_hall",
+    "actors": [
+      "npc_tantaiwujiu",
+      "npc_zhonglihen"
+    ],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "student"
+      ]
+    },
+    "seed": "劝退听证设在议事厅。院主坐在最上首，第一次为一个弟子的事出面。钟离衡念完卷宗，抬头看你：「你还有什么要说的。」满堂的人都在等。院主没有看你，他在看窗外。",
+    "facts": [
+      "劝退听证，院主亲自到场",
+      "这是你最后一次说话的机会"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "把整件事从头到尾说一遍，不辩解，只陈述",
+        "reason": 16,
+        "check": {
+          "attr": "xin",
+          "difficulty": 62
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你说了一炷香。没有一句是为自己求情的，全是事实。说完，院主终于转过头来。他问了一个跟案子毫无关系的问题：「你为什么想留下。」你答了。他点点头：「留下吧。」就三个字，没有解释。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "framed_resolved"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_tantaiwujiu",
+                "favor": 15,
+                "awe": 10,
+                "note": "议事厅上他问了你一个问题"
+              },
+              {
+                "type": "attr",
+                "key": "xin",
+                "value": 1
+              },
+              {
+                "type": "reputation",
+                "value": 6
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你说得清楚。处分改成了记大过，学籍保住了。",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -8
+              },
+              {
+                "type": "flag",
+                "key": "framed_resolved"
+              },
+              {
+                "type": "reputation",
+                "value": -3
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你说完了。他们商议了很久，最后决定：留院察看一年。",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -12
+              },
+              {
+                "type": "flag",
+                "key": "on_probation"
+              },
+              {
+                "type": "reputation",
+                "value": -6
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你说得断断续续。决议下来了：劝退。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "expelled"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你什么也没说出来。钟离衡合上卷宗，声音还是那么温和：「即日起，除名。」",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "expelled"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "指认真正的人",
+        "reason": 6,
+        "check": {
+          "attr": "shen",
+          "difficulty": 72
+        },
+        "reasonIf": [
+          {
+            "flag": "framed_resolved",
+            "value": 10
+          },
+          {
+            "flag": "zhong_letter_found",
+            "value": 8
+          }
+        ],
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把三个月来攒下的东西一件件摆出来：转手记录、日期、字迹比对。最后一件摆下去时，堂上有人变了脸色。院主终于开口：「继续查。」听证散了，你的名字从劝退名单上划掉了。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "framed_resolved"
+              },
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 30,
+                "clue": "钟离衡的密信"
+              },
+              {
+                "type": "reputation",
+                "value": 10
+              },
+              {
+                "type": "relation",
+                "npc": "npc_tantaiwujiu",
+                "awe": 12,
+                "favor": 8
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你的指认站住了一半。案子重查，你先留院察看。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "on_probation"
+              },
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 15
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "证据不足。留院察看一年。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "on_probation"
+              },
+              {
+                "type": "conduct",
+                "value": -10
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你指错了人。那人当堂反驳，句句在理。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "expelled"
+              },
+              {
+                "type": "demon",
+                "value": 12,
+                "source": "guilt",
+                "note": "议事厅上指错的那个人"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你指向的是钟离衡。他站起来，行了个礼，然后拿出三份文书，一份份念完。念到第三份时，你已经站不住了。「诬告在任教习。」他说，「按院规，除名。」",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "expelled"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_zhonglihen",
+                "favor": -30
+              },
+              {
+                "type": "demon",
+                "value": 20,
+                "source": "grudge",
+                "npc": "npc_zhonglihen",
+                "note": "议事厅上那三份文书"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "不辩了。认下来，走人",
+        "reason": -4,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你说：「我没有什么要说的。」院主这才转过头看了你一眼。那一眼很长。然后他说：「知道了。」\n\n三天后你背着行李下山。山门外的石阶上落了雪，你回头看了最后一眼。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "expelled"
+              },
+              {
+                "type": "demon",
+                "value": 15,
+                "source": "grudge",
+                "note": "山门外那场雪"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_lingxu_opening",
+    "category": "storyline",
+    "weight": 30,
+    "scene": "scene_lingxu",
+    "actors": [
+      "npc_chuheshan"
+    ],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "storyline": {
+        "seal": {
+          "unlocked": true,
+          "minProgress": 55
+        }
+      },
+      "notFlags": [
+        "lingxu_opened"
+      ],
+      "minWeek": 92
+    },
+    "seed": "楚河山半夜来敲你的门。他手里提着一盏灯，脸色是你从没见过的凝重。「灵墟的封印，撑不到明年了。」他说，「院主让我问你一句话——你想不想下去看看。」他顿了顿，「你可以说不想。说了不想，往后这件事就跟你无关。」",
+    "facts": [
+      "灵墟封印即将失效",
+      "楚河山代院主来问你的意思",
+      "你可以拒绝"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "去",
+        "reason": 10,
+        "check": {
+          "attr": "xin",
+          "difficulty": 45
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你说了「去」。他举着灯看了你很久，然后从袖中取出一枚玉牌递过来——灵墟的通行令。「明日辰时，山后第三道石门。」他转身走了两步又停下，「你要是活着回来，有些事我会告诉你。」",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "lingxu_permit"
+              },
+              {
+                "type": "flag",
+                "key": "lingxu_opened"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "favor": 18,
+                "trust": 20,
+                "note": "他把灵墟通行令给了你"
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 20,
+                "clue": "封印铭文拓片"
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 10
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他给了你通行令，叮嘱了很多注意的事。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "lingxu_permit"
+              },
+              {
+                "type": "flag",
+                "key": "lingxu_opened"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "favor": 10,
+                "trust": 12
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 12
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他给了通行令，什么也没多说。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "lingxu_permit"
+              },
+              {
+                "type": "flag",
+                "key": "lingxu_opened"
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 8
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "他犹豫了：「你现在的境界，恐怕不够。」最后还是给了令牌，但看你的眼神变了。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "lingxu_permit"
+              },
+              {
+                "type": "flag",
+                "key": "lingxu_opened"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "favor": -3
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你答得太急，急到他皱了眉。「这不是逞强的事。」他把灯提起来，「我再想想。」他走了，令牌没给。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "favor": -8
+              },
+              {
+                "type": "flag",
+                "key": "lingxu_opened"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "先问清楚下面到底是什么",
+        "reason": 14,
+        "check": {
+          "attr": "shi",
+          "difficulty": 58
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "他放下灯，坐了下来。说了一炷香。说到最后他停了很久，才把最要紧的那句说出口：「三百年前，前任院主下去了，没有上来。封印是他一个人续的。」他抬眼看你，「续封印的代价，是人留在里面。」",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "lingxu_permit"
+              },
+              {
+                "type": "flag",
+                "key": "lingxu_opened"
+              },
+              {
+                "type": "flag",
+                "key": "know_seal_price"
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 30,
+                "clue": "封印铭文拓片"
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 30,
+                "clue": "楚河山的沉默"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "favor": 15,
+                "trust": 22
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他说了大半，但最关键的那句没说。「下去了你就知道了。」",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "lingxu_permit"
+              },
+              {
+                "type": "flag",
+                "key": "lingxu_opened"
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 18,
+                "clue": "封印铭文拓片"
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 12,
+                "clue": "楚河山的沉默"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他只说了「一件很老的东西」。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "lingxu_permit"
+              },
+              {
+                "type": "flag",
+                "key": "lingxu_opened"
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 8
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "他摇头：「问这么多做什么。去还是不去。」",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "lingxu_opened"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "favor": -3
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你问到了他不愿提的地方。他把灯提起来：「当我没来过。」门在你面前关上了。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "lingxu_opened"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "favor": -12,
+                "trust": -10
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "不去",
+        "reason": 6,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你说了「不」。他点点头，一点意外也没有。「那就好。」他说，「这是对的答案。」他提着灯走了，脚步声在走廊里越来越远。\n\n那一夜你没睡着。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "lingxu_opened"
+              },
+              {
+                "type": "flag",
+                "key": "refused_lingxu"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "trust": 8
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "guilt",
+                "note": "那盏走远的灯"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_seal_choice",
+    "category": "storyline",
+    "weight": 40,
+    "scene": "scene_lingxu",
+    "actors": [
+      "npc_tantaiwujiu"
+    ],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "storyline": {
+        "seal": {
+          "unlocked": true,
+          "minProgress": 88
+        }
+      },
+      "flags": [
+        "lingxu_permit"
+      ],
+      "notFlags": [
+        "seal_resolved"
+      ]
+    },
+    "seed": "封印室的门开着。院主站在里面，白衣无纹，背对着你。你走进去的时候他没有回头。\n\n「你都查清楚了。」他说，「那你也知道，续这道封印要什么。」石台上的铭文正在一寸一寸地暗下去。「三百年前是他。」院主终于转过身，「这次可以是我。也可以是你。」\n\n「我不劝你。」他说，「你自己选。」",
+    "facts": [
+      "封印即将失效，需要有人留下来续",
+      "院主说可以是他，也可以是你",
+      "他不会劝你"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "我留下",
+        "reason": 14,
+        "check": {
+          "attr": "xin",
+          "difficulty": 55
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你走上石台。院主看了你很久，然后做了一件谁也没想到的事——他行了一礼。\n\n「往后一千年，这座学院会记得。」他说。\n\n石门在你身后合上时，你听见外面传来钟声。是学院的晨钟，一共二十四响。你数完了。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "choose_guard_seal"
+              },
+              {
+                "type": "flag",
+                "key": "seal_resolved"
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 20
+              },
+              {
+                "type": "reputation",
+                "value": 20
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你走上了石台。院主没有阻拦。石门合上时，你还听得见外面的风。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "choose_guard_seal"
+              },
+              {
+                "type": "flag",
+                "key": "seal_resolved"
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 15
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你走了上去。什么也没有说。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "choose_guard_seal"
+              },
+              {
+                "type": "flag",
+                "key": "seal_resolved"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你走到一半停住了。院主等了很久，然后自己走了上去。「不必勉强。」他说，「你还有很长的路。」",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "seal_resolved"
+              },
+              {
+                "type": "flag",
+                "key": "headmaster_sacrificed"
+              },
+              {
+                "type": "demon",
+                "value": 18,
+                "source": "guilt",
+                "note": "封印室里那半步"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你的脚在发抖，抖到走不上去。院主看着你，眼神里没有任何责备——这比责备难受一百倍。他自己走了上去。\n\n石门合上前，他说了最后一句：「活着。这是我给你的最后一课。」",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "seal_resolved"
+              },
+              {
+                "type": "flag",
+                "key": "headmaster_sacrificed"
+              },
+              {
+                "type": "demon",
+                "value": 30,
+                "source": "guilt",
+                "note": "石门合上前他说的那句话"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "还有第三条路吗",
+        "reason": 16,
+        "check": {
+          "attr": "wu",
+          "difficulty": 78
+        },
+        "reasonIf": [
+          {
+            "flag": "su_pill_seen",
+            "value": 8
+          },
+          {
+            "flag": "pei_ally",
+            "value": 6
+          }
+        ],
+        "outcomes": {
+          "perfect": {
+            "narrative": "你说出了那个想法——用丹霞院地下封的那炉禁丹，改的不是灵根，是灵脉的属性。院主沉默了很久。\n\n「一百二十年前，有个丫头也是这么跟我说的。」他说，「我没让她试。」\n\n他侧身让开了石台。「这次你试。」",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "seal_resolved"
+              },
+              {
+                "type": "flag",
+                "key": "seal_third_way"
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 20
+              },
+              {
+                "type": "storyline",
+                "key": "rootSecret",
+                "value": 30
+              },
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": 25,
+                "trust": 25,
+                "note": "一百二十年前她说过同样的话"
+              },
+              {
+                "type": "reputation",
+                "value": 15
+              },
+              {
+                "type": "attr",
+                "key": "wu",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你的想法让他停了下来。「或许可行。」他说，「但要时间。」封印又撑了三年——那三年里你把它变成了可行。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "seal_resolved"
+              },
+              {
+                "type": "flag",
+                "key": "seal_third_way"
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 15
+              },
+              {
+                "type": "reputation",
+                "value": 10
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他摇头：「想过了。不行。」",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "他听完，只是看着你。「这个法子会死更多人。」",
+            "effects": [
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "guilt"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你的想法有个致命的漏洞，而你自己没发现。院主指出来的时候，语气仍然平和。「时间不多了。」他说，「你还要再想吗。」石台上的铭文又暗了一分。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": 12,
+                "source": "guilt",
+                "note": "封印室里那个错的法子"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "让他留下",
+        "reason": -8,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你退了一步。\n\n院主点了点头，什么也没说。他走上石台的背影很直，白衣在暗下去的光里显得很淡。\n\n石门合上之前，他回头看了你一眼。你这辈子都会记得那一眼——里面什么都没有。没有责备，没有失望，也没有原谅。就是很平静地看了你一眼，然后转过身去。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "seal_resolved"
+              },
+              {
+                "type": "flag",
+                "key": "headmaster_sacrificed"
+              },
+              {
+                "type": "demon",
+                "value": 25,
+                "source": "guilt",
+                "note": "石门合上前院主回头的那一眼"
+              },
+              {
+                "type": "attr",
+                "key": "xin",
+                "value": -1
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_root_breakthrough",
+    "category": "storyline",
+    "weight": 40,
+    "scene": "scene_danxia",
+    "actors": [
+      "npc_sumuhan",
+      "npc_yesusu"
+    ],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "storyline": {
+        "rootSecret": {
+          "unlocked": true,
+          "minProgress": 88
+        }
+      },
+      "notFlags": [
+        "root_resolved"
+      ]
+    },
+    "seed": "丹房里三个人。苏暮寒把最后一味药引投进炉子，叶素素抱着那只白色的小兽站在一边——小兽的血是引子里最关键的一味，它自己走过来把爪子伸了出去。\n\n「一百二十年前那一炉，」苏暮寒盯着火，「我用错了引子。用的是人的。」\n\n炉子开始响了。她转头看你：「最后一步得有人推。推坏了，这条路就再没人敢走了。」",
+    "facts": [
+      "改灵根的丹快要成了",
+      "最后一步需要你来推",
+      "失败则此路永绝"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "推",
+        "reason": 12,
+        "check": {
+          "attr": "wu",
+          "difficulty": 72
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你的手按在炉壁上。三个人的灵力汇在一处，炉盖弹开的那一刻，整间丹房白得看不见东西。\n\n等你能看清时，炉里躺着九枚丹。苏暮寒拿起一枚，手在抖——一百二十年来第一次。\n\n「成了。」她说。就两个字，说完就哭了。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "root_barrier_broken"
+              },
+              {
+                "type": "flag",
+                "key": "root_resolved"
+              },
+              {
+                "type": "storyline",
+                "key": "rootSecret",
+                "value": 20
+              },
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": 30,
+                "trust": 30,
+                "bond": 25,
+                "note": "你和她一起成了那一炉丹",
+                "openRomance": true
+              },
+              {
+                "type": "relation",
+                "npc": "npc_yesusu",
+                "favor": 20,
+                "bond": 20
+              },
+              {
+                "type": "reputation",
+                "value": 25
+              },
+              {
+                "type": "attr",
+                "key": "wu",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "成了三枚。不多，但足够证明这条路走得通。苏暮寒把其中一枚收进了怀里，另外两枚她说要送去论道大会上当众验。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "root_barrier_broken"
+              },
+              {
+                "type": "flag",
+                "key": "root_resolved"
+              },
+              {
+                "type": "storyline",
+                "key": "rootSecret",
+                "value": 12
+              },
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": 20,
+                "trust": 22,
+                "bond": 15
+              },
+              {
+                "type": "reputation",
+                "value": 15
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "炉子熄了，什么也没炼出来。但也没炸。苏暮寒看着炉子说：「再来。」",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": 8,
+                "trust": 10
+              },
+              {
+                "type": "storyline",
+                "key": "rootSecret",
+                "value": 5
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "炉子裂了。药全废了。叶素素怀里的小兽虚弱得站不起来，她抱着它蹲在地上，一直在说对不起。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_yesusu",
+                "favor": -8
+              },
+              {
+                "type": "flag",
+                "key": "root_resolved"
+              },
+              {
+                "type": "demon",
+                "value": 12,
+                "source": "guilt",
+                "note": "丹房里那只废掉的炉子"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "炉子炸了。\n\n火光把整个丹房吞了。等院里的人赶到，三个人都躺在废墟里。你醒来时是在自己床上，第七天。苏暮寒的丹道废了一半，叶素素的小兽没有了。\n\n没有人责怪你。这比责怪难受。",
+            "effects": [
+              {
+                "type": "injury",
+                "key": "burn",
+                "value": 3,
+                "weeks": 8
+              },
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": -10,
+                "bond": 20
+              },
+              {
+                "type": "relation",
+                "npc": "npc_yesusu",
+                "favor": -20,
+                "note": "她的小兽没有了"
+              },
+              {
+                "type": "flag",
+                "key": "root_resolved"
+              },
+              {
+                "type": "demon",
+                "value": 30,
+                "source": "guilt",
+                "note": "丹房里那声爆炸"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "让苏暮寒自己来",
+        "reason": 8,
+        "check": {
+          "attr": "xin",
+          "difficulty": 40
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你退了半步：「这是你等了一百二十年的东西。」\n\n她愣了一下，然后点了点头，把手按了上去。炉盖弹开时她一个人站在光里，很久没有动。\n\n后来她说，那一刻她想起了十九岁那年那个人的脸。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "root_barrier_broken"
+              },
+              {
+                "type": "flag",
+                "key": "root_resolved"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": 25,
+                "trust": 30,
+                "bond": 22,
+                "note": "你把最后一步让给了她",
+                "openRomance": true
+              },
+              {
+                "type": "storyline",
+                "key": "rootSecret",
+                "value": 18
+              },
+              {
+                "type": "reputation",
+                "value": 12
+              }
+            ]
+          },
+          "good": {
+            "narrative": "她推了。成了两枚。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "root_barrier_broken"
+              },
+              {
+                "type": "flag",
+                "key": "root_resolved"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": 16,
+                "trust": 18
+              },
+              {
+                "type": "reputation",
+                "value": 8
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "她推了，炉子熄了。她说下次。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": 6
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "她推了，炉子裂了。她蹲在地上收拾碎片，动作跟一百二十年前应该是一样的。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "root_resolved"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": 4,
+                "bond": 10
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "guilt"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "她推了，炉子炸了。她挡在你和叶素素前面。\n\n她在丹霞院躺了半年。醒来的第一句话是问那炉丹怎么样了。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "root_resolved"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": 10,
+                "bond": 25
+              },
+              {
+                "type": "demon",
+                "value": 20,
+                "source": "guilt",
+                "note": "她挡在你前面的那一下"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "叫停。这东西不该出世",
+        "reason": -6,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你说了「停」。\n\n苏暮寒的手停在半空。她转过头看你，等一个理由。你说了。她听完，很久没有说话，然后伸手把炉火灭了。\n\n「你说得对。」她说。但那天之后，她再没跟你说过一句关于丹道的话。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "root_resolved"
+              },
+              {
+                "type": "flag",
+                "key": "root_sealed"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": -15,
+                "trust": 8,
+                "note": "你叫停了那一炉丹"
+              },
+              {
+                "type": "attr",
+                "key": "xin",
+                "value": 1
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "guilt",
+                "note": "那盆被你浇灭的炉火"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_graduation_choice",
+    "category": "fixed",
+    "weight": 50,
+    "scene": "scene_main_plaza",
+    "actors": [
+      "npc_guchangqing"
+    ],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "year": [
+        5
+      ],
+      "month": [
+        6
+      ],
+      "notFlags": [
+        "graduation_chosen"
+      ]
+    },
+    "seed": "毕业典礼前三天，顾长青把你叫到剑渊院。他把三份文书推过来：一份是宗门的招揽，一份是世家的聘书，还有一份是学院的留任函。\n\n「五年了。」他说，「选吧。」他给自己倒了杯茶，「选完就别回头。回头的人，我见过太多。」",
+    "facts": [
+      "毕业在即，需要选择去向",
+      "顾长青把三份文书都摆在了你面前"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "留院任教",
+        "reason": 12,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你按住了留任函。顾长青看了很久，然后笑了——你从没见他笑过。\n\n「当年我也是这么按的。」他说。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "choose_stay_teach"
+              },
+              {
+                "type": "flag",
+                "key": "graduation_chosen"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_guchangqing",
+                "favor": 20,
+                "trust": 20,
+                "note": "你选了留院"
+              },
+              {
+                "type": "reputation",
+                "value": 6
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "入宗门，去外面闯",
+        "reason": 10,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你拿起了宗门那份。他点点头，没有意外。\n\n「出去了别丢云霄的脸。」他说完就摆手让你走。你走到门口时听见他补了一句，声音很轻：「照顾好自己。」",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "choose_sect"
+              },
+              {
+                "type": "flag",
+                "key": "graduation_chosen"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_guchangqing",
+                "favor": 12
+              },
+              {
+                "type": "reputation",
+                "value": 4
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "哪个都不选，自己走",
+        "reason": 6,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你把三份文书都推了回去。\n\n他看着你，很久，然后把茶喝完了。「行。」他说，「这条路最难走。」他站起来，从架子上取下一柄旧剑放在桌上，「拿着。别问为什么。」",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "choose_rogue"
+              },
+              {
+                "type": "flag",
+                "key": "graduation_chosen"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_guchangqing",
+                "favor": 15,
+                "awe": 8,
+                "note": "他把自己的旧剑给了你"
+              },
+              {
+                "type": "attr",
+                "key": "ji",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "D",
+        "text": "问他当年是怎么选的",
+        "reason": 14,
+        "check": {
+          "attr": "shi",
+          "difficulty": 55
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "他沉默了很久，久到茶都凉了。\n\n「我当年选了宗门。」他说，「走到半路，有个人死了。我就回来了。」他把杯子放下，「所以我没资格劝你。我只能告诉你——不管选哪个，都会有你后悔的那一天。要紧的是后悔完了还能不能接着走。」\n\n这是他这辈子对你说过最长的一段话。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_guchangqing",
+                "favor": 25,
+                "trust": 25,
+                "bond": 20,
+                "note": "他说了当年那件事"
+              },
+              {
+                "type": "attr",
+                "key": "xin",
+                "value": 1
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 8
+              },
+              {
+                "type": "demon",
+                "value": -10,
+                "source": "clear"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "「宗门。」他说，「后来回来了。」就这两句。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_guchangqing",
+                "favor": 12,
+                "trust": 10
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他没回答，只是把文书往前推了推。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "「问这个做什么。」他说，「选你自己的。」",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_guchangqing",
+                "favor": -3
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "他的脸沉了下来。「有些事不该问。」茶碗放在桌上的那一声很重。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_guchangqing",
+                "favor": -10
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+]

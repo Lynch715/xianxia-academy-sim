@@ -1,0 +1,1083 @@
+[
+  {
+    "id": "evt_vein_anomaly",
+    "category": "crisis",
+    "weight": 22,
+    "scene": "scene_lingxu",
+    "actors": [],
+    "cooldown": 20,
+    "important": true,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "phase": [
+        "dusk"
+      ],
+      "minWeek": 10
+    },
+    "seed": "后山的灵气不对。你是在打坐时察觉的——地脉的搏动比平日快了小半拍，像是有什么东西在下面翻身。学院禁止弟子夜入后山，但那阵搏动一直没停。你睁开眼，窗外的月色白得刺眼。",
+    "facts": [
+      "学院后山灵脉出现异动",
+      "夜入后山违反院规"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "去看看",
+        "reason": -6,
+        "reasonIf": [
+          {
+            "flag": "vein_anomaly",
+            "value": 12
+          }
+        ],
+        "check": {
+          "attr": "shen",
+          "difficulty": 60
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你摸到了灵脉节点。那里的石面上有一圈新裂的纹，纹路很规整，不像天然崩的。你用炭在纸上拓了下来。回程时你绕开了巡夜的路线——你早就记熟了。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 15,
+                "clue": "封印铭文拓片"
+              },
+              {
+                "type": "flag",
+                "key": "vein_anomaly",
+                "value": 2
+              },
+              {
+                "type": "attr",
+                "key": "shen",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你看到了裂纹，但没敢靠太近。回来的路上心一直跳得很快。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 8
+              },
+              {
+                "type": "flag",
+                "key": "vein_anomaly",
+                "value": 2
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你在后山绕了半宿，什么也没找到。天快亮时才摸回宿舍。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "vein_anomaly",
+                "value": 1
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你被巡夜的执事撞见了。虽然没被认出来，但你在灌木丛里蹲到了后半夜，腿麻得站不起来。",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -2
+              },
+              {
+                "type": "demon",
+                "value": 2,
+                "source": "repress"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "地脉的震荡忽然拔高，一股杂乱的灵气顺着你的经脉倒灌进来。等你醒过来，天已经亮了，你躺在后山的石头上，浑身像被拆过一遍。",
+            "effects": [
+              {
+                "type": "injury",
+                "key": "internal",
+                "value": 2,
+                "weeks": 3
+              },
+              {
+                "type": "conduct",
+                "value": -4
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "repress",
+                "note": "后山那一夜"
+              },
+              {
+                "type": "flag",
+                "key": "vein_anomaly",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "报给楚河山",
+        "reason": 15,
+        "check": {
+          "attr": "shi",
+          "difficulty": 40
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "楚河山听完，放下了茶杯。他沉默了很久，久到茶都凉了。「你还跟谁说过？」你说没有。他点点头：「就这样。」临走时他叫住你：「往后你若再察觉到，还来找我。别自己去。」",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "favor": 15,
+                "trust": 14,
+                "note": "你把灵脉异动报给了他"
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 8
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 5
+              },
+              {
+                "type": "contribution",
+                "value": 30
+              },
+              {
+                "type": "flag",
+                "key": "vein_anomaly",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他记下了，说会派人查。你退出去的时候，看见他还坐在原处没动。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "favor": 8,
+                "trust": 6
+              },
+              {
+                "type": "contribution",
+                "value": 15
+              },
+              {
+                "type": "flag",
+                "key": "vein_anomaly",
+                "value": 1
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他说知道了，让你回去好好修炼。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "favor": 3
+              },
+              {
+                "type": "contribution",
+                "value": 5
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你说得含糊，他听得也含糊。这事就这么过去了。",
+            "effects": []
+          },
+          "terrible": {
+            "narrative": "你把话说得太满，用了「封印」两个字。他抬眼看你：「这两个字，你从哪里听来的？」那一刻你意识到自己说错了什么。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "favor": -4,
+                "awe": 8
+              },
+              {
+                "type": "flag",
+                "key": "chu_suspicious"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "去找裴无忧问问",
+        "reason": 10,
+        "check": {
+          "attr": "shi",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "他听完，脸上的笑第一次收干净了。「你也感觉到了。」他把卦钱推到一边，「这半年，第三次。」他压低声音，「别告诉别人是你先发现的。」",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_peiwuyou",
+                "favor": 14,
+                "trust": 16,
+                "bond": 8,
+                "note": "你们都察觉到了灵脉的异动"
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 14,
+                "clue": "灵脉走向图"
+              },
+              {
+                "type": "flag",
+                "key": "vein_anomaly",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他说：「巧了，我也算到了。」然后就顾左右而言他。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_peiwuyou",
+                "favor": 7,
+                "trust": 6
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 6
+              },
+              {
+                "type": "flag",
+                "key": "vein_anomaly",
+                "value": 1
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他打了个哈欠说地脉动一动很正常，然后把你打发走了。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "vein_anomaly",
+                "value": 1
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "他笑得很轻松，轻松得反常。「少往后山跑。」他说，「那边风大。」",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_peiwuyou",
+                "favor": 2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "「你从哪听说的？」他问得很快，快到你反应过来时已经答了。他点点头，笑容回到脸上：「我随口一问。」但你知道他记住了。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_peiwuyou",
+                "trust": -6
+              },
+              {
+                "type": "flag",
+                "key": "pei_wary"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "D",
+        "text": "当作没察觉，接着睡",
+        "reason": 0,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你重新躺下。搏动持续了大半夜，天亮前才慢慢平息。第二天没有人提起这件事，好像根本没发生过。",
+            "effects": []
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_bounty_escort",
+    "category": "trial",
+    "weight": 28,
+    "scene": "scene_wild_hunt",
+    "actors": [],
+    "cooldown": 13,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "minWeek": 8
+    },
+    "variants": [
+      {
+        "seed": "悬赏堂新贴了一张乙等：护送一批药材下山，途经外域边缘。报酬两百下品灵石，五十贡献。已经有人接过又退了——告示角上有撕过的痕迹。",
+        "facts": [
+          "乙等悬赏：护送药材下山",
+          "此前有人接了又退"
+        ]
+      },
+      {
+        "seed": "悬赏堂前围了几个人。一张甲等的告示：外域边缘出现兽群，需人手驱赶。三百灵石，一百贡献。旁边小字写着：伤亡自负。",
+        "facts": [
+          "甲等悬赏：驱赶外域兽群",
+          "告示注明伤亡自负"
+        ]
+      }
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "独自接下",
+        "reason": -5,
+        "check": {
+          "attr": "gen",
+          "difficulty": 62
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你一个人做完了。回来交差时执事看了你两眼，把贡献点多记了二十。「独自完成，按规矩加。」",
+            "effects": [
+              {
+                "type": "stone",
+                "value": 260
+              },
+              {
+                "type": "contribution",
+                "value": 70
+              },
+              {
+                "type": "reputation",
+                "value": 4
+              },
+              {
+                "type": "exp",
+                "value": 40
+              }
+            ]
+          },
+          "good": {
+            "narrative": "做完了，衣服划破了几处。钱货两清。",
+            "effects": [
+              {
+                "type": "stone",
+                "value": 180
+              },
+              {
+                "type": "contribution",
+                "value": 50
+              },
+              {
+                "type": "exp",
+                "value": 25
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "勉强完成。报酬按打折算的。",
+            "effects": [
+              {
+                "type": "stone",
+                "value": 90
+              },
+              {
+                "type": "contribution",
+                "value": 20
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "半路上货损了一部分。你自己贴了钱赔。",
+            "effects": [
+              {
+                "type": "stone",
+                "value": -60,
+                "noScale": true
+              },
+              {
+                "type": "contribution",
+                "value": -15
+              },
+              {
+                "type": "injury",
+                "key": "wound",
+                "value": 1,
+                "weeks": 2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你被围了。等到执事带人赶到时，你已经在血泊里躺了半个时辰。醒来是在丹霞院，苏暮寒站在床边，脸色很难看。「一个人去。」她只说了这四个字。",
+            "effects": [
+              {
+                "type": "injury",
+                "key": "wound",
+                "value": 3,
+                "weeks": 5
+              },
+              {
+                "type": "contribution",
+                "value": -30
+              },
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": 4,
+                "trust": 3
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "repress",
+                "note": "外域那次差点没回来"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "拉上同窗组队",
+        "reason": 14,
+        "check": {
+          "attr": "shi",
+          "difficulty": 45
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你叫上了三个人。配合出乎意料地顺——赵鸣岐认路，沈惊澜开道，你在中间调度。回来分钱时谁也没多拿一分。那晚你们在坊市喝到很晚。",
+            "effects": [
+              {
+                "type": "stone",
+                "value": 150
+              },
+              {
+                "type": "contribution",
+                "value": 50
+              },
+              {
+                "type": "relation",
+                "npc": "npc_zhaomingqi",
+                "favor": 10,
+                "trust": 8,
+                "note": "一起跑了趟外域"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_shenjinglan",
+                "favor": 8,
+                "bond": 6
+              },
+              {
+                "type": "exp",
+                "value": 30
+              }
+            ]
+          },
+          "good": {
+            "narrative": "队伍磕磕绊绊，但事办成了。分钱时有点小争执，最后还是平分了。",
+            "effects": [
+              {
+                "type": "stone",
+                "value": 110
+              },
+              {
+                "type": "contribution",
+                "value": 35
+              },
+              {
+                "type": "relation",
+                "npc": "npc_zhaomingqi",
+                "favor": 5
+              },
+              {
+                "type": "exp",
+                "value": 20
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "四个人跑了一趟，钱分下来一人没几个。",
+            "effects": [
+              {
+                "type": "stone",
+                "value": 50
+              },
+              {
+                "type": "contribution",
+                "value": 15
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "队伍散了一半。剩下的人把活干完，但气氛僵到最后。",
+            "effects": [
+              {
+                "type": "stone",
+                "value": 30
+              },
+              {
+                "type": "relation",
+                "npc": "npc_zhaomingqi",
+                "favor": -4
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "有人受了重伤。回来的路上没人说话。你走在最后面，一直在想是不是该在第二个路口就叫停。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": -20
+              },
+              {
+                "type": "relation",
+                "npc": "npc_zhaomingqi",
+                "favor": -8,
+                "trust": -6,
+                "note": "你带的队，有人伤了"
+              },
+              {
+                "type": "demon",
+                "value": 7,
+                "source": "guilt",
+                "note": "外域那次，是你带的队"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "不接。风险不值那点钱",
+        "reason": 6,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你从告示前走开了。三天后听说接下那单的人在外域折了条腿。你不知道该松口气还是别的什么。",
+            "effects": []
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_leak_rumor",
+    "category": "crisis",
+    "weight": 18,
+    "scene": "scene_main_plaza",
+    "actors": [],
+    "cooldown": 23,
+    "important": true,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "minWeek": 22
+    },
+    "seed": "赤焰宗的人昨夜在山门外叫阵，点名要学院交出一份「三年前的丹方录」。奇怪的是他们连丹方录存放的位置都说得分毫不差——那是丹霞院地下的丙字库，全院知道的人不超过十个。今日全院都在传这件事。",
+    "facts": [
+      "赤焰宗准确说出了机密档案的存放位置",
+      "知情者不超过十人"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "留心听各方的说法",
+        "reason": 12,
+        "check": {
+          "attr": "shen",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你注意到一件事：白鹿卿在事发前三天调阅过丙字库的册子，而钟离衡那三天不在院里。两条都是你从不同的人嘴里听来的，各自都不奇怪，凑在一起就有点意思了。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 15,
+                "clue": "钟离衡的密信"
+              },
+              {
+                "type": "flag",
+                "key": "leak_incident",
+                "value": 1
+              },
+              {
+                "type": "attr",
+                "key": "shen",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你听到几个说法，都指向内部有人。但没有实证。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 7
+              },
+              {
+                "type": "flag",
+                "key": "leak_incident",
+                "value": 1
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "满院都是猜测，没一条站得住脚。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "leak_incident",
+                "value": 1
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你打听得太明显，被人反问了一句：「你怎么这么关心？」",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "leak_incident",
+                "value": 1
+              },
+              {
+                "type": "reputation",
+                "value": -1
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "第二天执事堂找你谈话。「有人举报你在四处打听丙字库的事。」你解释了很久。走出执事堂时，你觉得背后有目光。",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -3
+              },
+              {
+                "type": "flag",
+                "key": "leak_incident",
+                "value": 1
+              },
+              {
+                "type": "flag",
+                "key": "watched"
+              },
+              {
+                "type": "demon",
+                "value": 3,
+                "source": "repress"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "这与你无关，专心修炼",
+        "reason": 8,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你没有掺和。半个月后风头过去，学院加派了禁制，事情就此不了了之。你只是偶尔会想起那份丹方录的位置，是谁说出去的。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "leak_incident",
+                "value": 1
+              },
+              {
+                "type": "exp",
+                "value": 20
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "直接去问钟离衡",
+        "reason": -10,
+        "check": {
+          "attr": "shi",
+          "difficulty": 70
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "他放下茶杯，笑意不减：「你觉得是我。」不是疑问句。他给你续了茶，「若是我，我会承认吗？」他站起身，「不过你敢来问，倒是让我高看一眼。」",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_zhonglihen",
+                "favor": 8,
+                "awe": 12,
+                "trust": 5,
+                "note": "你当面问了他"
+              },
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 10
+              },
+              {
+                "type": "flag",
+                "key": "leak_incident",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他很客气地把你的问题绕开了，绕得滴水不漏。你什么也没问到，但他看你的眼神变了。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_zhonglihen",
+                "awe": 6
+              },
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 4
+              },
+              {
+                "type": "flag",
+                "key": "leak_incident",
+                "value": 1
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他说这事自有执事堂查办，让你不必操心。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "leak_incident",
+                "value": 1
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "「按院规，弟子不得质询在任教习。」他笑着说完这句，「这一条，你该记得。」",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -3
+              },
+              {
+                "type": "relation",
+                "npc": "npc_zhonglihen",
+                "favor": -6
+              },
+              {
+                "type": "flag",
+                "key": "leak_incident",
+                "value": 1
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "他一直在笑。等你说完，他慢慢道：「你知道诬告一个元婴期教习，是什么处分吗？」茶还在冒气。你忽然出了一身冷汗。",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -8
+              },
+              {
+                "type": "contribution",
+                "value": -50
+              },
+              {
+                "type": "relation",
+                "npc": "npc_zhonglihen",
+                "favor": -15,
+                "awe": 15,
+                "note": "你当面指认他，他记住了"
+              },
+              {
+                "type": "flag",
+                "key": "leak_incident",
+                "value": 1
+              },
+              {
+                "type": "flag",
+                "key": "zhong_hostile"
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "grudge",
+                "note": "那盏还冒着气的茶",
+                "npc": "npc_zhonglihen"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_deviation_neighbor",
+    "category": "life",
+    "weight": 24,
+    "scene": "scene_dorm_room",
+    "actors": [],
+    "cooldown": 17,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "phase": [
+        "dusk"
+      ],
+      "minWeek": 7
+    },
+    "seed": "隔壁传来一声闷响，接着是重物倒地。你冲过去推门——那人蜷在地上，脸涨成青紫色，经脉在皮肤下鼓起来一条条。走火入魔。丹炉翻在旁边，药渣撒了一地。他还有气，但撑不了多久。",
+    "facts": [
+      "邻舍弟子走火入魔",
+      "情况危急"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "立刻去叫教习",
+        "reason": 16,
+        "check": {
+          "attr": "gen",
+          "difficulty": 35
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你跑得比这辈子任何时候都快。苏暮寒赶到时那人已经开始抽搐。她三针下去，人稳住了。事后她只对你说了一句：「跑得快。」但这句话她说得很认真。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": 12,
+                "trust": 10,
+                "note": "你及时叫来了她"
+              },
+              {
+                "type": "reputation",
+                "value": 4
+              },
+              {
+                "type": "contribution",
+                "value": 40
+              }
+            ]
+          },
+          "good": {
+            "narrative": "教习赶到，人救回来了，但落下了病根。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": 6
+              },
+              {
+                "type": "reputation",
+                "value": 2
+              },
+              {
+                "type": "contribution",
+                "value": 20
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "人救回来了。你在门外站了一夜。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": 10
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "教习来晚了一步。人保住了命，但修为废了大半。他后来退了学。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "death",
+                "note": "隔壁那晚"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "没救回来。你站在门口，看着他们把人抬走。那天之后，隔壁的房间空了整整一年。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": 10,
+                "source": "death",
+                "note": "隔壁那个没能救回来的人"
+              },
+              {
+                "type": "attr",
+                "key": "xin",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "自己出手替他护住心脉",
+        "reason": 4,
+        "check": {
+          "attr": "gen",
+          "difficulty": 68
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把灵气渡过去，硬生生把那股暴走的气压回丹田。等教习赶到时，人已经稳了。苏暮寒看了你半天：「你哪学的？」你说不上来。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 6
+              },
+              {
+                "type": "contribution",
+                "value": 60
+              },
+              {
+                "type": "attr",
+                "key": "gen",
+                "value": 1
+              },
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": 10,
+                "awe": 8
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你撑到了教习赶来。人救回来了，你自己经脉也伤了几处。",
+            "effects": [
+              {
+                "type": "injury",
+                "key": "internal",
+                "value": 1,
+                "weeks": 3
+              },
+              {
+                "type": "reputation",
+                "value": 3
+              },
+              {
+                "type": "contribution",
+                "value": 30
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你手忙脚乱，帮不上什么忙。好在教习赶到得及时。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": 5
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你的灵气和他暴走的气撞在一起，两个人一起倒下了。",
+            "effects": [
+              {
+                "type": "injury",
+                "key": "internal",
+                "value": 2,
+                "weeks": 4
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "guilt",
+                "note": "那次帮倒忙"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你的介入让他的气机彻底乱了。教习赶到时已经晚了。事后调查认定你无过失，但那份卷宗你看了很多遍。",
+            "effects": [
+              {
+                "type": "injury",
+                "key": "internal",
+                "value": 3,
+                "weeks": 6
+              },
+              {
+                "type": "demon",
+                "value": 14,
+                "source": "guilt",
+                "note": "是你的手按在他背上的"
+              },
+              {
+                "type": "reputation",
+                "value": -3
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "关上门，当没看见",
+        "reason": -15,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你退回自己房里，把门闩上。隔壁的声音持续了一刻钟，然后停了。第二天清晨有人来抬人。你听着脚步声从门外过去，没有起身。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": 15,
+                "source": "guilt",
+                "note": "那扇你亲手闩上的门"
+              },
+              {
+                "type": "attr",
+                "key": "xin",
+                "value": -1
+              },
+              {
+                "type": "flag",
+                "key": "closed_the_door"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+]

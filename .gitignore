@@ -1,0 +1,12 @@
+# 原始素材：163 MB 的 PNG 母版，仓库里不留。
+# assets/ 下已经有转好的 WebP 成品，游戏跑的是那一套。
+assets_raw/
+
+# 系统与编辑器
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+node_modules/

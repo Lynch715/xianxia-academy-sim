@@ -1,0 +1,238 @@
+[
+  {
+    "id": "evt_tower_high_floor",
+    "category": "trial",
+    "weight": 26,
+    "scene": "scene_trial_tower",
+    "actors": [],
+    "cooldown": 12,
+    "conditions": { "role": ["student"], "minWeek": 30 },
+    "variants": [
+      { "seed": "试炼塔第七层。\n\n这一层没有妖兽，没有机关，只有一面墙。墙上映出你自己的样子——但那个样子比你现在强，强得多。\n\n它抬起手，用的是你还没学会的招式。\n\n塔灵的声音从头顶传来：「胜过三年后的你，方可上行。」", "facts": ["试炼塔第七层的对手是三年后的自己"] },
+      { "seed": "试炼塔第九层是一间空屋。\n\n屋里有一张桌子，桌上摆着你此刻最需要的东西——修为、丹药、功法，一样不少，全是真的。\n\n门在你身后关上了。塔灵说：「拿一样，即刻出塔，此层算过。」\n\n「或者什么都不拿，往上走。」", "facts": ["试炼塔第九层：拿一样就算过关，或者空手往上"] }
+    ],
+    "options": [
+      { "id": "A", "text": "硬闯", "reason": 4, "check": { "attr": "gen", "difficulty": 68 },
+        "outcomes": {
+          "perfect": { "narrative": "你打了很久，久到自己都记不清打了多少招。\n\n最后那一下是你从没用过的——不是学来的，是当场想出来的。\n\n墙上的影子碎了。塔灵说了句在记载里从没出现过的话：「你比三年后的你，早了三年。」", "effects": [ { "type": "exp", "value": 250 }, { "type": "attr", "key": "gen", "value": 1 }, { "type": "contribution", "value": 120 }, { "type": "reputation", "value": 5 }, { "type": "flag", "key": "tower_floor", "value": 9 } ] },
+          "good": { "narrative": "你赢了，赢得很险。躺在地上喘了半个时辰才爬起来。", "effects": [ { "type": "exp", "value": 150 }, { "type": "contribution", "value": 70 }, { "type": "injury", "key": "wound", "value": 1, "weeks": 1 } ] },
+          "plain": { "narrative": "打了个平手。塔灵放你过了，但没有说什么。", "effects": [ { "type": "exp", "value": 70 }, { "type": "contribution", "value": 30 } ] },
+          "bad": { "narrative": "你输了。被弹出塔外时，塔门在你身后合上。", "effects": [ { "type": "injury", "key": "wound", "value": 1, "weeks": 2 }, { "type": "demon", "value": 5, "source": "inferior" } ] },
+          "terrible": { "narrative": "你输得很惨。\n\n最后一击落下时，那个「三年后的你」在你耳边说了一句话——用的是你自己的声音。\n\n那句话你后来做梦都会听见。", "effects": [ { "type": "injury", "key": "internal", "value": 2, "weeks": 4 }, { "type": "demon", "value": 14, "source": "inferior", "note": "塔里那个用你的声音说话的东西" } ] }
+        } },
+      { "id": "B", "text": "退下来，先补足了再上", "reason": 14, "check": { "attr": "xin", "difficulty": 35 },
+        "outcomes": {
+          "perfect": { "narrative": "你转身下了塔。\n\n下面的执事看了记录，说了句：「第七层退下来的，一百个里有九十九个不会再上来。」\n\n三个月后你上来了。这一次你赢得很干净。", "effects": [ { "type": "exp", "value": 180 }, { "type": "attr", "key": "xin", "value": 1 }, { "type": "contribution", "value": 90 }, { "type": "demon", "value": -6, "source": "clear" } ] },
+          "good": { "narrative": "你退了，补了三个月，再上来时过了。", "effects": [ { "type": "exp", "value": 100 }, { "type": "contribution", "value": 50 } ] },
+          "plain": { "narrative": "你退了下来。这一层的记录停在了那里。", "effects": [ { "type": "exp", "value": 20 } ] },
+          "bad": { "narrative": "你退下来之后就一直没再上去。", "effects": [ { "type": "demon", "value": 4, "source": "inferior" } ] },
+          "terrible": { "narrative": "你退下来的时候，塔灵说了句：「记下了。」\n\n后来每次你进塔，这一层的门都会开得慢一些。", "effects": [ { "type": "demon", "value": 8, "source": "inferior", "note": "塔灵那句'记下了'" }, { "type": "flag", "key": "tower_marked" } ] }
+        } },
+      { "id": "C", "text": "空手往上走", "reason": 16, "check": { "attr": "xin", "difficulty": 58 },
+        "outcomes": {
+          "perfect": { "narrative": "你一样没拿，径直走向上一层的门。\n\n门开了。\n\n塔灵的声音里第一次有了别的东西：「第七个。一千二百年里，第七个。」\n\n后面几层的路，比记载里描述的要好走很多。", "effects": [ { "type": "exp", "value": 220 }, { "type": "attr", "key": "xin", "value": 1 }, { "type": "contribution", "value": 150 }, { "type": "reputation", "value": 6 }, { "type": "demon", "value": -10, "source": "clear" }, { "type": "flag", "key": "tower_pure" } ] },
+          "good": { "narrative": "你空手上去了。往上的路依然难走，但你走得比以前稳。", "effects": [ { "type": "exp", "value": 130 }, { "type": "contribution", "value": 70 }, { "type": "demon", "value": -5, "source": "clear" } ] },
+          "plain": { "narrative": "你空手上了一层，然后就撑不住了。", "effects": [ { "type": "exp", "value": 50 } ] },
+          "bad": { "narrative": "你在门口犹豫了很久，最后还是拿了一样。\n\n门开了，但塔灵没有说话。", "effects": [ { "type": "exp", "value": 80 }, { "type": "item", "id": "ningqi_dan", "value": 2 }, { "type": "demon", "value": 4, "source": "guilt" } ] },
+          "terrible": { "narrative": "你把桌上的东西全拿了。\n\n门开了——是出塔的门。\n\n塔灵说：「此层已过。」这四个字里没有任何情绪，但你走出塔的时候手心全是汗。", "effects": [ { "type": "exp", "value": 60 }, { "type": "item", "id": "ningqi_dan", "value": 4 }, { "type": "item", "id": "pozhang_dan", "value": 1 }, { "type": "demon", "value": 12, "source": "guilt", "note": "第九层桌上的东西" } ] }
+        } }
+    ]
+  },
+
+  {
+    "id": "evt_quest_gone_wrong",
+    "category": "trial",
+    "weight": 28,
+    "scene": "scene_wild_hunt",
+    "actors": [],
+    "cooldown": 14,
+    "important": true,
+    "conditions": { "role": ["student"], "minWeek": 26 },
+    "seed": "任务出了岔子。\n\n本该是护送一批药材，结果在外域边缘撞上了一群不该出现在这个季节的妖兽。\n\n同行的三个人里，一个断了腿，一个在流血，还有一个不见了。\n\n药材还在车上。伤员走不快。天要黑了。",
+    "facts": ["护送任务遭遇妖兽", "一人断腿一人流血一人失踪", "天要黑了，伤员走不快"],
+    "options": [
+      { "id": "A", "text": "先找失踪的那个", "reason": 12, "check": { "attr": "shen", "difficulty": 62 },
+        "outcomes": {
+          "perfect": { "narrative": "你顺着一道很淡的血痕找了过去——那道痕迹只有半尺，别人都没看见。\n\n人卡在一处石缝里，昏着，但活着。\n\n四个人一个不少地回了山。药材丢了大半，但执事看完记录只说了一句：「人齐就好。」", "effects": [ { "type": "reputation", "value": 8 }, { "type": "contribution", "value": 80 }, { "type": "attr", "key": "shen", "value": 1 }, { "type": "flag", "key": "quest_all_returned" } ] },
+          "good": { "narrative": "你找到了人。药材损失了一半。", "effects": [ { "type": "reputation", "value": 4 }, { "type": "contribution", "value": 40 }, { "type": "flag", "key": "quest_all_returned" } ] },
+          "plain": { "narrative": "找了两个时辰，人自己走回来了。", "effects": [ { "type": "contribution", "value": 20 } ] },
+          "bad": { "narrative": "没找到。天黑了，你只能先带伤员走。\n\n那个人三天后自己回来了，但一条胳膊废了。", "effects": [ { "type": "contribution", "value": -20 }, { "type": "demon", "value": 8, "source": "guilt" } ] },
+          "terrible": { "narrative": "你找人的时候，妖兽回来了。\n\n断腿的那个没能跑掉。\n\n后来清点的时候，四个人回来了两个。", "effects": [ { "type": "contribution", "value": -60 }, { "type": "reputation", "value": -6 }, { "type": "demon", "value": 20, "source": "death", "note": "那次没能带回来的两个人" } ] }
+        } },
+      { "id": "B", "text": "先把伤员送出去", "reason": 14, "check": { "attr": "gen", "difficulty": 52 },
+        "outcomes": {
+          "perfect": { "narrative": "你背着断腿的那个走了一夜山路，另一个搀着。\n\n天亮时你们出了外域。\n\n失踪的那个是三天后回来的——他自己找到了路，只是崴了脚。\n\n断腿那个后来跟人说：「我记得他一句话没说，走了一整夜。」", "effects": [ { "type": "reputation", "value": 8 }, { "type": "contribution", "value": 70 }, { "type": "attr", "key": "gen", "value": 1 }, { "type": "flag", "key": "quest_all_returned" } ] },
+          "good": { "narrative": "伤员保住了。失踪那个第二天回来了。", "effects": [ { "type": "reputation", "value": 5 }, { "type": "contribution", "value": 45 }, { "type": "injury", "key": "exhaust", "value": 1, "weeks": 1 } ] },
+          "plain": { "narrative": "你把伤员带了出去。失踪的那个再没有消息。", "effects": [ { "type": "contribution", "value": 25 }, { "type": "demon", "value": 8, "source": "death" } ] },
+          "bad": { "narrative": "路上又遇到了一波。你护着两个人硬闯出去，自己伤得最重。", "effects": [ { "type": "injury", "key": "wound", "value": 2, "weeks": 3 }, { "type": "contribution", "value": 20 } ] },
+          "terrible": { "narrative": "你背的那个在半路上就不行了。\n\n他一直没说话，你以为他在睡。等到出了外域你把他放下来，才发现已经凉了。", "effects": [ { "type": "reputation", "value": -4 }, { "type": "demon", "value": 22, "source": "death", "note": "你背了一夜的那个人" } ] }
+        } },
+      { "id": "C", "text": "保药材。任务是任务", "reason": -10, "check": { "attr": "shi", "difficulty": 48 },
+        "outcomes": {
+          "perfect": { "narrative": "你把药材原封不动地送到了。\n\n执事很满意，赏格给到了最高一档。\n\n伤员是第二天被别的队伍带回来的。失踪那个没有回来。\n\n领赏那天，断腿的那个坐在门口看着你，一句话没说。", "effects": [ { "type": "stone", "value": 500 }, { "type": "contribution", "value": 120 }, { "type": "reputation", "value": -3 }, { "type": "demon", "value": 15, "source": "guilt", "note": "领赏那天坐在门口的那个人" } ] },
+          "good": { "narrative": "药材保住了。人也大致都回来了，只是伤得不轻。", "effects": [ { "type": "stone", "value": 300 }, { "type": "contribution", "value": 70 }, { "type": "demon", "value": 8, "source": "guilt" } ] },
+          "plain": { "narrative": "药材保住了一半，人也回来了大半。", "effects": [ { "type": "stone", "value": 120 }, { "type": "contribution", "value": 30 }, { "type": "demon", "value": 5, "source": "guilt" } ] },
+          "bad": { "narrative": "药材和人都没保住。这一趟白跑了。", "effects": [ { "type": "contribution", "value": -40 }, { "type": "demon", "value": 12, "source": "guilt" } ] },
+          "terrible": { "narrative": "你护着车走的时候，身后传来了声音。\n\n你没有回头。\n\n药材完好无损地送到了。这件事后来在弟子里传了很久，传的版本不止一个，但每个版本里你都没有回头。", "effects": [ { "type": "stone", "value": 500 }, { "type": "contribution", "value": 100 }, { "type": "reputation", "value": -12 }, { "type": "flag", "key": "abandoned_teammates" }, { "type": "demon", "value": 25, "source": "guilt", "note": "你没有回头的那一次" } ] }
+        } }
+    ]
+  },
+
+  {
+    "id": "evt_beast_tide",
+    "category": "crisis",
+    "weight": 22,
+    "scene": "scene_mountain_gate",
+    "actors": ["npc_guchangqing"],
+    "cooldown": 999,
+    "important": true,
+    "conditions": { "role": ["student"], "minWeek": 100, "notFlags": ["beast_tide_done"] },
+    "seed": "妖潮来了。\n\n百年一遇。山门的钟连响了九下——上一次响九下是三百年前。\n\n顾长青在广场上点人：金丹以上守山门，筑基守二道禁制，练气的全部撤到后山。\n\n点到你的时候他停了一下。\n\n他知道你的境界，也知道你的名字。\n\n「你自己选。」他说。这四个字他这辈子没对弟子说过。",
+    "facts": ["百年一遇的妖潮来了", "顾长青让你自己选去哪一线"],
+    "options": [
+      { "id": "A", "text": "上山门", "reason": 6, "check": { "attr": "gen", "difficulty": 72 },
+        "outcomes": {
+          "perfect": { "narrative": "你在山门上守了三天三夜。\n\n第三天夜里禁制破了一道口子，你堵在那儿撑了半炷香，撑到顾长青赶过来。\n\n他把你拎到后面的时候骂了一句：「不要命了？」\n\n但事后论功，你的名字排在第七——前面六个全是金丹。", "effects": [ { "type": "reputation", "value": 20 }, { "type": "contribution", "value": 300 }, { "type": "exp", "value": 400 }, { "type": "attr", "key": "gen", "value": 1 }, { "type": "relation", "npc": "npc_guchangqing", "favor": 20, "awe": 10, "note": "妖潮那三天，你堵在破口上" }, { "type": "injury", "key": "wound", "value": 2, "weeks": 4 }, { "type": "flag", "key": "beast_tide_done" }, { "type": "flag", "key": "tide_hero" } ] },
+          "good": { "narrative": "你守住了自己那一段。三天后妖潮退了。", "effects": [ { "type": "reputation", "value": 12 }, { "type": "contribution", "value": 180 }, { "type": "exp", "value": 250 }, { "type": "injury", "key": "wound", "value": 2, "weeks": 3 }, { "type": "flag", "key": "beast_tide_done" } ] },
+          "plain": { "narrative": "你在山门上撑了一天就被换了下来。", "effects": [ { "type": "reputation", "value": 4 }, { "type": "contribution", "value": 80 }, { "type": "exp", "value": 100 }, { "type": "injury", "key": "wound", "value": 1, "weeks": 2 }, { "type": "flag", "key": "beast_tide_done" } ] },
+          "bad": { "narrative": "你伤得太重，第一天就下来了。躺了两个月。", "effects": [ { "type": "injury", "key": "internal", "value": 3, "weeks": 8 }, { "type": "contribution", "value": 40 }, { "type": "flag", "key": "beast_tide_done" }, { "type": "demon", "value": 8, "source": "inferior" } ] },
+          "terrible": { "narrative": "你倒在山门上。\n\n有人把你拖了回去——是你身边那个你叫不出名字的师兄。他把你拖到安全的地方，转身又上去了。\n\n他没有再下来。", "effects": [ { "type": "injury", "key": "internal", "value": 3, "weeks": 10 }, { "type": "flag", "key": "beast_tide_done" }, { "type": "demon", "value": 22, "source": "death", "note": "把你拖回来又转身上去的那个人" } ] }
+        } },
+      { "id": "B", "text": "守二道禁制", "reason": 14, "check": { "attr": "shen", "difficulty": 55 },
+        "outcomes": {
+          "perfect": { "narrative": "二道禁制是符箓院布的，但符阵的节点有一处算错了——你在第一天就看出来了。\n\n你带着人重新调了三个节点。\n\n第二天妖潮冲上来的时候，那三个节点撑住了整条防线。事后符箓院首亲自来问你是怎么看出来的。", "effects": [ { "type": "reputation", "value": 15 }, { "type": "contribution", "value": 250 }, { "type": "exp", "value": 300 }, { "type": "attr", "key": "shen", "value": 1 }, { "type": "flag", "key": "beast_tide_done" }, { "type": "flag", "key": "tide_hero" } ] },
+          "good": { "narrative": "禁制守住了。你在这一线出了不少力。", "effects": [ { "type": "reputation", "value": 8 }, { "type": "contribution", "value": 150 }, { "type": "exp", "value": 180 }, { "type": "flag", "key": "beast_tide_done" } ] },
+          "plain": { "narrative": "禁制守住了。你做的事不多不少。", "effects": [ { "type": "contribution", "value": 80 }, { "type": "exp", "value": 100 }, { "type": "flag", "key": "beast_tide_done" } ] },
+          "bad": { "narrative": "禁制破了一道。你和几个人被冲散，在山里躲了一夜。", "effects": [ { "type": "injury", "key": "wound", "value": 1, "weeks": 2 }, { "type": "contribution", "value": 30 }, { "type": "flag", "key": "beast_tide_done" } ] },
+          "terrible": { "narrative": "你负责的那个节点崩了。\n\n后来查下来，是你调节点的时候动错了一处。\n\n没有人怪你——那种情况下谁都可能出错。但那道口子里冲进来的东西，伤了十一个人。", "effects": [ { "type": "reputation", "value": -8 }, { "type": "contribution", "value": -50 }, { "type": "flag", "key": "beast_tide_done" }, { "type": "demon", "value": 18, "source": "guilt", "note": "你调错的那个节点" } ] }
+        } },
+      { "id": "C", "text": "去后山，照看撤下来的人", "reason": 12, "check": { "attr": "xin", "difficulty": 45 },
+        "outcomes": {
+          "perfect": { "narrative": "后山挤了两百多个练气期的弟子，大半是新生，怕得发抖。\n\n你把他们编了组，分了活——烧水的、包扎的、传消息的、看着最小那几个的。\n\n三天里后山没有出一件乱子。\n\n妖潮退后，那两百多个人里有很多人记住了你的名字。有些人一辈子都记得。", "effects": [ { "type": "reputation", "value": 14 }, { "type": "contribution", "value": 200 }, { "type": "attr", "key": "xin", "value": 1 }, { "type": "flag", "key": "beast_tide_done" }, { "type": "flag", "key": "tide_shelter" }, { "type": "demon", "value": -8, "source": "clear" } ] },
+          "good": { "narrative": "后山秩序还算好。你忙了三天，没合过眼。", "effects": [ { "type": "reputation", "value": 8 }, { "type": "contribution", "value": 120 }, { "type": "flag", "key": "beast_tide_done" } ] },
+          "plain": { "narrative": "后山乱了一阵，但没出大事。", "effects": [ { "type": "contribution", "value": 60 }, { "type": "flag", "key": "beast_tide_done" } ] },
+          "bad": { "narrative": "有几个新生跑了出去。找回来的时候少了一个。", "effects": [ { "type": "contribution", "value": 20 }, { "type": "flag", "key": "beast_tide_done" }, { "type": "demon", "value": 10, "source": "guilt" } ] },
+          "terrible": { "narrative": "妖兽绕过了防线，摸到了后山。\n\n你挡在最前面，但你的境界挡不住。\n\n最后是顾长青赶到的。他到的时候，后山已经有七个人躺在地上。", "effects": [ { "type": "injury", "key": "wound", "value": 3, "weeks": 6 }, { "type": "flag", "key": "beast_tide_done" }, { "type": "demon", "value": 20, "source": "death", "note": "后山地上躺着的那七个人" } ] }
+        } },
+      { "id": "D", "text": "问他：你希望我去哪", "reason": 10, "check": { "attr": "shi", "difficulty": 50 },
+        "outcomes": {
+          "perfect": { "narrative": "顾长青看了你很久。\n\n「三百年前那次，」他忽然说，「我也问过我师父这句话。」\n\n「他怎么说。」\n\n「他说：去你死了之后，最不后悔的地方。」\n\n他把手放在你肩上——这是他第一次碰你：「现在这句话给你。」\n\n你去了山门。三天后你还活着，而且你确实不后悔。", "effects": [ { "type": "relation", "npc": "npc_guchangqing", "favor": 25, "trust": 20, "bond": 15, "note": "他把师父给他的那句话给了你" }, { "type": "reputation", "value": 16 }, { "type": "contribution", "value": 250 }, { "type": "exp", "value": 300 }, { "type": "injury", "key": "wound", "value": 2, "weeks": 4 }, { "type": "flag", "key": "beast_tide_done" }, { "type": "flag", "key": "tide_hero" }, { "type": "attr", "key": "xin", "value": 1 } ] },
+          "good": { "narrative": "他指了二道禁制：「去那儿。别逞强。」\n\n你去了，守住了。", "effects": [ { "type": "relation", "npc": "npc_guchangqing", "favor": 12 }, { "type": "reputation", "value": 8 }, { "type": "contribution", "value": 150 }, { "type": "exp", "value": 200 }, { "type": "flag", "key": "beast_tide_done" } ] },
+          "plain": { "narrative": "他说：「后山。」\n\n你去了后山。", "effects": [ { "type": "contribution", "value": 80 }, { "type": "flag", "key": "beast_tide_done" } ] },
+          "bad": { "narrative": "「我说了你自己选。」他转身走了。\n\n你在广场上站了很久，最后跟着大队去了后山。", "effects": [ { "type": "relation", "npc": "npc_guchangqing", "favor": -5 }, { "type": "contribution", "value": 50 }, { "type": "flag", "key": "beast_tide_done" }, { "type": "demon", "value": 5, "source": "inferior" } ] },
+          "terrible": { "narrative": "你问得像在推卸。\n\n他盯着你看了三息，然后说：「后山。」\n\n那两个字里的东西你听懂了。三天后论功的时候，他没有看你。", "effects": [ { "type": "relation", "npc": "npc_guchangqing", "favor": -12, "awe": -8 }, { "type": "contribution", "value": 30 }, { "type": "reputation", "value": -4 }, { "type": "flag", "key": "beast_tide_done" }, { "type": "demon", "value": 10, "source": "inferior" } ] }
+        } }
+    ]
+  },
+
+  {
+    "id": "evt_realm_fortune",
+    "category": "trial",
+    "weight": 24,
+    "scene": "scene_secret_realm",
+    "actors": [],
+    "cooldown": 16,
+    "conditions": { "role": ["student"], "minWeek": 34 },
+    "variants": [
+      { "seed": "秘境深处有一间石室。\n\n室中有一具枯坐的骸骨，面前摊着一部功法。骨头上没有伤，衣服也是整齐的——这个人是坐着走的。\n\n功法的最后一页写着一行小字：「后来者，取此书须应一诺：不得以此伤同门。」\n\n没有别的条件。也没有人监督。", "facts": ["秘境深处的功法要求立一个无人监督的誓"] },
+      { "seed": "你在一处崖壁上发现了刻字。\n\n刻得很深，是用指力划的：「吾道不孤」。四个字下面还有一行更小的，被风蚀了大半，只剩下「……悔」。\n\n刻字旁边有一个石龛，里面放着一枚玉简。", "facts": ["崖壁上的刻字：'吾道不孤'，下面残缺的一个'悔'字", "旁边石龛里有一枚玉简"] }
+    ],
+    "options": [
+      { "id": "A", "text": "应下这个誓，取书", "reason": 14, "check": { "attr": "xin", "difficulty": 40 },
+        "outcomes": {
+          "perfect": { "narrative": "你对着那具骸骨行了个礼，把誓言念了一遍——念得很慢，一个字一个字。\n\n骸骨没有动。但功法在你手里的时候，你觉得它比刚才轻了。\n\n那部功法你后来练了很多年。每次运功到第七转，你都会想起那间石室。", "effects": [ { "type": "technique", "id": "wuxiang_jing" }, { "type": "exp", "value": 200 }, { "type": "attr", "key": "xin", "value": 1 }, { "type": "flag", "key": "realm_oath" }, { "type": "demon", "value": -8, "source": "clear" } ] },
+          "good": { "narrative": "你应了誓，取了书。", "effects": [ { "type": "technique", "id": "wuxiang_jing" }, { "type": "exp", "value": 120 }, { "type": "flag", "key": "realm_oath" } ] },
+          "plain": { "narrative": "书取到了。誓也念了，但念得有点敷衍。", "effects": [ { "type": "technique", "id": "wuxiang_jing" }, { "type": "exp", "value": 60 } ] },
+          "bad": { "narrative": "你伸手的时候书化成了灰。\n\n大概是誓念得不诚。", "effects": [ { "type": "exp", "value": 30 }, { "type": "demon", "value": 5, "source": "guilt" } ] },
+          "terrible": { "narrative": "书到手了。\n\n但走出石室时你回头看了一眼——那具骸骨的姿势变了。\n\n只变了一点点：原本垂着的手，现在指着门口。", "effects": [ { "type": "technique", "id": "wuxiang_jing" }, { "type": "exp", "value": 80 }, { "type": "demon", "value": 15, "source": "repress", "note": "石室里那具改了姿势的骸骨" } ] }
+        } },
+      { "id": "B", "text": "不取。这书不该动", "reason": 10, "check": { "attr": "xin", "difficulty": 45 },
+        "outcomes": {
+          "perfect": { "narrative": "你把书按原样放好，行了个礼，退了出去。\n\n出秘境的时候你身上什么也没多。\n\n但那天夜里打坐，你忽然通了一处困了半年的关窍。\n\n你不知道这两件事有没有关系。", "effects": [ { "type": "exp", "value": 250 }, { "type": "attr", "key": "xin", "value": 1 }, { "type": "demon", "value": -12, "source": "clear" }, { "type": "flag", "key": "realm_refrained" } ] },
+          "good": { "narrative": "你没有取。走出石室时心里很静。", "effects": [ { "type": "exp", "value": 120 }, { "type": "demon", "value": -6, "source": "clear" } ] },
+          "plain": { "narrative": "你没有取。仅此而已。", "effects": [ { "type": "exp", "value": 40 } ] },
+          "bad": { "narrative": "你犹豫了很久，最后空手出去了。\n\n后来你听说别人在同一间石室里取走了那部功法。", "effects": [ { "type": "demon", "value": 6, "source": "inferior" } ] },
+          "terrible": { "narrative": "你退到门口时又折了回来。\n\n手伸出去的那一刻，石室的门关上了。\n\n你在里面待了三天，出来时那部功法还在原处，你什么也没拿走。但你的心魔重了很多。", "effects": [ { "type": "injury", "key": "exhaust", "value": 1, "weeks": 2 }, { "type": "demon", "value": 15, "source": "guilt", "note": "石室里那三天" } ] }
+        } },
+      { "id": "C", "text": "取书，但不应誓", "reason": -12, "check": { "attr": "ji", "difficulty": 65 },
+        "outcomes": {
+          "perfect": { "narrative": "你什么也没说，把书拿了就走。\n\n没有异变，没有反噬。石室安安静静，那具骸骨还是原来的姿势。\n\n书到手了，一分代价也没付。\n\n只是往后每次翻开这部功法，最后那一页你都会跳过去。", "effects": [ { "type": "technique", "id": "wuxiang_jing" }, { "type": "exp", "value": 150 }, { "type": "demon", "value": 10, "source": "guilt", "note": "那一页你从来不看的字" } ] },
+          "good": { "narrative": "书拿到了。没出什么事。", "effects": [ { "type": "technique", "id": "wuxiang_jing" }, { "type": "exp", "value": 80 }, { "type": "demon", "value": 8, "source": "guilt" } ] },
+          "plain": { "narrative": "书拿到了。走出秘境时你没有回头。", "effects": [ { "type": "technique", "id": "wuxiang_jing" }, { "type": "demon", "value": 10, "source": "guilt" } ] },
+          "bad": { "narrative": "书在你手里烧了起来。\n\n烧完之后石室里什么也没剩下。", "effects": [ { "type": "injury", "key": "burn", "value": 1, "weeks": 2 }, { "type": "demon", "value": 12, "source": "guilt" } ] },
+          "terrible": { "narrative": "你把书塞进怀里的那一刻，整间石室的温度降了下来。\n\n骸骨的头转了过来。\n\n你是爬出秘境的。书还在怀里，但从那以后，每次你想用这部功法伤人，手都会抖。", "effects": [ { "type": "technique", "id": "wuxiang_jing" }, { "type": "injury", "key": "internal", "value": 2, "weeks": 4 }, { "type": "demon", "value": 25, "source": "guilt", "note": "石室里那颗转过来的头" }, { "type": "flag", "key": "cursed_technique" } ] }
+        } }
+    ]
+  },
+
+  {
+    "id": "evt_save_deviation",
+    "category": "crisis",
+    "weight": 24,
+    "scene": "scene_meditation_hall",
+    "actors": ["npc_shenjinglan"],
+    "cooldown": 999,
+    "important": true,
+    "conditions": { "role": ["student"], "minWeek": 70, "relations": { "npc_shenjinglan": { "favor": [40, 100] } } },
+    "seed": "静修室的门是被撞开的。\n\n沈惊澜倒在里面，经脉在皮肤下鼓成一条条青紫的线。他在冲金丹，冲到一半心魔起了——那是北境家书里的期限，是他压了两年的东西。\n\n他还有意识。看见你，他费了很大力气才说出三个字：\n\n「别……进来。」",
+    "facts": ["沈惊澜冲金丹时走火入魔", "他让你别进来"],
+    "options": [
+      { "id": "A", "text": "进去，替他护住心脉", "reason": 12, "check": { "attr": "gen", "difficulty": 70 },
+        "outcomes": {
+          "perfect": { "narrative": "你把自己的灵力渡了过去。\n\n那股乱气顺着两个人的经脉走了三个周天，最后被你压回了他的丹田。\n\n他睁开眼的时候，第一句话是：「我说了别进来。」\n\n第二句是：「……谢谢。」\n\n第三句他说不出来了，因为他哭了。这是你唯一一次见他哭。", "effects": [ { "type": "relation", "favor": 30, "trust": 30, "bond": 35, "note": "静修室那一夜，他哭了" }, { "type": "injury", "key": "internal", "value": 2, "weeks": 4 }, { "type": "flag", "key": "shen_saved" }, { "type": "attr", "key": "gen", "value": 1 }, { "type": "demon", "value": -8, "source": "clear" } ] },
+          "good": { "narrative": "你撑到了教习赶来。人救回来了，两个人都伤得不轻。", "effects": [ { "type": "relation", "favor": 20, "bond": 25, "trust": 18 }, { "type": "injury", "key": "internal", "value": 2, "weeks": 4 }, { "type": "flag", "key": "shen_saved" } ] },
+          "plain": { "narrative": "你帮不上什么忙，但你挡到了教习赶来。", "effects": [ { "type": "relation", "favor": 12, "bond": 15 }, { "type": "injury", "key": "wound", "value": 1, "weeks": 2 }, { "type": "flag", "key": "shen_saved" } ] },
+          "bad": { "narrative": "你的灵力和他的乱气撞在一起，两个人一起倒下。\n\n是苏暮寒把你们分开的。他保住了命，但金丹废了。", "effects": [ { "type": "relation", "favor": 10, "bond": 20 }, { "type": "injury", "key": "internal", "value": 3, "weeks": 6 }, { "type": "flag", "key": "shen_crippled" }, { "type": "demon", "value": 18, "source": "guilt" } ] },
+          "terrible": { "narrative": "你冲进去的时候，他正在最后一道关口上。\n\n你的介入让那道关口彻底崩了。\n\n他活下来了，但修为退回了练气。北境的人一个月后来接他走的。\n\n走之前他对你说：「不怪你。」这三个字他说了两遍。", "effects": [ { "type": "relation", "favor": 5, "bond": 25, "trust": 10 }, { "type": "flag", "key": "shen_recalled" }, { "type": "flag", "key": "shen_crippled" }, { "type": "demon", "value": 25, "source": "guilt", "note": "他说了两遍的那三个字" } ] }
+        } },
+      { "id": "B", "text": "去叫人。你不够格插手", "reason": 14, "check": { "attr": "gen", "difficulty": 40 },
+        "outcomes": {
+          "perfect": { "narrative": "你转身就跑，跑得比这辈子任何时候都快。\n\n顾长青和苏暮寒一起赶到，三针下去，人稳住了。\n\n事后顾长青说：「你要是进去了，现在躺着的就是两个。」\n\n沈惊澜醒来后什么也没说，但从那以后他每次闭关都会先告诉你一声。", "effects": [ { "type": "relation", "npc": "npc_shenjinglan", "favor": 20, "trust": 25, "bond": 20, "note": "从那以后他闭关都会先告诉你" }, { "type": "relation", "npc": "npc_guchangqing", "favor": 12 }, { "type": "flag", "key": "shen_saved" }, { "type": "reputation", "value": 6 } ] },
+          "good": { "narrative": "教习及时赶到了。人保住了，金丹没成，但根基还在。", "effects": [ { "type": "relation", "npc": "npc_shenjinglan", "favor": 14, "trust": 16 }, { "type": "flag", "key": "shen_saved" } ] },
+          "plain": { "narrative": "教习来了。人救回来了，但伤了根本。", "effects": [ { "type": "relation", "npc": "npc_shenjinglan", "favor": 8 }, { "type": "flag", "key": "shen_saved" } ] },
+          "bad": { "narrative": "你跑得不够快。等人赶到，他的经脉已经废了七成。", "effects": [ { "type": "relation", "npc": "npc_shenjinglan", "favor": 5, "bond": 10 }, { "type": "flag", "key": "shen_crippled" }, { "type": "demon", "value": 12, "source": "guilt" } ] },
+          "terrible": { "narrative": "静修室在偏院，最近的教习在三里外。\n\n你带着人回来时，屋里已经安静了。\n\n他倒在蒲团旁边，姿势像是想爬起来关门——他到最后想的还是别让人进来。", "effects": [ { "type": "relation", "npc": "npc_shenjinglan", "favor": 0 }, { "type": "flag", "key": "shen_dead" }, { "type": "demon", "value": 30, "source": "death", "note": "他到最后还想着关门" }, { "type": "attr", "key": "xin", "value": 1 } ] }
+        } },
+      { "id": "C", "text": "照他说的，不进去", "reason": -8,
+        "outcomes": { "fixed": { "narrative": "你站在门口，没有进去。\n\n里面的声音持续了两炷香。\n\n你听着，一直听到没有声音了。\n\n后来他自己走出来了——脸白得像纸，走一步晃三下，但他自己走出来了。\n\n他看了你一眼：「谢谢你没进来。」\n\n你不知道该说什么。这句话到底是不是真心的，你想了很多年也没想明白。", "effects": [ { "type": "relation", "favor": 8, "trust": 15, "bond": 10, "note": "他说'谢谢你没进来'" }, { "type": "flag", "key": "shen_saved" }, { "type": "demon", "value": 14, "source": "repress", "note": "门外站着的那两炷香" } ] } } }
+    ]
+  },
+
+  {
+    "id": "evt_lingxu_annual",
+    "category": "trial",
+    "weight": 26,
+    "scene": "scene_lingxu",
+    "actors": ["npc_chuheshan"],
+    "cooldown": 30,
+    "conditions": { "role": ["student"], "minWeek": 60, "realm": { "min": "zhuji" } },
+    "seed": "灵墟一年开一次，只放核心弟子进去。\n\n今年的名额有十二个，你在名单上。\n\n楚河山在入口处交代规矩，说到最后一条时他停了一下：\n\n「进去多少人，出来多少人。这一条不是规矩，是往年的记录。」\n\n他顿了顿：「我希望今年也是。」",
+    "facts": ["灵墟一年一开，你在十二人名单上", "楚河山说往年都是进去多少出来多少"],
+    "options": [
+      { "id": "A", "text": "跟紧大队，稳着来", "reason": 14, "check": { "attr": "xin", "difficulty": 42 },
+        "outcomes": {
+          "perfect": { "narrative": "十二个人一路没散过。\n\n收获不算惊人，但每个人都有。最后一段路你替两个体力不支的分担了背包。\n\n出来的时候楚河山数了三遍人头，然后点了点头。\n\n那个点头在他脸上很少见。", "effects": [ { "type": "stone", "value": 400 }, { "type": "exp", "value": 200 }, { "type": "contribution", "value": 120 }, { "type": "relation", "npc": "npc_chuheshan", "favor": 12, "trust": 10 }, { "type": "reputation", "value": 6 }, { "type": "flag", "key": "lingxu_permit" } ] },
+          "good": { "narrative": "一趟下来平平安安。收获中规中矩。", "effects": [ { "type": "stone", "value": 250 }, { "type": "exp", "value": 120 }, { "type": "contribution", "value": 70 }, { "type": "flag", "key": "lingxu_permit" } ] },
+          "plain": { "narrative": "跟着走了一圈，什么也没捡到。", "effects": [ { "type": "exp", "value": 50 }, { "type": "contribution", "value": 30 }, { "type": "flag", "key": "lingxu_permit" } ] },
+          "bad": { "narrative": "队伍在第三层散了。你跟丢了，绕了两天才出来。", "effects": [ { "type": "injury", "key": "exhaust", "value": 1, "weeks": 2 }, { "type": "exp", "value": 40 } ] },
+          "terrible": { "narrative": "有人在第四层掉队了。\n\n找了一天一夜。找到的时候人还在，但已经不太认得人了。\n\n出来时楚河山数了人头，十二个，一个不少。他什么也没说。", "effects": [ { "type": "exp", "value": 60 }, { "type": "demon", "value": 12, "source": "death", "note": "第四层掉队的那个人" } ] }
+        } },
+      { "id": "B", "text": "自己往深处走", "reason": -6, "check": { "attr": "ji", "difficulty": 62 },
+        "outcomes": {
+          "perfect": { "narrative": "你在第七层找到了一处没有记载的岔道。\n\n岔道尽头是一间圆室，墙上刻满了灵脉走向——比裴无忧那张图详细十倍。\n\n你把它拓了下来。\n\n出来时你是最后一个，楚河山看着你，看了很久，什么也没问。", "effects": [ { "type": "stone", "value": 600 }, { "type": "exp", "value": 300 }, { "type": "storyline", "key": "seal", "value": 22, "clue": "灵脉走向图" }, { "type": "attr", "key": "ji", "value": 1 }, { "type": "flag", "key": "lingxu_explored", "value": 2 }, { "type": "flag", "key": "lingxu_permit" } ] },
+          "good": { "narrative": "你独自走了三层，捡到了不少东西。", "effects": [ { "type": "stone", "value": 400 }, { "type": "exp", "value": 180 }, { "type": "storyline", "key": "seal", "value": 10 }, { "type": "flag", "key": "lingxu_explored", "value": 1 }, { "type": "flag", "key": "lingxu_permit" } ] },
+          "plain": { "narrative": "你走岔了，绕回了原地。", "effects": [ { "type": "exp", "value": 60 } ] },
+          "bad": { "narrative": "你迷路了，在里面转了两天。出来时错过了归队的时辰，被记了一笔。", "effects": [ { "type": "conduct", "value": -3 }, { "type": "injury", "key": "exhaust", "value": 1, "weeks": 2 } ] },
+          "terrible": { "narrative": "你走到了不该走的地方。\n\n那里的东西看了你一眼——只是看了一眼。\n\n你是被人抬出来的。醒来之后有半个月说不出话。", "effects": [ { "type": "injury", "key": "internal", "value": 3, "weeks": 6 }, { "type": "storyline", "key": "seal", "value": 15 }, { "type": "flag", "key": "vein_anomaly", "value": 2 }, { "type": "demon", "value": 22, "source": "repress", "note": "灵墟深处看了你一眼的东西" } ] }
+        } },
+      { "id": "C", "text": "留意有没有人掉队", "reason": 16, "check": { "attr": "shen", "difficulty": 48 },
+        "outcomes": {
+          "perfect": { "narrative": "你一路数人头，数了十七遍。\n\n第五层的时候你发现少了一个——只差了半炷香，你就在岔道口把人截住了。\n\n那个人后来才知道自己走错了方向，越走越深。\n\n出来时楚河山听完经过，破例记了你一个特等功。「往年的记录，」他说，「今年也保住了。」", "effects": [ { "type": "contribution", "value": 250 }, { "type": "reputation", "value": 10 }, { "type": "relation", "npc": "npc_chuheshan", "favor": 20, "trust": 18, "note": "你数了十七遍人头" }, { "type": "attr", "key": "shen", "value": 1 }, { "type": "exp", "value": 100 }, { "type": "flag", "key": "lingxu_permit" } ] },
+          "good": { "narrative": "你提醒了两次，队伍没有散。", "effects": [ { "type": "contribution", "value": 100 }, { "type": "reputation", "value": 4 }, { "type": "exp", "value": 80 }, { "type": "flag", "key": "lingxu_permit" } ] },
+          "plain": { "narrative": "一路无事。你的谨慎没有派上用场。", "effects": [ { "type": "contribution", "value": 50 }, { "type": "exp", "value": 60 }, { "type": "flag", "key": "lingxu_permit" } ] },
+          "bad": { "narrative": "你顾着看别人，自己反而在第四层崴了脚。", "effects": [ { "type": "injury", "key": "wound", "value": 1, "weeks": 1 }, { "type": "contribution", "value": 30 } ] },
+          "terrible": { "narrative": "你发现少人的时候已经晚了。\n\n往回找了整整一夜，最后在第六层的一处石缝里找到了。\n\n人还在，但已经不动了。\n\n出来的时候是十一个。楚河山数完人头，站在原地很久没有说话。", "effects": [ { "type": "reputation", "value": -4 }, { "type": "relation", "npc": "npc_chuheshan", "favor": -6 }, { "type": "demon", "value": 22, "source": "death", "note": "第六层石缝里的那个人" } ] }
+        } }
+    ]
+  }
+]

@@ -1,0 +1,235 @@
+[
+  {
+    "id": "evt_love_ye_1",
+    "category": "romance",
+    "weight": 32,
+    "chainId": "love_ye",
+    "scene": "scene_yuling",
+    "actors": ["npc_yesusu"],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": ["student"], "minWeek": 44,
+      "relations": { "npc_yesusu": { "favor": [55, 100], "bond": [30, 100] } },
+      "notFlags": ["love_ye_1", "confession_handled"]
+    },
+    "seed": "灵兽园的后院你没来过。\n\n叶素素带你绕过三道篱笆，掀开一片藤蔓——后面是一小块空地，中间有个用石头垒的圈，圈里铺着干草。\n\n「它睡这儿。」她说。那只白色的幼兽正蜷在草上，比你上次见时大了一圈。\n\n「我从来没带过别人来。」她的声音很小，「因为……」\n\n她停住了。幼兽睁开眼睛看了看你，又闭上了。",
+    "facts": ["叶素素带你去了从未带人来过的地方", "那只幼兽比之前大了一圈", "她有句话没说完"],
+    "options": [
+      { "id": "A", "text": "不追问，蹲下来看那只幼兽", "reason": 16, "check": { "attr": "xin", "difficulty": 32 },
+        "outcomes": {
+          "perfect": { "narrative": "你蹲下来，不伸手，也不出声。\n\n过了很久，那只幼兽自己走过来了，在你手边闻了闻，然后趴下，把脑袋搁在你的鞋面上。\n\n叶素素捂住了嘴。\n\n「它从来不这样。」她的声音都变了，「三年了，除了我，它谁也不让碰。」\n\n她在你旁边蹲下来，两个人肩膀挨着肩膀，看着那团白色的东西一点点睡熟。", "effects": [ { "type": "relation", "favor": 20, "trust": 22, "bond": 25, "note": "那只兽把脑袋搁在了你鞋面上", "openRomance": true }, { "type": "flag", "key": "love_ye_1" }, { "type": "flag", "key": "cub_familiar" } ] },
+          "good": { "narrative": "你蹲了很久。幼兽睁眼看了你几次，最后没有躲开。\n\n叶素素小声说：「它今天不怕你。」", "effects": [ { "type": "relation", "favor": 14, "trust": 15, "bond": 16, "openRomance": true }, { "type": "flag", "key": "love_ye_1" } ] },
+          "plain": { "narrative": "幼兽一直没有醒。你们蹲到天暗了才回去。", "effects": [ { "type": "relation", "favor": 7, "bond": 8 }, { "type": "flag", "key": "love_ye_1" } ] },
+          "bad": { "narrative": "幼兽忽然警觉起来，退到了石圈的另一边。\n\n叶素素慌忙去哄，一边哄一边说对不起。她道歉的是那只兽，不是你。", "effects": [ { "type": "relation", "favor": 2 }, { "type": "flag", "key": "love_ye_1" } ] },
+          "terrible": { "narrative": "你不小心碰到了石圈。幼兽炸了毛，一口咬在她手上。\n\n血渗出来，她却先看的是你有没有事。\n\n「它不是故意的。」她说了第三遍。你忽然很想让她也说说自己。", "effects": [ { "type": "relation", "favor": -4, "bond": 8 }, { "type": "flag", "key": "love_ye_1" }, { "type": "demon", "value": 4, "source": "guilt" } ] }
+        } },
+      { "id": "B", "text": "把她那句没说完的话问出来", "reason": 8, "check": { "attr": "shi", "difficulty": 48 },
+        "outcomes": {
+          "perfect": { "narrative": "你等她说完，她说不下去，你就替她把开头起了。\n\n「因为你怕别人看见它。」\n\n她猛地抬头，眼睛红了：「你怎么知道。」\n\n「因为南疆驯兽世家的旁支，不会有这样的兽。」\n\n她哭了。哭着说了一句她憋了三年的话：「它不是我契的。是它自己来的。我一直不敢跟人说。」", "effects": [ { "type": "relation", "favor": 18, "trust": 28, "bond": 22, "note": "她说出了憋了三年的话", "openRomance": true }, { "type": "flag", "key": "love_ye_1" }, { "type": "storyline", "key": "rootSecret", "value": 14, "clue": "叶素素幼兽的血脉记录" } ] },
+          "good": { "narrative": "「因为它不太一样。」她说，「跟别的灵兽不一样。」\n\n她没有再往下说，但你知道她说的是实话的一半。", "effects": [ { "type": "relation", "favor": 12, "trust": 15, "openRomance": true }, { "type": "flag", "key": "love_ye_1" }, { "type": "storyline", "key": "rootSecret", "value": 6 } ] },
+          "plain": { "narrative": "她摇了摇头，说没什么。", "effects": [ { "type": "relation", "favor": 5, "trust": 4 }, { "type": "flag", "key": "love_ye_1" } ] },
+          "bad": { "narrative": "她把幼兽抱起来，往后退了半步。「没什么。真的没什么。」", "effects": [ { "type": "relation", "favor": -3, "trust": -4 }, { "type": "flag", "key": "love_ye_1" } ] },
+          "terrible": { "narrative": "你问得太直，直接提到了「来历」两个字。\n\n她整个人绷紧了，抱着兽退到了篱笆边上：「我就知道。」\n\n她说完就跑了。那片藤蔓晃了很久才停。", "effects": [ { "type": "relation", "favor": -14, "trust": -12, "note": "你提到了'来历'两个字" }, { "type": "flag", "key": "love_ye_1" }, { "type": "demon", "value": 5, "source": "guilt" } ] }
+        } },
+      { "id": "C", "text": "说你会替她守着这个秘密", "reason": 14, "check": { "attr": "xin", "difficulty": 40 },
+        "outcomes": {
+          "perfect": { "narrative": "你说：「不管它是什么，我不会跟人说。」\n\n她抬起头看你，看了很久很久。\n\n「你都不问它是什么？」\n\n「你要说的时候会说。」\n\n她低下头，肩膀开始抖。抖了一会儿，那只幼兽醒了，凑过去舔她的手。\n\n她一手抱着兽，一手抓住了你的袖子。", "effects": [ { "type": "relation", "favor": 22, "trust": 25, "bond": 24, "note": "你说你不会问，也不会说", "openRomance": true }, { "type": "flag", "key": "love_ye_1" }, { "type": "flag", "key": "ye_secret_kept" } ] },
+          "good": { "narrative": "她点了点头，很用力。然后小声说了句谢谢。", "effects": [ { "type": "relation", "favor": 15, "trust": 18, "bond": 15, "openRomance": true }, { "type": "flag", "key": "love_ye_1" }, { "type": "flag", "key": "ye_secret_kept" } ] },
+          "plain": { "narrative": "她「嗯」了一声。这个话题就到这儿了。", "effects": [ { "type": "relation", "favor": 6, "trust": 6 }, { "type": "flag", "key": "love_ye_1" } ] },
+          "bad": { "narrative": "「什么秘密？」她说，「没有秘密。」\n\n她的语气比平时硬，硬得不像她。", "effects": [ { "type": "relation", "trust": -4 }, { "type": "flag", "key": "love_ye_1" } ] },
+          "terrible": { "narrative": "你的话让她意识到你已经知道了多少。\n\n她没有生气，只是很慢地把幼兽抱起来，说：「那你替我保密吧。」\n\n然后她走了。此后半年，她再没带你去过后院。", "effects": [ { "type": "relation", "favor": -10, "trust": -10 }, { "type": "flag", "key": "love_ye_1" } ] }
+        } }
+    ],
+    "chainNext": { "on": ["perfect", "good"], "eventId": "evt_love_ye_2", "delayWeeks": 8 }
+  },
+
+  {
+    "id": "evt_love_ye_2",
+    "category": "romance",
+    "chainOnly": true,
+    "chainId": "love_ye",
+    "scene": "scene_yuling",
+    "actors": ["npc_yesusu"],
+    "cooldown": 999,
+    "important": true,
+    "conditions": { "role": ["student"] },
+    "seed": "御灵院来了人。\n\n三个南疆口音的驯兽师，带着盖了印的文书：那只幼兽的血脉不在册，按规矩要「上交查验」。\n\n查验完会怎样，文书上没写。\n\n叶素素站在石圈前面，两条胳膊张开挡着，整个人在抖。她这辈子没跟人吵过架，现在连一句完整的话都说不出来。\n\n为首那个已经在往前走了。",
+    "facts": ["南疆驯兽师要带走那只幼兽", "文书没写查验之后会怎样", "叶素素挡在前面，说不出话"],
+    "options": [
+      { "id": "A", "text": "站到她前面去", "reason": 12, "check": { "attr": "gen", "difficulty": 58 },
+        "outcomes": {
+          "perfect": { "narrative": "你挡在了她前面。\n\n那三个人没料到有人会插手，愣了一下。为首的伸手来推，你没有让。\n\n动手的时候你挨了两下，但你把文书抢了过来——文书上的印，缺了云霄仙院的会签。\n\n「无我院用印，不得入园。」你把文书甩回去，「这一条，写在院规第五条。」\n\n他们走了。你回过头，看见叶素素捂着嘴，眼泪从指缝里往下掉。", "effects": [ { "type": "relation", "favor": 25, "trust": 25, "bond": 30, "note": "你挡在了她前面，还抓出了文书的破绽" }, { "type": "injury", "key": "wound", "value": 1, "weeks": 2 }, { "type": "flag", "key": "ye_cub_saved" }, { "type": "reputation", "value": 6 }, { "type": "storyline", "key": "rootSecret", "value": 10 } ] },
+          "good": { "narrative": "你把人拦住了，僵持到执事赶来。事情压下来了，但只是暂时。", "effects": [ { "type": "relation", "favor": 18, "bond": 22, "trust": 15 }, { "type": "injury", "key": "wound", "value": 1, "weeks": 2 }, { "type": "flag", "key": "ye_cub_saved" } ] },
+          "plain": { "narrative": "你拦了，但拦不住。最后是御灵院的教习出面，说要「再议」。\n\n再议了三个月，这事就没人提了。", "effects": [ { "type": "relation", "favor": 12, "bond": 14 }, { "type": "flag", "key": "ye_cub_saved" } ] },
+          "bad": { "narrative": "你被推倒了。等你爬起来，石圈已经空了。\n\n叶素素坐在干草上，什么也没说。", "effects": [ { "type": "relation", "favor": 8, "bond": 15 }, { "type": "injury", "key": "wound", "value": 2, "weeks": 3 }, { "type": "flag", "key": "ye_cub_taken" }, { "type": "demon", "value": 8, "source": "guilt" } ] },
+          "terrible": { "narrative": "你动了手，而且先动的手。\n\n三个南疆人当场就有了理由——文书变成了「云霄弟子袭击外使」的证词。\n\n兽被带走了。你被记了大过。叶素素来看你的时候只说了一句：「不怪你。」\n\n这句话你听了三遍，一次比一次难受。", "effects": [ { "type": "relation", "favor": 5, "bond": 12 }, { "type": "conduct", "value": -8 }, { "type": "contribution", "value": -60 }, { "type": "flag", "key": "ye_cub_taken" }, { "type": "demon", "value": 14, "source": "guilt", "note": "你先动的那一手" } ] }
+        } },
+      { "id": "B", "text": "去查文书的破绽", "reason": 16, "check": { "attr": "shen", "difficulty": 52 },
+        "outcomes": {
+          "perfect": { "narrative": "你没有硬拦，而是要来文书从头看。\n\n看到第三行你就笑了——签发日期在「查验令」的核准日期之前。这份文书是先写好再补的印。\n\n你把它递给闻讯赶来的秦九思。他看了两眼，抬头：「伪造文书，按律扣押。」\n\n三个人被带走了。叶素素一直不敢相信，问了你三次：「真的没事了？」", "effects": [ { "type": "relation", "npc": "npc_yesusu", "favor": 25, "trust": 28, "bond": 26, "note": "你从文书里挑出了破绽" }, { "type": "relation", "npc": "npc_qinjiusi", "favor": 15, "trust": 12 }, { "type": "flag", "key": "ye_cub_saved" }, { "type": "attr", "key": "shen", "value": 1 }, { "type": "reputation", "value": 8 } ] },
+          "good": { "narrative": "你找出一处日期对不上，争取到了「暂缓」。\n\n暂缓的意思是这事还会再来，但至少今天不会。", "effects": [ { "type": "relation", "favor": 16, "trust": 18, "bond": 16 }, { "type": "flag", "key": "ye_cub_saved" } ] },
+          "plain": { "narrative": "文书没什么毛病。你只争取到了三天。", "effects": [ { "type": "relation", "favor": 8, "trust": 8 } ] },
+          "bad": { "narrative": "你看得太慢。等你抬头，人已经把兽装进笼子了。", "effects": [ { "type": "relation", "favor": 4, "bond": 8 }, { "type": "flag", "key": "ye_cub_taken" }, { "type": "demon", "value": 6, "source": "guilt" } ] },
+          "terrible": { "narrative": "你在文书上找到的那一处，恰好是对他们有利的条款。\n\n你念出声之后，为首那个笑了：「这位小友倒是懂行。」\n\n兽被带走了，走得合规合法。", "effects": [ { "type": "relation", "favor": -6, "trust": -5 }, { "type": "flag", "key": "ye_cub_taken" }, { "type": "demon", "value": 10, "source": "guilt", "note": "你自己念出来的那一条" } ] }
+        } },
+      { "id": "C", "text": "让叶素素自己说", "reason": 10, "check": { "attr": "jiao", "difficulty": 62 },
+        "outcomes": {
+          "perfect": { "narrative": "你没有替她挡，只是站到她身边，很小声地说了句：「你说。它是你的。」\n\n她愣了三息。\n\n然后她开口了——声音很抖，但一句比一句稳：「它不是货。它有名字。它叫小满。」\n\n「三年前它从雪里爬出来找到我的时候，你们在哪儿？」\n\n那三个人被问住了。最后是为首的先移开视线。\n\n他们走了。她还站在那儿，手一直在抖，但没有倒。", "effects": [ { "type": "relation", "favor": 30, "trust": 30, "bond": 32, "note": "她第一次为自己说了话" }, { "type": "flag", "key": "ye_cub_saved" }, { "type": "flag", "key": "ye_spoke_up" }, { "type": "attr", "key": "xin", "value": 1 }, { "type": "reputation", "value": 5 } ] },
+          "good": { "narrative": "她说了几句，声音很小，但说完了。\n\n对方大概是没料到，僵了一会儿就走了。她转过身抱住那只兽，肩膀抖了很久。", "effects": [ { "type": "relation", "favor": 20, "trust": 22, "bond": 24 }, { "type": "flag", "key": "ye_cub_saved" }, { "type": "flag", "key": "ye_spoke_up" } ] },
+          "plain": { "narrative": "她张了张嘴，什么也没说出来。\n\n最后是御灵院的教习赶来解的围。", "effects": [ { "type": "relation", "favor": 8, "bond": 10 }, { "type": "flag", "key": "ye_cub_saved" } ] },
+          "bad": { "narrative": "她说不出话，急得哭了。\n\n那三个人趁乱把兽装进了笼子。", "effects": [ { "type": "relation", "favor": -4, "bond": 10 }, { "type": "flag", "key": "ye_cub_taken" }, { "type": "demon", "value": 8, "source": "guilt", "note": "你让她自己说的那一次" } ] },
+          "terrible": { "narrative": "你把她推到了前面。\n\n她一句话也说不出来，站在那里，脸白得像纸。为首那个从她身边直接走了过去。\n\n笼子扣上的时候她终于喊了一声。太晚了。\n\n后来她再没提过那天。但她也再没跟你说起过小满。", "effects": [ { "type": "relation", "favor": -20, "trust": -18, "note": "你把她推到了前面，她说不出话" }, { "type": "flag", "key": "ye_cub_taken" }, { "type": "demon", "value": 16, "source": "guilt", "note": "笼子扣上时她那一声" } ] }
+        } }
+    ],
+    "chainNext": { "on": ["perfect", "good"], "eventId": "evt_love_ye_3", "delayWeeks": 10 }
+  },
+
+  {
+    "id": "evt_love_ye_3",
+    "category": "romance",
+    "chainOnly": true,
+    "chainId": "love_ye",
+    "scene": "scene_yuling",
+    "actors": ["npc_yesusu"],
+    "cooldown": 999,
+    "important": true,
+    "conditions": { "role": ["student"] },
+    "seed": "小满长大了。\n\n它已经不是当初那团能捧在手里的白色，现在站起来快到人的腰。叶素素说它这两个月不太肯吃东西，总是往山外面看。\n\n「它要走了。」她说得很平静，平静得像练过很多遍，「南疆的兽，长成了就得回去。这是它们的规矩。」\n\n她蹲下来抱住它的脖子，抱了很久。\n\n然后她转过头来看你，眼睛很干净：「我有件事想跟你说。趁我现在还哭不出来。」",
+    "facts": ["小满长成了，要回南疆", "叶素素说她有话要说", "她说趁现在还哭不出来"],
+    "options": [
+      { "id": "A", "text": "听她说完", "reason": 16, "check": { "attr": "xin", "difficulty": 35 },
+        "outcomes": {
+          "perfect": { "narrative": "她说得很慢，一句一句：\n\n「小满走了之后，我就是一个人了。」\n\n「我从小到大没有跟谁开口要过什么，因为要了也没有。」\n\n「但是今天我想要一次。」\n\n她站起来，走到你面前，抬头看你——这是她第一次抬头看人看这么久。\n\n「你能不能，别走。」\n\n小满在旁边低低地叫了一声，像是催她。", "effects": [ { "type": "relation", "favor": 28, "trust": 30, "bond": 32, "note": "她这辈子第一次开口要东西" }, { "type": "flag", "key": "in_relationship" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_ye_done" }, { "type": "demon", "value": -12, "source": "love" } ] },
+          "good": { "narrative": "她把话说完了，说到一半开始哭，哭着说完的。\n\n最后一句是：「你别走。」", "effects": [ { "type": "relation", "favor": 20, "trust": 22, "bond": 26 }, { "type": "flag", "key": "in_relationship" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_ye_done" }, { "type": "demon", "value": -8, "source": "love" } ] },
+          "plain": { "narrative": "她说到一半就哭了，剩下的没说完。\n\n你陪她坐到小满离开。", "effects": [ { "type": "relation", "favor": 12, "bond": 15 }, { "type": "flag", "key": "love_ye_done" } ] },
+          "bad": { "narrative": "她哭得说不出话，最后摆摆手：「算了，你回去吧。」", "effects": [ { "type": "relation", "favor": 5, "bond": 8 }, { "type": "flag", "key": "love_ye_done" }, { "type": "demon", "value": 5, "source": "love" } ] },
+          "terrible": { "narrative": "你在她说到一半时接了话——接得完全不对。\n\n她愣住，然后飞快地说：「对，我就是这个意思。」\n\n她说的和你以为的完全不是一件事。这个误会，后来一直没有澄清。", "effects": [ { "type": "relation", "favor": -6, "trust": -8 }, { "type": "flag", "key": "love_ye_done" }, { "type": "demon", "value": 8, "source": "love" } ] }
+        } },
+      { "id": "B", "text": "先说：小满可以不走", "reason": 10, "check": { "attr": "wu", "difficulty": 60 },
+        "outcomes": {
+          "perfect": { "narrative": "你说了一整套办法——御灵院的契约术可以改，改成双向的；只要她愿意，小满就有留下的理由。\n\n这是你查了三个月的东西。\n\n她听完，没有说话，只是走过来，把额头抵在你肩上。\n\n过了很久她说：「你查了很久吧。」\n\n「三个月。」\n\n「傻。」她说。然后她哭了。", "effects": [ { "type": "relation", "favor": 30, "trust": 28, "bond": 32, "note": "你查了三个月，只为让那只兽能留下" }, { "type": "flag", "key": "in_relationship" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_ye_done" }, { "type": "flag", "key": "cub_stayed" }, { "type": "storyline", "key": "rootSecret", "value": 12 }, { "type": "demon", "value": -12, "source": "love" } ] },
+          "good": { "narrative": "你说了个法子。她愣了很久，然后小声说：「真的可以吗。」\n\n后来试了，成了一半——小满每年回南疆三个月，其余时间留在山上。", "effects": [ { "type": "relation", "favor": 22, "trust": 22, "bond": 26 }, { "type": "flag", "key": "in_relationship" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_ye_done" }, { "type": "flag", "key": "cub_stayed" } ] },
+          "plain": { "narrative": "你的法子不成。她笑着说：「谢谢你想过。」", "effects": [ { "type": "relation", "favor": 12, "bond": 14 }, { "type": "flag", "key": "love_ye_done" } ] },
+          "bad": { "narrative": "你说的法子她早就试过了，试了三年。\n\n她没有揭穿你，只是点头说好。", "effects": [ { "type": "relation", "favor": 4, "trust": -3 }, { "type": "flag", "key": "love_ye_done" } ] },
+          "terrible": { "narrative": "你说的法子是强留——用禁制把它锁在山上。\n\n她的脸色变了。\n\n「它跟着我三年，不是因为被锁着。」她说，「你怎么会想到用锁的。」\n\n那天她没有把要说的话说出来。此后也没有。", "effects": [ { "type": "relation", "favor": -18, "trust": -18, "note": "你想用禁制把它锁下来" }, { "type": "flag", "key": "love_ye_done" }, { "type": "demon", "value": 12, "source": "love" } ] }
+        } },
+      { "id": "C", "text": "陪她把小满送到山门", "reason": 14,
+        "outcomes": { "fixed": { "narrative": "你们一起把小满送到了山门。\n\n它走到石阶最下面一级，回头看了很久，然后转身进了雾里。\n\n叶素素一直没有哭。直到看不见了，她才蹲下来，抱着膝盖，哭得像个孩子。\n\n你在旁边站了很久。等她终于停下来，她抬起头，眼睛肿得睁不开，但她笑了。\n\n「它走的时候，」她说，「回头看的是你。」\n\n「不是我？」\n\n「不是。」她伸手抓住你的衣角，抓得很紧，「它是在托付。」", "effects": [ { "type": "relation", "favor": 26, "trust": 28, "bond": 30, "note": "小满走的时候，回头看的是你" }, { "type": "flag", "key": "in_relationship" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_ye_done" }, { "type": "attr", "key": "xin", "value": 1 }, { "type": "demon", "value": -10, "source": "love" } ] } } }
+    ]
+  },
+
+  {
+    "id": "evt_love_zhao_1",
+    "category": "romance",
+    "weight": 30,
+    "chainId": "love_zhao",
+    "scene": "scene_market",
+    "actors": ["npc_zhaomingqi"],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": ["student"], "minWeek": 48,
+      "relations": { "npc_zhaomingqi": { "favor": [55, 100], "trust": [45, 100] } },
+      "notFlags": ["love_zhao_1", "confession_handled"]
+    },
+    "seed": "他请你喝酒，在坊市最贵的那家。\n\n菜点了一桌，酒开了三坛，可他一口没动。\n\n「我算了一笔账。」他忽然说，「这些年我在你身上花了多少，你在我身上花了多少。」\n\n他从袖子里摸出一张纸，上面密密麻麻。\n\n「算不平。」他把纸推过来，「你欠我的，永远还不清；我欠你的，也一样。」\n\n他终于抬头看你：「所以这笔账，我不想算了。」",
+    "facts": ["赵鸣岐请你喝酒，一口没动", "他算了一笔你们之间的账", "他说这笔账他不想算了"],
+    "options": [
+      { "id": "A", "text": "把那张纸撕了", "reason": 16, "check": { "attr": "xin", "difficulty": 38 },
+        "outcomes": {
+          "perfect": { "narrative": "你把纸撕成两半，又撕成四份，扔进了酒里。\n\n他看着那些纸片在酒里泡开，忽然笑起来，笑得肩膀直抖。\n\n「你知道我最怕什么吗。」他给自己倒了一杯，「我怕有一天我算清楚了，就没理由再找你了。」\n\n他一口把酒喝干，连带着纸片一起。", "effects": [ { "type": "relation", "favor": 22, "trust": 25, "bond": 22, "note": "你把那张账单泡进了酒里", "openRomance": true }, { "type": "flag", "key": "love_zhao_1" } ] },
+          "good": { "narrative": "你把纸撕了。他愣了一下，然后开始倒酒——这次他自己也喝了。\n\n那晚两个人喝到三更。", "effects": [ { "type": "relation", "favor": 15, "trust": 18, "bond": 16, "openRomance": true }, { "type": "flag", "key": "love_zhao_1" } ] },
+          "plain": { "narrative": "你把纸推回去。他收了起来，然后开始劝菜。", "effects": [ { "type": "relation", "favor": 7, "trust": 6 }, { "type": "flag", "key": "love_zhao_1" } ] },
+          "bad": { "narrative": "你撕纸的动作让他误会了。「行行行，」他忙说，「我不算了，别恼。」\n\n那顿饭后半段他一直在赔笑。", "effects": [ { "type": "relation", "favor": 2, "trust": -3 }, { "type": "flag", "key": "love_zhao_1" } ] },
+          "terrible": { "narrative": "你把纸撕了，还说了句「你这人怎么什么都算」。\n\n他脸上的笑僵了三息，然后恢复如常：「是是是，商贾习气，改不了。」\n\n那顿饭吃到最后，他把钱全付了，一分没让你出。", "effects": [ { "type": "relation", "favor": -10, "trust": -10, "note": "你说了句'你这人怎么什么都算'" }, { "type": "flag", "key": "love_zhao_1" }, { "type": "demon", "value": 4, "source": "guilt" } ] }
+        } },
+      { "id": "B", "text": "顺着他算——把他欠你的那栏念出来", "reason": 12, "check": { "attr": "shi", "difficulty": 50 },
+        "outcomes": {
+          "perfect": { "narrative": "你把纸拿过来，从他欠你的那一栏念起。\n\n念到第七条时他打断了：「够了。」\n\n「还有二十三条。」\n\n「我说够了。」他抢过纸，「你怎么记得这么细。」\n\n「因为你也记得。」\n\n他不说话了。过了很久，他把纸叠好收进怀里，说：「那这笔账就一直挂着。挂一辈子。」", "effects": [ { "type": "relation", "favor": 20, "trust": 22, "bond": 20, "note": "这笔账要挂一辈子", "openRomance": true }, { "type": "flag", "key": "love_zhao_1" } ] },
+          "good": { "narrative": "你念了几条，他听得很不自在，最后把纸抢了回去。\n\n但那晚他喝得很多，话也很多。", "effects": [ { "type": "relation", "favor": 14, "trust": 15, "openRomance": true }, { "type": "flag", "key": "love_zhao_1" } ] },
+          "plain": { "narrative": "你念了两条就停了。他笑着把话岔开。", "effects": [ { "type": "relation", "favor": 6 }, { "type": "flag", "key": "love_zhao_1" } ] },
+          "bad": { "narrative": "你念错了两处。他纠正了，纠正得很认真——认真到有点扫兴。", "effects": [ { "type": "relation", "favor": 2, "trust": -2 }, { "type": "flag", "key": "love_zhao_1" } ] },
+          "terrible": { "narrative": "你念着念着，把那些他为你垫过的钱一笔笔说成了「小事」。\n\n他听完，笑了：「对，都是小事。」\n\n他把纸收了，那晚再没提这件事。", "effects": [ { "type": "relation", "favor": -12, "trust": -12 }, { "type": "flag", "key": "love_zhao_1" } ] }
+        } },
+      { "id": "C", "text": "问他：你到底想说什么", "reason": 6, "check": { "attr": "shen", "difficulty": 52 },
+        "outcomes": {
+          "perfect": { "narrative": "你把话挑明了。\n\n他愣住，然后叹了很长一口气，像是终于卸了什么东西。\n\n「我这人做惯了买卖，」他说，「凡事都要先算清楚值不值。可我算了三年，算不明白你。」\n\n他倒了一杯酒推给你：「所以我今天不带算盘。」", "effects": [ { "type": "relation", "favor": 20, "trust": 22, "bond": 18, "note": "他说他今天不带算盘", "openRomance": true }, { "type": "flag", "key": "love_zhao_1" } ] },
+          "good": { "narrative": "他挠了挠头：「没什么，就是喝酒。」\n\n但他把那张纸收了起来，再没拿出来。", "effects": [ { "type": "relation", "favor": 12, "trust": 12, "openRomance": true }, { "type": "flag", "key": "love_zhao_1" } ] },
+          "plain": { "narrative": "他打了个哈哈，开始说生意上的事。", "effects": [ { "type": "relation", "favor": 5 }, { "type": "flag", "key": "love_zhao_1" } ] },
+          "bad": { "narrative": "他被问得有点急：「我能有什么意思，就是请你吃个饭。」\n\n那顿饭后半段很沉默。", "effects": [ { "type": "relation", "favor": -4, "trust": -3 }, { "type": "flag", "key": "love_zhao_1" } ] },
+          "terrible": { "narrative": "你问得太直，还带了点不耐烦。\n\n他把那张纸慢慢收回袖子，脸上又挂起了那副招呼客人的笑：「没什么意思。菜要凉了，吃菜。」\n\n那顿饭他付了三十两，是他半个月的用度。", "effects": [ { "type": "relation", "favor": -14, "trust": -14 }, { "type": "flag", "key": "love_zhao_1" }, { "type": "demon", "value": 5, "source": "guilt" } ] }
+        } }
+    ],
+    "chainNext": { "on": ["perfect", "good"], "eventId": "evt_love_zhao_2", "delayWeeks": 8 }
+  },
+
+  {
+    "id": "evt_love_zhao_2",
+    "category": "romance",
+    "chainOnly": true,
+    "chainId": "love_zhao",
+    "scene": "scene_market",
+    "actors": ["npc_zhaomingqi"],
+    "cooldown": 999,
+    "important": true,
+    "conditions": { "role": ["student"] },
+    "seed": "赵家倒了。\n\n不是缺钱那种倒，是彻底倒——铺子被封，宅子被抵，他爹病倒在床上。\n\n他没有告诉任何人。你是在坊市听人闲话才知道的，找到他时他正在山下的码头上扛货，一身粗布，手上全是血泡。\n\n看见你，他先是愣住，然后飞快地把手背到身后，笑了：「哟，怎么下山了。」\n\n那个笑跟他招呼客人时一模一样。",
+    "facts": ["赵家彻底倒了", "他在码头扛货，手上全是血泡", "他先把手藏到了身后"],
+    "options": [
+      { "id": "A", "text": "把他的手拉出来看", "reason": 14, "check": { "attr": "xin", "difficulty": 42 },
+        "outcomes": {
+          "perfect": { "narrative": "你伸手把他藏着的手拽了出来。\n\n他挣了一下，没挣开。\n\n血泡破了好几个，掌心一片血肉模糊。你就那么攥着，也不说话。\n\n他先撑不住了。「你放开。」他的声音开始抖，「你放开啊。」\n\n你没放。\n\n他站在码头上哭了。二十年来第一次，当着人的面。", "effects": [ { "type": "relation", "favor": 28, "trust": 30, "bond": 30, "note": "码头上，他二十年来第一次当着人哭" }, { "type": "flag", "key": "zhao_broke_down" }, { "type": "item", "id": "huichun_dan", "value": -1 } ] },
+          "good": { "narrative": "你把他的手拉出来看了。他别过脸去，说了句「小伤」。\n\n但那天之后，他不再瞒你了。", "effects": [ { "type": "relation", "favor": 20, "trust": 22, "bond": 22 }, { "type": "flag", "key": "zhao_broke_down" } ] },
+          "plain": { "narrative": "他把手抽了回去，笑着说没事。你没能再问下去。", "effects": [ { "type": "relation", "favor": 8, "trust": 8 } ] },
+          "bad": { "narrative": "他躲开了：「别看别看，脏。」\n\n他一直在笑。笑到你走，都没停。", "effects": [ { "type": "relation", "favor": 4, "trust": 3 }, { "type": "demon", "value": 5, "source": "guilt" } ] },
+          "terrible": { "narrative": "你说了句「怎么弄成这样」。\n\n他的笑僵了。「我怎么样，」他慢慢地说，「跟你有什么关系。」\n\n他背起货就走了。那批货压得他背都直不起来。", "effects": [ { "type": "relation", "favor": -12, "trust": -12 }, { "type": "demon", "value": 8, "source": "guilt", "note": "码头上那句'怎么弄成这样'" } ] }
+        } },
+      { "id": "B", "text": "什么也不说，扛起另一头", "reason": 16, "check": { "attr": "gen", "difficulty": 45 },
+        "outcomes": {
+          "perfect": { "narrative": "你脱了外袍，扛起了另一头。\n\n他张嘴要说什么，你说：「快点，这批货天黑前要装完。」\n\n两个人扛到天黑。中间谁也没说话。\n\n最后一件货上船时，他坐在码头石阶上，忽然说：「我小时候我爹跟我说，赵家的人，饿死也不能让人看见落魄。」\n\n他顿了顿：「他没说过被人看见了怎么办。」", "effects": [ { "type": "relation", "favor": 30, "trust": 28, "bond": 32, "note": "两个人在码头扛了一整天的货" }, { "type": "flag", "key": "zhao_broke_down" }, { "type": "stone", "value": 80 }, { "type": "attr", "key": "gen", "value": 1 } ] },
+          "good": { "narrative": "你扛了半天。他一开始拦，后来不拦了。\n\n收工时他给你分了工钱，一文不少。", "effects": [ { "type": "relation", "favor": 22, "trust": 22, "bond": 24 }, { "type": "flag", "key": "zhao_broke_down" }, { "type": "stone", "value": 40 } ] },
+          "plain": { "narrative": "你扛了两趟就不行了。他笑着让你歇着。", "effects": [ { "type": "relation", "favor": 12, "bond": 12 } ] },
+          "bad": { "narrative": "货太重，你把腰闪了。他背你回的山。\n\n一路上他一直在说笑话——说得很勤，勤得反常。", "effects": [ { "type": "relation", "favor": 10, "bond": 15 }, { "type": "injury", "key": "wound", "value": 1, "weeks": 1 } ] },
+          "terrible": { "narrative": "你把一箱货摔了。\n\n那是他今天的全部工钱。管事的骂了很久，他一句话没辩，全认了。\n\n收工后他说：「你以后别来了。」", "effects": [ { "type": "relation", "favor": -10, "trust": -8 }, { "type": "demon", "value": 10, "source": "guilt", "note": "码头上摔碎的那箱货" } ] }
+        } },
+      { "id": "C", "text": "拿钱给他", "reason": 4, "require": { "stone": 1000 },
+        "outcomes": { "fixed": { "narrative": "你把身上所有的灵石都拿了出来。\n\n他看着那袋钱，看了很久，然后笑了——是真笑，笑得眼睛都眯起来。\n\n「你知道我们家最落魄的时候，多少人送钱来吗？」他把袋子推回去，「一个都没有。」\n\n「所以你这一袋，」他站起来，拍了拍身上的灰，「我记着。但我不能要。」\n\n他背起货，走了两步又回头：「等我把铺子挣回来，第一顿还是那家。你等着。」", "effects": [ { "type": "relation", "favor": 22, "trust": 25, "bond": 22, "note": "他没要那袋钱，说等他把铺子挣回来" }, { "type": "flag", "key": "zhao_broke_down" }, { "type": "flag", "key": "zhao_promise" } ] } } }
+    ],
+    "chainNext": { "on": ["perfect", "good"], "eventId": "evt_love_zhao_3", "delayWeeks": 12 }
+  },
+
+  {
+    "id": "evt_love_zhao_3",
+    "category": "romance",
+    "chainOnly": true,
+    "chainId": "love_zhao",
+    "scene": "scene_market",
+    "actors": ["npc_zhaomingqi"],
+    "cooldown": 999,
+    "important": true,
+    "conditions": { "role": ["student"] },
+    "seed": "坊市东头新开了一间铺子，招牌很小，只有两个字：赵记。\n\n开张那天他站在门口，穿着新做的衣裳，可袖口还是卷着——扛了一年货的习惯改不掉。\n\n他把你请进去，关上门，从柜台底下掏出一样东西。\n\n是那张账单。泡过酒，皱得不成样子，但他补好了，一条一条抄在了新纸上。\n\n「我说过要还的。」他说。",
+    "facts": ["赵鸣岐重新开了铺子", "他把那张泡烂的账单补好抄在了新纸上", "他说他要还"],
+    "options": [
+      { "id": "A", "text": "告诉他，你要的不是还账", "reason": 16, "check": { "attr": "shi", "difficulty": 45 },
+        "outcomes": {
+          "perfect": { "narrative": "你说：「我不要你还。」\n\n「那你要什么。」他问得很快，像是等这句话等了很久。\n\n「要这间铺子里有我的一半。」\n\n他愣住了。\n\n「不是钱。」你说，「是名字。招牌上那两个字，我想再加一个。」\n\n他把那张纸攥在手里，攥得指节发白，很久很久，然后他说：「你等着。」\n\n三天后招牌换了。上面多了一个字，是他一笔一笔刻的。", "effects": [ { "type": "relation", "favor": 30, "trust": 30, "bond": 32, "note": "赵记的招牌上多了一个字" }, { "type": "flag", "key": "in_relationship" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_zhao_done" }, { "type": "flag", "key": "zhao_shop_shared" }, { "type": "stone", "value": 200 }, { "type": "demon", "value": -12, "source": "love" } ] },
+          "good": { "narrative": "你把话说明白了。他听完，把账单折起来收好。\n\n「那我记另一本账。」他说，「记这辈子的。」", "effects": [ { "type": "relation", "favor": 22, "trust": 24, "bond": 26 }, { "type": "flag", "key": "in_relationship" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_zhao_done" }, { "type": "demon", "value": -8, "source": "love" } ] },
+          "plain": { "narrative": "他听懂了一半。账单没有撕，也没有还。这事就悬着。", "effects": [ { "type": "relation", "favor": 12, "bond": 12 }, { "type": "flag", "key": "love_zhao_done" } ] },
+          "bad": { "narrative": "他误会了，以为你要入股。当场就算起了分成。\n\n算到一半他自己停下来，说：「不对，你刚才说的不是这个意思吧。」\n\n但气氛已经过去了。", "effects": [ { "type": "relation", "favor": 6, "bond": 8 }, { "type": "flag", "key": "love_zhao_done" }, { "type": "demon", "value": 4, "source": "love" } ] },
+          "terrible": { "narrative": "你说得含糊，他理解成了「不用还了」。\n\n「那不行。」他把纸推过来，「赵家的人不欠账。」\n\n钱还清了。此后你们还是朋友，但他每次见你都要先客气三句。", "effects": [ { "type": "relation", "favor": -8, "trust": -6 }, { "type": "stone", "value": 400 }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_zhao_done" }, { "type": "demon", "value": 8, "source": "love" } ] }
+        } },
+      { "id": "B", "text": "把账单收下——但要求他亲自送货上门，送一辈子", "reason": 14, "check": { "attr": "shi", "difficulty": 50 },
+        "outcomes": {
+          "perfect": { "narrative": "你把那张纸接过来，看了一遍，然后说：「行。这些我都收。」\n\n他松了口气。\n\n「不过有个条件。」你说，「赵记的货，得你亲自送。送到我手上。」\n\n「那要送到什么时候。」\n\n「送到你送不动为止。」\n\n他张着嘴看了你半天，然后一屁股坐在柜台上，笑得整间铺子都在响。", "effects": [ { "type": "relation", "favor": 28, "trust": 26, "bond": 30, "note": "赵记的货，他要亲自送一辈子" }, { "type": "flag", "key": "in_relationship" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_zhao_done" }, { "type": "flag", "key": "zhao_delivery" }, { "type": "demon", "value": -12, "source": "love" } ] },
+          "good": { "narrative": "他听完，笑着应了。从那以后，每旬都有人给你送东西——都是他自己来。", "effects": [ { "type": "relation", "favor": 20, "trust": 20, "bond": 24 }, { "type": "flag", "key": "in_relationship" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_zhao_done" }, { "type": "demon", "value": -6, "source": "love" } ] },
+          "plain": { "narrative": "他答应了，但当成了一句玩笑。", "effects": [ { "type": "relation", "favor": 10, "bond": 10 }, { "type": "flag", "key": "love_zhao_done" } ] },
+          "bad": { "narrative": "他认真地算了算送货的成本，说这样不划算。\n\n你看着他算，忽然不知道该说什么。", "effects": [ { "type": "relation", "favor": 4 }, { "type": "flag", "key": "love_zhao_done" }, { "type": "demon", "value": 4, "source": "love" } ] },
+          "terrible": { "narrative": "你的玩笑开得太隐晦，他完全没听懂，还以为你在挑他生意的毛病。\n\n他很紧张地解释了一通送货的流程。\n\n你听着，听到最后自己也笑了——笑得有点想哭。", "effects": [ { "type": "relation", "favor": 2, "trust": -4 }, { "type": "flag", "key": "love_zhao_done" }, { "type": "demon", "value": 8, "source": "love" } ] }
+        } },
+      { "id": "C", "text": "把账清了。你们两清", "reason": 4,
+        "outcomes": { "fixed": { "narrative": "你把账一条条对完，付清了差额。\n\n他数完钱，写了收条，双手递给你——很正式，像对待一个真正的客人。\n\n「两清了。」他说。\n\n「两清了。」\n\n你走出铺子的时候，听见身后有人在收算盘。那个声音响了很久，久到不像是在收。\n\n后来赵记的生意做得很大。每年冬至他都会送一份年礼上山，从不落下，也从不多说一个字。", "effects": [ { "type": "stone", "value": -300, "noScale": true }, { "type": "relation", "favor": -10, "trust": 15, "bond": 10, "note": "你们两清了" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_zhao_done" }, { "type": "demon", "value": 6, "source": "love", "note": "铺子里那阵收算盘的声音" } ] } } }
+    ]
+  }
+]

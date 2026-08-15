@@ -1,0 +1,1978 @@
+[
+  {
+    "id": "evt_gov_patrol_find",
+    "category": "gov",
+    "weight": 30,
+    "scene": "scene_market",
+    "actors": [],
+    "cooldown": 13,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 14
+    },
+    "variants": [
+      {
+        "seed": "你换了身寻常衣裳下山，坊市里没人认得出你。\n\n在一家药铺门口你听见两个弟子在说话——说的是学院最近的伙食、说的是哪个教习最好糊弄、说的是「反正院主也不知道」。\n\n他们没看见你。",
+        "facts": [
+          "你微服下山，听见弟子私下议论",
+          "其中一句是'反正院主也不知道'"
+        ]
+      },
+      {
+        "seed": "你在剑渊院后墙看见一处塌了的台阶。\n\n三个月前的账上，这处修缮的钱已经拨出去了。你在那儿站了很久。石缝里的草长得很高——不是三个月能长成这样的。",
+        "facts": [
+          "拨过款的修缮没有做",
+          "从草的长势看，废弃已久"
+        ]
+      }
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "回去查到底",
+        "reason": 14,
+        "check": {
+          "attr": "jue",
+          "difficulty": 52
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你没有声张，只让方砚把近三年的杂项支出全调出来。\n\n查了七天，揪出四笔。数目都不大，但连成一条线，指向的是同一个执事。\n\n处置那天你说得很轻：「补上，然后走。」没有通报全院——这是你能给的最后一点体面。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": 900,
+                "unrestAll": -6
+              },
+              {
+                "type": "attr",
+                "key": "jue",
+                "value": 1
+              },
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": 15,
+                "trust": 12,
+                "note": "他陪你查了七天账"
+              },
+              {
+                "type": "reputation",
+                "value": 6
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你查出了问题，补了窟窿。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": 400,
+                "unrestAll": -3
+              },
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": 8
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "查了半个月，账面上看不出毛病。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "你查错了方向，惊动了不该惊动的人。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 5
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你当众点了名，结果查下来那人是冤枉的。\n\n道歉是道了，但七院看你的眼神变了。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 10
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -1
+              },
+              {
+                "type": "reputation",
+                "value": -6
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "guilt",
+                "note": "被你当众点错名的那个人"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "把话原样带回议事厅，让七院自己认领",
+        "reason": 8,
+        "check": {
+          "attr": "wei",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你在议事厅把听到的原话复述了一遍，一个字没改，然后就不说话了。\n\n沉默了很久。最后是楚河山先开的口：「这话，我们该听。」\n\n那一季各院自查出的问题，比过去三年加起来都多。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -10
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 1
+              },
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "favor": 12
+              },
+              {
+                "type": "reputation",
+                "value": 6
+              }
+            ]
+          },
+          "good": {
+            "narrative": "各院都表了态。至少表面上认真了一阵。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -5
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "说完了。没什么反应。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "有人当场反问：「院主是从哪儿听来的？」这个问题你不太好答。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 4
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你的话被解读成了「院主在暗中监视各院」。\n\n此后半年，你走到哪里都是一片客客气气。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 12
+              },
+              {
+                "type": "flag",
+                "key": "spy_rumor"
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "repress"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "当没听见。有些话本来就不该被院主听到",
+        "reason": 6,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你转身走了。\n\n回山的路上你一直在想那句「反正院主也不知道」。\n\n现在你知道了。但知道之后能怎么样，你也没想明白。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "yuan",
+                "value": 1
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "repress",
+                "note": "坊市药铺门口那句话"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_gov_old_friend",
+    "category": "gov",
+    "weight": 24,
+    "scene": "scene_headmaster_hall",
+    "actors": [
+      "npc_fangyan"
+    ],
+    "cooldown": 20,
+    "important": true,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 40
+    },
+    "seed": "方砚站在案前，手里的册子没有递上来。\n\n「院主，」他说，「有件事我瞒了三十年。」\n\n他把册子放下，翻到中间某一页——三十年来的「损耗」栏，一笔一笔，加起来是一个不小的数目。\n\n「都是我垫的。给交不起束脩的寒门弟子。」他没有抬头，「账做得不干净。您现在可以办我了。」",
+    "facts": [
+      "方砚三十年来用自己的俸禄补寒门弟子的欠账",
+      "他把账做成了损耗",
+      "他自己来认了"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "把这笔钱从私库补给他",
+        "reason": 14,
+        "check": {
+          "attr": "de",
+          "difficulty": 40
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你算了算数目，从私库里如数拨出，推到他面前。\n\n「这三十年，你替学院做了学院该做的事。」你说，「不是你欠学院，是学院欠你。」\n\n他没有接。站了很久，然后突然哭了——那种老人的哭，没什么声音，肩膀一抖一抖的。",
+            "effects": [
+              {
+                "type": "gov",
+                "privy": -1200
+              },
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": 30,
+                "trust": 30,
+                "bond": 25,
+                "note": "你替他把三十年的账补上了"
+              },
+              {
+                "type": "attr",
+                "key": "de",
+                "value": 2
+              },
+              {
+                "type": "gov",
+                "unrestAll": -8
+              },
+              {
+                "type": "reputation",
+                "value": 8
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你补了大半。他推辞了很久才收下。",
+            "effects": [
+              {
+                "type": "gov",
+                "privy": -800
+              },
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": 20,
+                "trust": 20
+              },
+              {
+                "type": "attr",
+                "key": "de",
+                "value": 1
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你补了一部分。他道了谢。",
+            "effects": [
+              {
+                "type": "gov",
+                "privy": -400
+              },
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": 10
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你答应补，但账上一时腾不出。这事拖了半年。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": 4
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你说会补，但后来忘了。\n\n他再没提过。这件事就这么过去了——只是他每次送账本进来，都放下就走。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": -15,
+                "trust": -20
+              },
+              {
+                "type": "demon",
+                "value": 12,
+                "source": "guilt",
+                "note": "答应了方砚却忘掉的那件事"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "把它变成正式的院规：设寒门助学一项",
+        "reason": 16,
+        "check": {
+          "attr": "yuan",
+          "difficulty": 55
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你没有办他，也没有只是补钱。\n\n你把这条写进了院规：自今年起，学院设寒门助学，从灵脉产出里固定划一成。\n\n落笔的时候你说：「方执事一个人做了三十年的事，不该再靠一个人。」\n\n那一条后来叫作「方砚例」。一直用了很多年。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -600,
+                "unrestAll": -14
+              },
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": 30,
+                "trust": 25,
+                "bond": 20
+              },
+              {
+                "type": "attr",
+                "key": "yuan",
+                "value": 1
+              },
+              {
+                "type": "attr",
+                "key": "de",
+                "value": 1
+              },
+              {
+                "type": "flag",
+                "key": "reforms_passed"
+              },
+              {
+                "type": "reputation",
+                "value": 12
+              },
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": 8
+              }
+            ]
+          },
+          "good": {
+            "narrative": "助学一项立了起来，虽然额度不高。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -300,
+                "unrestAll": -8
+              },
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": 18
+              },
+              {
+                "type": "flag",
+                "key": "reforms_passed"
+              },
+              {
+                "type": "reputation",
+                "value": 6
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "议了几轮，最后不了了之。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": 6
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "提案被驳了。理由是「学院不是善堂」。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 4
+              },
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": 4
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "这事一议，三十年的旧账被翻了出来。方砚被停职查办。\n\n查了三个月，一分钱贪墨都没查到——只查到他自己垫进去了半辈子的俸禄。\n\n他复职那天，头发白了一半。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": -10,
+                "bond": 20
+              },
+              {
+                "type": "gov",
+                "unrestAll": 8
+              },
+              {
+                "type": "demon",
+                "value": 15,
+                "source": "guilt",
+                "note": "方砚被查那三个月"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "按院规办。做假账就是做假账",
+        "reason": -8,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你说：「账不能这么做。」\n\n他点点头，好像早就知道会是这个答案。他把印信解下来放在案上，行了个礼，退出去了。\n\n新来的执事年轻，账做得漂漂亮亮。第一个月就有三个寒门弟子交不上束脩，退了学。\n\n名单送到你案上的时候，你看了很久。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": -30,
+                "trust": -25
+              },
+              {
+                "type": "gov",
+                "unrestAll": 12
+              },
+              {
+                "type": "attr",
+                "key": "de",
+                "value": -1
+              },
+              {
+                "type": "reputation",
+                "value": -6
+              },
+              {
+                "type": "demon",
+                "value": 18,
+                "source": "guilt",
+                "note": "那三个退学弟子的名单"
+              },
+              {
+                "type": "flag",
+                "key": "fangyan_dismissed"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_gov_envoy",
+    "category": "gov",
+    "weight": 26,
+    "scene": "scene_headmaster_hall",
+    "actors": [
+      "npc_bailuqing"
+    ],
+    "cooldown": 17,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 24
+    },
+    "variants": [
+      {
+        "seed": "天圣王朝派来了使者。\n\n来意很客气，条件很不客气：朝廷要在学院设一个「监学」，说是「便于沟通」。\n\n白鹿卿在旁边一言不发。这种事她向来是有主意的，但今天她把主意留给你。",
+        "facts": [
+          "天圣王朝要在学院设监学",
+          "白鹿卿罕见地不表态"
+        ]
+      },
+      {
+        "seed": "幽冥教的人在山下留了一封信，没有落款，只有一句话：「贵院丙字库的东西，我们不要了。换个交易。」\n\n信里附了一份名单——三个云霄弟子的名字，据说是他们已经发展的内线。\n\n名单可能是真的，也可能是离间。",
+        "facts": [
+          "幽冥教送来一份'内线名单'",
+          "真假不明，可能是离间"
+        ]
+      }
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "强硬拒绝",
+        "reason": 6,
+        "check": {
+          "attr": "wei",
+          "difficulty": 58
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你的回绝没有一个多余的字，但把学院一千二百年的位置说清楚了。\n\n使者当场变了脸，走的时候没有行礼。\n\n三个月后朝廷换了个说法重新来谈——这一次，条件是我们提的。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 2
+              },
+              {
+                "type": "reputation",
+                "value": 10
+              },
+              {
+                "type": "gov",
+                "unrestAll": -6,
+                "threatProgress": 25
+              },
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": 10
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你顶住了。对方悻悻而归。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 1
+              },
+              {
+                "type": "reputation",
+                "value": 5
+              },
+              {
+                "type": "gov",
+                "threatProgress": 15
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "谈崩了。事情悬着。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 3
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你的话说得太满，对方抓住了一处漏洞。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 6
+              },
+              {
+                "type": "relation",
+                "npc": "npc_bailuqing",
+                "favor": -6
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "使者回去之后，山下的商路断了两个月。\n\n方砚拿着空了一半的账本站在你面前，一句话没说。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -1500,
+                "unrestAll": 12
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -1
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "repress"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "交给白鹿卿去周旋",
+        "reason": 12,
+        "check": {
+          "attr": "ren",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把事情整个交给她，只划了一条线：不许动学院的自主。\n\n她谈了一个月，回来时带了一份文书——监学设了，但只能旁听不能过问，任期一年，人选由学院提名。\n\n「他们以为赢了。」她把文书放下，「其实这一条以后归我们用。」",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_bailuqing",
+                "favor": 20,
+                "trust": 18,
+                "note": "她把一条不利的条款谈成了工具"
+              },
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": 1
+              },
+              {
+                "type": "gov",
+                "threatProgress": 30
+              },
+              {
+                "type": "reputation",
+                "value": 6
+              },
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 8
+              }
+            ]
+          },
+          "good": {
+            "narrative": "她谈了个折中方案回来。不算亏。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_bailuqing",
+                "favor": 12
+              },
+              {
+                "type": "gov",
+                "threatProgress": 18
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "谈成了，条件平平。",
+            "effects": [
+              {
+                "type": "gov",
+                "threatProgress": 8
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "她让了一步你不想让的。事后她说：「总得给点什么。」",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 5
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -1
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "她越了权，用学院的名义许了一件你完全不知情的事。\n\n等你知道的时候，文书已经盖了印。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -2
+              },
+              {
+                "type": "gov",
+                "unrestAll": 10
+              },
+              {
+                "type": "flag",
+                "key": "bai_ambitious"
+              },
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 12,
+                "clue": "白鹿卿家族档案"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "先拖着，同时暗中查对方的底",
+        "reason": 14,
+        "check": {
+          "attr": "yuan",
+          "difficulty": 55
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你以「兹事体大，需议」为由拖了两个月，同时让人查对方的来路。\n\n查出来的东西很有意思：来的这位使者，在朝中的位置并不稳，这趟差事是他自己揽的。\n\n第三个月你才见他。谈的条件，比他一开始开的低了一半还多。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "yuan",
+                "value": 2
+              },
+              {
+                "type": "gov",
+                "threatProgress": 35
+              },
+              {
+                "type": "reputation",
+                "value": 8
+              },
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 10
+              }
+            ]
+          },
+          "good": {
+            "narrative": "拖出了转机。条件谈得比一开始好。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "yuan",
+                "value": 1
+              },
+              {
+                "type": "gov",
+                "threatProgress": 20
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "拖了两个月，情况没什么变化。",
+            "effects": [
+              {
+                "type": "gov",
+                "threatProgress": 5
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "拖得太久，对方失了耐心，条件反而更硬了。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 5,
+                "threatProgress": -10
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你查对方的事被对方知道了。\n\n这下不是谈条件的问题了。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 10,
+                "threatProgress": -20
+              },
+              {
+                "type": "reputation",
+                "value": -5
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "repress"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_gov_heir_test",
+    "category": "gov",
+    "weight": 26,
+    "scene": "scene_headmaster_hall",
+    "actors": [],
+    "cooldown": 18,
+    "important": true,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 60,
+      "flags": []
+    },
+    "seed": "你把一件真的院务交给了接班人去办——不是演习，是真的，办砸了会有真的后果。\n\n三天后他回来复命。事办成了，但办法不是你会用的那种：他绕开了两道规矩，也确实没有伤到任何人。\n\n他站在那儿等你的评价。",
+    "facts": [
+      "接班人办成了一件真事",
+      "但绕开了两道规矩",
+      "他在等你的评价"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "肯定结果，但把那两道规矩掰开讲清楚",
+        "reason": 16,
+        "check": {
+          "attr": "jiao",
+          "difficulty": 45
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你先说了事办得好，然后花了一个时辰讲那两道规矩为什么在。\n\n讲完你问他：「现在你还会那么办吗？」\n\n他想了很久，说：「还会。但我会先来跟您报备。」\n\n你笑了。这个答案比「不会」好。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "heir_ready",
+                "value": 3
+              },
+              {
+                "type": "attr",
+                "key": "yuan",
+                "value": 1
+              },
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": 1
+              },
+              {
+                "type": "reputation",
+                "value": 4
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他听进去了。下次会做得更周全。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "heir_ready",
+                "value": 2
+              },
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": 1
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他点头应了，但你不确定他听懂了多少。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "heir_ready",
+                "value": 1
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你讲得太长，他后半段明显走神了。",
+            "effects": []
+          },
+          "terrible": {
+            "narrative": "你把肯定和批评掺在一起说，他只听见了批评。\n\n此后他办事变得极其谨慎，谨慎到什么也不敢担。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "heir_timid"
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "只问一句：如果出了事，你担得起吗",
+        "reason": 10,
+        "check": {
+          "attr": "wei",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你只问了这一句。\n\n他站了很久，然后说：「担不起。所以我留了一手——那两道规矩我绕开的时候，都留了能收回来的口子。」他从袖中取出两份东西。\n\n你接过来看完，把它们放进了自己的匣子里。这个人可以。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "heir_ready",
+                "value": 4
+              },
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": 1
+              },
+              {
+                "type": "reputation",
+                "value": 6
+              },
+              {
+                "type": "flag",
+                "key": "heir_proven"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他答得很实在。你放心了一些。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "heir_ready",
+                "value": 2
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他说担得起。你不太确定。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "heir_ready",
+                "value": 1
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "他没答上来。这个沉默很长。",
+            "effects": []
+          },
+          "terrible": {
+            "narrative": "他答了一句「有院主在」。\n\n你看着他，忽然意识到自己这些年教错了什么。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "heir_timid"
+              },
+              {
+                "type": "attr",
+                "key": "yuan",
+                "value": -1
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "guilt",
+                "note": "那句'有院主在'"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "什么也不说，把下一件更难的交给他",
+        "reason": 12,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你只说了「知道了」，然后把另一件更棘手的推过去。\n\n他愣了一下，接了。\n\n出门的时候他回头看了一眼——那一眼里的东西，你在很多年前的镜子里见过。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "heir_ready",
+                "value": 2
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 1
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_gov_seal_pressure",
+    "category": "gov",
+    "weight": 30,
+    "scene": "scene_lingxu",
+    "actors": [
+      "npc_chuheshan"
+    ],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 70,
+      "storyline": {
+        "seal": {
+          "unlocked": true,
+          "minProgress": 40
+        }
+      },
+      "notFlags": [
+        "gov_seal_faced"
+      ]
+    },
+    "seed": "楚河山带你下到了灵墟。\n\n石台上的铭文比记载里暗了三成。他伸手在上面拂过，指尖沾了一层灰白的粉——那是灵纹在崩解。\n\n「三年。」他说，「最多三年。」\n\n他没有说三年之后会怎样。他不用说。",
+    "facts": [
+      "灵墟封印的铭文正在崩解",
+      "楚河山说最多还有三年"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "调全院之力加固",
+        "reason": 12,
+        "check": {
+          "attr": "jue",
+          "difficulty": 60
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把这件事摊到了七院面前，没有隐瞒。\n\n意外的是没有人退缩。符箓院熬了两个月重推禁制，剑渊院轮班守夜，丹霞院供药，连百艺院都出了人。\n\n加固完那天，铭文的光比原来还亮。楚河山看了很久，说：「一千二百年了，这座山第一次这么齐心。」",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -2000,
+                "unrestAll": -18
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 25
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 2
+              },
+              {
+                "type": "reputation",
+                "value": 15
+              },
+              {
+                "type": "flag",
+                "key": "gov_seal_faced"
+              },
+              {
+                "type": "flag",
+                "key": "seal_reinforced"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "加固做完了。撑得住，但花了不少。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -1500,
+                "unrestAll": -8
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 15
+              },
+              {
+                "type": "flag",
+                "key": "gov_seal_faced"
+              },
+              {
+                "type": "flag",
+                "key": "seal_reinforced"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "勉强加固了一层。三年变成了五年。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -1200
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 8
+              },
+              {
+                "type": "flag",
+                "key": "gov_seal_faced"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "工程做了一半就停了——预算不够，人心也不齐。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -800,
+                "unrestAll": 8
+              },
+              {
+                "type": "flag",
+                "key": "gov_seal_faced"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "加固时出了岔子，铭文崩了一大块。\n\n三年变成了一年。这件事你没有告诉任何人。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -1000,
+                "unrestAll": 6
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 12
+              },
+              {
+                "type": "flag",
+                "key": "gov_seal_faced"
+              },
+              {
+                "type": "flag",
+                "key": "seal_worsened"
+              },
+              {
+                "type": "demon",
+                "value": 15,
+                "source": "repress",
+                "note": "那块崩掉的铭文"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "封锁消息，只让最信得过的几个人知道",
+        "reason": 4,
+        "check": {
+          "attr": "jue",
+          "difficulty": 48
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "知道这件事的一共四个人。四个人做了三年该做的事，全院没有一丝风声。\n\n代价是这三年你一个人扛着——每次议事、每次巡院、每次看着弟子在广场上笑，你都知道脚下有什么。\n\n楚河山有一次问你睡得着吗。你说睡得着。你们都知道这是假话。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 20
+              },
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "favor": 18,
+                "trust": 20,
+                "bond": 15
+              },
+              {
+                "type": "flag",
+                "key": "gov_seal_faced"
+              },
+              {
+                "type": "flag",
+                "key": "seal_secret"
+              },
+              {
+                "type": "demon",
+                "value": 12,
+                "source": "repress",
+                "note": "那三年你一个人扛的东西"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "消息封住了。事情在暗中推进。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 12
+              },
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "favor": 10
+              },
+              {
+                "type": "flag",
+                "key": "gov_seal_faced"
+              },
+              {
+                "type": "flag",
+                "key": "seal_secret"
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "repress"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "封住了，但也没推进什么。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 5
+              },
+              {
+                "type": "flag",
+                "key": "gov_seal_faced"
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "repress"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "消息还是漏了半句。谣言比真相难听十倍。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 10
+              },
+              {
+                "type": "flag",
+                "key": "gov_seal_faced"
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "repress"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "消息漏得干干净净，而且是从你最信任的那几个人里漏的。\n\n全院哗然。有人开始收拾行李。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 20
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -2
+              },
+              {
+                "type": "reputation",
+                "value": -10
+              },
+              {
+                "type": "flag",
+                "key": "gov_seal_faced"
+              },
+              {
+                "type": "demon",
+                "value": 14,
+                "source": "repress"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "问楚河山：三百年前那位，是怎么做的",
+        "reason": 14,
+        "check": {
+          "attr": "ren",
+          "difficulty": 55
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "他沉默了很久，久到石台上的粉又落了一层。\n\n「他一个人下去的。」楚河山说，「谁也没告诉，包括我。」他抬起头，「我是三个月后才发现的——那时候封印已经稳了，人没了。」\n\n他看着你：「院主，我不想再发现一次。」",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 30,
+                "clue": "楚河山的沉默"
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 18
+              },
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "favor": 22,
+                "trust": 25,
+                "bond": 20,
+                "note": "他说他不想再发现一次"
+              },
+              {
+                "type": "flag",
+                "key": "gov_seal_faced"
+              },
+              {
+                "type": "flag",
+                "key": "know_seal_price"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他说了大概。最关键的那句他没说完。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 15,
+                "clue": "楚河山的沉默"
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 10
+              },
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "trust": 12
+              },
+              {
+                "type": "flag",
+                "key": "gov_seal_faced"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他说：「记载上没有。」这不是答案，但他不肯再说。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 6
+              },
+              {
+                "type": "flag",
+                "key": "gov_seal_faced"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "他转身往外走：「院主，先想眼下的事。」",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "favor": -5
+              },
+              {
+                "type": "flag",
+                "key": "gov_seal_faced"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你问得太急，用了「他是不是死在里面」这样的话。\n\n楚河山的手在石台上按了一下，铭文簌簌落了一片。\n\n「那是我师兄。」他说。这是他这辈子唯一一次在你面前失态。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "favor": -15,
+                "trust": -10,
+                "bond": 15
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 20
+              },
+              {
+                "type": "flag",
+                "key": "gov_seal_faced"
+              },
+              {
+                "type": "demon",
+                "value": 10,
+                "source": "guilt",
+                "note": "灵墟里那句问错的话"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_gov_market_tax",
+    "category": "gov",
+    "weight": 24,
+    "scene": "scene_market",
+    "actors": [
+      "npc_fangyan"
+    ],
+    "cooldown": 17,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 20
+    },
+    "seed": "山脚坊市的商户联名上书，说学院抽的税太重，做不下去了。\n\n方砚把两本账并排放着：一本是坊市的实收，一本是学院的支出。两本都不好看。\n\n「减税，学院这季就得动私库。」他说，「不减，明年坊市能剩一半就不错了。」",
+    "facts": [
+      "坊市商户联名请求减税",
+      "减税学院要动私库，不减坊市会垮一半"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "减。坊市垮了学院也没好处",
+        "reason": 12,
+        "check": {
+          "attr": "yuan",
+          "difficulty": 48
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把税减了三成，同时改了收法——按流水抽，不按摊位抽。\n\n第一季学院确实亏了。第二季坊市多了四十家新铺。第三季，学院的税收比减税前还高。\n\n方砚拿着账本反复算了三遍。",
+            "effects": [
+              {
+                "type": "gov",
+                "privy": -800,
+                "budget": 1600,
+                "unrestAll": -8
+              },
+              {
+                "type": "attr",
+                "key": "yuan",
+                "value": 2
+              },
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": 15,
+                "trust": 12
+              },
+              {
+                "type": "reputation",
+                "value": 8
+              },
+              {
+                "type": "flag",
+                "key": "reforms_passed"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "减了税。坊市缓过来了，学院紧了一阵。",
+            "effects": [
+              {
+                "type": "gov",
+                "privy": -600,
+                "budget": 600,
+                "unrestAll": -4
+              },
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": 8
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "减了一成。两边都不太满意。",
+            "effects": [
+              {
+                "type": "gov",
+                "privy": -300
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "减了税，坊市还是在萎缩。原因不在税上。",
+            "effects": [
+              {
+                "type": "gov",
+                "privy": -600,
+                "budget": -300
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你减得太多，有人趁机囤了三个坊口。\n\n半年后你才发现，联名上书那件事从一开始就是他策划的。",
+            "effects": [
+              {
+                "type": "gov",
+                "privy": -900,
+                "budget": -600,
+                "unrestAll": 6
+              },
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": -1
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "不减，但派人查清楚他们到底难在哪",
+        "reason": 16,
+        "check": {
+          "attr": "ren",
+          "difficulty": 52
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你没有直接答复，而是让方砚带人在坊市蹲了半个月。\n\n查出来的结果出乎所有人意料：压垮商户的不是学院的税，是三家大铺子在放印子钱。\n\n你把那三家的坊契收了。税一分没减，商户联名来谢。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": 800,
+                "unrestAll": -10
+              },
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": 2
+              },
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": 18,
+                "trust": 15
+              },
+              {
+                "type": "reputation",
+                "value": 10
+              }
+            ]
+          },
+          "good": {
+            "narrative": "查出了几处症结，对症处置了。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": 300,
+                "unrestAll": -5
+              },
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": 1
+              },
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": 10
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "查了半个月，问题还是那些问题。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "查得慢了。等结果出来，已经有七家铺子关了门。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -400,
+                "unrestAll": 5
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "派去的人被收买了，报上来的东西全是编的。\n\n你照着那份假报告下了三道令，一道比一道错。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -800,
+                "unrestAll": 12
+              },
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": -1
+              },
+              {
+                "type": "reputation",
+                "value": -6
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "不减。学院自己也难",
+        "reason": -2,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你驳回了联名书，理由写得很清楚：学院今年的账也紧。\n\n道理是站得住的。\n\n三个月后，坊市空了十一间铺面。你下山时经过那条街，比往年安静很多。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": 300,
+                "unrestAll": 6
+              },
+              {
+                "type": "reputation",
+                "value": -4
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "guilt",
+                "note": "那条安静了很多的街"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_gov_disciple_death",
+    "category": "gov",
+    "weight": 20,
+    "scene": "scene_wild_hunt",
+    "actors": [
+      "npc_guchangqing"
+    ],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 50,
+      "notFlags": [
+        "gov_death_faced"
+      ]
+    },
+    "seed": "春猎出事了。\n\n一个弟子没有回来。搜了三天，找到的时候人已经凉了——是自己脱队走深了，不是谁的过错。\n\n顾长青站在你面前，脸色比石头还硬：「按例，抚恤发下去，事情就了了。」\n\n他顿了顿：「往年都是这么办的。」",
+    "facts": [
+      "春猎中一名弟子身亡",
+      "调查认定无人过错",
+      "按往例发抚恤就算了结"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "亲自去一趟他家",
+        "reason": 16,
+        "check": {
+          "attr": "de",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你一个人下的山，走了六天。\n\n那是个种药的凡人家。他母亲听完，没有哭，只问了一句：「他在山上，快活吗？」\n\n你说快活。你说了他在剑渊院怎么被人夸、说了他去年冬至在论道峰上说过的话。\n\n你说了整整一夜。天亮时她给你煮了碗面。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "de",
+                "value": 2
+              },
+              {
+                "type": "gov",
+                "privy": -400,
+                "unrestAll": -12
+              },
+              {
+                "type": "reputation",
+                "value": 12
+              },
+              {
+                "type": "relation",
+                "npc": "npc_guchangqing",
+                "favor": 18,
+                "trust": 15,
+                "note": "你亲自走了六天山路"
+              },
+              {
+                "type": "flag",
+                "key": "gov_death_faced"
+              },
+              {
+                "type": "demon",
+                "value": -6,
+                "source": "clear"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你去了。话说得不多，但去了。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "de",
+                "value": 1
+              },
+              {
+                "type": "gov",
+                "privy": -300,
+                "unrestAll": -6
+              },
+              {
+                "type": "reputation",
+                "value": 6
+              },
+              {
+                "type": "flag",
+                "key": "gov_death_faced"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你去了，坐了半个时辰，把抚恤留下就走了。",
+            "effects": [
+              {
+                "type": "gov",
+                "privy": -300
+              },
+              {
+                "type": "flag",
+                "key": "gov_death_faced"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你去了，但那户人家没有开门。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "gov_death_faced"
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "guilt"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你去的时候说错了一句话——你说「学院已经尽力了」。\n\n那位母亲把抚恤扔在了地上。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "gov_death_faced"
+              },
+              {
+                "type": "reputation",
+                "value": -6
+              },
+              {
+                "type": "demon",
+                "value": 15,
+                "source": "guilt",
+                "note": "那句'学院已经尽力了'"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "改规矩：春猎从此不许单人脱队",
+        "reason": 14,
+        "check": {
+          "attr": "jue",
+          "difficulty": 45
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你在议事厅上说：「往年都是这么办的，所以往年一直在死人。」\n\n新规当天就立了：春猎三人成组，组不齐不许入域，违者取消资格。\n\n顾长青一句话没说。散会后他留下来，对你行了一礼——他这辈子没对院主行过这个礼。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "reforms_passed"
+              },
+              {
+                "type": "gov",
+                "unrestAll": -8
+              },
+              {
+                "type": "attr",
+                "key": "jue",
+                "value": 1
+              },
+              {
+                "type": "relation",
+                "npc": "npc_guchangqing",
+                "favor": 20,
+                "awe": 10
+              },
+              {
+                "type": "reputation",
+                "value": 10
+              },
+              {
+                "type": "flag",
+                "key": "gov_death_faced"
+              },
+              {
+                "type": "flag",
+                "key": "hunt_rule_changed"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "新规立了。以后春猎会安全一些。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "reforms_passed"
+              },
+              {
+                "type": "gov",
+                "unrestAll": -4
+              },
+              {
+                "type": "reputation",
+                "value": 5
+              },
+              {
+                "type": "flag",
+                "key": "gov_death_faced"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "规矩改了，但执行起来松松垮垮。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "gov_death_faced"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "有院首反对，说这是因噎废食。争了三轮，最后不了了之。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 4
+              },
+              {
+                "type": "flag",
+                "key": "gov_death_faced"
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "guilt"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "新规立得太急，条文里有个漏洞。第二年春猎，出事的变成了两个人。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 12
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -1
+              },
+              {
+                "type": "reputation",
+                "value": -8
+              },
+              {
+                "type": "flag",
+                "key": "gov_death_faced"
+              },
+              {
+                "type": "demon",
+                "value": 15,
+                "source": "guilt",
+                "note": "那个条文里的漏洞"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "按往例办",
+        "reason": -4,
+        "outcomes": {
+          "fixed": {
+            "narrative": "抚恤发了下去，卷宗封了存。\n\n一切都合规矩。院志上会有一行小字，记着某年某月某日，弟子某某，殁于外域。\n\n你在那一行上停了很久，然后翻了过去。后面还有二十几件事等着你批。",
+            "effects": [
+              {
+                "type": "gov",
+                "privy": -300,
+                "unrestAll": 5
+              },
+              {
+                "type": "flag",
+                "key": "gov_death_faced"
+              },
+              {
+                "type": "demon",
+                "value": 12,
+                "source": "guilt",
+                "note": "院志上那一行小字"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+]

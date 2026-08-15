@@ -1,0 +1,15 @@
+{
+  "name": "xianxia-academy-sim",
+  "version": "1.0.0",
+  "description": "修仙学院模拟器 · 云霄仙院 —— 单 HTML 文件的文字模拟经营 RPG，数值由本地引擎裁决，叙事可选接入 LLM。",
+  "private": true,
+  "scripts": {
+    "build": "node build.js",
+    "test": "node test/headless.js 240 && node test/balance.js && node test/dom.js && node test/viewport.js",
+    "icons": "python3 tools/make_icons.py"
+  },
+  "devDependencies": {
+    "jsdom": "^24.0.0"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,361 @@
+[
+  {
+    "id": "evt_love_su_1",
+    "category": "romance",
+    "weight": 30,
+    "chainId": "love_su",
+    "scene": "scene_danxia",
+    "actors": ["npc_sumuhan"],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": ["student", "teacher"], "minWeek": 52,
+      "relations": { "npc_sumuhan": { "favor": [50, 100], "trust": [50, 100] } },
+      "notFlags": ["love_su_1"]
+    },
+    "seed": "丹房的灯亮了三夜。\n\n第三夜你推门进去时，她正趴在案上睡着——手里还捏着笔，笔尖在纸上洇开一大团墨。\n\n你替她把笔抽出来。她醒了，抬头看你，眼睛里有一瞬的茫然，那种茫然你从没在她脸上见过。\n\n「几时了。」她问。\n\n「寅时。」\n\n她「哦」了一声，低头继续看方子。过了一会儿她忽然说：「你为什么每次都来。」",
+    "facts": ["苏暮寒连熬三夜，趴在案上睡着了", "她问你为什么每次都来"],
+    "options": [
+      { "id": "A", "text": "说实话：怕你熬坏了", "reason": 14, "check": { "attr": "xin", "difficulty": 42 },
+        "outcomes": {
+          "perfect": { "narrative": "你说完，她没有立刻回应。\n\n笔在纸上停了很久，久到那团墨又洇大了一圈。\n\n「一百二十年。」她终于开口，声音很平，「这一百二十年里，没有人跟我说过这句话。」\n\n她把笔放下：「你把它说得像是很寻常的一件事。」\n\n那天她没有再熬。她让你陪着，在丹房里睡了两个时辰——这是她第一次在别人面前睡着，而且知道自己会睡着。", "effects": [ { "type": "relation", "favor": 20, "trust": 25, "bond": 20, "note": "一百二十年里第一次有人担心她熬坏", "openRomance": true }, { "type": "flag", "key": "love_su_1" } ] },
+          "good": { "narrative": "她愣了一下，然后说：「知道了。」\n\n但那晚她真的收工了，比往常早了两个时辰。", "effects": [ { "type": "relation", "favor": 14, "trust": 16, "bond": 12, "openRomance": true }, { "type": "flag", "key": "love_su_1" } ] },
+          "plain": { "narrative": "她「嗯」了一声，接着看方子。", "effects": [ { "type": "relation", "favor": 6, "trust": 6 }, { "type": "flag", "key": "love_su_1" } ] },
+          "bad": { "narrative": "她抬头看了你两息，说：「不必。」然后低头继续。", "effects": [ { "type": "relation", "favor": 2 }, { "type": "flag", "key": "love_su_1" } ] },
+          "terrible": { "narrative": "你的话里带了点埋怨。\n\n她把笔搁下，很认真地说：「我炼丹的时候，不喜欢有人在旁边。」\n\n这句话她说得毫无恶意，但也毫无余地。", "effects": [ { "type": "relation", "favor": -8, "trust": -6 }, { "type": "flag", "key": "love_su_1" } ] }
+        } },
+      { "id": "B", "text": "反问她：你为什么每次都不赶我走", "reason": 10, "check": { "attr": "shi", "difficulty": 55 },
+        "outcomes": {
+          "perfect": { "narrative": "她愣住了。\n\n这是你第一次看见她在一个问题上卡住——她能算出丹方里最细的火候，却答不上这一句。\n\n很久之后她说：「我不知道。」\n\n又过了更久：「我从来没想过这个。」\n\n她把方子推开，第一次正眼看你，看了很长时间。「现在我要想了。」", "effects": [ { "type": "relation", "favor": 18, "trust": 22, "bond": 20, "note": "她说'现在我要想了'", "openRomance": true }, { "type": "flag", "key": "love_su_1" } ] },
+          "good": { "narrative": "她想了很久，说：「因为你不吵。」\n\n这大概是她能给出的最高评价。", "effects": [ { "type": "relation", "favor": 13, "trust": 15, "openRomance": true }, { "type": "flag", "key": "love_su_1" } ] },
+          "plain": { "narrative": "她说：「没想过。」然后就真的不想了。", "effects": [ { "type": "relation", "favor": 5 }, { "type": "flag", "key": "love_su_1" } ] },
+          "bad": { "narrative": "「要赶吗。」她问得一本正经，「那你走。」\n\n你不确定她是不是在开玩笑。她大概也不是。", "effects": [ { "type": "relation", "favor": -3 }, { "type": "flag", "key": "love_su_1" } ] },
+          "terrible": { "narrative": "你的语气让她皱了眉。\n\n「我不擅长这个。」她说，「你要是想听什么话，直接说。我不会猜。」\n\n她说得很平静。你忽然意识到，她是真的不会猜。", "effects": [ { "type": "relation", "favor": -6, "trust": -4 }, { "type": "flag", "key": "love_su_1" } ] }
+        } },
+      { "id": "C", "text": "什么也不说，替她把火看好", "reason": 16, "check": { "attr": "wu", "difficulty": 48 },
+        "outcomes": {
+          "perfect": { "narrative": "你没有回答，只是走到炉边，把火调到她惯用的那个高度。\n\n她看着你的手，看了很久。\n\n「你知道我用几分火。」\n\n「看你调过三百多次。」\n\n她没有再问了。那一夜她把方子看完了，你把火守到了天亮。谁也没有再说一句话。\n\n天亮时她说：「明天这个时辰。」", "effects": [ { "type": "relation", "favor": 22, "trust": 25, "bond": 22, "note": "你知道她用几分火", "openRomance": true }, { "type": "flag", "key": "love_su_1" }, { "type": "flag", "key": "su_night_ritual" }, { "type": "attr", "key": "wu", "value": 1 } ] },
+          "good": { "narrative": "你把火看好了。她没有说什么，但也没有让你走。\n\n那一夜过得很快。", "effects": [ { "type": "relation", "favor": 15, "trust": 16, "bond": 14, "openRomance": true }, { "type": "flag", "key": "love_su_1" } ] },
+          "plain": { "narrative": "火没出岔子。天亮时她说了句「多谢」，然后回房了。", "effects": [ { "type": "relation", "favor": 7, "trust": 8 }, { "type": "flag", "key": "love_su_1" } ] },
+          "bad": { "narrative": "火大了一线。她无声地伸手调回去，什么也没说。\n\n那个「什么也没说」比说什么都难受。", "effects": [ { "type": "relation", "favor": 2 }, { "type": "flag", "key": "love_su_1" } ] },
+          "terrible": { "narrative": "你把火催过了，一炉半成的药废了。\n\n她盯着炉子看了很久，然后说：「出去。」\n\n只有两个字，但你退到门外时腿都是软的。", "effects": [ { "type": "relation", "favor": -12, "trust": -10 }, { "type": "flag", "key": "love_su_1" }, { "type": "demon", "value": 6, "source": "guilt" } ] }
+        } }
+    ],
+    "chainNext": { "on": ["perfect", "good"], "eventId": "evt_love_su_2", "delayWeeks": 10 }
+  },
+
+  {
+    "id": "evt_love_su_2",
+    "category": "romance",
+    "chainOnly": true,
+    "chainId": "love_su",
+    "scene": "scene_danxia",
+    "actors": ["npc_sumuhan"],
+    "cooldown": 999,
+    "important": true,
+    "conditions": { "role": ["student", "teacher"] },
+    "seed": "她带你下到了丹霞院地下。\n\n那扇封了一百二十年的门前，她停下来，从袖中取出一把钥匙——钥匙上的铜锈厚得几乎看不出形状。\n\n「我要开了。」她说，「开之前，我得先跟你说一件事。」\n\n她背对着门，声音很稳：\n\n「一百二十年前，我给一个人炼了一炉改灵根的丹。那个人是我的师兄。他喝了。」\n\n「他没有死。他变成了别的东西。」\n\n「我亲手把他封在里面。」",
+    "facts": ["苏暮寒要打开封了一百二十年的门", "门里封着的是她师兄", "他喝了她炼的改灵根丹，变成了别的东西"],
+    "options": [
+      { "id": "A", "text": "陪她进去", "reason": 14, "check": { "attr": "xin", "difficulty": 58 },
+        "outcomes": {
+          "perfect": { "narrative": "门开了。\n\n里面比想象中干净。石台上放着一炉早已冷透的丹，旁边有一具东西——不能说是尸体，因为它还在极缓慢地起伏。\n\n她走过去，把手放在它身上，说了句什么。太轻，你没听清。\n\n然后她转过身：「我以为我需要一个人来阻止我。」她的眼睛很红，但没有哭，「结果我需要的是一个人陪我看清楚。」\n\n那一夜你们把整间石室清理干净，重新封好。她把钥匙给了你。", "effects": [ { "type": "relation", "favor": 25, "trust": 30, "bond": 28, "note": "她把那把钥匙给了你" }, { "type": "storyline", "key": "rootSecret", "value": 28, "clue": "禁丹残渣" }, { "type": "flag", "key": "su_door_opened" }, { "type": "attr", "key": "xin", "value": 1 } ] },
+          "good": { "narrative": "门开了。你陪她在里面待了两个时辰。\n\n出来时她说：「谢谢你没有问为什么。」", "effects": [ { "type": "relation", "favor": 18, "trust": 22, "bond": 22 }, { "type": "storyline", "key": "rootSecret", "value": 18, "clue": "禁丹残渣" }, { "type": "flag", "key": "su_door_opened" } ] },
+          "plain": { "narrative": "门开了一条缝，她又关上了。\n\n「今天不行。」她说。", "effects": [ { "type": "relation", "favor": 8, "trust": 10 }, { "type": "storyline", "key": "rootSecret", "value": 6 } ] },
+          "bad": { "narrative": "开门的时候封印起了反应，一股冷气灌出来。她把你推开了，自己去挡。\n\n门重新封上后她病了半个月。", "effects": [ { "type": "relation", "favor": 10, "bond": 18 }, { "type": "injury", "key": "internal", "value": 1, "weeks": 2 }, { "type": "storyline", "key": "rootSecret", "value": 10 } ] },
+          "terrible": { "narrative": "里面的东西醒了一瞬。\n\n只有一瞬，但那一瞬里你听见了一个声音——很轻，在叫她的名字。\n\n她跪在门口，一动不动，直到那个声音停下来。\n\n重新封好之后她说：「我们不该来的。」这句话她说了三遍。", "effects": [ { "type": "relation", "favor": 5, "trust": 12, "bond": 20 }, { "type": "storyline", "key": "rootSecret", "value": 22, "clue": "禁丹残渣" }, { "type": "flag", "key": "su_door_opened" }, { "type": "demon", "value": 12, "source": "death", "note": "门里那个叫她名字的声音" } ] }
+        } },
+      { "id": "B", "text": "拦住她", "reason": 12, "check": { "attr": "shi", "difficulty": 52 },
+        "outcomes": {
+          "perfect": { "narrative": "你按住了她拿钥匙的手。\n\n「你等这一天等了一百二十年，」你说，「不差今天这一个时辰。先坐下，把话说完。」\n\n她真的坐下了。\n\n她说了三个时辰，把一百二十年前的每一个细节都说了一遍——包括她师兄喝下那炉丹之前对她说的最后一句话：「值得试。」\n\n说完之后她说：「现在我不想开了。」\n\n「为什么。」\n\n「因为我刚才说的时候，」她看着你，「你一次都没有打断我。」", "effects": [ { "type": "relation", "favor": 28, "trust": 32, "bond": 26, "note": "她说了三个时辰，你一次都没打断" }, { "type": "storyline", "key": "rootSecret", "value": 25, "clue": "上古灵根实验记录" }, { "type": "attr", "key": "xin", "value": 1 } ] },
+          "good": { "narrative": "你劝住了她。两个人在门外坐了一夜，她说了很多以前的事。", "effects": [ { "type": "relation", "favor": 20, "trust": 25, "bond": 20 }, { "type": "storyline", "key": "rootSecret", "value": 15 } ] },
+          "plain": { "narrative": "她把钥匙收了起来，说：「那再等等。」", "effects": [ { "type": "relation", "favor": 10, "trust": 12 }, { "type": "storyline", "key": "rootSecret", "value": 6 } ] },
+          "bad": { "narrative": "她摇头：「这是我的事。」\n\n她开了门，一个人进去了。你在门外站了整整一夜。", "effects": [ { "type": "relation", "favor": 4, "trust": 5 }, { "type": "storyline", "key": "rootSecret", "value": 12 }, { "type": "flag", "key": "su_door_opened" } ] },
+          "terrible": { "narrative": "你拦的时候用了「你会后悔」这样的话。\n\n她的手停住了。「我这一百二十年，」她说，「每天都在后悔。」\n\n「你觉得我还差这一次吗。」\n\n她把钥匙放回袖子，转身上楼了。此后半年，丹房的门对你关着。", "effects": [ { "type": "relation", "favor": -15, "trust": -12 }, { "type": "demon", "value": 8, "source": "guilt" } ] }
+        } },
+      { "id": "C", "text": "问她：你想让我做什么", "reason": 16, "check": { "attr": "shen", "difficulty": 45 },
+        "outcomes": {
+          "perfect": { "narrative": "她握着钥匙站了很久。\n\n「我想让你在外面等着。」她终于说，「如果一炷香之后我没出来，你就把这扇门重新封死，然后走。」\n\n「不来找你？」\n\n「不来找我。」\n\n你说好。然后你补了一句：「但一炷香我会数得很慢。」\n\n她笑了。这是你见过她笑得最像笑的一次。", "effects": [ { "type": "relation", "favor": 24, "trust": 30, "bond": 26, "note": "她笑了，那是你见过最像笑的一次" }, { "type": "storyline", "key": "rootSecret", "value": 22, "clue": "禁丹残渣" }, { "type": "flag", "key": "su_door_opened" } ] },
+          "good": { "narrative": "「守着门。」她说。\n\n你守了一夜。她出来时天已经亮了，手里拿着一小包东西。", "effects": [ { "type": "relation", "favor": 16, "trust": 20, "bond": 18 }, { "type": "storyline", "key": "rootSecret", "value": 15, "clue": "禁丹残渣" }, { "type": "flag", "key": "su_door_opened" } ] },
+          "plain": { "narrative": "她说：「什么也不用。」然后自己开了门。", "effects": [ { "type": "relation", "favor": 8, "trust": 10 }, { "type": "storyline", "key": "rootSecret", "value": 10 }, { "type": "flag", "key": "su_door_opened" } ] },
+          "bad": { "narrative": "她想了很久，说：「你回去吧。」\n\n你走到楼梯口时听见门开了。", "effects": [ { "type": "relation", "favor": 3, "trust": 5 }, { "type": "storyline", "key": "rootSecret", "value": 8 } ] },
+          "terrible": { "narrative": "她说：「你不该在这儿。」\n\n她说得很轻，但你听出了她的意思——她带你来，本来是想让你劝她的。而你把选择又推回给了她。\n\n她一个人进去了。三天后才出来。", "effects": [ { "type": "relation", "favor": -10, "trust": -8 }, { "type": "storyline", "key": "rootSecret", "value": 12 }, { "type": "flag", "key": "su_door_opened" }, { "type": "demon", "value": 8, "source": "guilt" } ] }
+        } }
+    ],
+    "chainNext": { "on": ["perfect", "good"], "eventId": "evt_love_su_3", "delayWeeks": 12 }
+  },
+
+  {
+    "id": "evt_love_su_3",
+    "category": "romance",
+    "chainOnly": true,
+    "chainId": "love_su",
+    "scene": "scene_danxia",
+    "actors": ["npc_sumuhan"],
+    "cooldown": 999,
+    "important": true,
+    "conditions": { "role": ["student", "teacher"] },
+    "seed": "她把一枚丹放在你面前。\n\n通体透明，看得见里面细细的纹路。这是她这辈子炼得最好的一枚。\n\n「这个方子，」她说，「我改了一百二十年。今天成了。」\n\n她推过来：「你吃。」\n\n你问这是什么。\n\n「养神的。」她说得很快，快得不像她，「没有别的意思。」\n\n她说完就转过身去看炉子了。但那个炉子今天根本没生火。",
+    "facts": ["她炼成了这辈子最好的一枚丹", "她说'没有别的意思'", "她盯着的那个炉子今天根本没生火"],
+    "options": [
+      { "id": "A", "text": "吃下去，然后说：还有别的意思吗", "reason": 14, "check": { "attr": "shi", "difficulty": 48 },
+        "outcomes": {
+          "perfect": { "narrative": "你把丹吃了，然后问了那句话。\n\n她的背绷住了。\n\n很久之后她转过身来。这个转身花了很长时间，长到你以为她不会转了。\n\n「有。」她说。\n\n就一个字。她说完就低下头，耳朵红得厉害——你从没见过她脸上有这个颜色。\n\n「我不会说那些话。」她盯着自己的鞋，「我只会炼丹。所以我把想说的都炼进去了。」\n\n「那我刚才吃下去的是什么。」\n\n她抬起头：「一百二十年。」", "effects": [ { "type": "relation", "favor": 30, "trust": 30, "bond": 32, "note": "她把想说的都炼进了那枚丹里" }, { "type": "flag", "key": "in_relationship" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_su_done" }, { "type": "attr", "key": "xin", "value": 1 }, { "type": "demon", "value": -14, "source": "love" } ] },
+          "good": { "narrative": "你吃了，问了。她沉默了很久，然后说：「你自己想。」\n\n但她一直没有转过身，也一直没有让你走。", "effects": [ { "type": "relation", "favor": 22, "trust": 24, "bond": 26 }, { "type": "flag", "key": "in_relationship" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_su_done" }, { "type": "demon", "value": -8, "source": "love" } ] },
+          "plain": { "narrative": "她说：「没有。」\n\n你们都知道这不是真话，但谁也没有再往下说。", "effects": [ { "type": "relation", "favor": 12, "bond": 14 }, { "type": "flag", "key": "love_su_done" } ] },
+          "bad": { "narrative": "她说：「你想多了。」\n\n那枚丹的效力很好。好到你后来每次运功都会想起那天。", "effects": [ { "type": "relation", "favor": 6, "trust": -3 }, { "type": "flag", "key": "love_su_done" }, { "type": "demon", "value": 5, "source": "love" } ] },
+          "terrible": { "narrative": "你问的语气像在打趣。\n\n她转过身，脸上什么表情也没有：「没有。养神而已。」\n\n她把炉子生上了火，开始配下一炉药。你在丹房里站了一会儿，然后走了。\n\n那枚丹的方子，她此后再没炼过第二次。", "effects": [ { "type": "relation", "favor": -12, "trust": -12 }, { "type": "flag", "key": "love_su_done" }, { "type": "demon", "value": 12, "source": "love", "note": "那个再没炼过第二次的方子" } ] }
+        } },
+      { "id": "B", "text": "不吃，把丹推回去，让她自己说", "reason": 10, "check": { "attr": "xin", "difficulty": 55 },
+        "outcomes": {
+          "perfect": { "narrative": "你把丹推了回去。\n\n「我不吃。」你说，「你说。」\n\n她僵在那里。丹房里静得能听见药材干燥的细响。\n\n过了很久很久——久到你以为这一夜就要这么过去了——她开口了，说得极慢，像每一个字都要先在心里过一遍称：\n\n「我不知道该怎么说。所以我炼了一炉丹。」\n\n「我用了一百二十年学会炼丹，」她抬起头，「却没学会这一句。」\n\n「你能不能……教我。」", "effects": [ { "type": "relation", "favor": 32, "trust": 32, "bond": 32, "note": "她说她没学会这一句，问你能不能教她" }, { "type": "flag", "key": "in_relationship" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_su_done" }, { "type": "item", "id": "ningxin_dan", "value": 2 }, { "type": "demon", "value": -15, "source": "love" } ] },
+          "good": { "narrative": "她挣扎了很久，最后说了半句。\n\n半句就够了。", "effects": [ { "type": "relation", "favor": 22, "trust": 25, "bond": 26 }, { "type": "flag", "key": "in_relationship" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_su_done" }, { "type": "demon", "value": -8, "source": "love" } ] },
+          "plain": { "narrative": "她说不出来。最后她把丹收了回去。\n\n「那就算了。」她说。", "effects": [ { "type": "relation", "favor": 8, "bond": 10 }, { "type": "flag", "key": "love_su_done" }, { "type": "demon", "value": 5, "source": "love" } ] },
+          "bad": { "narrative": "她把丹收进袖子，说：「不吃就算了。」\n\n然后她去生火了。这个话题被那炉火烧掉了。", "effects": [ { "type": "relation", "favor": 2, "trust": -5 }, { "type": "flag", "key": "love_su_done" }, { "type": "demon", "value": 6, "source": "love" } ] },
+          "terrible": { "narrative": "你推回去的动作太干脆，她理解成了拒绝。\n\n「好。」她说。她把丹放回药匣，锁上，动作一丝不乱。\n\n「那今天就到这儿。」\n\n她再没提过那枚丹。你后来在丹霞院的库房清单上见过它，编号之后写着两个字：封存。", "effects": [ { "type": "relation", "favor": -18, "trust": -15 }, { "type": "flag", "key": "love_su_done" }, { "type": "demon", "value": 14, "source": "love", "note": "库房清单上那两个字：封存" } ] }
+        } },
+      { "id": "C", "text": "收下，但说这枚丹你不吃——要留着", "reason": 12,
+        "outcomes": { "fixed": { "narrative": "你把丹收进了怀里。\n\n「不吃。」你说，「留着。」\n\n她皱眉：「丹放久了会失效。」\n\n「那就等它失效。」\n\n她愣了很久，然后忽然明白了。她低下头，很小声地说了句什么——你没听清，但你看见她的耳朵红了。\n\n那枚丹你留了很多年。它确实失效了。但每次打开药匣，你都还能闻到当年那一夜丹房里的味道。", "effects": [ { "type": "relation", "favor": 26, "trust": 26, "bond": 30, "note": "那枚你一直没吃的丹" }, { "type": "flag", "key": "in_relationship" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_su_done" }, { "type": "flag", "key": "su_pill_kept" }, { "type": "demon", "value": -12, "source": "love" } ] } } }
+    ]
+  },
+
+  {
+    "id": "evt_love_liu_1",
+    "category": "romance",
+    "weight": 30,
+    "chainId": "love_liu",
+    "scene": "scene_baiyi",
+    "actors": ["npc_liumianyan"],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": ["student", "teacher"], "minWeek": 54,
+      "relations": { "npc_liumianyan": { "favor": [55, 100], "trust": [50, 100] } },
+      "notFlags": ["love_liu_1"]
+    },
+    "seed": "她今天没喝酒。\n\n琴在膝上，但她没有弹，只是用指腹一遍遍摩着第七根弦。那根弦比别的旧，颜色也深。\n\n「这根是原配的。」她忽然说，「别的都换过。就这根，换不了。」\n\n她抬头看你：「你知道为什么吗。」\n\n「为什么。」\n\n「因为换了，我就想不起这琴原来是什么声音了。」",
+    "facts": ["柳眠烟今天没喝酒", "琴上第七根弦是原配的，她不肯换", "她说换了就想不起原来的声音"],
+    "options": [
+      { "id": "A", "text": "问她那是什么声音", "reason": 14, "check": { "attr": "shi", "difficulty": 50 },
+        "outcomes": {
+          "perfect": { "narrative": "她弹了。\n\n只有那一根弦，一个音，很短。\n\n「就是这个。」她说，「三百年前有个人听完这个音，说了句『可惜』。」\n\n「可惜什么。」\n\n「可惜什么他没说完。」她把手从弦上拿开，「他第二天就闭关了，说三个月出来。」\n\n她笑了一下：「我等了三百年，就为了问他那两个字后面是什么。」\n\n屋里安静了很久。然后她说：「今天说出来，好像也没那么难。」", "effects": [ { "type": "relation", "favor": 20, "trust": 28, "bond": 22, "note": "她弹了那一个音，说了三百年前的'可惜'", "openRomance": true }, { "type": "flag", "key": "love_liu_1" }, { "type": "storyline", "key": "exHead", "value": 18, "clue": "柳眠烟的醉话" } ] },
+          "good": { "narrative": "她弹了一个音，然后就把琴推开了。\n\n「不好听。」她说。但她的手一直放在弦上。", "effects": [ { "type": "relation", "favor": 13, "trust": 18, "openRomance": true }, { "type": "flag", "key": "love_liu_1" }, { "type": "storyline", "key": "exHead", "value": 8 } ] },
+          "plain": { "narrative": "她摇了摇头，转手去拿酒葫芦。", "effects": [ { "type": "relation", "favor": 6, "trust": 6 }, { "type": "flag", "key": "love_liu_1" } ] },
+          "bad": { "narrative": "「忘了。」她说。这两个字她说得太快了。", "effects": [ { "type": "relation", "trust": -3 }, { "type": "flag", "key": "love_liu_1" } ] },
+          "terrible": { "narrative": "你追问了三遍。\n\n第三遍的时候她把琴收了：「今天不弹了。」\n\n她拎起酒葫芦出去了，那一晚百艺院的灯亮到很晚。", "effects": [ { "type": "relation", "favor": -10, "trust": -10 }, { "type": "flag", "key": "love_liu_1" } ] }
+        } },
+      { "id": "B", "text": "说：那就别换。我陪你记着", "reason": 16, "check": { "attr": "xin", "difficulty": 40 },
+        "outcomes": {
+          "perfect": { "narrative": "你说完，她的手停在弦上。\n\n「你知道你在说什么吗。」她的声音第一次不带那种懒洋洋的调子，「三百年了。我等的是一个死人。」\n\n「那就两个人一起等。」\n\n她盯着你看了很久。然后她笑了，笑着笑着眼泪就下来了——她自己都愣了一下，抬手抹了一把，很不好意思地笑：「哎哟，多少年没这样了。」\n\n她把琴推给你：「按这根弦。轻一点。」", "effects": [ { "type": "relation", "favor": 25, "trust": 28, "bond": 26, "note": "她把琴推过来，让你按那根弦", "openRomance": true }, { "type": "flag", "key": "love_liu_1" }, { "type": "storyline", "key": "exHead", "value": 15, "clue": "柳眠烟的醉话" } ] },
+          "good": { "narrative": "她笑了：「傻话。」\n\n但那天之后，她弹琴的时候会看你一眼——每次弹到第七根弦的时候。", "effects": [ { "type": "relation", "favor": 16, "trust": 20, "bond": 16, "openRomance": true }, { "type": "flag", "key": "love_liu_1" } ] },
+          "plain": { "narrative": "她拍拍你的肩：「行了行了，喝酒。」", "effects": [ { "type": "relation", "favor": 7 }, { "type": "flag", "key": "love_liu_1" } ] },
+          "bad": { "narrative": "「小孩子话。」她说得很轻，但把琴收起来了。", "effects": [ { "type": "relation", "favor": -2, "trust": 3 }, { "type": "flag", "key": "love_liu_1" } ] },
+          "terrible": { "narrative": "她的表情变了，变得很陌生。\n\n「你不懂。」她说，「你连他是谁都不知道。」\n\n她把琴抱起来出去了。走到门口她停了一下，加了一句：「对不起。」\n\n那句对不起比什么都难受。", "effects": [ { "type": "relation", "favor": -12, "trust": -8 }, { "type": "flag", "key": "love_liu_1" }, { "type": "demon", "value": 6, "source": "love" } ] }
+        } },
+      { "id": "C", "text": "把那根弦换了", "reason": -8, "check": { "attr": "wu", "difficulty": 60 },
+        "outcomes": {
+          "perfect": { "narrative": "你趁她不在，把第七根弦换了。\n\n她回来时一眼就看见了。整个人僵在门口。\n\n「你——」\n\n「你试试。」\n\n她坐下，试了那个音。然后她愣住了——新弦的声音，跟她记忆里那个几乎一模一样。\n\n「你怎么找到的。」\n\n「找了半年。」你说，「一样的桐木，一样的丝，一样的年头。」\n\n她低下头，肩膀开始抖。抖了很久她才说：「原来我记的那个声音，是可以再有的。」", "effects": [ { "type": "relation", "favor": 28, "trust": 25, "bond": 28, "note": "你找了半年，配出了一模一样的第七根弦", "openRomance": true }, { "type": "flag", "key": "love_liu_1" }, { "type": "flag", "key": "liu_string_replaced" }, { "type": "stone", "value": -200, "noScale": true } ] },
+          "good": { "narrative": "新弦的声音有七八分像。她听了很久，说：「差一点。」\n\n但她没有换回去。", "effects": [ { "type": "relation", "favor": 15, "bond": 15, "openRomance": true }, { "type": "flag", "key": "love_liu_1" }, { "type": "stone", "value": -200, "noScale": true } ] },
+          "plain": { "narrative": "新弦的声音不对。她自己换回去了，什么也没说。", "effects": [ { "type": "relation", "favor": 3 }, { "type": "flag", "key": "love_liu_1" }, { "type": "stone", "value": -200, "noScale": true } ] },
+          "bad": { "narrative": "她把新弦拆了下来，动作很轻，但一句话没说。\n\n那晚她喝了很多。", "effects": [ { "type": "relation", "favor": -8, "trust": -6 }, { "type": "flag", "key": "love_liu_1" }, { "type": "stone", "value": -200, "noScale": true } ] },
+          "terrible": { "narrative": "旧弦在你手里断了。\n\n她进门时看见的就是这一幕——你手里攥着两截断弦。\n\n她没有发火。她走过来，把断弦从你手里拿走，用一块布仔细包好，收进抽屉。\n\n然后她说：「你出去吧。」", "effects": [ { "type": "relation", "favor": -25, "trust": -20, "note": "那根断在你手里的弦" }, { "type": "flag", "key": "love_liu_1" }, { "type": "demon", "value": 14, "source": "guilt", "note": "断在你手里的那根弦" } ] }
+        } }
+    ],
+    "chainNext": { "on": ["perfect", "good"], "eventId": "evt_love_liu_2", "delayWeeks": 10 }
+  },
+
+  {
+    "id": "evt_love_liu_2",
+    "category": "romance",
+    "chainOnly": true,
+    "chainId": "love_liu",
+    "scene": "scene_lingxu",
+    "actors": ["npc_liumianyan"],
+    "cooldown": 999,
+    "important": true,
+    "conditions": { "role": ["student", "teacher"] },
+    "seed": "她带你下到了灵墟。\n\n没有通行令，没有告诉任何人。她走得很熟，熟得像走过很多次。\n\n在封印室的门外，她停下来，从怀里取出一样东西——一个很旧的木匣。\n\n「三百年前那一夜，他托我保管这个。」她说，「说三个月后来取。」\n\n她把匣子放在门槛上：「我从来没打开过。」\n\n她转头看你：「你陪我打开。」",
+    "facts": ["柳眠烟带你潜入灵墟", "她拿出了三百年前那人托付的木匣", "她从未打开过"],
+    "options": [
+      { "id": "A", "text": "打开", "reason": 12, "check": { "attr": "xin", "difficulty": 52 },
+        "outcomes": {
+          "perfect": { "narrative": "匣子里没有法宝，没有信物。\n\n只有一张纸。上面是一份曲谱——写了一半，最后几个音空着。\n\n纸的边角有一行小字：「余下的，等你补。」\n\n她拿着那张纸，站在封印室门口，站了很久很久。\n\n然后她笑了。「三百年。」她说，「我以为他留的是什么了不得的东西。」\n\n她把曲谱折好收进怀里：「原来是作业。」\n\n她转身往外走，走了两步停下来，回头说：「我们回去吧。这次是真的可以回去了。」", "effects": [ { "type": "relation", "favor": 25, "trust": 30, "bond": 28, "note": "匣子里是半张曲谱，写着'余下的，等你补'" }, { "type": "storyline", "key": "exHead", "value": 30, "clue": "柳眠烟的醉话" }, { "type": "flag", "key": "liu_box_opened" }, { "type": "attr", "key": "xin", "value": 1 } ] },
+          "good": { "narrative": "匣子里是半张曲谱。她看了很久，什么也没说，把它收了起来。\n\n出灵墟的时候她走在前面，脚步比来时轻。", "effects": [ { "type": "relation", "favor": 18, "trust": 22, "bond": 22 }, { "type": "storyline", "key": "exHead", "value": 20, "clue": "柳眠烟的醉话" }, { "type": "flag", "key": "liu_box_opened" } ] },
+          "plain": { "narrative": "匣子打不开。锁上有禁制，是他亲手下的。\n\n她苦笑：「到死都不肯让我省心。」", "effects": [ { "type": "relation", "favor": 8, "trust": 10 }, { "type": "storyline", "key": "exHead", "value": 10 } ] },
+          "bad": { "narrative": "匣子开了，里面是空的。\n\n她盯着空匣子看了很久，然后说：「也好。」\n\n那两个字听着比什么都难受。", "effects": [ { "type": "relation", "favor": 8, "bond": 15 }, { "type": "storyline", "key": "exHead", "value": 15 }, { "type": "flag", "key": "liu_box_opened" }, { "type": "demon", "value": 8, "source": "love" } ] },
+          "terrible": { "narrative": "匣子上的禁制炸了。\n\n她替你挡了，肩膀被削掉一块。血流得很快。\n\n匣子里的东西也毁了——纸片被烧成了灰，一个字都看不出来。\n\n她躺在你怀里，笑着说：「三百年，白等了。」", "effects": [ { "type": "relation", "favor": 12, "bond": 25, "trust": 15 }, { "type": "injury", "key": "wound", "value": 2, "weeks": 4 }, { "type": "storyline", "key": "exHead", "value": 12 }, { "type": "flag", "key": "liu_box_opened" }, { "type": "demon", "value": 14, "source": "guilt", "note": "那匣被烧成灰的纸" } ] }
+        } },
+      { "id": "B", "text": "劝她别开——三个月还没到", "reason": 10, "check": { "attr": "shi", "difficulty": 55 },
+        "outcomes": {
+          "perfect": { "narrative": "你说：「他说的是三个月后来取。他没说三个月后你可以打开。」\n\n她愣住了。\n\n「三百年了，你都替他守着。」你说，「差这一天？」\n\n她低头看着匣子，很久很久。然后她把它抱起来，重新揣回怀里。\n\n「你说得对。」她的声音很轻，「我还能等。」\n\n出灵墟的路上她一直没说话。到了地面她忽然说：「刚才那句话，是这三百年里我听过最狠的一句。」\n\n她顿了顿：「也是最好的一句。」", "effects": [ { "type": "relation", "favor": 28, "trust": 30, "bond": 26, "note": "你说'他没说三个月后你可以打开'" }, { "type": "storyline", "key": "exHead", "value": 22 }, { "type": "attr", "key": "xin", "value": 1 } ] },
+          "good": { "narrative": "她想了想，把匣子收了回去。\n\n「再等等。」她说。", "effects": [ { "type": "relation", "favor": 18, "trust": 22, "bond": 18 }, { "type": "storyline", "key": "exHead", "value": 12 } ] },
+          "plain": { "narrative": "她摇摇头：「不开了。走吧。」", "effects": [ { "type": "relation", "favor": 8, "trust": 10 }, { "type": "storyline", "key": "exHead", "value": 6 } ] },
+          "bad": { "narrative": "「你不用替我留这个念想。」她说，然后打开了匣子。\n\n里面的东西你没看清，因为她看完就合上了。", "effects": [ { "type": "relation", "favor": 5, "trust": 8 }, { "type": "storyline", "key": "exHead", "value": 15 }, { "type": "flag", "key": "liu_box_opened" } ] },
+          "terrible": { "narrative": "你劝的时候说了一句「他不会回来了」。\n\n她的手停在匣子上。\n\n「我知道。」她说，「我知道三百年了。」\n\n她把匣子放回怀里，转身往外走。走出灵墟之后她说：「这件事，我以后自己来。」", "effects": [ { "type": "relation", "favor": -15, "trust": -12, "note": "你说了'他不会回来了'" }, { "type": "demon", "value": 8, "source": "guilt" } ] }
+        } },
+      { "id": "C", "text": "让她自己打开，你退到门外", "reason": 14, "check": { "attr": "xin", "difficulty": 45 },
+        "outcomes": {
+          "perfect": { "narrative": "你退到了石阶转角，背对着她。\n\n听见匣子打开的声音，然后是很长的安静。\n\n然后你听见她哭了。哭得毫无声息，只有呼吸乱了——你听了很多年她说话的样子，所以听得出来。\n\n你没有回头。你在那儿站着，一直站到她说「好了」。\n\n她出来的时候脸洗过了，眼睛还是红的。她走过你身边时说了句：「谢谢你没回头。」", "effects": [ { "type": "relation", "favor": 26, "trust": 32, "bond": 26, "note": "你没有回头，她记住了" }, { "type": "storyline", "key": "exHead", "value": 25, "clue": "柳眠烟的醉话" }, { "type": "flag", "key": "liu_box_opened" }, { "type": "attr", "key": "xin", "value": 1 } ] },
+          "good": { "narrative": "你退了出去。等她叫你时，匣子已经合上了。\n\n她只说了一句：「他写了半张曲子。」", "effects": [ { "type": "relation", "favor": 18, "trust": 24, "bond": 20 }, { "type": "storyline", "key": "exHead", "value": 18 }, { "type": "flag", "key": "liu_box_opened" } ] },
+          "plain": { "narrative": "她开了，看了，合上了。全程没有说话。\n\n回程的路上她也没有说。", "effects": [ { "type": "relation", "favor": 10, "trust": 12 }, { "type": "storyline", "key": "exHead", "value": 10 }, { "type": "flag", "key": "liu_box_opened" } ] },
+          "bad": { "narrative": "你退得太远。等你听见动静赶回去，她已经把匣子重新锁上了。\n\n「没什么。」她说。", "effects": [ { "type": "relation", "favor": 5, "trust": 8 }, { "type": "storyline", "key": "exHead", "value": 6 } ] },
+          "terrible": { "narrative": "你退出去的时候，封印室的门被震开了一线。\n\n里面的东西感应到了活人。\n\n她把你推出灵墟，自己留在里面封门。等她出来时天已经黑了，她的头发白了一缕。\n\n匣子丢在了里面。", "effects": [ { "type": "relation", "favor": 10, "bond": 22, "trust": 12 }, { "type": "storyline", "key": "seal", "value": 20 }, { "type": "flag", "key": "vein_anomaly", "value": 2 }, { "type": "demon", "value": 12, "source": "guilt", "note": "她那一缕白掉的头发" } ] }
+        } }
+    ],
+    "chainNext": { "on": ["perfect", "good"], "eventId": "evt_love_liu_3", "delayWeeks": 12 }
+  },
+
+  {
+    "id": "evt_love_liu_3",
+    "category": "romance",
+    "chainOnly": true,
+    "chainId": "love_liu",
+    "scene": "scene_baiyi",
+    "actors": ["npc_liumianyan"],
+    "cooldown": 999,
+    "important": true,
+    "conditions": { "role": ["student", "teacher"] },
+    "seed": "她把那半张曲谱铺在案上，旁边压着笔。\n\n「补完了。」她说。\n\n她弹给你听。前半段是三百年前那个人写的，后半段是她自己续的——两段接在一起，接得看不出缝。\n\n弹到最后一个音，她的手停在弦上没有抬起来。\n\n「这支曲子，」她说，「我给它取了个名。」\n\n她抬头看你。这一次她的眼睛里没有酒，也没有那种什么都不在意的懒散。\n\n「我想弹给一个还活着的人听。」",
+    "facts": ["柳眠烟补完了那半张曲谱", "她给曲子取了名", "她说想弹给一个还活着的人听"],
+    "options": [
+      { "id": "A", "text": "问她曲子叫什么", "reason": 16, "check": { "attr": "xin", "difficulty": 38 },
+        "outcomes": {
+          "perfect": { "narrative": "她说：「叫《不必等》。」\n\n屋里安静了很久。\n\n「这三个字我想了三个月。」她把手从弦上收回来，「三百年我都在等。等的时候我以为等是最难的。」\n\n「后来我发现，」她看着你，「不等，才难。」\n\n「因为不等，就得承认前面那三百年都不作数。也得承认——」她停了一下，「有个人比那三百年更值得。」\n\n她伸手把琴推到一边，那是这些年她第一次主动把琴推开。", "effects": [ { "type": "relation", "favor": 32, "trust": 32, "bond": 32, "note": "那支曲子叫《不必等》" }, { "type": "flag", "key": "in_relationship" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_liu_done" }, { "type": "demon", "value": -15, "source": "love" } ] },
+          "good": { "narrative": "「《不必等》。」她说。\n\n然后她笑了：「取得不好，是不是。」\n\n你说很好。她说那就好，说完就把琴收了，收得比平时快很多。", "effects": [ { "type": "relation", "favor": 24, "trust": 26, "bond": 28 }, { "type": "flag", "key": "in_relationship" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_liu_done" }, { "type": "demon", "value": -10, "source": "love" } ] },
+          "plain": { "narrative": "她想了想，说：「还没想好。」\n\n然后她开始收琴。", "effects": [ { "type": "relation", "favor": 12, "bond": 14 }, { "type": "flag", "key": "love_liu_done" } ] },
+          "bad": { "narrative": "「随便取的。」她说，「不重要。」\n\n她拎起酒葫芦，那个熟悉的懒散又回来了。", "effects": [ { "type": "relation", "favor": 6, "trust": -3 }, { "type": "flag", "key": "love_liu_done" }, { "type": "demon", "value": 5, "source": "love" } ] },
+          "terrible": { "narrative": "你问得漫不经心。\n\n她看了你两息，然后笑起来：「就叫《无题》吧。」\n\n她把曲谱折起来，塞进了案下的抽屉。那个抽屉后来一直没有再打开过。", "effects": [ { "type": "relation", "favor": -10, "trust": -10 }, { "type": "flag", "key": "love_liu_done" }, { "type": "demon", "value": 10, "source": "love", "note": "那个再没打开过的抽屉" } ] }
+        } },
+      { "id": "B", "text": "说：那你弹吧。我听着", "reason": 14, "check": { "attr": "shi", "difficulty": 44 },
+        "outcomes": {
+          "perfect": { "narrative": "「我听着。」\n\n她愣了一下，然后重新把手放上去。\n\n她弹了整整一夜。同一支曲子，弹了不知道多少遍——每一遍都有一点不一样，越弹越轻，越弹越慢。\n\n天快亮的时候她停了。\n\n「三百年我只弹给一个人听过。」她说，「他没听完。」\n\n她抬起头，眼睛很亮：「你听完了。」", "effects": [ { "type": "relation", "favor": 30, "trust": 30, "bond": 32, "note": "她弹了一夜，你听完了" }, { "type": "flag", "key": "in_relationship" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_liu_done" }, { "type": "attr", "key": "xin", "value": 1 }, { "type": "demon", "value": -14, "source": "love" } ] },
+          "good": { "narrative": "她弹了三遍。第三遍的时候你发现她在看你，不是在看弦。", "effects": [ { "type": "relation", "favor": 22, "trust": 24, "bond": 26 }, { "type": "flag", "key": "in_relationship" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_liu_done" }, { "type": "demon", "value": -8, "source": "love" } ] },
+          "plain": { "narrative": "她弹完了，收了琴，说：「时候不早了。」", "effects": [ { "type": "relation", "favor": 12, "bond": 12 }, { "type": "flag", "key": "love_liu_done" } ] },
+          "bad": { "narrative": "你听着听着睡着了。\n\n醒来时天已经亮了，身上盖着她的外袍。琴还在案上，人不在。", "effects": [ { "type": "relation", "favor": 8, "bond": 12 }, { "type": "flag", "key": "love_liu_done" }, { "type": "demon", "value": 5, "source": "love" } ] },
+          "terrible": { "narrative": "你说「我听着」的时候顺口问了句这支曲子多长。\n\n她的手停住了。\n\n「不长。」她说，「三百年而已。」\n\n她把琴放下，出去了。那一夜她没有回来。", "effects": [ { "type": "relation", "favor": -14, "trust": -12 }, { "type": "flag", "key": "love_liu_done" }, { "type": "demon", "value": 12, "source": "love" } ] }
+        } },
+      { "id": "C", "text": "告诉她，这支曲子该弹给她自己听", "reason": 10,
+        "outcomes": { "fixed": { "narrative": "你说：「这支曲子不该弹给我。」\n\n她挑眉：「那给谁。」\n\n「给你自己。你等了三百年，补了三个月。这是你的曲子。」\n\n她沉默了很久。\n\n然后她笑了——那个笑很复杂，有点酸，有点释然，也有点别的什么。\n\n「你这人啊。」她说，「专会挑最不该说的实话讲。」\n\n她把琴抱起来，走到窗边，背对着你弹完了整支。\n\n弹完她说：「往后我还是会喝酒，还是会不上进。但我不等了。」\n\n她转过身：「这个改变，算你一份。」", "effects": [ { "type": "relation", "favor": 15, "trust": 30, "bond": 24, "note": "《不必等》她弹给了自己" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_liu_done" }, { "type": "flag", "key": "liu_moved_on" }, { "type": "attr", "key": "xin", "value": 1 }, { "type": "demon", "value": -8, "source": "clear" } ] } } }
+    ]
+  },
+
+  {
+    "id": "evt_love_zhong_1",
+    "category": "romance",
+    "weight": 28,
+    "chainId": "love_zhong",
+    "scene": "scene_mingde",
+    "actors": ["npc_zhonglihen"],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": ["student", "teacher"], "minWeek": 58,
+      "relations": { "npc_zhonglihen": { "favor": [55, 100], "trust": [50, 100] } },
+      "notFlags": ["love_zhong_1"]
+    },
+    "seed": "他请你喝茶，第七次。\n\n前六次都是有事——查案、问话、点拨。这一次案上什么卷宗都没有。\n\n茶过三巡，他忽然说：「你有没有发现，我从来不问你的事。」\n\n你说是。\n\n「因为我一问，就变成审。」他放下茶盏，「两百年了，我已经不太会用别的方式跟人说话。」\n\n他抬起头，笑容还是那个笑容：「今天我想试一次。」",
+    "facts": ["钟离衡第七次请你喝茶，案上没有卷宗", "他说自己已经不会用别的方式跟人说话", "他说今天想试一次"],
+    "options": [
+      { "id": "A", "text": "那你问吧。我答", "reason": 14, "check": { "attr": "xin", "difficulty": 45 },
+        "outcomes": {
+          "perfect": { "narrative": "他问了。\n\n问得很生涩——问你喜欢什么茶，问你冬天冷不冷，问你有没有想过毕业以后去哪儿。\n\n每一个问题他都要先在心里过一遍，问出来的时候还是像在核对口供。他自己也知道，问到第四个的时候他停下来，很少见地露出了一点狼狈：\n\n「你看。」他说，「我说了我不会。」\n\n「那就慢慢学。」\n\n他愣了一下，然后笑了。这一次的笑，眼睛里有东西。", "effects": [ { "type": "relation", "favor": 20, "trust": 25, "bond": 20, "note": "他第一次用不是审问的方式跟你说话", "openRomance": true }, { "type": "flag", "key": "love_zhong_1" } ] },
+          "good": { "narrative": "他问了几个问题，都很生硬。但他一直在问，问到茶凉了才停。", "effects": [ { "type": "relation", "favor": 14, "trust": 18, "openRomance": true }, { "type": "flag", "key": "love_zhong_1" } ] },
+          "plain": { "narrative": "他问了两句，然后自己先岔开了话题。", "effects": [ { "type": "relation", "favor": 6, "trust": 6 }, { "type": "flag", "key": "love_zhong_1" } ] },
+          "bad": { "narrative": "他的问题问得太像审讯，你下意识地防了一下。\n\n他察觉到了，笑了笑：「你看。」然后就不问了。", "effects": [ { "type": "relation", "favor": -3, "trust": -3 }, { "type": "flag", "key": "love_zhong_1" } ] },
+          "terrible": { "narrative": "你答得很谨慎，谨慎到每一句都像在防他。\n\n他听完，把茶盏放下，笑容一点没变：「明白了。」\n\n他站起来送客，礼数周到得无可挑剔。\n\n此后他再没请过你喝茶。", "effects": [ { "type": "relation", "favor": -12, "trust": -12 }, { "type": "flag", "key": "love_zhong_1" } ] }
+        } },
+      { "id": "B", "text": "反过来问他", "reason": 12, "check": { "attr": "shi", "difficulty": 55 },
+        "outcomes": {
+          "perfect": { "narrative": "你问了他一个问题：「你上一次说真话，是什么时候。」\n\n他的手停在茶盏上。\n\n很长的沉默。\n\n「两百三十年前。」他终于说，「我入院第一年，写了一篇文章，说院规第六条不该存在。」\n\n「后来呢。」\n\n「后来我被罚抄了三个月院规。」他笑了，「抄完之后我明白了一件事——说真话是很贵的。贵到我后来只买得起客气。」\n\n他重新斟了茶：「今天这一盏，算我又买了一次。」", "effects": [ { "type": "relation", "favor": 22, "trust": 28, "bond": 22, "note": "他说两百三十年前写过一篇文章", "openRomance": true }, { "type": "flag", "key": "love_zhong_1" }, { "type": "flag", "key": "zhong_truth_told" } ] },
+          "good": { "narrative": "他答了，答得很谨慎，但确实是真话。\n\n「你看，」他说，「原来我还会。」", "effects": [ { "type": "relation", "favor": 15, "trust": 20, "openRomance": true }, { "type": "flag", "key": "love_zhong_1" } ] },
+          "plain": { "narrative": "他用一个很漂亮的句子把问题绕开了。", "effects": [ { "type": "relation", "favor": 6 }, { "type": "flag", "key": "love_zhong_1" } ] },
+          "bad": { "narrative": "「这个问题不好答。」他说，「换一个。」", "effects": [ { "type": "relation", "trust": -4 }, { "type": "flag", "key": "love_zhong_1" } ] },
+          "terrible": { "narrative": "你问的是他与外界宗门的往来。\n\n茶盏放下的声音很轻，但你听清了。\n\n「原来今天你是有备而来。」他笑着说，「那我们换个地方谈。」\n\n换的地方是执事堂。谈的是三个时辰。", "effects": [ { "type": "relation", "favor": -18, "trust": -18, "awe": 15 }, { "type": "flag", "key": "love_zhong_1" }, { "type": "flag", "key": "zhong_suspects" }, { "type": "demon", "value": 8, "source": "repress" } ] }
+        } },
+      { "id": "C", "text": "把茶推开，说：不用试。这样就很好", "reason": 10, "check": { "attr": "xin", "difficulty": 48 },
+        "outcomes": {
+          "perfect": { "narrative": "你把茶盏推到一边。\n\n「你不用学别的方式。」你说，「你请我喝了七次茶。前六次都有事，这一次没有。这就够了。」\n\n他看着那个被推开的茶盏，看了很久。\n\n「你怎么记得是第七次。」\n\n「因为我也数着。」\n\n他没有说话。过了很久，他伸手把茶盏又拿了回来，重新斟满，推到你面前。\n\n「那就第八次。」", "effects": [ { "type": "relation", "favor": 24, "trust": 26, "bond": 22, "note": "他说'那就第八次'", "openRomance": true }, { "type": "flag", "key": "love_zhong_1" } ] },
+          "good": { "narrative": "他笑了，这次笑得很轻松：「也好。」\n\n那壶茶两个人喝完了，一句正经话都没说。", "effects": [ { "type": "relation", "favor": 16, "trust": 18, "openRomance": true }, { "type": "flag", "key": "love_zhong_1" } ] },
+          "plain": { "narrative": "他点点头：「有理。」然后就开始说院务了。", "effects": [ { "type": "relation", "favor": 7 }, { "type": "flag", "key": "love_zhong_1" } ] },
+          "bad": { "narrative": "他的笑淡了一点：「是我唐突了。」\n\n剩下的茶喝得很客气。", "effects": [ { "type": "relation", "favor": -4, "trust": -3 }, { "type": "flag", "key": "love_zhong_1" } ] },
+          "terrible": { "narrative": "你说得像是在推辞。\n\n他立刻会意，站起来：「那不打扰了。」\n\n他送你到门口，行了个标准的礼。\n\n那个礼行得太标准了。", "effects": [ { "type": "relation", "favor": -12, "trust": -10 }, { "type": "flag", "key": "love_zhong_1" } ] }
+        } }
+    ],
+    "chainNext": { "on": ["perfect", "good"], "eventId": "evt_love_zhong_2", "delayWeeks": 10 }
+  },
+
+  {
+    "id": "evt_love_zhong_2",
+    "category": "romance",
+    "chainOnly": true,
+    "chainId": "love_zhong",
+    "scene": "scene_mingde",
+    "actors": ["npc_zhonglihen"],
+    "cooldown": 999,
+    "important": true,
+    "conditions": { "role": ["student", "teacher"] },
+    "seed": "他把一叠信摊在你面前。\n\n赤焰宗的往来函件，二十七封，跨了十一年。每一封的落款都是他。\n\n「你迟早会知道。」他说，「与其从别人嘴里听，不如我自己给你看。」\n\n他把信推过来：「你自己看。看完你再决定，要不要把它交上去。」\n\n他斟了茶，然后就不说话了，安静得像在等一个判决。",
+    "facts": ["钟离衡主动交出与赤焰宗的二十七封往来信件", "他让你自己决定是否上交", "他在等你的判决"],
+    "options": [
+      { "id": "A", "text": "一封一封看完", "reason": 16, "check": { "attr": "shen", "difficulty": 55 },
+        "outcomes": {
+          "perfect": { "narrative": "你看了两个时辰。\n\n二十七封信，前十六封是回绝——措辞一次比一次硬。第十七封开始变了，他开始「答应」一些无关紧要的小事。\n\n最后一封的日期是三个月前。内容是一份假的丹方录目录。\n\n你抬起头：「你在喂他们假消息。」\n\n他终于笑了，那种松下来的笑：「十一年了。你是第一个看完就明白的。」\n\n「为什么不上报。」\n\n「因为上报了，这条线就断了。」他把茶推给你，「而这条线，现在通到了赤焰宗宗主的案头。」", "effects": [ { "type": "relation", "favor": 28, "trust": 32, "bond": 26, "note": "你看完就明白了他在做什么" }, { "type": "storyline", "key": "mole", "value": 35, "clue": "钟离衡的密信" }, { "type": "flag", "key": "zhong_innocent_clue" }, { "type": "flag", "key": "zhong_ally" }, { "type": "attr", "key": "shen", "value": 1 } ] },
+          "good": { "narrative": "你看完了，看出他是在周旋，但没看出全部。\n\n他补齐了剩下的部分。", "effects": [ { "type": "relation", "favor": 20, "trust": 25, "bond": 20 }, { "type": "storyline", "key": "mole", "value": 25, "clue": "钟离衡的密信" }, { "type": "flag", "key": "zhong_innocent_clue" }, { "type": "flag", "key": "zhong_ally" } ] },
+          "plain": { "narrative": "信太多，你只看了一半。看完的那一半看不出问题。\n\n他没有解释。", "effects": [ { "type": "relation", "favor": 10, "trust": 12 }, { "type": "storyline", "key": "mole", "value": 12 } ] },
+          "bad": { "narrative": "你看得太快，把第十七封之后的「答应」当成了通敌的证据。\n\n他看着你的表情变化，什么也没说。", "effects": [ { "type": "relation", "favor": -6, "trust": -8 }, { "type": "storyline", "key": "mole", "value": 15 } ] },
+          "terrible": { "narrative": "你只看了三封就合上了。\n\n「够了。」你说。\n\n他点点头，把信收起来：「是够了。」\n\n他送你出门，礼数周全。那二十七封信第二天出现在了执事堂——是他自己交上去的。\n\n查了半年，最后不了了之。但从此他见你只谈公事。", "effects": [ { "type": "relation", "favor": -20, "trust": -20 }, { "type": "storyline", "key": "mole", "value": 20 }, { "type": "demon", "value": 10, "source": "guilt", "note": "你只看了三封" } ] }
+        } },
+      { "id": "B", "text": "不看。直接问他：你是不是内鬼", "reason": 8, "check": { "attr": "shi", "difficulty": 60 },
+        "outcomes": {
+          "perfect": { "narrative": "你把信推了回去，问了那一句。\n\n他放下茶盏，认真地看了你很久。\n\n「不是。」他说。就两个字，没有解释，没有辩白。\n\n「好。」你说，「那我信你。」\n\n这次轮到他愣住了。\n\n很久之后他开口，声音有点不稳：「两百年了。」他说，「你是第一个不用看证据就说信我的人。」\n\n他把那叠信推到烛火上：「那就不用看了。」", "effects": [ { "type": "relation", "favor": 32, "trust": 35, "bond": 30, "note": "你不用看证据就说信他，他把信烧了" }, { "type": "storyline", "key": "mole", "value": 25 }, { "type": "flag", "key": "zhong_innocent_clue" }, { "type": "flag", "key": "zhong_ally" }, { "type": "attr", "key": "xin", "value": 1 } ] },
+          "good": { "narrative": "「不是。」他说。\n\n然后他还是让你把信看了——「不为别的，为你自己心里踏实。」", "effects": [ { "type": "relation", "favor": 22, "trust": 26, "bond": 22 }, { "type": "storyline", "key": "mole", "value": 25, "clue": "钟离衡的密信" }, { "type": "flag", "key": "zhong_innocent_clue" }, { "type": "flag", "key": "zhong_ally" } ] },
+          "plain": { "narrative": "「不是。」他说完就沉默了。信还摊在那儿。", "effects": [ { "type": "relation", "favor": 10, "trust": 12 }, { "type": "storyline", "key": "mole", "value": 12 } ] },
+          "bad": { "narrative": "他笑了：「你觉得我会说是吗。」\n\n这个回答什么也没回答。", "effects": [ { "type": "relation", "trust": -5 }, { "type": "storyline", "key": "mole", "value": 8 } ] },
+          "terrible": { "narrative": "你问得咄咄逼人，还带了「果然」两个字。\n\n他的笑第一次彻底消失了。\n\n「果然。」他重复了一遍，「原来你早就这么想了。」\n\n他把信一封封收好：「那这些你就不必看了。」", "effects": [ { "type": "relation", "favor": -25, "trust": -25 }, { "type": "flag", "key": "zhong_hostile" }, { "type": "demon", "value": 10, "source": "grudge", "npc": "npc_zhonglihen" } ] }
+        } },
+      { "id": "C", "text": "问他为什么现在给你看", "reason": 14, "check": { "attr": "shi", "difficulty": 50 },
+        "outcomes": {
+          "perfect": { "narrative": "他沉默了很久。\n\n「因为再过些时候，」他说，「我就不确定自己还能不能全身而退了。」\n\n他把最后一封信抽出来：「这一封，是他们要我提供学院禁制排布图。」\n\n「你给了吗。」\n\n「给了假的。」他把信折好，「但他们迟早会发现。」\n\n他抬起头，笑了一下——这个笑很难看：「所以我想在那之前，让至少一个人知道我不是那样的人。」\n\n「为什么是我。」\n\n「因为我不想让你从别人嘴里听说。」", "effects": [ { "type": "relation", "favor": 30, "trust": 32, "bond": 30, "note": "他说不想让你从别人嘴里听说" }, { "type": "storyline", "key": "mole", "value": 32, "clue": "钟离衡的密信" }, { "type": "flag", "key": "zhong_innocent_clue" }, { "type": "flag", "key": "zhong_ally" }, { "type": "flag", "key": "zhong_at_risk" } ] },
+          "good": { "narrative": "「因为你迟早会知道。」他说，「我宁可你从我这儿知道。」", "effects": [ { "type": "relation", "favor": 20, "trust": 24, "bond": 20 }, { "type": "storyline", "key": "mole", "value": 22, "clue": "钟离衡的密信" }, { "type": "flag", "key": "zhong_innocent_clue" }, { "type": "flag", "key": "zhong_ally" } ] },
+          "plain": { "narrative": "他笑了笑：「到时候了。」这话说了等于没说。", "effects": [ { "type": "relation", "favor": 8, "trust": 10 }, { "type": "storyline", "key": "mole", "value": 10 } ] },
+          "bad": { "narrative": "「你不必知道为什么。」他说，「你只需要决定交不交。」", "effects": [ { "type": "relation", "favor": 4, "trust": 5 }, { "type": "storyline", "key": "mole", "value": 8 } ] },
+          "terrible": { "narrative": "你问得像在找他的动机破绽。\n\n他听出来了。\n\n「你在审我。」他说。这句话说得很平静，但你听出了别的东西——不是愤怒，是某种很久没有过的失望。\n\n他把信收了：「我今天犯了个错。」", "effects": [ { "type": "relation", "favor": -18, "trust": -20 }, { "type": "demon", "value": 10, "source": "guilt", "note": "他说'我今天犯了个错'" } ] }
+        } }
+    ],
+    "chainNext": { "on": ["perfect", "good"], "eventId": "evt_love_zhong_3", "delayWeeks": 12 }
+  },
+
+  {
+    "id": "evt_love_zhong_3",
+    "category": "romance",
+    "chainOnly": true,
+    "chainId": "love_zhong",
+    "scene": "scene_mingde",
+    "actors": ["npc_zhonglihen"],
+    "cooldown": 999,
+    "important": true,
+    "conditions": { "role": ["student", "teacher"] },
+    "seed": "事情了了。\n\n赤焰宗那条线被端了，钟离衡的十一年周旋大白于天下。学院给了嘉奖，全院都在说他。\n\n可他把自己关在明德院三天没出门。\n\n第四天你推门进去，看见他坐在案前，面前摊着一张空白的纸和一支笔。\n\n「我在写一封信。」他说，「写了三天，一个字都写不出来。」\n\n「写给谁。」\n\n他放下笔，抬起头。这一次他的脸上什么也没有——没有笑，没有那层温和的壳。\n\n「写给你。」",
+    "facts": ["赤焰宗的线被端了，他的周旋大白于天下", "他关了自己三天，在写一封写不出来的信", "他说信是写给你的"],
+    "options": [
+      { "id": "A", "text": "把笔拿过来，替他写", "reason": 14, "check": { "attr": "shi", "difficulty": 48 },
+        "outcomes": {
+          "perfect": { "narrative": "你把笔拿过来，在纸上写了四个字。\n\n他探过身看，看完之后很久没有动。\n\n「这是判词的格式。」他说。\n\n「是。」你说，「我跟你学的。」\n\n他笑了。这一次的笑是从眼睛开始的，一直漫到嘴角，慢得像化开的墨。\n\n「两百年了，」他说，「第一次有人用我的东西判我。」\n\n他伸手把那张纸收进袖中：「这个我留着。」", "effects": [ { "type": "relation", "favor": 32, "trust": 32, "bond": 32, "note": "你用判词的格式给他写了四个字" }, { "type": "flag", "key": "in_relationship" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_zhong_done" }, { "type": "demon", "value": -15, "source": "love" } ] },
+          "good": { "narrative": "你写了几个字。他看完，把纸小心地折好收了起来。\n\n「谢谢。」他说，「这封信我写了三天，你三息就替我写完了。」", "effects": [ { "type": "relation", "favor": 24, "trust": 26, "bond": 28 }, { "type": "flag", "key": "in_relationship" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_zhong_done" }, { "type": "demon", "value": -10, "source": "love" } ] },
+          "plain": { "narrative": "你写了几个字，他看了，点了点头。\n\n那张纸留在了案上。", "effects": [ { "type": "relation", "favor": 12, "bond": 14 }, { "type": "flag", "key": "love_zhong_done" } ] },
+          "bad": { "narrative": "你写的东西他看了很久，然后说：「写得很好。」\n\n那句「很好」是他招呼客人时的语气。", "effects": [ { "type": "relation", "favor": 4, "trust": -4 }, { "type": "flag", "key": "love_zhong_done" }, { "type": "demon", "value": 5, "source": "love" } ] },
+          "terrible": { "narrative": "你写的是一句玩笑话。\n\n他看完，笑了：「有意思。」\n\n他把纸揉了，扔进纸篓。那个动作很随意，随意到你知道自己搞砸了。", "effects": [ { "type": "relation", "favor": -12, "trust": -12 }, { "type": "flag", "key": "love_zhong_done" }, { "type": "demon", "value": 10, "source": "love" } ] }
+        } },
+      { "id": "B", "text": "说：不用写。当面说", "reason": 16, "check": { "attr": "xin", "difficulty": 45 },
+        "outcomes": {
+          "perfect": { "narrative": "「你写了两百年的公文。」你说，「这一次别写了。当面说。」\n\n他把笔搁下。\n\n然后是很长的沉默——比他平时任何一次沉默都长。\n\n「我不知道该怎么开头。」他终于说。\n\n「那就从中间说。」\n\n他抬起头。这一次他的眼睛里什么也没藏。\n\n「我这一生，」他说，「说过成千上万句话。没有一句是为了我自己说的。」\n\n他站起来，走到你面前：「这一句，是。」", "effects": [ { "type": "relation", "favor": 34, "trust": 34, "bond": 34, "note": "他说这一生第一句为自己说的话" }, { "type": "flag", "key": "in_relationship" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_zhong_done" }, { "type": "attr", "key": "xin", "value": 1 }, { "type": "demon", "value": -16, "source": "love" } ] },
+          "good": { "narrative": "他说了。说得很慢，很笨拙，跟他平时判案时判若两人。\n\n但他说完了。", "effects": [ { "type": "relation", "favor": 25, "trust": 28, "bond": 30 }, { "type": "flag", "key": "in_relationship" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_zhong_done" }, { "type": "demon", "value": -10, "source": "love" } ] },
+          "plain": { "narrative": "他张了张嘴，最后说：「还是写吧。」\n\n那封信你后来收到了。很短，很客气。", "effects": [ { "type": "relation", "favor": 12, "bond": 12 }, { "type": "flag", "key": "love_zhong_done" }, { "type": "demon", "value": 5, "source": "love" } ] },
+          "bad": { "narrative": "他笑了笑：「当面说，我怕说成审词。」\n\n他把笔又拿起来了。", "effects": [ { "type": "relation", "favor": 6, "trust": -3 }, { "type": "flag", "key": "love_zhong_done" }, { "type": "demon", "value": 5, "source": "love" } ] },
+          "terrible": { "narrative": "你催得太急。\n\n他停了很久，然后把那张白纸推开：「不写了。」\n\n他站起来，恢复了那个温和的笑：「今日多有叨扰。」\n\n那封信此后再没被提起。", "effects": [ { "type": "relation", "favor": -14, "trust": -14 }, { "type": "flag", "key": "love_zhong_done" }, { "type": "demon", "value": 12, "source": "love", "note": "那张被推开的白纸" } ] }
+        } },
+      { "id": "C", "text": "让他写完。你等着", "reason": 12,
+        "outcomes": { "fixed": { "narrative": "你说：「那你写。我在这儿等。」\n\n然后你就坐下了。\n\n他看了你一眼，重新拿起笔。\n\n那一夜他写了很多张，写一张揉一张。你就在旁边坐着，一句话没说，也没有睡。\n\n天亮的时候他把最后一张推过来。\n\n上面只有一行字：「此人可信，可托，可与共事，可与共生死。——钟离衡，具结。」\n\n下面盖了他的判官印。\n\n「这是我这辈子写过最不合规矩的一份文书。」他说。", "effects": [ { "type": "relation", "favor": 30, "trust": 34, "bond": 32, "note": "那份盖了判官印的、最不合规矩的文书" }, { "type": "flag", "key": "in_relationship" }, { "type": "flag", "key": "confession_handled" }, { "type": "flag", "key": "love_zhong_done" }, { "type": "flag", "key": "zhong_pledge" }, { "type": "demon", "value": -14, "source": "love" } ] } } }
+    ]
+  }
+]

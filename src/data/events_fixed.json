@@ -1,0 +1,1127 @@
+[
+  {
+    "id": "fixed_opening_ceremony",
+    "category": "fixed",
+    "fixed": true,
+    "scene": "scene_main_plaza",
+    "actors": [
+      "npc_tantaiwujiu"
+    ],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "student"
+      ]
+    },
+    "seed": "九月初一，望仙峰上云开。三百新入弟子在广场列队，七色院旗次第升起。院主澹台无咎站在高台上，白衣无纹，看不出年纪。他说的话不多，只有一句你后来一直记得：「这里不教你们如何成仙。这里只教你们，在成仙之前如何做人。」典礼散后，各院开始点名分堂。",
+    "facts": [
+      "开学典礼，院主训话",
+      "三百新生正式入院"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "记住院主那句话",
+        "reason": 10,
+        "check": {
+          "attr": "xin",
+          "difficulty": 30
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "散场后你在原地站了很久。人都走空了，风把院旗吹得猎猎响。你把那句话在心里过了三遍。往后五年里，你会在很多个夜里想起它。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "xin",
+                "value": 1
+              },
+              {
+                "type": "demon",
+                "value": -3,
+                "source": "clear"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你把那句话记下了。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": -2,
+                "source": "clear"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "典礼很长，你的腿站麻了。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "你走神了，等回过神来大家已经在散场。",
+            "effects": []
+          },
+          "terrible": {
+            "narrative": "你在队列里打了个哈欠，正好被秦九思看见。他记了一笔。第一天。",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -1
+              },
+              {
+                "type": "relation",
+                "npc": "npc_qinjiusi",
+                "favor": -4
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "留意周围的同届",
+        "reason": 12,
+        "check": {
+          "attr": "shen",
+          "difficulty": 40
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把几个人记住了：前排那个背剑的少年，全程没动过一下；旁边一个丹霞院的女孩，袖口沾着洗不掉的药渍；还有一个天机院的，从头到尾都在笑，但眼睛在扫全场。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_shenjinglan",
+                "favor": 4,
+                "awe": 4
+              },
+              {
+                "type": "relation",
+                "npc": "npc_wenjiujiu",
+                "favor": 5
+              },
+              {
+                "type": "relation",
+                "npc": "npc_peiwuyou",
+                "favor": 3,
+                "awe": 3
+              },
+              {
+                "type": "attr",
+                "key": "shen",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你记住了几张脸，往后总会再见。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_shenjinglan",
+                "favor": 3
+              },
+              {
+                "type": "relation",
+                "npc": "npc_wenjiujiu",
+                "favor": 3
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "三百个人，你一个也没记住。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "你东张西望，被前排的人回头瞪了一眼。",
+            "effects": []
+          },
+          "terrible": {
+            "narrative": "你看得太明显。旁边一个同院的低声说了句「新来的规矩真差」，声音刚好够你听见。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "主动去认识身边的人",
+        "reason": 8,
+        "check": {
+          "attr": "shi",
+          "difficulty": 45
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "散场时你搭上了话。丹霞院那个女孩笑得很响：「温酒酒。酒酒的酒。」符箓院一个手头阔绰的少年顺势递了张名帖过来：「赵鸣岐，有事找我。」第一天你就认识了两个人。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_wenjiujiu",
+                "favor": 10,
+                "trust": 5
+              },
+              {
+                "type": "relation",
+                "npc": "npc_zhaomingqi",
+                "favor": 8,
+                "trust": 4
+              },
+              {
+                "type": "attr",
+                "key": "shi",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你和邻座交换了名字。这是个开始。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_wenjiujiu",
+                "favor": 6
+              },
+              {
+                "type": "relation",
+                "npc": "npc_zhaomingqi",
+                "favor": 4
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你开了口，对方点了点头就走了。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_wenjiujiu",
+                "favor": 2
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你开口的时机不对，对方正在收拾东西，敷衍了两句。",
+            "effects": []
+          },
+          "terrible": {
+            "narrative": "你话说多了。散场路上你听见有人在学你说话的语气，几个人笑成一团。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -2
+              },
+              {
+                "type": "demon",
+                "value": 3,
+                "source": "inferior",
+                "note": "入院第一天那场笑"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "fixed_freshman_exam",
+    "category": "fixed",
+    "fixed": true,
+    "scene": "scene_mingde",
+    "actors": [
+      "npc_guchangqing"
+    ],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "student"
+      ]
+    },
+    "seed": "十月的摸底考核不算正式院试，但所有人都当真了。三日之内考三场：心法运转、术法演练、灵材辨识。顾长青坐在主考席上，从头到尾没换过表情。轮到你时，他把册子往前推了推：「开始。」",
+    "facts": [
+      "新生摸底考核，顾长青主考"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "稳扎稳打，不求出彩",
+        "reason": 10,
+        "check": {
+          "attr": "wu",
+          "difficulty": 42
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "三场都没出错。顾长青在册子上落了个「稳」字。散场时他叫住你：「不出错，比出彩难。」这是他今天说的第二句超过五个字的话。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": 40
+              },
+              {
+                "type": "reputation",
+                "value": 3
+              },
+              {
+                "type": "relation",
+                "npc": "npc_guchangqing",
+                "favor": 8,
+                "awe": 5,
+                "note": "他说不出错比出彩难"
+              },
+              {
+                "type": "exp",
+                "value": 40
+              }
+            ]
+          },
+          "good": {
+            "narrative": "三场都过了，成绩中上。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": 25
+              },
+              {
+                "type": "exp",
+                "value": 25
+              },
+              {
+                "type": "reputation",
+                "value": 1
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "过了，名次靠中。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": 12
+              },
+              {
+                "type": "exp",
+                "value": 12
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "灵材那一场认错了两味。顾长青什么也没说，只是在册子上画了个圈。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": -5
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "三场里有两场垫底。榜出来那天，你在最后一页找到自己的名字。旁边有人在小声念数字。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": -15
+              },
+              {
+                "type": "reputation",
+                "value": -2
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "inferior",
+                "note": "第一次摸底考的名次"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "在术法演练上拼一把",
+        "reason": 2,
+        "check": {
+          "attr": "gen",
+          "difficulty": 60
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你用了一手超出练气期的打法，收势时手在抖。全场安静了两息。顾长青抬起眼：「谁教你的？」你说是自己琢磨的。他看了你很久，在册子上写了三个字，你没看清。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": 60
+              },
+              {
+                "type": "reputation",
+                "value": 8
+              },
+              {
+                "type": "relation",
+                "npc": "npc_guchangqing",
+                "favor": 10,
+                "awe": 8,
+                "note": "摸底考上你露了一手"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_shenjinglan",
+                "awe": 10,
+                "favor": 5
+              },
+              {
+                "type": "exp",
+                "value": 50
+              }
+            ]
+          },
+          "good": {
+            "narrative": "演练超出了预期。有几个人回头看你。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": 35
+              },
+              {
+                "type": "reputation",
+                "value": 4
+              },
+              {
+                "type": "exp",
+                "value": 30
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "打完了，中规中矩。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": 12
+              },
+              {
+                "type": "exp",
+                "value": 12
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你用力过猛，收不住势，摔在场中。有人笑了。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -2
+              },
+              {
+                "type": "injury",
+                "key": "wound",
+                "value": 1,
+                "weeks": 1
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "灵气岔了。你趴在场中喘了半天才起来。顾长青只说了两个字：「下一个。」",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -4
+              },
+              {
+                "type": "injury",
+                "key": "internal",
+                "value": 1,
+                "weeks": 2
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "inferior",
+                "note": "摸底考那场演练"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "考前熬夜临阵磨枪",
+        "reason": -8,
+        "check": {
+          "attr": "gen",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "熬了三个通宵，居然全押中了。你交卷时眼睛通红，但成绩很好。你知道这次是运气。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": 40
+              },
+              {
+                "type": "exp",
+                "value": 20
+              },
+              {
+                "type": "demon",
+                "value": 2,
+                "source": "repress"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "临时抱的佛脚起了些作用。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": 20
+              },
+              {
+                "type": "exp",
+                "value": 10
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "熬了夜，考得一般。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": 8
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你在第二场上睡着了。醒来时监考正站在你面前。",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -3
+              },
+              {
+                "type": "contribution",
+                "value": -10
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "三个通宵之后，你的气色比考卷还难看。三场全砸。最要命的是，你连自己错在哪都不知道。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": -20
+              },
+              {
+                "type": "reputation",
+                "value": -3
+              },
+              {
+                "type": "injury",
+                "key": "exhaust",
+                "value": 1,
+                "weeks": 2
+              },
+              {
+                "type": "demon",
+                "value": 7,
+                "source": "inferior",
+                "note": "熬垮了的那三天"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "fixed_dongzhi_debate",
+    "category": "fixed",
+    "fixed": true,
+    "scene": "scene_lundao_peak",
+    "actors": [
+      "npc_tantaiwujiu",
+      "npc_zhonglihen"
+    ],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "minWeek": 14
+    },
+    "variants": [
+      {
+        "seed": "冬至。全院师生齐聚论道峰，雪落在石阶上没人扫。今年的议题由院主亲自出：「修仙者是否有义务庇护凡人？」话音落下，峰顶静了很久。钟离衡执笔记录，目光在人群里慢慢扫。报名发言的名额有限。",
+        "facts": [
+          "冬至论道大会",
+          "议题：修仙者是否有义务庇护凡人"
+        ]
+      },
+      {
+        "seed": "冬至。论道峰上风大得站不稳。院主出的题只有八个字：「灵根品质，是否即上限。」这题一出，底下就有人变了脸色——五灵根的弟子在院里不是少数。钟离衡开始记名。",
+        "facts": [
+          "冬至论道大会",
+          "议题：灵根品质是否决定修士上限"
+        ]
+      }
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "报名发言，正面立论",
+        "reason": 8,
+        "check": {
+          "attr": "shi",
+          "difficulty": 58
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你说完，峰顶安静了很久。然后是掌声——不多，但来自你没想到的方向。院主始终没有表态，只是在你说到一半时，微微点了一下头。散会后好几个教习记住了你的名字。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 12
+              },
+              {
+                "type": "contribution",
+                "value": 80
+              },
+              {
+                "type": "relation",
+                "npc": "npc_zhonglihen",
+                "favor": 10,
+                "awe": 6
+              },
+              {
+                "type": "relation",
+                "npc": "npc_tantaiwujiu",
+                "favor": 6,
+                "awe": 4
+              },
+              {
+                "type": "attr",
+                "key": "shi",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你说得不错。有人在底下点头。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 6
+              },
+              {
+                "type": "contribution",
+                "value": 40
+              },
+              {
+                "type": "relation",
+                "npc": "npc_zhonglihen",
+                "favor": 5
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你说完了。没人反对，也没人附和。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 2
+              },
+              {
+                "type": "contribution",
+                "value": 15
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你的论点被人当场驳倒。你站在那里，一时接不上话。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -3
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "inferior",
+                "note": "论道峰上那次哑口无言"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你说到一半就乱了。风大，声音传不出去，底下开始有人交头接耳。你听见自己的声音越来越小，最后是钟离衡温和地说了句「下一位」。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -6
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "inferior",
+                "note": "论道峰上没能说完的那段话"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "报名，但反着立论",
+        "reason": 4,
+        "reasonIf": [
+          {
+            "attr": {
+              "key": "shi",
+              "min": 7
+            },
+            "value": 10
+          }
+        ],
+        "check": {
+          "attr": "shi",
+          "difficulty": 68
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你说的话让半个峰顶不舒服。但你说完之后，没有一个人能立刻反驳。院主开口了，只有一句：「谁教你这么想的？」你说没人教。他说：「那就更该记住今天。」",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 15
+              },
+              {
+                "type": "contribution",
+                "value": 90
+              },
+              {
+                "type": "relation",
+                "npc": "npc_tantaiwujiu",
+                "favor": 10,
+                "awe": 6,
+                "note": "论道峰上，院主问了你一句话"
+              },
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 12
+              },
+              {
+                "type": "attr",
+                "key": "shi",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你的立场引起了争论。争论本身就是效果。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 8
+              },
+              {
+                "type": "contribution",
+                "value": 40
+              },
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 8
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你说完，底下议论了一阵，然后转向了下一个人。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 2
+              },
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 3
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "有几位老教习脸色不好看。散会后你听说有人在打听你是哪个院的。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 3
+              },
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 5
+              },
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": -8
+              },
+              {
+                "type": "relation",
+                "npc": "npc_guchangqing",
+                "favor": -6
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你把话说过头了。峰顶一片死寂，然后是顾长青的一声冷笑。散会后你被叫去了明德院，钟离衡请你喝了三盏茶，一句重话没说，但你出来时腿是软的。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -4
+              },
+              {
+                "type": "conduct",
+                "value": -5
+              },
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": -15
+              },
+              {
+                "type": "relation",
+                "npc": "npc_guchangqing",
+                "favor": -12
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "repress",
+                "note": "论道峰上那句说过头的话"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "不发言，在底下听",
+        "reason": 6,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你站在人群后面听了一整天。有几个人说得很好，有几个人说得很糟。散场时雪停了，你觉得自己想明白了一点什么，但又说不清是什么。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "xin",
+                "value": 1
+              },
+              {
+                "type": "contribution",
+                "value": 10
+              },
+              {
+                "type": "demon",
+                "value": -2,
+                "source": "clear"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "fixed_seven_college_tourney",
+    "category": "fixed",
+    "fixed": true,
+    "scene": "scene_arena",
+    "actors": [
+      "npc_shenjinglan",
+      "npc_guchangqing"
+    ],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "minWeek": 30
+    },
+    "seed": "四月，七院大比。擂台四周的看台坐满了人，七色院旗在风里翻卷。院首们坐在高处，院主的位子空着——他从不看初赛。你所在的院选出了五个参赛名额，其中一个空着，等你决定接不接。",
+    "facts": [
+      "七院大比开始",
+      "你所在的院还有一个参赛名额"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "参赛，正面硬拼",
+        "reason": 8,
+        "check": {
+          "attr": "gen",
+          "difficulty": 65
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你一路赢到了第三轮。最后一场输给了沈惊澜，输得很干净。下台时他伸手拉了你一把，说了三个字：「你会赢。」不是这次，是以后。看台上有很多人记住了你的名字。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 18
+              },
+              {
+                "type": "contribution",
+                "value": 150
+              },
+              {
+                "type": "relation",
+                "npc": "npc_shenjinglan",
+                "favor": 18,
+                "awe": 12,
+                "bond": 12,
+                "note": "大比上你和他打到了最后",
+                "openRomance": true
+              },
+              {
+                "type": "relation",
+                "npc": "npc_guchangqing",
+                "favor": 10,
+                "awe": 5
+              },
+              {
+                "type": "exp",
+                "value": 200
+              },
+              {
+                "type": "attr",
+                "key": "gen",
+                "value": 1
+              },
+              {
+                "type": "flag",
+                "key": "tourney_finalist"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你打进了第二轮。虽然没能更进一步，但院里给了嘉奖。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 8
+              },
+              {
+                "type": "contribution",
+                "value": 80
+              },
+              {
+                "type": "exp",
+                "value": 100
+              },
+              {
+                "type": "relation",
+                "npc": "npc_shenjinglan",
+                "awe": 5,
+                "favor": 4
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "第一轮就被淘汰了。不丢人，但也不光彩。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 2
+              },
+              {
+                "type": "contribution",
+                "value": 30
+              },
+              {
+                "type": "exp",
+                "value": 40
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你输得很快。下台时看台上有嘘声。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -3
+              },
+              {
+                "type": "injury",
+                "key": "wound",
+                "value": 1,
+                "weeks": 2
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "inferior",
+                "note": "大比上那场速败"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你被一招击落台下。全场哗然。你躺在那里，看着头顶七面旗子在转。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -8
+              },
+              {
+                "type": "injury",
+                "key": "wound",
+                "value": 2,
+                "weeks": 4
+              },
+              {
+                "type": "demon",
+                "value": 10,
+                "source": "inferior",
+                "note": "七院大比上被一招击落"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "参赛，但走术业赛",
+        "reason": 12,
+        "check": {
+          "attr": "wu",
+          "difficulty": 55
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "术业赛上你拿了头名。这个奖项没有个人战那么风光，但院首们记住了。散场时苏暮寒难得主动跟你说了句话：「手很稳。」",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 12
+              },
+              {
+                "type": "contribution",
+                "value": 120
+              },
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": 12,
+                "awe": 6,
+                "note": "术业赛上她说你手很稳"
+              },
+              {
+                "type": "exp",
+                "value": 120
+              },
+              {
+                "type": "attr",
+                "key": "wu",
+                "value": 1
+              },
+              {
+                "type": "flag",
+                "key": "craft_champion"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "术业赛第三名。够体面了。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 6
+              },
+              {
+                "type": "contribution",
+                "value": 70
+              },
+              {
+                "type": "exp",
+                "value": 70
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "中游。没人特别注意。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": 25
+              },
+              {
+                "type": "exp",
+                "value": 30
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "手抖了一下，成品废了。你在台上站了很久才把东西收走。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -2
+              },
+              {
+                "type": "demon",
+                "value": 3,
+                "source": "inferior"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你的作品在评审面前散了架。评审席上有人笑出了声。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -5
+              },
+              {
+                "type": "demon",
+                "value": 7,
+                "source": "inferior",
+                "note": "术业赛上散架的那件东西"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "不参赛，去看台上观战",
+        "reason": 4,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你在看台最后一排坐了整整三天。你看清了很多东西——沈惊澜出剑前会先收一下呼吸，剑渊院的人打法都太直，符箓院那个第二轮的黑马其实在藏拙。你把这些都记住了。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "shen",
+                "value": 1
+              },
+              {
+                "type": "flag",
+                "key": "watched_tourney"
+              },
+              {
+                "type": "exp",
+                "value": 30
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+]

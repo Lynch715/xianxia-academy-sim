@@ -1,0 +1,661 @@
+{
+  "courses": {
+    "required": [
+      {
+        "id": "c_xinfa",
+        "name": "基础心法",
+        "college": null,
+        "attr": "wu",
+        "exam": "修为检测",
+        "expBonus": 12,
+        "desc": "灵气运转、经脉通畅"
+      },
+      {
+        "id": "c_shufa",
+        "name": "术法通识",
+        "college": null,
+        "attr": "gen",
+        "exam": "实战演练",
+        "expBonus": 8,
+        "desc": "五行基础术法"
+      },
+      {
+        "id": "c_daolun",
+        "name": "道论",
+        "college": "mingde",
+        "attr": "xin",
+        "exam": "论述答辩",
+        "expBonus": 4,
+        "desc": "修仙历史、道义辩论"
+      },
+      {
+        "id": "c_lingcai",
+        "name": "灵材辨识",
+        "college": "danxia",
+        "attr": "shen",
+        "exam": "实物考核",
+        "expBonus": 4,
+        "desc": "灵草、矿石、兽材鉴别"
+      },
+      {
+        "id": "c_zhenfa",
+        "name": "阵法入门",
+        "college": "fulu",
+        "attr": "shen",
+        "exam": "阵法实操",
+        "expBonus": 6,
+        "desc": "基础阵法原理与布设"
+      }
+    ],
+    "elective": [
+      {
+        "id": "e_jianshu",
+        "name": "高等剑术",
+        "college": "jianyuan",
+        "attr": "gen",
+        "expBonus": 14,
+        "cost": 0,
+        "req": null,
+        "note": "需自备飞剑"
+      },
+      {
+        "id": "e_dandao",
+        "name": "丹道初阶",
+        "college": "danxia",
+        "attr": "wu",
+        "expBonus": 6,
+        "cost": 20,
+        "req": null,
+        "note": "提供基础药材，丹炉需自备或借用"
+      },
+      {
+        "id": "e_fulu",
+        "name": "符箓绘制",
+        "college": "fulu",
+        "attr": "shen",
+        "expBonus": 6,
+        "cost": 15,
+        "req": null,
+        "note": "消耗灵墨与符纸"
+      },
+      {
+        "id": "e_lingshou",
+        "name": "灵兽习性",
+        "college": "yuling",
+        "attr": "xin",
+        "expBonus": 5,
+        "cost": 0,
+        "req": null,
+        "note": "可接触学院灵兽园"
+      },
+      {
+        "id": "e_xingxiang",
+        "name": "星象推演",
+        "college": "tianji",
+        "attr": "shen",
+        "expBonus": 8,
+        "cost": 0,
+        "req": {
+          "attr": "shen",
+          "min": 4
+        },
+        "note": "需神识资质出众"
+      },
+      {
+        "id": "e_qixiu",
+        "name": "器修入门",
+        "college": "baiyi",
+        "attr": "wu",
+        "expBonus": 6,
+        "cost": 25,
+        "req": null,
+        "note": "可学炼器/音修/画修分支"
+      },
+      {
+        "id": "e_lvfa",
+        "name": "律法与规章",
+        "college": "mingde",
+        "attr": "shi",
+        "expBonus": 3,
+        "cost": 0,
+        "req": null,
+        "note": "枯燥但实用，影响辩论与申辩"
+      }
+    ]
+  },
+  "techniques": [
+    {
+      "id": "fanji_basic",
+      "name": "《引气诀》",
+      "tier": "fan",
+      "mult": 1.0,
+      "element": null,
+      "desc": "入学即发的基础功法，人人有份。"
+    },
+    {
+      "id": "qingxiao_sword",
+      "name": "《青霄剑诀》",
+      "tier": "huang",
+      "mult": 1.5,
+      "element": "metal",
+      "cost": 80,
+      "desc": "剑渊院基础剑修功法，走的是快而不是重。"
+    },
+    {
+      "id": "danxia_yangyuan",
+      "name": "《养元篇》",
+      "tier": "huang",
+      "mult": 1.5,
+      "element": "wood",
+      "cost": 80,
+      "desc": "丹霞院心法，温养为主，突破稳当。"
+    },
+    {
+      "id": "fulu_jingshen",
+      "name": "《静神录》",
+      "tier": "huang",
+      "mult": 1.5,
+      "element": null,
+      "cost": 80,
+      "desc": "符箓院心法，专修神识。"
+    },
+    {
+      "id": "xuanji_tuiyan",
+      "name": "《玄机推演诀》",
+      "tier": "xuan",
+      "mult": 2.0,
+      "element": null,
+      "cost": 400,
+      "req": {
+        "realm": "zhuji"
+      },
+      "desc": "天机院不外传之法，藏经阁二层。"
+    },
+    {
+      "id": "wuxiang_jing",
+      "name": "《无相经》",
+      "tier": "xuan",
+      "mult": 2.0,
+      "element": null,
+      "cost": 400,
+      "req": {
+        "realm": "zhuji"
+      },
+      "desc": "明德院心法，心境加成极高。"
+    }
+  ],
+  "items": [
+    {
+      "id": "ningqi_dan",
+      "name": "凝气丹",
+      "type": "pill",
+      "price": 30,
+      "effect": {
+        "exp": 15
+      },
+      "desc": "最常见的辅助丹药，无副作用。"
+    },
+    {
+      "id": "pozhang_dan",
+      "name": "破障丹",
+      "type": "pill",
+      "price": 200,
+      "effect": {
+        "breakthrough": 20
+      },
+      "desc": "突破时服用，成功率+20%。"
+    },
+    {
+      "id": "ningxin_dan",
+      "name": "宁心丹",
+      "type": "pill",
+      "price": 120,
+      "effect": {
+        "demon": -15
+      },
+      "desc": "静心安神，压制心魔。治标不治本。"
+    },
+    {
+      "id": "huichun_dan",
+      "name": "回春丹",
+      "type": "pill",
+      "price": 90,
+      "effect": {
+        "heal": 1
+      },
+      "desc": "疗伤，缩短休养时间一周。"
+    },
+    {
+      "id": "lingmo",
+      "name": "灵墨",
+      "type": "mat",
+      "price": 15,
+      "desc": "画符必需，消耗品。"
+    },
+    {
+      "id": "fuzhi",
+      "name": "符纸",
+      "type": "mat",
+      "price": 10,
+      "desc": "画符必需，消耗品。"
+    },
+    {
+      "id": "jianpi",
+      "name": "剑坯",
+      "type": "mat",
+      "price": 150,
+      "desc": "未开锋的剑胚，剑修常用来练手。"
+    },
+    {
+      "id": "beijing_cha",
+      "name": "北境雪茶",
+      "type": "gift",
+      "price": 60,
+      "desc": "北地风物，味涩回甘。"
+    },
+    {
+      "id": "tanggao",
+      "name": "糖糕",
+      "type": "gift",
+      "price": 5,
+      "desc": "山下坊市最便宜的点心，甜得实在。"
+    },
+    {
+      "id": "mingjiu",
+      "name": "醉仙酿",
+      "type": "gift",
+      "price": 180,
+      "desc": "百艺院柳教习指名要过三次的酒。"
+    },
+    {
+      "id": "shouzha",
+      "name": "手札",
+      "type": "gift",
+      "price": 40,
+      "desc": "空白札记，读书人常用。"
+    }
+  ],
+  "talents": [
+    {
+      "id": "photographic",
+      "name": "过目不忘",
+      "desc": "阅读功法、典籍后理解度+30%，但易陷入知障",
+      "mods": {
+        "study": 0.3,
+        "demonGain": 0.15
+      }
+    },
+    {
+      "id": "sword_heart",
+      "name": "天生剑心",
+      "desc": "剑道修炼事半功倍，但对其他术法领悟力-20%",
+      "mods": {
+        "swordExp": 0.4,
+        "otherExp": -0.2
+      }
+    },
+    {
+      "id": "poison_immune",
+      "name": "药毒不侵",
+      "desc": "对丹毒、瘴气免疫，但灵石消耗增加",
+      "mods": {
+        "poisonImmune": 1,
+        "upkeep": 0.25
+      }
+    },
+    {
+      "id": "beast_affinity",
+      "name": "灵兽亲和",
+      "desc": "灵兽好感度天然+50，驯养成功率大增",
+      "mods": {
+        "beast": 50
+      }
+    },
+    {
+      "id": "clear_heart",
+      "name": "道心通明",
+      "desc": "心魔侵袭概率-50%，但共情能力弱，社交略难",
+      "mods": {
+        "demonGain": -0.5,
+        "social": -0.15
+      }
+    },
+    {
+      "id": "sixth_sense",
+      "name": "生而知微",
+      "desc": "关键时刻可感知危险，但常有幻觉干扰",
+      "mods": {
+        "danger": 0.3,
+        "demonGain": 0.1
+      }
+    },
+    {
+      "id": "none",
+      "name": "无",
+      "desc": "平平无奇，也未尝不好",
+      "mods": {}
+    }
+  ],
+  "traits": [
+    {
+      "id": "calm",
+      "name": "沉稳",
+      "mods": {
+        "xin": 1
+      }
+    },
+    {
+      "id": "flashy",
+      "name": "张扬",
+      "mods": {
+        "rep": 1
+      }
+    },
+    {
+      "id": "gentle",
+      "name": "温和",
+      "mods": {
+        "social": 0.1
+      }
+    },
+    {
+      "id": "aloof",
+      "name": "孤傲",
+      "mods": {
+        "social": -0.15,
+        "wu": 1
+      }
+    },
+    {
+      "id": "smooth",
+      "name": "圆滑",
+      "mods": {
+        "shi": 1
+      }
+    },
+    {
+      "id": "sincere",
+      "name": "赤诚",
+      "mods": {
+        "trust": 0.2
+      }
+    },
+    {
+      "id": "enduring",
+      "name": "隐忍",
+      "mods": {
+        "demonGain": 0.1,
+        "gen": 1
+      }
+    },
+    {
+      "id": "carefree",
+      "name": "洒脱",
+      "mods": {
+        "demonGain": -0.2
+      }
+    },
+    {
+      "id": "obsessive",
+      "name": "偏执",
+      "mods": {
+        "wu": 1,
+        "demonGain": 0.25
+      }
+    }
+  ],
+  "origins": [
+    {
+      "id": "clan",
+      "name": "修仙世家",
+      "desc": "人脉广，但家族期望重",
+      "stone": 300,
+      "monthly": 150,
+      "mods": {
+        "shi": 1
+      },
+      "demonSeed": "family_expectation"
+    },
+    {
+      "id": "poor_genius",
+      "name": "寒门天才",
+      "desc": "资源少，但潜力高",
+      "stone": 40,
+      "monthly": 0,
+      "mods": {
+        "wu": 1
+      }
+    },
+    {
+      "id": "rogue",
+      "name": "散修出身",
+      "desc": "经验杂，自由度高",
+      "stone": 120,
+      "monthly": 0,
+      "mods": {
+        "ji": 1
+      }
+    },
+    {
+      "id": "special",
+      "name": "特殊来历",
+      "desc": "自行描述",
+      "stone": 100,
+      "monthly": 0,
+      "mods": {}
+    }
+  ],
+  "spiritRootQuality": [
+    {
+      "id": "five",
+      "name": "五灵根",
+      "coef": 0.7
+    },
+    {
+      "id": "four",
+      "name": "四灵根",
+      "coef": 0.85
+    },
+    {
+      "id": "triple",
+      "name": "三灵根",
+      "coef": 1.0
+    },
+    {
+      "id": "dual",
+      "name": "双灵根",
+      "coef": 1.15
+    },
+    {
+      "id": "single",
+      "name": "单灵根",
+      "coef": 1.3
+    },
+    {
+      "id": "heaven",
+      "name": "天灵根",
+      "coef": 1.8
+    },
+    {
+      "id": "mutant",
+      "name": "变异灵根",
+      "coef": 1.4
+    }
+  ],
+  "elements": [
+    {
+      "id": "metal",
+      "name": "金"
+    },
+    {
+      "id": "wood",
+      "name": "木"
+    },
+    {
+      "id": "water",
+      "name": "水"
+    },
+    {
+      "id": "fire",
+      "name": "火"
+    },
+    {
+      "id": "earth",
+      "name": "土"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "scene_mountain_gate",
+      "name": "望仙峰山门",
+      "focus": 40
+    },
+    {
+      "id": "scene_main_plaza",
+      "name": "云霄仙院主殿广场",
+      "focus": 52
+    },
+    {
+      "id": "scene_library_interior",
+      "name": "藏经阁",
+      "focus": 32
+    },
+    {
+      "id": "scene_dorm_room",
+      "name": "弟子宿舍",
+      "focus": 38
+    },
+    {
+      "id": "scene_meditation_hall",
+      "name": "静修室",
+      "focus": 40
+    },
+    {
+      "id": "scene_market",
+      "name": "山脚坊市",
+      "focus": 41
+    },
+    {
+      "id": "scene_jianyuan",
+      "name": "剑渊院·练剑场",
+      "focus": 47
+    },
+    {
+      "id": "scene_danxia",
+      "name": "丹霞院·丹房",
+      "focus": 31
+    },
+    {
+      "id": "scene_fulu",
+      "name": "符箓院·符阵堂",
+      "focus": 23
+    },
+    {
+      "id": "scene_yuling",
+      "name": "御灵院·灵兽园",
+      "focus": 32
+    },
+    {
+      "id": "scene_tianji",
+      "name": "天机院·观星台",
+      "focus": 50
+    },
+    {
+      "id": "scene_baiyi",
+      "name": "百艺院·器坊",
+      "focus": 26
+    },
+    {
+      "id": "scene_mingde",
+      "name": "明德院·讲堂",
+      "focus": 30
+    },
+    {
+      "id": "scene_arena",
+      "name": "七院大比擂台",
+      "focus": 43
+    },
+    {
+      "id": "scene_lundao_peak",
+      "name": "论道峰",
+      "focus": 37
+    },
+    {
+      "id": "scene_wild_hunt",
+      "name": "青霄外域",
+      "focus": 25
+    },
+    {
+      "id": "scene_trial_tower",
+      "name": "青霄试炼塔",
+      "focus": 65
+    },
+    {
+      "id": "scene_lingxu",
+      "name": "灵墟",
+      "focus": 36
+    },
+    {
+      "id": "scene_secret_realm",
+      "name": "秘境",
+      "focus": 25
+    },
+    {
+      "id": "scene_stone_stairs",
+      "name": "石阶",
+      "focus": 68
+    },
+    {
+      "id": "scene_headmaster_hall",
+      "name": "院主议事厅",
+      "focus": 31
+    },
+    {
+      "id": "scene_cloud_sea_dawn",
+      "name": "云海",
+      "focus": 40
+    }
+  ],
+  "collegeScene": {
+    "jianyuan": "scene_jianyuan",
+    "danxia": "scene_danxia",
+    "fulu": "scene_fulu",
+    "yuling": "scene_yuling",
+    "tianji": "scene_tianji",
+    "baiyi": "scene_baiyi",
+    "mingde": "scene_mingde"
+  },
+  "factionLabel": {
+    "traditional": "传统派",
+    "reform": "革新派",
+    "xiaoyao": "逍遥派",
+    "pragmatic": "务实派"
+  },
+  "repTiers": [
+    {
+      "max": 20,
+      "name": "无名",
+      "desc": "无人认识你"
+    },
+    {
+      "max": 40,
+      "name": "小有名气",
+      "desc": "同院人知道你的名字"
+    },
+    {
+      "max": 60,
+      "name": "院中翘楚",
+      "desc": "全院知名，教习关注"
+    },
+    {
+      "max": 80,
+      "name": "学院风云",
+      "desc": "全院瞩目，外院亦有耳闻"
+    },
+    {
+      "max": 100,
+      "name": "名动九州",
+      "desc": "修仙界都知道云霄仙院有此人"
+    }
+  ]
+}

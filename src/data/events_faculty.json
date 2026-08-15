@@ -1,0 +1,1400 @@
+[
+  {
+    "id": "evt_class_hard_question",
+    "category": "teach",
+    "weight": 32,
+    "scene": "scene_mingde",
+    "actors": [],
+    "cooldown": 10,
+    "conditions": {
+      "role": [
+        "teacher"
+      ],
+      "minWeek": 2
+    },
+    "variants": [
+      {
+        "seed": "讲到一半，后排一个弟子举了手。问的问题很刁——不是刁难，是真的问到了这门学问最松动的地方。堂上安静下来，所有人都在等你怎么答。你自己也不确定答案。",
+        "facts": [
+          "弟子提出了一个你答不上来的问题",
+          "满堂都在等你回答"
+        ]
+      },
+      {
+        "seed": "「教习，」那个一直沉默的弟子忽然开口，「您上节课说的和典籍上写的不一样。」他把书翻开举起来。他没有恶意，他只是想知道哪个对。",
+        "facts": [
+          "弟子当堂指出你与典籍不符",
+          "他没有恶意"
+        ]
+      }
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "承认不知道，和他们一起推",
+        "reason": 16,
+        "check": {
+          "attr": "xue",
+          "difficulty": 45
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你说：「我不知道。」堂上先是一静，然后有人笑了。你把问题写在板上，一堂课变成了一场公开的推演。散课时铃响了三遍才有人肯走。那个提问的弟子留到最后，说了句「这是我入院以来最好的一课」。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 6
+              },
+              {
+                "type": "attr",
+                "key": "xue",
+                "value": 1
+              },
+              {
+                "type": "contribution",
+                "value": 40
+              },
+              {
+                "type": "flag",
+                "key": "open_teaching"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你坦承不知，带着他们推了半堂课，得出个大概。弟子们眼里的东西不一样了。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 3
+              },
+              {
+                "type": "contribution",
+                "value": 25
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "推了半天没推出来。你说下次给答案。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": 10
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "越推越乱，后半堂课散了架。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你不但没答上，还把自己绕进去了。散课后你听见走廊里有人在学你结巴的样子。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -5
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "inferior",
+                "note": "讲堂上答不出的那一次"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "按典籍上的说法糊过去",
+        "reason": -10,
+        "check": {
+          "attr": "shi",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你引了三处典籍，话说得滴水不漏。弟子坐下了。但你知道你没有回答他。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": 15
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "guilt",
+                "note": "讲堂上糊过去的那个问题"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "混过去了。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": 8
+              },
+              {
+                "type": "demon",
+                "value": 3,
+                "source": "guilt"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "那弟子坐下了，但眼神里的光暗了一点。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": 3,
+                "source": "guilt"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "他又追问了一句。这次你答不上来了。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -3
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "guilt"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "他翻出了第二本典籍，上面写的和你引的正好相反。堂上一片安静。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -8
+              },
+              {
+                "type": "demon",
+                "value": 9,
+                "source": "inferior",
+                "note": "被弟子当堂翻出的那本书"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "把问题留给他自己去查",
+        "reason": 8,
+        "check": {
+          "attr": "jiao",
+          "difficulty": 40
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你告诉他去哪几层找哪几册，然后说：「一个月后你来告诉我答案。」一个月后他真的来了，带着七页纸。那七页纸后来成了他的立身之本。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 4
+              },
+              {
+                "type": "attr",
+                "key": "jiao",
+                "value": 1
+              },
+              {
+                "type": "contribution",
+                "value": 30
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他记下了书目，认真地道了谢。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": 15
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他应了一声，你不知道他有没有去查。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "他觉得你是在推脱。这话没说出口，但脸上写着。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "「教习是不知道，还是不想说？」他问得很轻，但全堂都听见了。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -6
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "inferior"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_disciple_conflict",
+    "category": "teach",
+    "weight": 28,
+    "scene": "scene_main_plaza",
+    "actors": [],
+    "cooldown": 13,
+    "conditions": {
+      "role": [
+        "teacher"
+      ],
+      "minWeek": 8
+    },
+    "seed": "你名下两个弟子在练功场打起来了。等你赶到时已经被人拉开，两个人都挂了彩，谁也不肯先开口。围观的人不少，其中有别院的教习。",
+    "facts": [
+      "你的两个弟子当众动手",
+      "有别院教习在场"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "当场各罚一顿，回头再问原委",
+        "reason": 6,
+        "check": {
+          "attr": "wei",
+          "difficulty": 40
+        },
+        "reasonIf": [
+          {
+            "attr": {
+              "key": "jiao",
+              "min": 10
+            },
+            "value": 6
+          }
+        ],
+        "outcomes": {
+          "perfect": {
+            "narrative": "你当众罚了两人，把场面压了下去。回院后单独问，才知道是为了替对方出头才打起来的——荒唐，但也让人说不出重话。你把处罚减了一半，两个人从此再没红过脸。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 4
+              },
+              {
+                "type": "attr",
+                "key": "jiao",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "场面压住了，事后也问明白了。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 2
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "罚了，也问了。谁也没真服。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "你罚重了。两个弟子低着头受了，但眼神里的东西你看得懂。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -1
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你当众下手太重，一个弟子当场吐了血。别院那位教习什么也没说，转身走了——但这事第二天就传遍了。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -6
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "guilt",
+                "note": "练功场上那一下"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "先问清楚谁先动的手",
+        "reason": 12,
+        "check": {
+          "attr": "ren",
+          "difficulty": 48
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你没有急着罚人。问到第三个证人时才弄清楚：先动手的那个，是因为另一个在背后编排他家里的事。你处置得很清楚，两边都心服。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 5
+              },
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "问明白了，处置也算公道。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 3
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "各执一词，问不出结果。你只好各打五十大板。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "你问了半天，围观的人越来越多。这场面本身就已经是丢人了。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -3
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你信了错的那一方。真相三个月后才浮出来，那时被冤枉的那个弟子已经转投别的教习了。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -5
+              },
+              {
+                "type": "demon",
+                "value": 10,
+                "source": "guilt",
+                "note": "你判错的那一次"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "把两个人一起罚去藏经阁抄书三个月",
+        "reason": 10,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你把两个人一起丢进藏经阁，抄同一部书，坐同一张案。第一个月他们谁也不理谁。第二个月开始换纸。第三个月出来时，两个人是一起来谢的。云舒说，抄书这法子她见了三百年，管用。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 3
+              },
+              {
+                "type": "relation",
+                "npc": "npc_yunshu",
+                "favor": 8
+              },
+              {
+                "type": "attr",
+                "key": "jiao",
+                "value": 1
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_disciple_pressure",
+    "category": "teach",
+    "weight": 30,
+    "scene": "scene_jianyuan",
+    "actors": [],
+    "cooldown": 12,
+    "important": true,
+    "conditions": {
+      "role": [
+        "teacher"
+      ],
+      "minWeek": 14
+    },
+    "seed": "有个弟子这几天不太对。上课时眼睛是空的，练功时手在抖，你叫他名字要叫两遍才应。今天散课后他没走，站在门口，像是有话说又不敢说。",
+    "facts": [
+      "有弟子状态明显不对",
+      "他站在门口没走"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "让他坐下，慢慢说",
+        "reason": 16,
+        "check": {
+          "attr": "jiao",
+          "difficulty": 38
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你给他倒了杯茶，什么也没问。他捧着杯子坐了一炷香，然后开始说——说的是家里，是排名，是他觉得自己撑不住了。说完他自己也愣了，好像没想到能说这么多。你只说了一句：「那就慢一点。」",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "jiao",
+                "value": 1
+              },
+              {
+                "type": "reputation",
+                "value": 3
+              },
+              {
+                "type": "flag",
+                "key": "relieved_disciple"
+              },
+              {
+                "type": "demon",
+                "value": -4,
+                "source": "clear"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他说了一些。压力松了一半。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "relieved_disciple"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他说没事，然后走了。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "你说的话没说到点子上。他谢了你，走了，肩膀还是塌着。",
+            "effects": []
+          },
+          "terrible": {
+            "narrative": "你无意中说了句「你师兄比你难多了」。他站起来说了声「弟子知道了」，从此再没单独找过你。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "guilt",
+                "note": "那句'你师兄比你难多了'"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "让他去歇一个月，功课先放着",
+        "reason": 14,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你把他这个月的功课全免了，让他下山住几天。他愣住了：「那我的进度……」你说进度是给活人排的。他走的时候回头看了你一眼。一个月后回来，人是松的。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "relieved_disciple"
+              },
+              {
+                "type": "attr",
+                "key": "de",
+                "value": 1
+              },
+              {
+                "type": "reputation",
+                "value": 2
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "告诉他修行本就苦，熬过去就好",
+        "reason": -12,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你说了一番很正确的话。他听完，点了点头，说弟子明白了，然后走了。\n\n背影挺得很直。\n\n那之后他确实再没提过。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "ignored_pressure"
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "guilt",
+                "note": "他站在门口那次，你说了很正确的话"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_peer_politics",
+    "category": "teach",
+    "weight": 26,
+    "scene": "scene_baiyi",
+    "actors": [
+      "npc_zhonglihen"
+    ],
+    "cooldown": 15,
+    "conditions": {
+      "role": [
+        "teacher"
+      ],
+      "minWeek": 24
+    },
+    "variants": [
+      {
+        "seed": "钟离衡请你喝茶。茶过三巡他才把话引到正题上：下季的教务会上，有人要提一个对百艺院很不利的案子。他说他不表态，只是「觉得你该知道」。然后他就不说了，等着你接。",
+        "facts": [
+          "钟离衡透露了一个不利于某院的提案",
+          "他在等你表态"
+        ]
+      },
+      {
+        "seed": "教务会上争执起来。一边是要削减选修课时数的，一边是坚决反对的。两边都在看你——你是这场里唯一没表过态的人。",
+        "facts": [
+          "教务会争执不下",
+          "所有人都在等你表态"
+        ]
+      }
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "支持传统一方",
+        "reason": 6,
+        "check": {
+          "attr": "sheng",
+          "difficulty": 45
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你说的话不多，但每一句都踩在点上。顾长青破天荒地点了下头。事后传统一派的几位教习主动来找你说话。",
+            "effects": [
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": 15
+              },
+              {
+                "type": "relation",
+                "npc": "npc_guchangqing",
+                "favor": 12,
+                "awe": 5
+              },
+              {
+                "type": "reputation",
+                "value": 4
+              },
+              {
+                "type": "attr",
+                "key": "sheng",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你的立场被接受了。",
+            "effects": [
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": 10
+              },
+              {
+                "type": "relation",
+                "npc": "npc_guchangqing",
+                "favor": 6
+              },
+              {
+                "type": "reputation",
+                "value": 2
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你表了态，会照旧开完了。",
+            "effects": [
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": 5
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你的理由站不住，被人当场驳了。",
+            "effects": [
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": 4
+              },
+              {
+                "type": "reputation",
+                "value": -2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你说错了立场——那个案子对你自己所在的院也不利。散会后你的弟子问你为什么。你答不上来。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -5
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "支持革新一方",
+        "reason": 6,
+        "check": {
+          "attr": "shi",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把利害算得很细，连白鹿卿都多看了你两眼。案子改了三条，通过了。",
+            "effects": [
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 15
+              },
+              {
+                "type": "relation",
+                "npc": "npc_bailuqing",
+                "favor": 12
+              },
+              {
+                "type": "reputation",
+                "value": 5
+              },
+              {
+                "type": "attr",
+                "key": "shi",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你的意见被采纳了一部分。",
+            "effects": [
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 10
+              },
+              {
+                "type": "relation",
+                "npc": "npc_bailuqing",
+                "favor": 6
+              },
+              {
+                "type": "reputation",
+                "value": 2
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你表了态。仅此而已。",
+            "effects": [
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 5
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "顾长青在会上冷了一句：「年轻人。」",
+            "effects": [
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 5
+              },
+              {
+                "type": "relation",
+                "npc": "npc_guchangqing",
+                "favor": -6
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你的提议被解读成了要动院首的位子。这个误会传出去，越传越离谱。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -6
+              },
+              {
+                "type": "relation",
+                "npc": "npc_guchangqing",
+                "favor": -12
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "repress"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "不表态，只提事实",
+        "reason": 14,
+        "check": {
+          "attr": "xue",
+          "difficulty": 52
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你没有站队，只把三年来的课时数据、通过率、弟子去向摆了出来。会场安静下来。最后决议是按数据改的，两边都说不出话。钟离衡在门口拦住你：「你比我想的难对付。」",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 8
+              },
+              {
+                "type": "attr",
+                "key": "xue",
+                "value": 1
+              },
+              {
+                "type": "relation",
+                "npc": "npc_zhonglihen",
+                "favor": 10,
+                "awe": 8
+              },
+              {
+                "type": "faction",
+                "key": "pragmatic",
+                "value": 12
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你的数据帮了忙。两边都记住了你不站队。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 4
+              },
+              {
+                "type": "faction",
+                "key": "pragmatic",
+                "value": 8
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "没人在意你的数据。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "两边都觉得你在和稀泥。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你的数据被断章取义，成了对方的弹药。散会后你才反应过来——钟离衡从一开始就是要你去说这番话的。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -4
+              },
+              {
+                "type": "relation",
+                "npc": "npc_zhonglihen",
+                "awe": 15,
+                "trust": -8
+              },
+              {
+                "type": "demon",
+                "value": 7,
+                "source": "grudge",
+                "npc": "npc_zhonglihen",
+                "note": "被当刀使的那次教务会"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_head_selection",
+    "category": "teach",
+    "weight": 45,
+    "scene": "scene_main_plaza",
+    "actors": [
+      "npc_guchangqing",
+      "npc_sumuhan"
+    ],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "teacher"
+      ],
+      "minWeek": 60,
+      "reputation": [
+        62,
+        100
+      ],
+      "notFlags": [
+        "became_head",
+        "head_bid_done"
+      ]
+    },
+    "seed": "院首选拔的通告贴出来了。天机院首告老，位子空着。有资格递名帖的一共四个人，你是其中之一。\n\n方砚把名册送到你手里时多说了一句：「递不递，今晚就得定。」",
+    "facts": [
+      "院首选拔开始，你有资格竞争",
+      "今晚必须决定递不递名帖"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "以政绩服人",
+        "reason": 12,
+        "check": null,
+        "fixedGrade": "good",
+        "outcomes": {
+          "good": {
+            "narrative": "你把这些年的东西整理成册递了上去——课时、弟子去向、著述、院务。厚厚一摞，没有一句自夸的话。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "head_bid_done"
+              },
+              {
+                "type": "flag",
+                "key": "head_bid_approach",
+                "value": "merit"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "先去拜访几位关键的同僚",
+        "reason": 8,
+        "check": null,
+        "fixedGrade": "good",
+        "outcomes": {
+          "good": {
+            "narrative": "你花了三个晚上，走了五家门。有人开门，有人没开。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "head_bid_done"
+              },
+              {
+                "type": "flag",
+                "key": "head_bid_approach",
+                "value": "ally"
+              },
+              {
+                "type": "faction",
+                "key": "pragmatic",
+                "value": 8
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "在名帖上写下你要做的改革",
+        "reason": 4,
+        "check": null,
+        "fixedGrade": "good",
+        "outcomes": {
+          "good": {
+            "narrative": "你写了七条。第七条写完你自己都犹豫了一下，但还是递了上去。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "head_bid_done"
+              },
+              {
+                "type": "flag",
+                "key": "head_bid_approach",
+                "value": "reform"
+              },
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 10
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "D",
+        "text": "不递。你还没准备好",
+        "reason": 6,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你把名册还给了方砚。他没有多问，只说了句「也好」。\n\n那天晚上你在院里走了很久。苏暮寒的丹房还亮着灯——她也没递。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "head_bid_declined"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": 8,
+                "trust": 8,
+                "note": "那年你们都没有递名帖"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_teacher_student_line",
+    "category": "romance",
+    "weight": 22,
+    "scene": "scene_mingde",
+    "actors": [
+      "npc_zhonglihen"
+    ],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "teacher"
+      ],
+      "minWeek": 50,
+      "flags": [
+        "forbidden_teacher_romance"
+      ],
+      "notFlags": [
+        "forbidden_romance_exposed"
+      ]
+    },
+    "seed": "钟离衡把门关上了。\n\n他没有绕弯子：「院规第六条。」茶还是那么烫，笑还是那么温和。「我手上有三份记录。递上去，你丢位子，那孩子丢学籍。」\n\n他把茶推过来。「我想听听你怎么说。」",
+    "facts": [
+      "钟离衡掌握了你越界的证据",
+      "递上去两个人都完了",
+      "他在等你开口"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "认。愿受院规处置",
+        "reason": 14,
+        "check": {
+          "attr": "xin",
+          "difficulty": 45
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你说：「按规矩办。但请把那孩子摘出去——是我越的界。」\n\n钟离衡看了你很久，然后把三份记录推进了火盆。「我要的不是你的位子。」他站起来，「我要的是你自己说出来。」他走到门口，「三年后她毕业。在那之前，管住自己。」",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "forbidden_choice",
+                "value": "accept"
+              },
+              {
+                "type": "flag",
+                "key": "forbidden_romance_exposed"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_zhonglihen",
+                "favor": 15,
+                "trust": 18,
+                "awe": 10,
+                "note": "他把记录烧了"
+              },
+              {
+                "type": "attr",
+                "key": "xin",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你认了。处分下来是记大过，降半级俸。那孩子被调去了别的教习名下。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "forbidden_choice",
+                "value": "accept"
+              },
+              {
+                "type": "flag",
+                "key": "forbidden_romance_exposed"
+              },
+              {
+                "type": "reputation",
+                "value": -6
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你认了。两个人的名字都进了卷宗。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "forbidden_choice",
+                "value": "accept"
+              },
+              {
+                "type": "flag",
+                "key": "forbidden_romance_exposed"
+              },
+              {
+                "type": "reputation",
+                "value": -10
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你认得太快，反而让他起了疑：「还有别的事？」",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "forbidden_choice",
+                "value": "accept"
+              },
+              {
+                "type": "flag",
+                "key": "forbidden_romance_exposed"
+              },
+              {
+                "type": "reputation",
+                "value": -12
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "guilt"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你把话说岔了，牵出了另一件本可以不提的事。卷宗厚了一倍。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "forbidden_choice",
+                "value": "accept"
+              },
+              {
+                "type": "flag",
+                "key": "forbidden_romance_exposed"
+              },
+              {
+                "type": "reputation",
+                "value": -15
+              },
+              {
+                "type": "demon",
+                "value": 14,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "据理力争",
+        "reason": 4,
+        "check": {
+          "attr": "shi",
+          "difficulty": 65
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你站起来，把话说得很慢：「道之所在，心之所安。若这是错，我甘受天罚——但不该由院规来罚一个还没做错任何事的弟子。」\n\n钟离衡沉默了很久。然后他笑了，第一次笑得像个人：「这话我等了两百年，终于有人说出来了。」",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "forbidden_choice",
+                "value": "fight"
+              },
+              {
+                "type": "flag",
+                "key": "forbidden_romance_exposed"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_zhonglihen",
+                "favor": 20,
+                "trust": 20,
+                "note": "你在他面前把话说完了"
+              },
+              {
+                "type": "reputation",
+                "value": 8
+              },
+              {
+                "type": "attr",
+                "key": "shi",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你据理力争，争回了一半。处分从革职减为记过。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "forbidden_choice",
+                "value": "fight"
+              },
+              {
+                "type": "flag",
+                "key": "forbidden_romance_exposed"
+              },
+              {
+                "type": "reputation",
+                "value": -3
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你说了很多，他一句也没接。处分照旧。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "forbidden_choice",
+                "value": "fight"
+              },
+              {
+                "type": "flag",
+                "key": "forbidden_romance_exposed"
+              },
+              {
+                "type": "reputation",
+                "value": -8
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你的辩解在他那套逻辑面前不堪一击。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "forbidden_choice",
+                "value": "fight"
+              },
+              {
+                "type": "flag",
+                "key": "forbidden_romance_exposed"
+              },
+              {
+                "type": "reputation",
+                "value": -12
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你说了一句威胁的话。说出口的那一刻，他脸上的笑第一次真正消失了。\n\n三天后全院通告：革职，逐出云霄。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "forbidden_choice",
+                "value": "fight"
+              },
+              {
+                "type": "flag",
+                "key": "forbidden_romance_exposed"
+              },
+              {
+                "type": "flag",
+                "key": "expelled"
+              },
+              {
+                "type": "demon",
+                "value": 20,
+                "source": "grudge",
+                "npc": "npc_zhonglihen"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "问他想要什么",
+        "reason": -8,
+        "check": {
+          "attr": "shi",
+          "difficulty": 60
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "「教习想要什么？」\n\n他放下茶盏。「你以为我在敲你。」他摇头，「我在给你一次机会——自己了断，比被人捅出来体面。」他把记录留在桌上就走了。三份，一份没带走。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "forbidden_warned"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_zhonglihen",
+                "awe": 15,
+                "trust": 8
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "repress",
+                "note": "桌上那三份没被带走的记录"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他说他什么也不要。你不确定该不该信。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "forbidden_warned"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_zhonglihen",
+                "awe": 10
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "repress"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他笑而不答，把茶喝完就走了。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "forbidden_warned"
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "repress"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "「你把我看成什么人了。」这句话说得很轻，但你听出来自己刚才犯了个大错。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_zhonglihen",
+                "favor": -15,
+                "trust": -12
+              },
+              {
+                "type": "flag",
+                "key": "forbidden_romance_exposed"
+              },
+              {
+                "type": "flag",
+                "key": "forbidden_choice",
+                "value": "accept"
+              },
+              {
+                "type": "reputation",
+                "value": -10
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你的话里带上了利益交换的意思。他站起来，把三份记录仔细收好。\n\n「明日教务会上见。」",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "forbidden_romance_exposed"
+              },
+              {
+                "type": "flag",
+                "key": "forbidden_choice",
+                "value": "accept"
+              },
+              {
+                "type": "reputation",
+                "value": -18
+              },
+              {
+                "type": "relation",
+                "npc": "npc_zhonglihen",
+                "favor": -25
+              },
+              {
+                "type": "demon",
+                "value": 15,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+]

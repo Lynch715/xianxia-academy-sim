@@ -1,0 +1,998 @@
+[
+  {
+    "id": "evt_class_question",
+    "category": "study",
+    "weight": 34,
+    "scene": "scene_mingde",
+    "actors": [
+      "npc_zhonglihen"
+    ],
+    "cooldown": 12,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "phase": [
+        "dawn",
+        "noon"
+      ],
+      "minWeek": 1
+    },
+    "variants": [
+      {
+        "seed": "钟离衡讲到院规第四十七条时忽然停下，目光在堂上扫了一圈，落在你身上。「这一条，为何要这样定？」满堂寂静。你能听见自己后排有人在翻书页的声音。",
+        "facts": [
+          "钟离衡当堂点你回答院规立法本意"
+        ]
+      },
+      {
+        "seed": "课上到一半，钟离衡合上书。「今日不讲条文，讲个案子。」他说了一桩三百年前的旧事，末了转向你，「若你是当日的执法者，你判还是不判？」他笑着，语气温和得像在问你要不要添茶。",
+        "facts": [
+          "钟离衡当堂考你一桩旧案的判法"
+        ]
+      }
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "老实答不知道",
+        "reason": 8,
+        "check": {
+          "attr": "xin",
+          "difficulty": 25
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "「不知道就是不知道，很好。」他点点头，「这四个字，堂上多半人说不出口。」他没有再追问，转而自己讲了下去。你注意到他在名册上记了一笔。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 8,
+                "trust": 6,
+                "note": "你当堂承认不知道"
+              },
+              {
+                "type": "contribution",
+                "value": 5
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他没有为难你，接着讲了下去。下课时路过你身边说了句：「不知道不丢人。装知道才丢人。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 5,
+                "trust": 4
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他点点头，叫了别人。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "他笑着说：「那便回去翻翻书。」堂上有几个人笑了。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": -3
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "「答不出。」他把这三个字重复了一遍，声音仍旧温和。你忽然理解了「笑面判官」这四个字。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": -5
+              },
+              {
+                "type": "relation",
+                "favor": -3
+              },
+              {
+                "type": "demon",
+                "value": 2,
+                "source": "inferior",
+                "note": "明德院堂上那次"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "顺着院规的字面意思答",
+        "reason": 0,
+        "check": {
+          "attr": "wu",
+          "difficulty": 45
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你答得工整。他等你说完，才慢慢道：「答得对。可我问的是'为何'，不是'是何'。」堂上一静。他随即笑了，「不过能背到这个地步，也不容易。」",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": 8
+              },
+              {
+                "type": "relation",
+                "favor": 4
+              },
+              {
+                "type": "exp",
+                "value": 10
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他点头，补了两句，把你的答案往深处引了引。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": 5
+              },
+              {
+                "type": "exp",
+                "value": 8
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他嗯了一声，继续往下讲。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": 2
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你背错了一条。他没纠正，只是看了你一眼。那一眼比纠正难受。",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": -2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你背串了两条，越说越乱，最后自己停住了。他等了三息，才轻声说：「坐下罢。」",
+            "effects": [
+              {
+                "type": "contribution",
+                "value": -6
+              },
+              {
+                "type": "relation",
+                "favor": -4
+              },
+              {
+                "type": "demon",
+                "value": 3,
+                "source": "inferior",
+                "note": "当堂答错的那次"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "质疑这条院规本身不合理",
+        "reason": 6,
+        "reasonIf": [
+          {
+            "attr": {
+              "key": "shi",
+              "min": 7
+            },
+            "value": 8
+          }
+        ],
+        "check": {
+          "attr": "shi",
+          "difficulty": 65
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你说完，堂上鸦雀无声。钟离衡放下书，看了你很久，然后笑了：「有人跟我说过一模一样的话。」他没说那人是谁，「这条确实不合理。但它还在，因为改它的代价更大。你记住这句，比记住条文有用。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 12,
+                "trust": 10,
+                "awe": 6,
+                "note": "你当堂质疑院规，他说有人说过一样的话"
+              },
+              {
+                "type": "reputation",
+                "value": 4
+              },
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 8
+              },
+              {
+                "type": "attr",
+                "key": "shi",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他饶有兴趣地听完，说：「这个想法可以写成课业交上来。」堂下有人朝你看。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 7,
+                "trust": 5
+              },
+              {
+                "type": "reputation",
+                "value": 2
+              },
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 4
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他听完，说了句「记下了」，就翻过这一页。",
+            "effects": [
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 2
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "秦九思在后排站了起来：「按院规第三条，堂上不得妄议律典。」钟离衡抬手让他坐下，但那一笔已经记了。",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -2
+              },
+              {
+                "type": "relation",
+                "npc": "npc_qinjiusi",
+                "favor": -6
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你说得太急，话里带了刺。钟离衡的笑没有变，但堂上的空气变了。散课后你被留了下来，谈了半个时辰。",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -5
+              },
+              {
+                "type": "relation",
+                "favor": -8,
+                "trust": -6
+              },
+              {
+                "type": "reputation",
+                "value": -2
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_library_scroll",
+    "category": "study",
+    "weight": 30,
+    "scene": "scene_library_interior",
+    "actors": [
+      "npc_yunshu"
+    ],
+    "cooldown": 23,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "minWeek": 4
+    },
+    "seed": "你在藏经阁三层的角落抽出一卷书，夹层里滑出半页残纸。纸很旧，字迹被水浸过，只剩下断续几行。你正想细看，守阁的云舒在楼梯口停下了脚步。她双目失明，却准确地朝你这个方向偏了偏头。「那一卷，是从别处混进来的。」",
+    "facts": [
+      "你在藏经阁发现一页混入的残纸",
+      "云舒似乎知道它的来历"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "把残纸交给云舒",
+        "reason": 14,
+        "check": {
+          "attr": "xin",
+          "difficulty": 35
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "她接过去，指尖在纸面上慢慢摸过，停了很久。「这是院志的第三十七页。」她说，「三百年前被人撕掉的。」她把纸折好收进袖中，「你若想知道上面写了什么，往后每旬来替我读一个时辰的书。我告诉你。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 18,
+                "trust": 20,
+                "note": "你把残页交给了云舒，她答应告诉你内容"
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 12,
+                "clue": "旧院志缺页"
+              },
+              {
+                "type": "flag",
+                "key": "yunshu_deal"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "她收下了，只说了句：「有心。」然后转身走了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 10,
+                "trust": 10
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 5,
+                "clue": "旧院志缺页"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "她收下了，什么也没说。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 5,
+                "trust": 4
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "她摇头：「不是我该收的东西。」她走了，把你和那半页纸留在原地。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "她的手在半空停住，没有接。「你已经看过了。」她说，「看过就是看过了。」她走下楼去，脚步很轻。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 3
+              },
+              {
+                "type": "demon",
+                "value": 2,
+                "source": "guilt",
+                "note": "藏经阁里那半页纸"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "先读完再说",
+        "reason": -6,
+        "check": {
+          "attr": "wu",
+          "difficulty": 55
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你借着窗缝的光认出了七个字：「……院主未归，权代之……」后面被水泡烂了。你抬头时，云舒还站在楼梯口，一动不动，像是在等你读完。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 15,
+                "clue": "旧院志缺页"
+              },
+              {
+                "type": "relation",
+                "trust": -3
+              },
+              {
+                "type": "flag",
+                "key": "read_missing_page"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你只认出「院主」两个字。剩下的都糊了。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 6,
+                "clue": "旧院志缺页"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "字迹太模糊，一个也认不出来。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "纸在你手里散了。碎片落了一地，怎么也拼不回去。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -5,
+                "trust": -6
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "「阁中不得私阅未登记之册。」秦九思的声音从书架另一头传来。他手里的册子已经翻开了。",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -4
+              },
+              {
+                "type": "relation",
+                "npc": "npc_qinjiusi",
+                "favor": -8
+              },
+              {
+                "type": "contribution",
+                "value": -20
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "把纸放回原处，当作没看见",
+        "reason": 2,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你把纸夹回原位，合上书，推回架子。云舒在楼梯口站了一会儿，然后下楼了。整个过程里她一句话也没说。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 2
+              },
+              {
+                "type": "flag",
+                "key": "page_left_alone"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_bottleneck",
+    "category": "study",
+    "weight": 32,
+    "scene": "scene_meditation_hall",
+    "actors": [],
+    "cooldown": 13,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "minWeek": 8
+    },
+    "seed": "已经第七天了。同样的时辰，同样的坐姿，同样的一段心法，灵气走到第四个周天就散。你睁开眼，静修室里只有自己的呼吸声。这不是勤不勤的问题——你心里清楚，是卡住了。",
+    "facts": [
+      "你的修炼遇到了瓶颈",
+      "连续七天毫无进展"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "停下来，去做点别的",
+        "reason": 12,
+        "check": {
+          "attr": "xin",
+          "difficulty": 35
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把蒲团收了，下山走了一趟坊市。回来那晚什么也没想就睡了。第二天再上座时，第四个周天过得毫无阻碍。有些墙不是撞开的，是绕过去的。",
+            "effects": [
+              {
+                "type": "exp",
+                "value": 60
+              },
+              {
+                "type": "attr",
+                "key": "xin",
+                "value": 1
+              },
+              {
+                "type": "demon",
+                "value": -4,
+                "source": "repress"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "歇了两天，回来时顺畅了些。",
+            "effects": [
+              {
+                "type": "exp",
+                "value": 25
+              },
+              {
+                "type": "demon",
+                "value": -2,
+                "source": "repress"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "歇了，但回来还是那样。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "你一停就停了半个月。再上座时，连原来的手感都找不回来了。",
+            "effects": [
+              {
+                "type": "exp",
+                "value": -30,
+                "noScale": true
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你说服自己这叫「张弛有度」，然后一个月没进静修室。月考榜出来那天，你在名单最后一页找到了自己。",
+            "effects": [
+              {
+                "type": "exp",
+                "value": -50,
+                "noScale": true
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "inferior",
+                "note": "那一个月的自欺"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "去请教教习",
+        "reason": 14,
+        "check": {
+          "attr": "shi",
+          "difficulty": 42
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "苏暮寒听完，只问了一句：「第四周天，你是在守还是在推？」你张了张嘴，答不上来。她说：「那就是在推。灵气不是柴火，越添越旺。」说完就回丹房了，全程没抬头看你。",
+            "effects": [
+              {
+                "type": "exp",
+                "value": 55
+              },
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": 8,
+                "trust": 6,
+                "note": "她一句话点破了你的瓶颈"
+              },
+              {
+                "type": "attr",
+                "key": "wu",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "教习给你改了一处运气的次序。回去试了试，通了大半。",
+            "effects": [
+              {
+                "type": "exp",
+                "value": 30
+              },
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": 4
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "教习说这是常事，熬过去就好。",
+            "effects": [
+              {
+                "type": "exp",
+                "value": 10
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你去了三次，人都不在。第四次你没再去。",
+            "effects": []
+          },
+          "terrible": {
+            "narrative": "你问得太细，被反问了一句：「这些心法上都写着。你读过几遍？」你说不出话。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_sumuhan",
+                "favor": -4
+              },
+              {
+                "type": "demon",
+                "value": 3,
+                "source": "inferior",
+                "note": "被反问的那一次"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "服丹药强行冲一冲",
+        "reason": -8,
+        "check": {
+          "attr": "gen",
+          "difficulty": 58
+        },
+        "require": {
+          "item": "ningqi_dan"
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "药力顶上来，第四周天硬生生冲开了。你睁眼时后背全是汗，但确实过去了。这次运气好。",
+            "effects": [
+              {
+                "type": "item",
+                "id": "ningqi_dan",
+                "value": -1
+              },
+              {
+                "type": "exp",
+                "value": 70
+              },
+              {
+                "type": "demon",
+                "value": 2,
+                "source": "repress"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "冲开了一半。剩下的还得慢慢磨。",
+            "effects": [
+              {
+                "type": "item",
+                "id": "ningqi_dan",
+                "value": -1
+              },
+              {
+                "type": "exp",
+                "value": 35
+              },
+              {
+                "type": "demon",
+                "value": 2,
+                "source": "repress"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "药吃了，墙还在。",
+            "effects": [
+              {
+                "type": "item",
+                "id": "ningqi_dan",
+                "value": -1
+              },
+              {
+                "type": "exp",
+                "value": 10
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "药力和滞涩撞在一起，你呕了一口血。不多，但确实是血。",
+            "effects": [
+              {
+                "type": "item",
+                "id": "ningqi_dan",
+                "value": -1
+              },
+              {
+                "type": "injury",
+                "key": "internal",
+                "value": 1,
+                "weeks": 2
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "repress"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "灵气在第四周天炸开。你从蒲团上翻下来，半边身子麻了整整一夜。第二天被人抬去了丹霞院。",
+            "effects": [
+              {
+                "type": "item",
+                "id": "ningqi_dan",
+                "value": -1
+              },
+              {
+                "type": "injury",
+                "key": "internal",
+                "value": 2,
+                "weeks": 4
+              },
+              {
+                "type": "exp",
+                "value": -60,
+                "noScale": true
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "repress",
+                "note": "静修室里炸开的那一次"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_qin_inspection",
+    "category": "study",
+    "weight": 26,
+    "scene": "scene_main_plaza",
+    "actors": [
+      "npc_qinjiusi"
+    ],
+    "cooldown": 15,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "minWeek": 6
+    },
+    "variants": [
+      {
+        "seed": "秦九思拦在路口，手里的竹牌翻开着。「昨夜亥时三刻，你不在宿舍。」他念的是记录，不是质问，「按院规第十九条，无故夜出，记过一次。」他把笔悬在那里，等你说话。",
+        "facts": [
+          "秦九思查到你昨夜不在宿舍",
+          "他正准备记过"
+        ]
+      },
+      {
+        "seed": "「你的课业迟交了两日。」秦九思把册子摊开给你看，上面清清楚楚记着日子。「我已经替你压了两天。」他合上册子，「今日再不交，我就要往上报了。」",
+        "facts": [
+          "秦九思压了你两天的迟交记录",
+          "他不打算再压"
+        ]
+      }
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "认，请他照规矩记",
+        "reason": 14,
+        "check": null,
+        "fixedGrade": "good",
+        "outcomes": {
+          "good": {
+            "narrative": "他写下了，一笔一划。写完抬头看你：「你是第三个不辩解的。」他把笔收好，「记过一次，不影响你排名。」说完就走了，背挺得笔直。",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -1
+              },
+              {
+                "type": "relation",
+                "favor": 12,
+                "awe": 5,
+                "trust": 8,
+                "note": "你没有辩解，他记住了"
+              },
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": 4
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "解释缘由，看能不能通融",
+        "reason": -4,
+        "check": {
+          "attr": "shi",
+          "difficulty": 65
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你说的是实话，而且拿得出人证。他核了两遍，把笔放下：「情形属实，不予记过。」顿了顿，「下次先来报备。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 6,
+                "awe": 3
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他改成了口头警告。「只此一次。」",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -1
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他听完，还是记了。「理由不在院规的免责条款里。」",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -2
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "「你在跟我讲人情。」他把册子合上，「那我就得连今日这一节也记进去。」",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -4
+              },
+              {
+                "type": "relation",
+                "favor": -6
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你说得越多，他记得越细。最后那一页写满了。「妨碍纠察，加一等。」他说这话时脸上没有得意，只有一种近乎疲惫的坚持。",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -6
+              },
+              {
+                "type": "contribution",
+                "value": -20
+              },
+              {
+                "type": "relation",
+                "favor": -12,
+                "note": "你试图跟他讲人情"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "反问他自己是不是也被记过",
+        "reason": 4,
+        "check": {
+          "attr": "shi",
+          "difficulty": 55
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "他愣了一下，然后翻开册子最前面几页，指给你看——上面确实有他自己的名字，两笔。「一次迟到，一次徇私。」他把册子合上，「徇私那次，是替我妹妹。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 14,
+                "trust": 15,
+                "bond": 8,
+                "note": "他给你看了自己名下的两笔记录"
+              },
+              {
+                "type": "conduct",
+                "value": -1
+              },
+              {
+                "type": "flag",
+                "key": "qin_sister"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "「记过两次。」他答得很干脆，「你要看吗？」你摇头。他点点头，把你那笔也写了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 8,
+                "trust": 6
+              },
+              {
+                "type": "conduct",
+                "value": -1
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "「与本案无关。」他把你那一笔写完了。",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -2
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "「你想说我双标？」他的声音没有起伏，「那你可以去执事堂告我。」",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -3
+              },
+              {
+                "type": "relation",
+                "favor": -5
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "周围围了几个人。他当着所有人的面把册子翻到自己那页，念了出来。念完抬头：「还有别的要问吗。」你站在那里，比被记过还难受。",
+            "effects": [
+              {
+                "type": "conduct",
+                "value": -3
+              },
+              {
+                "type": "relation",
+                "favor": -10
+              },
+              {
+                "type": "reputation",
+                "value": -2
+              },
+              {
+                "type": "demon",
+                "value": 3,
+                "source": "guilt",
+                "note": "广场上那次难堪"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+]

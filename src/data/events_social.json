@@ -1,0 +1,1536 @@
+[
+  {
+    "id": "evt_wenjiujiu_stairs",
+    "category": "social",
+    "weight": 35,
+    "chainId": "wenjiujiu_letter",
+    "scene": "scene_stone_stairs",
+    "actors": [
+      "npc_wenjiujiu"
+    ],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "phase": [
+        "dusk"
+      ],
+      "relations": {
+        "npc_wenjiujiu": {
+          "favor": [
+            20,
+            100
+          ]
+        }
+      },
+      "notFlags": [
+        "wenjiujiu_letter_seen"
+      ],
+      "minWeek": 3
+    },
+    "seed": "你从藏经阁出来时，天色已暗。石阶上坐着一个人，背对着你，正望着远处被暮色吞没的山峦。是温酒酒。她手里攥着一张纸，看不清写了什么，但你注意到她的肩膀在微微发抖。她似乎还没发现你。",
+    "facts": [
+      "温酒酒收到家中来信",
+      "她不想让人看见自己这样"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "走过去，在她身旁坐下，不说话",
+        "reason": 15,
+        "check": {
+          "attr": "xin",
+          "difficulty": 30
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你什么也没问，就那么坐着。石阶是凉的。过了很久，她把那张纸递过来——是家书，父亲病重。她说这句话的时候声音很稳，稳得像是练过很多遍。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 12,
+                "trust": 15,
+                "bond": 8,
+                "note": "石阶上，她把家书给你看了",
+                "openRomance": true
+              },
+              {
+                "type": "flag",
+                "key": "wenjiujiu_letter_seen"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你坐下了。她愣了一下，把纸折起来塞进袖子里，然后开始说些不相干的话。你听着，没有拆穿。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 8,
+                "trust": 8,
+                "bond": 4,
+                "note": "石阶上陪她坐了一会儿"
+              },
+              {
+                "type": "flag",
+                "key": "wenjiujiu_letter_seen"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你坐下了。两个人都没说话。天彻底黑下来的时候，她说了句我先回去了，就走了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 4,
+                "trust": 3
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你坐下的动作太突然，她整个人弹了起来，纸掉在地上。她慌忙捡起来，脸涨得通红。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -2,
+                "trust": 2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "她转过头看见是你，脸上那点没来得及收的表情僵在那里。她站起来说了声失陪，走得很快。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -5,
+                "trust": -3,
+                "note": "被你撞见了她不想被看见的样子"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "轻声问她怎么了",
+        "reason": 5,
+        "check": {
+          "attr": "shi",
+          "difficulty": 40
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你问得很轻。她沉默了一会儿，说：我爹病了。然后又补一句，没事，丹霞院有的是药。你们都知道后半句是假的。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 10,
+                "trust": 12,
+                "bond": 5,
+                "note": "她告诉你她父亲病了"
+              },
+              {
+                "type": "flag",
+                "key": "wenjiujiu_letter_seen"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "她笑了一下说没什么，家里来信而已。那个笑撑得有点辛苦。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 5,
+                "trust": 4
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "她说没事。你也就没再问。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 2
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "她说没事，语气比平时硬。你意识到自己问得不是时候。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -3,
+                "trust": -2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "她说：你管得着吗。说完自己也愣住了。她低头走了，没有解释。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -8,
+                "trust": -5,
+                "note": "你问得不是时候"
+              },
+              {
+                "type": "demon",
+                "value": 2,
+                "source": "guilt",
+                "note": "那天石阶上多问的那一句"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "假装没看到，悄悄离开",
+        "reason": -3,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你退回了阴影里，绕另一条路下山。走出很远，你回头看了一眼。那个背影还在那儿。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -1
+              },
+              {
+                "type": "flag",
+                "key": "wenjiujiu_avoided"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "D",
+        "text": "观察她手里的纸上写了什么",
+        "reason": -10,
+        "check": {
+          "attr": "shen",
+          "difficulty": 55
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你借着最后一点天光看清了几个字：父病重，勿念，家中尚可支撑。落款处有一片洇开的墨，像是写的人手抖了。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "wenjiujiu_letter_read"
+              },
+              {
+                "type": "relation",
+                "trust": -2
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你看清了开头两个字：吾女。是家书。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "wenjiujiu_letter_read"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "光太暗了，什么也看不清。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "你凑得太近。她猛地把纸按在胸口，回头瞪着你。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -6,
+                "trust": -8
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "她发现了。那一刻她脸上没有愤怒，只有一种被人剥开的难堪。她说：你看够了吗。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -15,
+                "trust": -15,
+                "note": "你偷看了她的家书"
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "guilt",
+                "note": "石阶上那次窥视"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "chainNext": {
+      "on": [
+        "perfect",
+        "good"
+      ],
+      "eventId": "evt_wenjiujiu_medicine",
+      "delayWeeks": 2
+    }
+  },
+  {
+    "id": "evt_wenjiujiu_medicine",
+    "category": "social",
+    "chainOnly": true,
+    "chainId": "wenjiujiu_letter",
+    "scene": "scene_danxia",
+    "actors": [
+      "npc_wenjiujiu"
+    ],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "student"
+      ]
+    },
+    "seed": "丹房的火还没熄。温酒酒守在炉前，眼下两团青黑。案上摊着七八张废掉的丹方，最上面那张写着一味药：雪顶灵芝。那东西在坊市要三百下品灵石，她一个月的补贴是五十。",
+    "facts": [
+      "温酒酒在为父亲炼药",
+      "缺一味雪顶灵芝，价值三百下品灵石"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "把灵石给她",
+        "reason": 10,
+        "check": null,
+        "fixedGrade": "good",
+        "require": {
+          "stone": 300
+        },
+        "outcomes": {
+          "good": {
+            "narrative": "她盯着那袋灵石看了很久，然后说：我会还你的。你说不急。她说：我说了我会还。语气硬得像在跟自己较劲。",
+            "effects": [
+              {
+                "type": "stone",
+                "value": -300,
+                "noScale": true
+              },
+              {
+                "type": "relation",
+                "favor": 18,
+                "trust": 20,
+                "bond": 12,
+                "note": "你替她垫了雪顶灵芝的钱",
+                "openRomance": true
+              },
+              {
+                "type": "flag",
+                "key": "wenjiujiu_debt"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "帮她去接一个能换到灵芝的悬赏",
+        "reason": 16,
+        "check": {
+          "attr": "gen",
+          "difficulty": 60
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你在外域找到了那株灵芝，回来时衣服上全是划口子。她把灵芝接过去的时候手是抖的，半天没说出一个字。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 25,
+                "trust": 22,
+                "bond": 18,
+                "note": "你为她跑了一趟外域",
+                "openRomance": true
+              },
+              {
+                "type": "reputation",
+                "value": 2
+              },
+              {
+                "type": "flag",
+                "key": "wenjiujiu_saved"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你换到了灵芝，代价是肩上添了一道口子。她一边给你上药一边骂你，骂着骂着声音就低下去了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 18,
+                "trust": 16,
+                "bond": 14,
+                "note": "你为她受了伤",
+                "openRomance": true
+              },
+              {
+                "type": "injury",
+                "key": "wound",
+                "value": 1,
+                "weeks": 2
+              },
+              {
+                "type": "flag",
+                "key": "wenjiujiu_saved"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你只弄到半株。她说够了，真的够了。你知道不够。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 8,
+                "trust": 8
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你空手而回。她说没关系，还有别的法子。她说这话的时候在笑。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 4,
+                "trust": 5
+              },
+              {
+                "type": "demon",
+                "value": 3,
+                "source": "guilt",
+                "note": "答应了却没做到的那件事"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你不但没弄到灵芝，还惊动了外域的兽群。回来时消息已经传开了，教习记了你一笔。",
+            "effects": [
+              {
+                "type": "injury",
+                "key": "wound",
+                "value": 2,
+                "weeks": 3
+              },
+              {
+                "type": "conduct",
+                "value": -3
+              },
+              {
+                "type": "relation",
+                "favor": 2,
+                "trust": 3
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "陪她一起想别的丹方",
+        "reason": 12,
+        "check": {
+          "attr": "wu",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你们熬了整夜。天快亮的时候她忽然拍案而起——雪顶灵芝可以用三味便宜药替，只是要多熬两个时辰。她转头看你，眼睛是亮的。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 20,
+                "trust": 18,
+                "bond": 12,
+                "note": "你陪她熬了一夜，改出了新丹方",
+                "openRomance": true
+              },
+              {
+                "type": "attr",
+                "key": "wu",
+                "value": 1
+              },
+              {
+                "type": "flag",
+                "key": "wenjiujiu_saved"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你们改出了一个勉强能用的方子。她说试试看。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 12,
+                "trust": 10,
+                "bond": 6
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "熬到后半夜，什么也没想出来。她说你先回去吧。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 5,
+                "trust": 5
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你的建议差点让那炉药废了。她很客气地说，还是我自己来吧。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "炉子炸了。药材全毁，丹房一片狼藉。她蹲在地上一片一片捡碎瓷，没有看你。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -8,
+                "trust": -5
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "guilt",
+                "note": "丹房那一炉炸掉的药"
+              },
+              {
+                "type": "conduct",
+                "value": -2
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "D",
+        "text": "这是她家的事，你不便插手",
+        "reason": -6,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你在门口站了一会儿，转身走了。丹房的火光在你身后一直亮到天明。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -6,
+                "trust": -4,
+                "note": "她最难的时候，你没有出现"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_shen_spar_invite",
+    "category": "social",
+    "weight": 30,
+    "scene": "scene_jianyuan",
+    "actors": [
+      "npc_shenjinglan"
+    ],
+    "cooldown": 20,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "minWeek": 2
+    },
+    "variants": [
+      {
+        "seed": "练剑场边上站着个人。是沈惊澜。他手里提着两柄未开锋的木剑，看见你就把其中一柄扔了过来。「三招。」他说。就这两个字。",
+        "facts": [
+          "沈惊澜邀你切磋，只说三招"
+        ]
+      },
+      {
+        "seed": "你路过练剑场时，沈惊澜正一个人对着木桩。他停下来，回头看你。「你站那儿多久了？」不等你答，他把剑转了个方向，剑柄朝你。",
+        "facts": [
+          "沈惊澜发现你在看他练剑，主动邀战"
+        ]
+      }
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "接下，全力以赴",
+        "reason": 14,
+        "check": {
+          "attr": "gen",
+          "difficulty": 62
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "第三招你没有退。木剑相击的那一声很闷。他收剑，看了你很久，说：「再来。」这是他今天说的第三句话。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 14,
+                "awe": 12,
+                "trust": 8,
+                "note": "三招之内你没有退"
+              },
+              {
+                "type": "exp",
+                "value": 30
+              },
+              {
+                "type": "reputation",
+                "value": 2
+              }
+            ]
+          },
+          "good": {
+            "narrative": "三招过后你的虎口在发麻。他点了点头：「出剑不犹豫。」这大概是他能给出的最高评价。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 10,
+                "awe": 8,
+                "note": "他说你出剑不犹豫"
+              },
+              {
+                "type": "exp",
+                "value": 22
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "三招，你退了两步。他没说什么，收剑走了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 4,
+                "awe": 3
+              },
+              {
+                "type": "exp",
+                "value": 14
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "第一招你就丢了剑。他弯腰替你捡起来，什么也没说。这比说什么都难受。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 2,
+                "awe": -2
+              },
+              {
+                "type": "exp",
+                "value": 8
+              },
+              {
+                "type": "demon",
+                "value": 2,
+                "source": "inferior",
+                "note": "练剑场上那三招"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你摔在地上，木剑飞出去老远。周围有人在看。他伸手要拉你，你没有接。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -2,
+                "awe": -4
+              },
+              {
+                "type": "reputation",
+                "value": -1
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "inferior",
+                "note": "当众被沈惊澜三招撂倒"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "接下，但只守不攻",
+        "reason": 6,
+        "check": {
+          "attr": "xin",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你一招不发，三招守满。他挑了挑眉：「有意思。」然后转身走了。你觉得他心情不错。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 8,
+                "awe": 10,
+                "note": "三招只守不攻，他说有意思"
+              },
+              {
+                "type": "attr",
+                "key": "xin",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你守住了两招半。他收剑，说了句「太稳了」，听不出是夸还是别的。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 5,
+                "awe": 5
+              },
+              {
+                "type": "exp",
+                "value": 12
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他很快就看出你不打算还手，剑势缓了下来，草草收了场。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 1
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "他停手了。「你在敷衍我。」他把剑扔回架子上。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -6,
+                "trust": -4,
+                "note": "他觉得你在敷衍他"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "「不想打就直说。」他把剑插回架子，头也不回地走了。你听见旁边有人在笑。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -10,
+                "awe": -5
+              },
+              {
+                "type": "reputation",
+                "value": -1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "婉拒，说自己还没准备好",
+        "reason": 2,
+        "outcomes": {
+          "fixed": {
+            "narrative": "他把剑收回去，没有勉强。「那等你准备好。」他说完就转身接着打他的木桩了，好像刚才那两句话没有发生过。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -1,
+                "awe": -2
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "D",
+        "text": "问他为什么总找你",
+        "reason": 8,
+        "check": {
+          "attr": "shi",
+          "difficulty": 55
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "他沉默了很久，久到你以为他不会回答。然后他说：「这院里三百个人，只有你看我出剑的时候，眼睛是看剑不是看我。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 12,
+                "trust": 15,
+                "bond": 8,
+                "note": "他说你看的是剑，不是他",
+                "openRomance": true
+              }
+            ]
+          },
+          "good": {
+            "narrative": "「因为你会接。」他说完就不肯再多说了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 6,
+                "trust": 6
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他没回答，只是把剑又递了一次。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 2
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "「话真多。」他把剑收了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -3
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "他上下打量了你一眼：「原来你是这么想的。」这句话说得很平，但你听出了别的意思。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -7,
+                "trust": -5
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_zhao_business",
+    "category": "social",
+    "weight": 28,
+    "scene": "scene_market",
+    "actors": [
+      "npc_zhaomingqi"
+    ],
+    "cooldown": 15,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "minWeek": 4
+    },
+    "variants": [
+      {
+        "seed": "赵鸣岐在坊市口拦住你，一脸笑：「兄弟，有笔生意。」他压低声音说，山下有批灵墨压在手里，收价只要市价六成，转手就是三倍。「本钱两百，我出一百五，你出五十，赚了对半分。」他说得太顺了，顺得像背过。",
+        "facts": [
+          "赵鸣岐提议合伙倒卖灵墨",
+          "他出150，要你出50"
+        ]
+      },
+      {
+        "seed": "赵鸣岐把你拉到角落，摊开一张单子。「符箓院下个月要采一批灵墨，我知道消息。」他手指点着数字，「现在囤，下个月出手。你只要出五十。」他的指甲修得很干净，指尖有一点洗不掉的墨渍。",
+        "facts": [
+          "赵鸣岐掌握符箓院采购内幕",
+          "邀你合伙囤货"
+        ]
+      }
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "入伙，出五十灵石",
+        "reason": 4,
+        "check": {
+          "attr": "shi",
+          "difficulty": 50
+        },
+        "require": {
+          "stone": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "半个月后他把一袋灵石拍在你面前，数了三遍。「三倍。我说话算话。」他笑得很实在，那种笑跟平时招呼人的不一样。",
+            "effects": [
+              {
+                "type": "stone",
+                "value": -50,
+                "noScale": true
+              },
+              {
+                "type": "stone",
+                "value": 200,
+                "noScale": true
+              },
+              {
+                "type": "relation",
+                "favor": 14,
+                "trust": 12,
+                "note": "第一笔生意，他没坑你"
+              },
+              {
+                "type": "attr",
+                "key": "shi",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "赚了。不多，但赚了。他把分成给你的时候顺口说了句：「以后有生意还找你。」",
+            "effects": [
+              {
+                "type": "stone",
+                "value": -50,
+                "noScale": true
+              },
+              {
+                "type": "stone",
+                "value": 110,
+                "noScale": true
+              },
+              {
+                "type": "relation",
+                "favor": 8,
+                "trust": 8
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "货压住了，没赔也没赚。他还了你五十，一分不少。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 4,
+                "trust": 5
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "采购取消了。他把三十灵石推过来：「剩下的我先欠着。」他不敢看你的眼睛。",
+            "effects": [
+              {
+                "type": "stone",
+                "value": -50,
+                "noScale": true
+              },
+              {
+                "type": "stone",
+                "value": 30,
+                "noScale": true
+              },
+              {
+                "type": "relation",
+                "favor": 2,
+                "trust": -3
+              },
+              {
+                "type": "flag",
+                "key": "zhao_owes_you"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "灵墨是假的。他把所有本钱赔给了你，赔完之后自己身上一个子儿都没剩。他坐在坊市台阶上笑：「我爹说得对，我不是这块料。」",
+            "effects": [
+              {
+                "type": "stone",
+                "value": -50,
+                "noScale": true
+              },
+              {
+                "type": "stone",
+                "value": 50,
+                "noScale": true
+              },
+              {
+                "type": "relation",
+                "favor": 6,
+                "trust": 10,
+                "bond": 8,
+                "note": "他赔光了本钱也没赖你的账"
+              },
+              {
+                "type": "flag",
+                "key": "zhao_family_trouble"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "先问清楚消息从哪来的",
+        "reason": 15,
+        "check": {
+          "attr": "shi",
+          "difficulty": 45
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你问得很细。他先是打哈哈，被你追到第三遍时收了笑：「……我表叔在符箓院管库房。」他顿了顿，「这话你别往外说。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 10,
+                "trust": 12,
+                "note": "你问到了他的底，他说了实话"
+              },
+              {
+                "type": "flag",
+                "key": "zhao_source_known"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他含糊了几句，但你听出这消息大概靠谱。「你要是不放心就算了。」他说这话时有点急。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 5,
+                "trust": 5
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他绕来绕去，你也没问出什么。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "他脸色变了：「兄弟，做生意讲个信字。你这么问，就是不信我。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -5,
+                "trust": -3
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你问得太尖，周围几个人都听见了。他把单子一收：「当我没说。」转身就走。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -10,
+                "trust": -8,
+                "note": "你当众质疑他的消息来源"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "不入伙，但答应替他保密",
+        "reason": 10,
+        "outcomes": {
+          "fixed": {
+            "narrative": "他愣了一下，随即笑开：「够意思。」他没再劝，只是走的时候拍了拍你肩膀。这一下拍得比平时重。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 6,
+                "trust": 8,
+                "note": "你没入伙，但替他守了口"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "D",
+        "text": "把这事报给纠察弟子",
+        "reason": -8,
+        "outcomes": {
+          "fixed": {
+            "narrative": "秦九思记下了。三天后赵鸣岐被叫去执事堂，出来时脸上还带着笑，但看你的眼神变了。他没有质问你，一句都没有。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_zhaomingqi",
+                "favor": -35,
+                "trust": -30,
+                "note": "你举报了他"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_qinjiusi",
+                "favor": 12,
+                "awe": 5,
+                "note": "你举报了同窗的违规交易"
+              },
+              {
+                "type": "conduct",
+                "value": 4
+              },
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": 8
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "guilt",
+                "note": "你举报赵鸣岐的那一天"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_yesusu_cub",
+    "category": "social",
+    "weight": 26,
+    "scene": "scene_yuling",
+    "actors": [
+      "npc_yesusu"
+    ],
+    "cooldown": 17,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "minWeek": 3
+    },
+    "seed": "灵兽园的角落里，叶素素蹲在地上，怀里那只白色的小兽在发抖。她抬头看见你，下意识把兽往怀里按了按。「它……不肯吃东西。」她说这话的时候声音很小，像是怕吵着谁。",
+    "facts": [
+      "叶素素的幼兽不肯进食",
+      "她不知道该怎么办"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "蹲下来，先不碰它，只是陪着",
+        "reason": 16,
+        "check": {
+          "attr": "xin",
+          "difficulty": 35
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你在三步外坐下，什么也不做。过了很久，那只小兽从她怀里探出头，朝你这边嗅了嗅。叶素素抬起头，眼睛睁得很大：「它……」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 16,
+                "trust": 14,
+                "bond": 10,
+                "note": "那只小兽认了你",
+                "openRomance": true
+              },
+              {
+                "type": "flag",
+                "key": "cub_familiar"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你坐了很久。小兽没出来，但也没再抖了。她小声说了句谢谢。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 10,
+                "trust": 8,
+                "bond": 5
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你陪着坐了一会儿。天暗下来时她说该回去了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 4,
+                "trust": 3
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "小兽一直在叫，声音尖得刺耳。她抱着它走开了，走之前说了句对不起。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 1
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你刚一动，小兽就炸了毛，一口咬在她手上。血很快渗出来。她死死抱着它，说的却是：「它不是故意的。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -4,
+                "trust": -2
+              },
+              {
+                "type": "demon",
+                "value": 2,
+                "source": "guilt",
+                "note": "灵兽园里那次"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "去丹霞院要一副开胃的药",
+        "reason": 10,
+        "check": {
+          "attr": "wu",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "温酒酒二话不说给你配了一副。小兽闻了闻，居然吃了。叶素素捧着空碗看了半天，忽然朝你深深鞠了一躬。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_yesusu",
+                "favor": 14,
+                "trust": 12,
+                "bond": 8,
+                "note": "你替她的幼兽求来了药"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_wenjiujiu",
+                "favor": 5,
+                "trust": 4
+              },
+              {
+                "type": "flag",
+                "key": "cub_fed"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "药起了作用，小兽勉强吃了一点。她说这样就好，真的。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 9,
+                "trust": 7,
+                "bond": 4
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "药没什么用。她说没关系，本来也不指望。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 4,
+                "trust": 3
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "小兽把药打翻了。碗碎在地上，药汁洇进土里。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 2
+              },
+              {
+                "type": "stone",
+                "value": -20,
+                "noScale": true
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "药性不对。小兽吐了一夜。她整宿没睡，第二天见你时脸白得吓人，却还是说：「不怪你。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -6,
+                "trust": -4
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "guilt",
+                "note": "那副下错的药"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "问她这只兽到底是什么来历",
+        "reason": -4,
+        "check": {
+          "attr": "shen",
+          "difficulty": 60
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "她沉默了很久，然后说：「不是我契的它。」她低头看着怀里那团白色，「是它选的我。我到现在也不知道为什么。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 6,
+                "trust": 12,
+                "bond": 8,
+                "note": "她告诉你，是那只兽选的她"
+              },
+              {
+                "type": "storyline",
+                "key": "rootSecret",
+                "value": 8,
+                "clue": "叶素素幼兽的血脉记录"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "「南疆带来的。」她说完就不再开口了。你知道这不是全部。",
+            "effects": [
+              {
+                "type": "relation",
+                "trust": 3
+              },
+              {
+                "type": "storyline",
+                "key": "rootSecret",
+                "value": 3
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "她只是摇头。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "她把小兽抱得更紧了：「它就是它。」这是你第一次听她把话说得这么硬。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -4,
+                "trust": -3
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "她站起来就走。走出几步又停下，背对着你说：「你也是来看它值不值钱的吗。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -12,
+                "trust": -10,
+                "note": "她以为你在打那只兽的主意"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_pei_offer",
+    "category": "social",
+    "weight": 24,
+    "scene": "scene_tianji",
+    "actors": [
+      "npc_peiwuyou"
+    ],
+    "cooldown": 18,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "minWeek": 6
+    },
+    "seed": "观星台上就他一个人。裴无忧背对着你，手里的六枚卦钱一直在指间转。「来了？」他没回头，「我给你算了一卦。」他把钱一摊，六枚全是背面。「凶。」他说完自己先笑了，「不过我从不为自己算，也不保准替别人算准。你要不要听听？」",
+    "facts": [
+      "裴无忧主动为你起了一卦",
+      "他说是凶卦"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "听。问他卦象说什么",
+        "reason": 8,
+        "check": {
+          "attr": "shen",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "「往下三个月，你会知道一件不该知道的事。」他把卦钱收进袖子，「知道了就退不回去了。我劝你别问，但我猜你不会听。」他转身要走，又停下，「山后的灵脉，最近不太安分。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 10,
+                "trust": 10,
+                "note": "他给了你一句预警"
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 8,
+                "clue": "裴无忧的卦象"
+              },
+              {
+                "type": "flag",
+                "key": "vein_anomaly",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "「有人在等你犯错。」他说完就笑了，「这话对院里三百个人说都成立，是不是？」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 6,
+                "trust": 5
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 3
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他说了一堆听不懂的话，越听越像在敷衍。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 2
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "「算了，跟你说不明白。」他把卦钱一收就走了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "他忽然停下来看着你，笑意退得干干净净：「你问得太急了。急的人容易被当成刀使。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -6,
+                "trust": -5
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "反问他为什么不给自己算",
+        "reason": 12,
+        "check": {
+          "attr": "shi",
+          "difficulty": 58
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "他转过身来，第一次没有笑。「因为算过。」他说，「算出来的东西我不想认，所以后来就不算了。」说完他自己也愣了一下，像是没料到会说出口。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 12,
+                "trust": 18,
+                "bond": 10,
+                "note": "他说他给自己算过，结果不想认",
+                "openRomance": true
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 6
+              }
+            ]
+          },
+          "good": {
+            "narrative": "「规矩。」他说，「天机院的规矩。」你听得出这是托词，但他显然不打算再说。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 6,
+                "trust": 6
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他打了个哈哈就把话岔开了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 2
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "「这就没意思了。」他摇摇头，「有些门推开了就关不上。」",
+            "effects": [
+              {
+                "type": "relation",
+                "trust": -3
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "他盯了你三秒，然后笑了：「你在套我的话。」他把卦钱收好，「下次学得像一点。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -8,
+                "trust": -8,
+                "note": "他识破了你在套话"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "不听。转身就走",
+        "reason": 5,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你走到台阶口时，听见他在身后说：「有意思。」你没有回头。风把那两个字吹得很散。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 3,
+                "awe": 4,
+                "note": "你没接他的卦"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+]

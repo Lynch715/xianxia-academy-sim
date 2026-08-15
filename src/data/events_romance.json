@@ -1,0 +1,934 @@
+[
+  {
+    "id": "evt_confession_received",
+    "category": "romance",
+    "weight": 30,
+    "scene": "scene_stone_stairs",
+    "actors": [],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "notFlags": [
+        "confession_handled"
+      ],
+      "minWeek": 38
+    },
+    "dynamicActor": "romance_top",
+    "seed": "她把你叫到石阶上，站了很久没说话。你等着。山下的灯一盏一盏亮起来，等最后一盏也亮了，她才开口——不是问句，是陈述句。说完之后她没有看你，只是低头看着自己的鞋尖。",
+    "facts": [
+      "有人向你表白了",
+      "她在等一个答复"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "接受",
+        "reason": 12,
+        "check": {
+          "attr": "xin",
+          "difficulty": 30
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你说了「好」。就一个字。她抬起头，眼睛亮得吓人，然后又低下去。「哦。」她说。两个人在石阶上站到很晚，谁也没再说话，但谁也没走。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 20,
+                "trust": 20,
+                "bond": 22,
+                "note": "石阶上，你答应了她",
+                "openRomance": true
+              },
+              {
+                "type": "flag",
+                "key": "confession_handled"
+              },
+              {
+                "type": "flag",
+                "key": "in_relationship"
+              },
+              {
+                "type": "demon",
+                "value": -6,
+                "source": "love"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你答应了。她笑得有点傻，然后转身跑了，跑出十几步又回头挥了下手。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 15,
+                "trust": 15,
+                "bond": 16,
+                "openRomance": true,
+                "note": "你答应了她"
+              },
+              {
+                "type": "flag",
+                "key": "confession_handled"
+              },
+              {
+                "type": "flag",
+                "key": "in_relationship"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你答应得有点犹豫。她察觉到了，但还是笑了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 10,
+                "trust": 8,
+                "bond": 10,
+                "openRomance": true
+              },
+              {
+                "type": "flag",
+                "key": "confession_handled"
+              },
+              {
+                "type": "flag",
+                "key": "in_relationship"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你说好，但话说得别扭。她的笑僵了一下。「你要是为难……」她没说完。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 6,
+                "trust": 2,
+                "bond": 8,
+                "openRomance": true
+              },
+              {
+                "type": "flag",
+                "key": "confession_handled"
+              },
+              {
+                "type": "flag",
+                "key": "in_relationship"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你答应得太快，快到像是敷衍。她看了你很久，说：「你再想想吧。」然后走了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -5,
+                "trust": -8
+              },
+              {
+                "type": "flag",
+                "key": "confession_handled"
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "love",
+                "note": "石阶上那句答得太快的话"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "婉拒，但说清楚为什么",
+        "reason": 14,
+        "check": {
+          "attr": "shi",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你说了很久，说得很慢。她听完点点头：「我知道了。」顿了顿，「那朋友还是能做的吧？」你说当然。她笑了，这次是真的笑。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -4,
+                "trust": 15,
+                "bond": 10,
+                "note": "你拒绝得很认真，她接住了"
+              },
+              {
+                "type": "flag",
+                "key": "confession_handled"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "她听完，说了句「好」。往后你们还是朋友，只是有些话再没提过。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -6,
+                "trust": 8
+              },
+              {
+                "type": "flag",
+                "key": "confession_handled"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "她点点头就走了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -10,
+                "trust": 3
+              },
+              {
+                "type": "flag",
+                "key": "confession_handled"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你的理由说得含糊，反而更伤人。她说了声「知道了」，转身下了石阶，走得很快。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -18,
+                "trust": -6
+              },
+              {
+                "type": "flag",
+                "key": "confession_handled"
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "love",
+                "note": "那晚的拒绝"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你说的话里有一句很伤人，说出口你就后悔了。她没有哭，只是很平静地说：「我不该说的。」然后走了。此后很长一段时间，你们连照面都避开。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -30,
+                "trust": -20,
+                "note": "石阶上那句伤人的话"
+              },
+              {
+                "type": "flag",
+                "key": "confession_handled"
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "guilt",
+                "note": "石阶上说出口就后悔的那句话"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "说需要时间想想",
+        "reason": 2,
+        "outcomes": {
+          "fixed": {
+            "narrative": "她说好。说完自己先笑了：「本来也没指望你现在就答。」但她的手一直在攥着袖口。这件事就这么悬在了那里，你们谁也没再提。",
+            "effects": [
+              {
+                "type": "relation",
+                "trust": -4,
+                "bond": 4,
+                "openRomance": true
+              },
+              {
+                "type": "flag",
+                "key": "confession_pending"
+              },
+              {
+                "type": "demon",
+                "value": 3,
+                "source": "love",
+                "note": "石阶上没给出的那个答复"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "chainNext": {
+      "on": [
+        "perfect",
+        "good"
+      ],
+      "eventId": "evt_first_date",
+      "delayWeeks": 2
+    }
+  },
+  {
+    "id": "evt_first_date",
+    "category": "romance",
+    "chainOnly": true,
+    "scene": "scene_market",
+    "actors": [],
+    "cooldown": 999,
+    "important": true,
+    "dynamicActor": "partner",
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "flags": [
+        "in_relationship"
+      ]
+    },
+    "seed": "旬休。你们约了下山。坊市的人比平时多，两个人挤在人堆里走了半条街，谁也没先开口说要去哪。她忽然停在一个糖摊前面，看了两秒，又装作没看见地走开了。",
+    "facts": [
+      "两人第一次一起下山",
+      "她在糖摊前停了一下又装作没看见"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "回头把那份糖买了",
+        "reason": 16,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你追上去把纸包塞给她。她「啊」了一声，然后耳朵一点点红了。「我又没说要。」她说着，已经拆开在吃了。走了半条街，她忽然说：「以后这种事，你别看得那么准。」",
+            "effects": [
+              {
+                "type": "stone",
+                "value": -10,
+                "noScale": true
+              },
+              {
+                "type": "relation",
+                "favor": 14,
+                "trust": 10,
+                "bond": 14,
+                "note": "坊市上那包糖"
+              },
+              {
+                "type": "demon",
+                "value": -4,
+                "source": "love"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "带她去看点别的",
+        "reason": 8,
+        "check": {
+          "attr": "shi",
+          "difficulty": 45
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你带她绕到坊市后面的一处崖口。那里能看见整片云海，日头正往下落。她站了很久，说：「你怎么知道这里。」你说以前一个人来过。她「嗯」了一声，然后往你这边挪了半步。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 16,
+                "trust": 14,
+                "bond": 16,
+                "note": "崖口的那场日落"
+              },
+              {
+                "type": "demon",
+                "value": -5,
+                "source": "love"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "转了大半天，两个人都挺高兴。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 10,
+                "bond": 8
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "走走停停，天就黑了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 5,
+                "bond": 4
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你选的地方她不喜欢，但她没说。你是后来才知道的。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 2,
+                "trust": -3
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你把路带错了，两个人在山道上绕到天黑，还差点误了归院的时辰。回来的路上她一句话没说。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -6,
+                "trust": -5
+              },
+              {
+                "type": "conduct",
+                "value": -2
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "问她想去哪",
+        "reason": 10,
+        "check": {
+          "attr": "xin",
+          "difficulty": 35
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "她想了很久，说：「药铺。」你以为她要买药，结果她只是站在铺子门口看了很久。「我家的铺子就长这样。」她说，「小时候我天天在门口坐着。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 12,
+                "trust": 18,
+                "bond": 14,
+                "note": "她带你去看了一家和她家很像的药铺"
+              },
+              {
+                "type": "demon",
+                "value": -4,
+                "source": "love"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "她说随便。你们就随便逛了逛。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 8,
+                "bond": 6
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "她也说不上想去哪。两个人在坊市口坐了一下午。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 5,
+                "bond": 5
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "她说随便，你就真的随便了。这一天过得有点没意思。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你追着问了三遍。她终于有点急了：「我说了随便！」说完两个人都愣住了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -5,
+                "trust": -3
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_jealousy",
+    "category": "romance",
+    "weight": 26,
+    "scene": "scene_main_plaza",
+    "actors": [],
+    "cooldown": 20,
+    "dynamicActor": "partner",
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "flags": [
+        "in_relationship"
+      ],
+      "minWeek": 52
+    },
+    "seed": "她今天不太对劲。你说什么她都「嗯」，问她怎么了就说没事。直到散课时她忽然停下脚步，背对着你说：「你最近和叶素素走得很近。」不是质问，语气平得像在说天气。",
+    "facts": [
+      "她因为你和别人走得近而不快",
+      "她把话说得很平"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "如实说清楚是怎么回事",
+        "reason": 16,
+        "check": {
+          "attr": "shi",
+          "difficulty": 45
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把前因后果说了一遍，一句没瞒。她听完，沉默了一会儿，忽然笑出声：「我就是想听你说。」她拽了下你的袖子，「以后有这种事，你先跟我说。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 12,
+                "trust": 18,
+                "bond": 12,
+                "note": "你把话说清楚了"
+              },
+              {
+                "type": "demon",
+                "value": -4,
+                "source": "love"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你解释了，她接受了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 6,
+                "trust": 10
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "她「哦」了一声，这事就算过去了。但你知道没真过去。",
+            "effects": [
+              {
+                "type": "relation",
+                "trust": 3
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你解释得越多，她的脸色越淡。最后她说：「我知道了。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -6,
+                "trust": -4
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你的解释里有一句自相矛盾的地方，她抓住了。「所以你是在骗我。」她说完就走了，那一整周都没理你。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -18,
+                "trust": -20,
+                "note": "你的解释里露了破绽"
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "love",
+                "note": "那次说不清的解释"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "反过来问她在想什么",
+        "reason": 8,
+        "check": {
+          "attr": "xin",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你没有辩解，只是问她心里在怕什么。她愣住了，很久才说：「我怕有一天你觉得我不够好。」这句话说出口，她自己先红了眼眶。那天晚上你们说了很多以前从没说过的话。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 14,
+                "trust": 22,
+                "bond": 20,
+                "note": "她说了她真正怕的东西"
+              },
+              {
+                "type": "demon",
+                "value": -8,
+                "source": "love"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "她把心里的话说了一些。气氛缓和下来。",
+            "effects": [
+              {
+                "type": "relation",
+                "trust": 12,
+                "bond": 8
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "她摇摇头说没什么。这话题就断了。",
+            "effects": [
+              {
+                "type": "relation",
+                "trust": 2
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "她觉得你在回避正题。「我在问你，你倒问起我来了。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -8,
+                "trust": -6
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你问得太尖，像在指责她小心眼。她的脸一下子白了。「原来你是这么想我的。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -20,
+                "trust": -18
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "love",
+                "note": "那句反问"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "别的什么都不说，就说以后少去",
+        "reason": -4,
+        "outcomes": {
+          "fixed": {
+            "narrative": "她愣了一下，然后说：「我不是这个意思。」你说没事。这事就这么算了。但从那以后，你确实很少再往御灵院去了，而她也再没提过这件事。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 4,
+                "trust": -6
+              },
+              {
+                "type": "relation",
+                "npc": "npc_yesusu",
+                "favor": -8,
+                "note": "你忽然不来了"
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "repress",
+                "note": "那件谁也没再提的事"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_forbidden_line",
+    "category": "romance",
+    "weight": 20,
+    "scene": "scene_baiyi",
+    "actors": [
+      "npc_liumianyan"
+    ],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "student"
+      ],
+      "relations": {
+        "npc_liumianyan": {
+          "favor": [
+            70,
+            100
+          ],
+          "trust": [
+            55,
+            100
+          ]
+        }
+      },
+      "notFlags": [
+        "forbidden_line_crossed",
+        "forbidden_line_refused"
+      ],
+      "minWeek": 60
+    },
+    "seed": "柳眠烟今天没喝酒。她把琴推到一边，看了你很久。「有件事我得说在前面。」她的声音比平时清醒，「院规第六条，在任教习不得与弟子有超出指导的关系。」她顿了顿，「我说这句，是因为我最近老想着要不要说。」",
+    "facts": [
+      "柳眠烟点明了院规第六条",
+      "她承认自己一直在想这件事"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "那就等，等到毕业",
+        "reason": 16,
+        "check": {
+          "attr": "xin",
+          "difficulty": 45
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你说了「等」。她笑了，笑着笑着眼睛就红了。「五年啊。」她说，「我一百九十岁了，五年算什么。」她重新把琴拉回膝上，「那这五年，你好好念书。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 18,
+                "trust": 25,
+                "bond": 22,
+                "note": "你说了等到毕业",
+                "openRomance": true
+              },
+              {
+                "type": "flag",
+                "key": "waiting_for_graduation"
+              },
+              {
+                "type": "attr",
+                "key": "xin",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "她点点头：「那就等。」这两个字说得很轻，但你听清了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 12,
+                "trust": 16,
+                "bond": 14,
+                "openRomance": true
+              },
+              {
+                "type": "flag",
+                "key": "waiting_for_graduation"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "她说：「说得容易。」但没有反驳。",
+            "effects": [
+              {
+                "type": "relation",
+                "trust": 8,
+                "bond": 6
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "她摇头：「你现在说的话，五年后自己都不记得。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -3,
+                "trust": 3
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你说得太轻巧了。她的表情淡下去：「你把这事想得太简单。」她拎起酒葫芦，「今天就到这儿。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -8,
+                "trust": -6
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "love"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "不管院规",
+        "reason": -10,
+        "check": {
+          "attr": "shi",
+          "difficulty": 60
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你说完，她盯着你看了很久。然后她做了一件从没做过的事——她把窗关上了。「那就谁也别说。」她说，「我认识钟离衡两百年，他什么都能查出来。所以你要很小心。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 20,
+                "trust": 20,
+                "bond": 25,
+                "openRomance": true,
+                "note": "你们越了那条线"
+              },
+              {
+                "type": "flag",
+                "key": "forbidden_line_crossed"
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "guilt",
+                "note": "那扇被关上的窗"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "她没有拒绝。但她说：「这事一旦被发现，我丢的是位子，你丢的是学籍。你想清楚。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 14,
+                "bond": 18,
+                "openRomance": true
+              },
+              {
+                "type": "flag",
+                "key": "forbidden_line_crossed"
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "guilt"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "她既没答应也没拒绝。这件事悬在那里。",
+            "effects": [
+              {
+                "type": "relation",
+                "bond": 8
+              },
+              {
+                "type": "demon",
+                "value": 3,
+                "source": "love"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "她站了起来：「你还是太年轻。」她走到门口又停下，「这话我当没听见。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -6,
+                "trust": -4
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你的话被门外的人听见了。第二天钟离衡「顺路」找你喝了盏茶，什么也没问，只说了句：「百艺院的琴，听听就好。」",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_liumianyan",
+                "favor": -10,
+                "trust": -12
+              },
+              {
+                "type": "relation",
+                "npc": "npc_zhonglihen",
+                "awe": 12
+              },
+              {
+                "type": "flag",
+                "key": "forbidden_line_watched"
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "repress",
+                "note": "钟离衡那盏茶"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "就此打住，什么都不要开始",
+        "reason": 10,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你说了「教习」两个字，把话到嘴边的东西堵了回去。她看着你，慢慢笑了：「对，我是教习。」她把琴拉回膝上，弹了一支很短的曲子。你走的时候，曲子还没弹完。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -4,
+                "trust": 12,
+                "bond": 8,
+                "note": "你们都退回了那条线后面"
+              },
+              {
+                "type": "flag",
+                "key": "forbidden_line_refused"
+              },
+              {
+                "type": "attr",
+                "key": "xin",
+                "value": 1
+              },
+              {
+                "type": "demon",
+                "value": 3,
+                "source": "love",
+                "note": "百艺院里那支没弹完的曲子"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+]

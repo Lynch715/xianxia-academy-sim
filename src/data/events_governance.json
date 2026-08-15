@@ -1,0 +1,1331 @@
+[
+  {
+    "id": "evt_gov_first_morning",
+    "category": "gov",
+    "weight": 40,
+    "scene": "scene_headmaster_hall",
+    "actors": [
+      "npc_fangyan",
+      "npc_chuheshan"
+    ],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "maxWeek": 6,
+      "notFlags": [
+        "gov_started"
+      ]
+    },
+    "seed": "方砚在门外站了半个时辰才敢敲门。\n\n他抱着的册子摞到下巴，最上面那本是今年的账。「院主，」他说，「先看哪一本？」\n\n楚河山站在他身后，什么也没说。",
+    "facts": [
+      "接任后的第一个清晨",
+      "方砚抱来了全部院务册子"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "先看账",
+        "reason": 10,
+        "check": {
+          "attr": "jue",
+          "difficulty": 40
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把账从头翻到尾，花了整整一天。翻到第三十七页时你停住了——一笔三十年前的损耗，数目对不上。你没有当场问，只在心里记下了。\n\n方砚看你的眼神变了。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "gov_started"
+              },
+              {
+                "type": "attr",
+                "key": "jue",
+                "value": 1
+              },
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": 15,
+                "trust": 12,
+                "note": "你把账从头看到了尾"
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 6
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你把账看完了，问了七个问题。方砚答了六个。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "gov_started"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": 10,
+                "trust": 8
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你翻了翻，看得头疼。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "gov_started"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你没看出问题，方砚也没提。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "gov_started"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你把账推回去了：「你看着办。」方砚愣了一下，抱着册子退出去。他做了两百年的账，第一次听到这句话。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "gov_started"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": -10,
+                "trust": -8
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "先问楚河山：上一任是怎么做的",
+        "reason": 14,
+        "check": {
+          "attr": "ren",
+          "difficulty": 45
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "楚河山沉默了很久。「上一任……」他停住，换了个说法，「前几任都是先看人，再看账。」他指了指窗外正在上早课的弟子，「那些才是学院。册子只是记录。」\n\n你注意到他刚才想说的不是「前几任」。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "gov_started"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "favor": 15,
+                "trust": 12
+              },
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": 1
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 12,
+                "clue": "楚河山的沉默"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他说了些老规矩，说得很详细，但绕开了某些年份。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "gov_started"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "favor": 8
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 5
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他说了些场面话。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "gov_started"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "他答得很谨慎，谨慎到近乎推脱。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "gov_started"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你问得太直，直接提到了三百年前。他的脸色沉了下来：「那件事，院主不必知道。」\n\n这是他第一次这么跟你说话。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "gov_started"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "favor": -12,
+                "trust": -10
+              },
+              {
+                "type": "flag",
+                "key": "chu_wary"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "都放下，先去七院走一遍",
+        "reason": 16,
+        "check": {
+          "attr": "de",
+          "difficulty": 42
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把册子放下就出了门，一天走完七个院。你没有带随从，也没有提前通报。\n\n最后一站是百艺院，柳眠烟从器坊里探出头，手里还拎着酒：「哟，新院主。」她上下打量你，「上一个这么走的，是三百年前那位。」",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "gov_started"
+              },
+              {
+                "type": "attr",
+                "key": "de",
+                "value": 1
+              },
+              {
+                "type": "reputation",
+                "value": 6
+              },
+              {
+                "type": "relation",
+                "npc": "npc_liumianyan",
+                "favor": 12,
+                "trust": 8
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 8
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你走了七个院。人心稳了些。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "gov_started"
+              },
+              {
+                "type": "reputation",
+                "value": 3
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你走了几个院，没走完。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "gov_started"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你去得突然，各院手忙脚乱地接待，反倒添了乱。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "gov_started"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你在剑渊院撞见弟子私斗，当场发作。顾长青什么也没说，但那天之后剑渊院对你客气了很多——客气得像对外人。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "gov_started"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_guchangqing",
+                "favor": -10
+              },
+              {
+                "type": "attr",
+                "key": "de",
+                "value": -1
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_gov_petition",
+    "category": "gov",
+    "weight": 28,
+    "scene": "scene_headmaster_hall",
+    "actors": [
+      "npc_bailuqing"
+    ],
+    "cooldown": 15,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 10
+    },
+    "variants": [
+      {
+        "seed": "白鹿卿把一份名单摔在案上。「三个宗门联名，要学院交出下届大比的观礼名额。」她的手指点着最后一行，「他们出的价不低。」\n\n她抬眼看你：「院主，这个钱学院很缺。」",
+        "facts": [
+          "三个宗门要买大比观礼名额",
+          "白鹿卿倾向于收下"
+        ]
+      },
+      {
+        "seed": "一位弟子的家族捐了一笔巨款，附带一个条件：那孩子必须进核心弟子名单。\n\n白鹿卿说得很直白：「这笔钱够修三年禁制。那孩子的资质，也不算太差。」",
+        "facts": [
+          "有家族用捐款换核心弟子名额",
+          "那孩子资质尚可但不够格"
+        ]
+      }
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "收。学院要活下去",
+        "reason": -4,
+        "check": {
+          "attr": "jue",
+          "difficulty": 45
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你收了，但加了三条约束条款，条条卡在要害上。白鹿卿看完笑了：「院主比我狠。」钱进了账，规矩没破。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_bailuqing",
+                "favor": 12,
+                "awe": 8
+              },
+              {
+                "type": "attr",
+                "key": "jue",
+                "value": 1
+              },
+              {
+                "type": "faction",
+                "key": "pragmatic",
+                "value": 10
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你收了。条件谈得还算体面。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_bailuqing",
+                "favor": 8
+              },
+              {
+                "type": "faction",
+                "key": "pragmatic",
+                "value": 8
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "收了。账上多了一笔，规矩少了一分。",
+            "effects": [
+              {
+                "type": "faction",
+                "key": "pragmatic",
+                "value": 5
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "guilt"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "消息走漏了。弟子里开始有人说，这院子是能拿钱买的。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -5
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "guilt"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "那个买进来的弟子在春猎里出了事，牵连了同队三个人。查下来，问题出在他根本不该在那个队里。\n\n楚河山来找你，只问了一句：「值吗。」",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -12
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -1
+              },
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "favor": -12
+              },
+              {
+                "type": "demon",
+                "value": 15,
+                "source": "guilt",
+                "note": "那个买进来的名额"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "不收。这个口子不能开",
+        "reason": 12,
+        "check": {
+          "attr": "wei",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把名单退了回去，附了一封信，措辞客气但没有余地。三个宗门里有两个后来反而更敬重云霄——他们要的本来就是一个态度。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 8
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 1
+              },
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": 10
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你回绝了。白鹿卿没说什么，但账上的窟窿还在。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 4
+              },
+              {
+                "type": "relation",
+                "npc": "npc_bailuqing",
+                "favor": -5
+              },
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": 8
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "回绝了。事情就这么过去了。",
+            "effects": [
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": 4
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "回绝的措辞太硬，得罪了人。白鹿卿花了半年才把关系补回来。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_bailuqing",
+                "favor": -10
+              },
+              {
+                "type": "reputation",
+                "value": -2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "三个宗门联手，在下一季的灵材交易上卡了学院的脖子。方砚拿着账本站在你面前，一句话没说。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -6
+              },
+              {
+                "type": "relation",
+                "npc": "npc_bailuqing",
+                "favor": -15
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "repress"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "让白鹿卿去谈一个两边都能下台的方案",
+        "reason": 14,
+        "check": {
+          "attr": "ren",
+          "difficulty": 55
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把事情整个交给了她，只提了一个底线：不能动名额。\n\n三天后她带回来一个谁也没想到的方案——用讲学交换。钱少了一半，但名声反而好了。她把文书放下时说：「院主用人，比我想的准。」",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_bailuqing",
+                "favor": 18,
+                "trust": 15,
+                "note": "你把整件事交给了她"
+              },
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": 1
+              },
+              {
+                "type": "reputation",
+                "value": 6
+              }
+            ]
+          },
+          "good": {
+            "narrative": "她谈成了一个折中方案。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_bailuqing",
+                "favor": 10,
+                "trust": 8
+              },
+              {
+                "type": "reputation",
+                "value": 3
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "谈崩了一半，剩下的勉强办成。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_bailuqing",
+                "favor": 4
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "她按自己的意思办了，超出了你的底线。事后她说：「院主没说不行。」",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -1
+              },
+              {
+                "type": "relation",
+                "npc": "npc_bailuqing",
+                "awe": -5
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "repress"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "她借这件事把手伸进了教务。等你察觉时，三个院首的任命名单上已经有了她的人。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -2
+              },
+              {
+                "type": "flag",
+                "key": "bai_ambitious"
+              },
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 10,
+                "clue": "白鹿卿家族档案"
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "repress"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_gov_unrest",
+    "category": "gov",
+    "weight": 30,
+    "scene": "scene_main_plaza",
+    "actors": [
+      "npc_chuheshan",
+      "npc_bailuqing"
+    ],
+    "cooldown": 17,
+    "important": true,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 30
+    },
+    "seed": "今天的议事，来了五个院首，缺两个。\n\n缺的那两个没有告假。楚河山把这件事说得很平淡，平淡到你听出了别的意思。白鹿卿的说法直接得多：「院主，人心散了。」",
+    "facts": [
+      "两位院首无故缺席议事",
+      "各院积怨已经摆到了台面上"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "亲自去那两个院",
+        "reason": 14,
+        "check": {
+          "attr": "de",
+          "difficulty": 52
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你一个人去的，没带随从。第一家的院首把你晾了半个时辰，你就在门外站了半个时辰。他开门时脸色很难看，但把话说了——说的是三年来七次拨款，他们院一次都没排上。\n\n你听完，只说了一句：「是我的错。」\n\n他愣住了。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "de",
+                "value": 1
+              },
+              {
+                "type": "reputation",
+                "value": 8
+              },
+              {
+                "type": "flag",
+                "key": "unrest_eased"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你去了，话说开了一些。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 4
+              },
+              {
+                "type": "flag",
+                "key": "unrest_eased"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你去了，人见到了，问题还在。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "有一家闭门不见。你在门外站了很久，最后走了。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -1
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你去的时候正撞上他们在议事——议的是联名上书。你推门的那一刻，屋里一片死寂。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -2
+              },
+              {
+                "type": "flag",
+                "key": "coalition_forming"
+              },
+              {
+                "type": "demon",
+                "value": 10,
+                "source": "repress",
+                "note": "推开那扇门的一刻"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "按院规究办，缺席就是缺席",
+        "reason": 2,
+        "check": {
+          "attr": "wei",
+          "difficulty": 48
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你当着五个人的面下了处分，一条不多一条不少。第二天那两位来请罪，你也一条不多一条不少地接了。\n\n规矩立住了。人心，也没散。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 2
+              },
+              {
+                "type": "reputation",
+                "value": 5
+              },
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": 10
+              },
+              {
+                "type": "flag",
+                "key": "unrest_eased"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "处分下了，两个人来了。表面上过去了。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 1
+              },
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": 6
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "处分下了，人没来。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "处分下得太重，反倒把更多人推到了那一边。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -4
+              },
+              {
+                "type": "flag",
+                "key": "coalition_forming"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "两位院首同时递了辞呈。\n\n你没有批。他们也没有再来。这件事就这么僵在了那里，僵了整整一年。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -2
+              },
+              {
+                "type": "reputation",
+                "value": -8
+              },
+              {
+                "type": "flag",
+                "key": "coalition_forming"
+              },
+              {
+                "type": "demon",
+                "value": 12,
+                "source": "repress"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "把预算摊开，让七个院自己分",
+        "reason": 10,
+        "check": {
+          "attr": "yuan",
+          "difficulty": 60
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把账本抬到了议事厅正中，摊开。\n\n「这是全部。你们自己分。分不出来，就一起饿着。」\n\n吵了三天。第四天他们拿出了一个方案——比你自己拟的那份好。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "yuan",
+                "value": 1
+              },
+              {
+                "type": "reputation",
+                "value": 10
+              },
+              {
+                "type": "flag",
+                "key": "unrest_eased"
+              },
+              {
+                "type": "flag",
+                "key": "reforms_passed"
+              },
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 12
+              }
+            ]
+          },
+          "good": {
+            "narrative": "吵了很久，最后分出来了。各院至少认这个结果是自己定的。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 5
+              },
+              {
+                "type": "flag",
+                "key": "unrest_eased"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "分是分了，怨气还在。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "强的院多分了，弱的院更不满。你把矛盾从自己身上转到了他们中间——这不算解决。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -3
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "议事厅里差点动手。楚河山第一次在你面前提高了声音：「院主，有些事不能推给底下人。」",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -2
+              },
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "favor": -12
+              },
+              {
+                "type": "flag",
+                "key": "coalition_forming"
+              },
+              {
+                "type": "demon",
+                "value": 10,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_gov_final_stand",
+    "category": "gov",
+    "weight": 50,
+    "scene": "scene_mountain_gate",
+    "actors": [
+      "npc_chuheshan",
+      "npc_bailuqing"
+    ],
+    "cooldown": 999,
+    "important": true,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 120,
+      "notFlags": [
+        "final_stand_done"
+      ]
+    },
+    "seed": "山门外站着黑压压一片人。\n\n赤焰宗这次是带着全部家当来的。白鹿卿的外交手段用尽了，楚河山已经把七院弟子撤到了后山。\n\n山门前只剩下你们三个人。\n\n「院主，」楚河山说，「下令吧。」",
+    "facts": [
+      "赤焰宗兵临山门",
+      "弟子已撤至后山",
+      "山门前只剩你与两位副院主"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "你一个人上前",
+        "reason": 8,
+        "check": {
+          "attr": "wei",
+          "difficulty": 72
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你独自走出山门。\n\n没有拔剑，也没有说话，只是站在那里。合体期的气机压下去，最前排的人后退了半步。\n\n然后是第二排。\n\n他们退了。一整支队伍，就那么退了。三十年后有人写院史，说那一天云霄仙院的院主一个人站在山门前，什么也没做。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "final_stand_done"
+              },
+              {
+                "type": "flag",
+                "key": "threat_resolved"
+              },
+              {
+                "type": "reputation",
+                "value": 25
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 2
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你出手了。打了三天三夜，把他们逼退了。代价是你自己伤了根本。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "final_stand_done"
+              },
+              {
+                "type": "flag",
+                "key": "threat_resolved"
+              },
+              {
+                "type": "reputation",
+                "value": 15
+              },
+              {
+                "type": "injury",
+                "key": "internal",
+                "value": 3,
+                "weeks": 12
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "打退了，但山门塌了半边，禁制毁了大半。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "final_stand_done"
+              },
+              {
+                "type": "flag",
+                "key": "threat_resolved"
+              },
+              {
+                "type": "reputation",
+                "value": 8
+              },
+              {
+                "type": "injury",
+                "key": "internal",
+                "value": 3,
+                "weeks": 16
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你撑住了，但撑得很难看。楚河山替你挡了最后一击，伤得比你还重。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "final_stand_done"
+              },
+              {
+                "type": "flag",
+                "key": "threat_resolved"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "bond": 25
+              },
+              {
+                "type": "injury",
+                "key": "internal",
+                "value": 3,
+                "weeks": 20
+              },
+              {
+                "type": "demon",
+                "value": 12,
+                "source": "guilt"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你倒在山门前。血染白阶。\n\n最后看到的，是身后那些你护在身后的、还那么年轻的弟子们的眼睛。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "final_stand_done"
+              },
+              {
+                "type": "flag",
+                "key": "died_defending"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "启动学院禁制，全力守山",
+        "reason": 14,
+        "check": {
+          "attr": "jue",
+          "difficulty": 62
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "楚河山三百年来摸熟了这座山的每一寸灵脉。你下令的那一刻，整座望仙峰亮了。\n\n禁制层层升起，山门前的地面裂开一道深沟。赤焰宗的人在沟前站了一整夜，天亮时退了。\n\n一个人都没死。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "final_stand_done"
+              },
+              {
+                "type": "flag",
+                "key": "threat_resolved"
+              },
+              {
+                "type": "reputation",
+                "value": 22
+              },
+              {
+                "type": "attr",
+                "key": "jue",
+                "value": 2
+              },
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "favor": 20,
+                "trust": 20
+              }
+            ]
+          },
+          "good": {
+            "narrative": "禁制撑住了。对方围了半月，粮尽而退。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "final_stand_done"
+              },
+              {
+                "type": "flag",
+                "key": "threat_resolved"
+              },
+              {
+                "type": "reputation",
+                "value": 14
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "禁制破了三层，人也伤了不少，但山守住了。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "final_stand_done"
+              },
+              {
+                "type": "flag",
+                "key": "threat_resolved"
+              },
+              {
+                "type": "reputation",
+                "value": 6
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "禁制的灵石储备不够——那是三年前你砍掉的那笔预算。山守住了，但你知道是为什么差点没守住。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "final_stand_done"
+              },
+              {
+                "type": "flag",
+                "key": "threat_resolved"
+              },
+              {
+                "type": "reputation",
+                "value": 2
+              },
+              {
+                "type": "demon",
+                "value": 12,
+                "source": "guilt",
+                "note": "三年前砍掉的那笔禁制预算"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "禁制在第三天夜里塌了。\n\n他们冲进来的时候，你在议事厅里。等你赶到，藏经阁已经烧了两层。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "final_stand_done"
+              },
+              {
+                "type": "reputation",
+                "value": -15
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -3
+              },
+              {
+                "type": "relation",
+                "npc": "npc_yunshu",
+                "favor": -20
+              },
+              {
+                "type": "demon",
+                "value": 25,
+                "source": "guilt",
+                "note": "藏经阁烧掉的那两层"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "谈。你亲自出去谈",
+        "reason": 10,
+        "check": {
+          "attr": "yuan",
+          "difficulty": 68
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你走出去，只带了一份东西——三十年来赤焰宗与云霄的全部往来记录。\n\n你把它摊在两军之间，一条一条念。念到第七条时，对方阵中开始有人交头接耳。念完，你说：「你们的宗主知不知道，今天带你们来的这个人，三年前收过我们多少灵石。」\n\n他们内讧了。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "final_stand_done"
+              },
+              {
+                "type": "flag",
+                "key": "threat_resolved"
+              },
+              {
+                "type": "reputation",
+                "value": 20
+              },
+              {
+                "type": "attr",
+                "key": "yuan",
+                "value": 2
+              },
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 25
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你谈成了。代价是三条灵脉的开采权，租期一百年。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "final_stand_done"
+              },
+              {
+                "type": "flag",
+                "key": "threat_resolved"
+              },
+              {
+                "type": "reputation",
+                "value": 8
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "谈成了，但条件很难看。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "final_stand_done"
+              },
+              {
+                "type": "flag",
+                "key": "threat_resolved"
+              },
+              {
+                "type": "reputation",
+                "value": -3
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "谈崩了。开打之后你才发现，谈的那半天他们已经把阵摆好了。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "final_stand_done"
+              },
+              {
+                "type": "reputation",
+                "value": -8
+              },
+              {
+                "type": "injury",
+                "key": "internal",
+                "value": 2,
+                "weeks": 10
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你在阵前被扣住了。\n\n楚河山用半条命把你抢了回来。他躺在床上说的第一句话是：「院主，下次别去。」",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "final_stand_done"
+              },
+              {
+                "type": "reputation",
+                "value": -15
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -2
+              },
+              {
+                "type": "relation",
+                "npc": "npc_chuheshan",
+                "bond": 30
+              },
+              {
+                "type": "demon",
+                "value": 20,
+                "source": "guilt",
+                "note": "楚河山替你挡下的那半条命"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "D",
+        "text": "让位。学院可以换个人守",
+        "reason": -10,
+        "outcomes": {
+          "fixed": {
+            "narrative": "你说了「我退」两个字。\n\n楚河山猛地转过头来。白鹿卿的表情你从没见过。\n\n山最后是守住了——由别人守住的。你在院志上的那一页，只有一行：某年某月，院主避位。",
+            "effects": [
+              {
+                "type": "flag",
+                "key": "final_stand_done"
+              },
+              {
+                "type": "flag",
+                "key": "forced_abdication"
+              },
+              {
+                "type": "demon",
+                "value": 30,
+                "source": "guilt",
+                "note": "山门前说出的那两个字"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+]
