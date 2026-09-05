@@ -36,6 +36,12 @@
       return `${MONTH_CN[t.month]}第${t.week}周`;
     },
 
+    /** 手机顶栏用：去掉纪年，一行放得下 */
+    compactLabel(s) {
+      const t = s.time;
+      return `${MONTH_CN[t.month]}·第${t.week}周·${DAY_LABEL[t.day - 1]}${PHASE_LABEL[t.phase]}`;
+    },
+
     /** 是否游历期（七、八月） */
     isVacation(s) { return s.time.month === 7 || s.time.month === 8; },
 

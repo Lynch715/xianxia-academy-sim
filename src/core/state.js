@@ -5,7 +5,7 @@
 (function (G) {
   'use strict';
 
-  const VERSION = '1.0.0';
+  const VERSION = '1.1.0';
 
   const ATTR_SETS = {
     student:    { keys: ['wu','gen','shen','ji','xin','shi'],       points: 30, cap: 10 },
@@ -128,6 +128,7 @@
 
         llmMemory: { summary:'', recentTurns:[], summarizedUpTo:0 },
 
+        rumors: [],
         log: [],
         flags: {},
         ended: null

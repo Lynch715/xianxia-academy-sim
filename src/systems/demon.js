@@ -162,6 +162,26 @@
       };
     },
 
+    /**
+     * 与心魔对峙（对话式心魔关）的结算。
+     * steady 是引擎从对话里累出来的"道心稳不稳"，-8..8。
+     *  · 成功率修正夹在 ±8——比最好的选项（+12..15）小，对话是加分不是替代
+     *  · 心魔本身随之升降，夹在 ±4
+     *  · 稳到 5 以上，连"最险的那条路"都不会直接走火：这是对峙做得好的真正奖励
+     */
+    steadiness(s, trial, steady) {
+      const v = Math.max(-8, Math.min(8, Math.round(Number(steady) || 0)));
+      const rateMod = Math.max(-8, Math.min(8, Math.round(v * 1.2)));
+      const demon = Math.max(-4, Math.min(4, -Math.round(v * 0.5)));
+      if (demon) {
+        G.State.commit([{ path: 'cultivation.demonHeart', op: 'add', value: demon, clamp: [0, 100] }],
+                       'demon.steadiness');
+      }
+      const saves = v >= 5;
+      if (saves && trial) for (const c of trial.choices) if (c.catastrophe) c.catastrophe = false;
+      return { steady: v, rateMod, demon, saves };
+    },
+
     /** 玩家在心魔关做出选择 */
     applyChoice(s, trial, choiceTag) {
       const c = trial.choices.find(x => x.tag === choiceTag) || trial.choices[0];

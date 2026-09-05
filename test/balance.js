@@ -101,7 +101,9 @@ function play(seed, smart) {
     realmIdx: G.State.realmIndex(s.cultivation.realm) * 9 + s.cultivation.layer,
     realm: G.State.realmName(s.cultivation.realm, s.cultivation.layer),
     ending: (ended || G.Ending.evaluate(s)).name,
-    survived: !ended || !['含冤被逐', '走火入魔', '为友赴死'].includes(ended.name)
+    survived: !ended || !['含冤被逐', '走火入魔', '为友赴死'].includes(ended.name),
+    rumors: s.flags._rumorTotal || 0,
+    rumorFavor: s.flags._rumorFavor || 0
   };
 }
 
@@ -128,6 +130,7 @@ const alive = a => a.filter(x => x.survived).length;
 console.log('─'.repeat(62));
 console.log(`随机：平均心魔 ${avg(agg.随机, 'demon')}　平均境界值 ${avg(agg.随机, 'realmIdx')}　善终 ${alive(agg.随机)}/${SEEDS.length}`);
 console.log(`谨慎：平均心魔 ${avg(agg.谨慎, 'demon')}　平均境界值 ${avg(agg.谨慎, 'realmIdx')}　善终 ${alive(agg.谨慎)}/${SEEDS.length}`);
+console.log(`传闻：随机一局起 ${avg(agg.随机, 'rumors')} 条、累计好感影响 ${avg(agg.随机, 'rumorFavor')}；谨慎一局起 ${avg(agg.谨慎, 'rumors')} 条、累计好感影响 ${avg(agg.谨慎, 'rumorFavor')}`);
 
 const fails = [];
 const dDemon = avg(agg.随机, 'demon') - avg(agg.谨慎, 'demon');

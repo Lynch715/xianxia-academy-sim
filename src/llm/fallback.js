@@ -43,8 +43,9 @@
       out.push(pick(SCENE_TONE[s.time.phase] || SCENE_TONE.noon) +
                (AMBIENT[scene?.id] ? pick(AMBIENT[scene.id]) : ''));
 
-      // 事件铺陈
-      if (event?.seed) out.push(this.fill(event.seed, s));
+      // 事件铺陈——只在开场（还没判定）时写。结算时开场文已经在屏幕上了，
+      // 再写一遍就是玩家看到的"同一段话出现两次"。
+      if (event?.seed && !grade) out.push(this.fill(event.seed, s));
 
       // 结果段
       if (grade) out.push(pick(GRADE_OPEN[grade] || GRADE_OPEN.plain));
@@ -166,12 +167,15 @@
       ];
 
       const allowed = G.State.ATTR_SETS[s.player.role].keys;
+      // 文字里点了名的人就是目标；没点名才退回事件里在场的人
+      const named = G.DATA.npcs.filter(n => t.includes(n.name)).map(n => n.id);
+      const targets = named.length ? named.slice(0, 1) : (ev?.actors || []).slice(0, 1);
       for (const r of RULES) {
         if (r.re.test(t)) {
           return {
             intent: r.intent,
             summary: t.slice(0, 20),
-            targets: (ev?.actors || []).slice(0, 1),
+            targets,
             check: { attr: allowed.includes(r.attr) ? r.attr : allowed[0], difficulty: r.diff },
             reason: r.reason,
             riskLevel: r.risk,

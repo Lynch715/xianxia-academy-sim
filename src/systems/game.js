@@ -40,6 +40,7 @@
                     const r = G.Check.roll({ attrKey: 'gen', difficulty: 45 + gap * 4 });
                     const won = ['perfect', 'good'].includes(r.grade);
                     G.Relation.act(s, target, won ? 'defeat_them' : 'lose_to_them');
+                    if (won) G.Rumor.add(s, 'strong', target);
                     const exp = Math.round(12 * (won ? 1.2 : 0.8));
                     G.State.commit([{ path: 'cultivation.exp', op: 'add', value: exp, min: 0 }], 'activity.spar');
                     return { grade: r.grade, npcId: target, won, exp };
@@ -86,9 +87,18 @@
                     G.Governance.handleThreat(s, a?.approach || 'talk') },
     heir:        { name: '培养接班人', cat: 'gov', role: 'headmaster', run: (s) => G.Governance.teachHeir(s) },
 
+    // 自拟：玩家用一句话安排这个时段。真正的结算在 Game.resolveCustom，
+    // 因为要先经过（可能是异步的）行动解析，run 只负责把文字交出去。
+    custom:      { name: '自拟',       cat: 'custom', run: (s, a) => ({ custom: String(a?.text || '').slice(0, 60) }) },
+
     // 空
     free:        { name: '自由安排',   cat: 'free', run: () => ({ idle: true }) }
   };
+
+  /* 自拟行动的收益表。按判定档位给，全部是小数目——一个时段换来的东西
+   * 不该超过"拜访"或"打坐"，否则日程表上其它格子就没意义了。 */
+  const CUSTOM_FAVOR = { perfect: 6, good: 4, plain: 1, bad: -2, terrible: -5 };
+  const CUSTOM_TRUST = { perfect: 4, good: 2, plain: 0, bad: -1, terrible: -3 };
 
   const Game = {
     ACTIVITIES,
@@ -224,13 +234,72 @@
     },
 
     /** 玩家处理完事件后调用 */
-    resolveEvent(s, optionId, customIntent) {
+    resolveEvent(s, optionId, customIntent, extraMods) {
       const ev = this.pending;
       if (!ev) return null;
-      const res = G.Event.resolve(s, ev, optionId, customIntent);
+      const res = G.Event.resolve(s, ev, optionId, customIntent, extraMods);
       this.pending = null;
       this._results.push({ type: 'eventResolved', ...res });
       return res;
+    },
+
+    /**
+     * 结算一个自拟时段。intent 来自 LLM.parseAction / Fallback.parseAction，
+     * 已经过白名单：属性键合法、难度 10-90、reason -15..20、目标 NPC 存在。
+     */
+    resolveCustom(s, text, intent) {
+      if (!intent || intent.violatesRules) {
+        return { rejected: true, reason: intent?.rejectReason || '这件事眼下做不到。', text };
+      }
+      const r = G.Check.roll({
+        attrKey: intent.check?.attr || null,
+        difficulty: intent.check?.difficulty ?? 50,
+        reason: intent.reason ?? 0,
+        modifiers: [s.cultivation.resting > 0 ? -10 : 0, s.cultivation.injuries.length ? -5 : 0]
+      });
+      const grade = r.grade;
+      const mult = G.Check.GRADE_MULT[grade];
+      const applied = [];
+      const deltas = [];
+
+      const exp = Math.round(8 * Math.max(0, mult));
+      if (exp) { deltas.push({ path: 'cultivation.exp', op: 'add', value: exp, min: 0 }); applied.push(`修为+${exp}`); }
+
+      const target = (intent.targets || [])[0];
+      if (target && s.relations[target]) {
+        const fav = CUSTOM_FAVOR[grade], tru = CUSTOM_TRUST[grade];
+        G.Relation.adjust(s, target, { favor: fav, trust: tru }, intent.summary);
+        applied.push(`${G.NPC.name(target)}好感${fav > 0 ? '+' : ''}${fav}`);
+      }
+
+      if (/help|defend|save|comfort|rescue|protect/.test(intent.intent) && (grade === 'good' || grade === 'perfect')) {
+        deltas.push({ path: 'reputation.value', op: 'add', value: 1, clamp: [0, 100] });
+        applied.push('声望+1');
+      }
+
+      if (grade === 'terrible') {
+        if (intent.riskLevel === 'high') {
+          deltas.push({ path: 'cultivation.injuries', op: 'push',
+                        value: { type: 'wound', severity: 1, healTurnsLeft: 1 } });
+          applied.push('受伤');
+        }
+        if (intent.riskLevel !== 'low') {
+          G.Demon.add(s, 'guilt', 2, intent.summary);
+          applied.push('心魔+2');
+        }
+      }
+
+      if (deltas.length) G.State.commit(deltas, 'custom.slot');
+      G.State.logLine(`自拟：${intent.summary}——${G.Check.GRADE_LABEL[grade]}`, 'info');
+
+      return {
+        rejected: false, text, intent, grade, check: r, applied,
+        facts: [
+          `你自行安排了这个时段：${intent.summary}`,
+          `判定结果：${G.Check.GRADE_LABEL[grade]}`,
+          applied.length ? `数值变化：${applied.join('，')}` : ''
+        ].filter(Boolean)
+      };
     },
 
     /** 跳过事件（罕见，用于异常兜底） */
@@ -240,6 +309,7 @@
     endWeek(s) {
       const notes = [];
       G.Cultivation.weeklyTick(s);
+      notes.push(...G.Rumor.weeklyTick(s));
 
       // 时间推进到下周
       s.time.week++;

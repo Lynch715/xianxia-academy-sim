@@ -165,6 +165,7 @@
         h('i', h('b', { style: { width: Math.max(0, Math.min(100, (v / max) * 100)) + '%' } })));
 
       const note = (r.log || []).slice(-1)[0];
+      const heard = G.Rumor.heardBy(s, npcId, 1)[0];
       return h('.rel',
         h('.rel-head',
           h('span.rel-name', npc.name),
@@ -173,7 +174,8 @@
         h('.rel-dims',
           dim('好感', r.favor, 100), dim('信任', r.trust, 100),
           dim('敬畏', r.awe, 100), dim('羁绊', r.bond, 100)),
-        note ? h('.rel-note', '近事：' + note.text) : null
+        note ? h('.rel-note', '近事：' + note.text) : null,
+        heard ? h('.rel-note' + (G.Rumor.KINDS[heard.kind].negative ? '.danger' : ''), 'TA 听说：' + heard.text) : null
       );
     },
 
@@ -195,6 +197,9 @@
               const c = G.Academy.courseById(e.courseId);
               label = c ? c.name.slice(0, 4) : '课';
               cls = '.slot.cls';
+            } else if (e.act === 'custom') {
+              label = (e.text || '自拟').slice(0, 4);
+              cls = '.slot.custom';
             } else {
               label = def ? def.name.slice(0, 4) : e.act;
               cls = '.slot';
@@ -303,6 +308,19 @@
           btn('闭关修炼', { act: 'meditate', place: 'hall' }, '闭关期间需委托副院主代管'),
           btn('休息', { act: 'rest' }));
       }
+
+      // 自拟：一句话说你想做什么。推演到这一格时会解析、判定、写一小段。
+      const customIn = h('input', { placeholder: '例：去后山找叶素素看看她的灵兽', maxlength: 60,
+        onkeydown: e => { if (e.key === 'Enter') submitCustom(); } });
+      const submitCustom = () => {
+        const t = customIn.value.trim();
+        if (!t) return G.Theme.toast('先写一句你想做什么');
+        pick({ act: 'custom', text: t });
+      };
+      body.appendChild(h('.panel-title', { style: { marginTop: '16px' } }, '自拟'));
+      body.appendChild(h('.custom-input', customIn, h('button.btn.primary', { onclick: submitCustom }, '就这么办')));
+      body.appendChild(h('.tiny.muted', { style: { marginTop: '4px' } },
+        '一句话安排这个时段。能不能成、成多少，看你的资质和运气；有模型时人物会真的回应你。'));
 
       body.appendChild(h('.btn-row', { style: { marginTop: '18px' } },
         h('button.btn.ghost', { onclick: () => pick(null) }, '空着这个时段')));

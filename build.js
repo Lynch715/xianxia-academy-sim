@@ -25,6 +25,7 @@ const JS_ORDER = [
   'systems/academy.js',
   'systems/economy.js',
   'systems/reputation.js',
+  'systems/rumor.js',
   'systems/storyline.js',
   'systems/quest.js',
   'systems/realm.js',
@@ -37,6 +38,7 @@ const JS_ORDER = [
   'llm/adapter.js',
   'llm/memory.js',
   'llm/fallback.js',
+  'llm/dialogue.js',
   'llm/narrator.js',
   'ui/theme.js',
   'ui/components.js',
@@ -44,6 +46,7 @@ const JS_ORDER = [
   'ui/panels.js',
   'ui/explore.js',
   'ui/festival.js',
+  'ui/dialogue.js',
   'ui/main.js',
   'boot.js'
 ];

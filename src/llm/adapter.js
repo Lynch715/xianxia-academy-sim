@@ -39,9 +39,13 @@
       useImportantModel: true,
       temperature: 0.85,
       maxTokens: 4000,
-      narrateLength: 1800,
+      // 普通事件 700 字够了——对话场已经把"戏"演过一遍，叙事只写余韵。
+      // 要紧场景（心魔关、暗线、圆满/糟糕）自动放大到 1.6 倍。
+      narrateLength: 700,
+      dialogue: true,     // 对话场：事件里的 NPC 先开口，玩家亲口回应
+      messages: true,     // 传音符：NPC 主动找玩家
       enabled: false,
-      cfgVersion: 2
+      cfgVersion: 3
     },
 
     get configured() { return !!(this.config.apiKey && this.config.model); },
@@ -59,7 +63,7 @@
     /* 配置版本号。改默认值救不了老玩家——load() 是拿存档覆盖默认值的，
      * 存档里那份旧值永远赢。要动已有配置就得在这里加一次性迁移，
      * 并把版本号推上去，免得反复覆盖玩家自己的调整。 */
-    CONFIG_VERSION: 2,
+    CONFIG_VERSION: 3,
 
     load() {
       const cfg = G.Save.readConfig();
@@ -86,6 +90,15 @@
           this.config.modelImportant = p.modelPro;
           this.config.useImportantModel = true;
         }
+        migrated = true;
+      }
+
+      // v3：对话场上线，叙事从 1800 字瘦到 700。只把还停在旧默认值的人改过来，
+      // 自己调过长度的玩家不动。
+      if (saved && (saved.cfgVersion || 0) < 3) {
+        if (!saved.narrateLength || saved.narrateLength === 1800) this.config.narrateLength = 700;
+        if (this.config.dialogue === undefined) this.config.dialogue = true;
+        if (this.config.messages === undefined) this.config.messages = true;
         migrated = true;
       }
 

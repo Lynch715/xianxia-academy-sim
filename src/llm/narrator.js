@@ -20,24 +20,27 @@
      * @param {object} res  G.Event.resolve 的返回值
      * @param {function} onChunk 流式回调 (piece, full)
      */
-    async renderResolution(s, res, onChunk) {
+    async renderResolution(s, res, onChunk, extra) {
       const ev = res.event;
+      const dlgFacts = extra?.dialogueFacts || [];
       const payload = {
         state: s,
         scene: this.sceneOf(s, ev),
-        facts: res.facts,
+        facts: dlgFacts.concat(res.facts),
         event: ev,
         grade: res.grade,
         outcome: res.outcome,
         actors: ev.actors || [],
         memory: G.Memory.build(s),
-        important: this.isImportant(ev, res)
+        important: this.isImportant(ev, res),
+        dialogue: extra?.dialogue || null
       };
 
       const text = await this._render(payload, onChunk);
 
-      // 记忆推进
-      G.Memory.push(s, res.facts, text.slice(0, 150));
+      // 记忆推进。对话稿本身太长不进记忆，只留"聊完之后对方态度如何"和交心这两类事实
+      const remember = dlgFacts.filter(f => !f.startsWith('此前的对话')).concat(res.facts);
+      G.Memory.push(s, remember, text.slice(0, 150));
       if (G.Memory.shouldSummarize(s)) {
         G.Memory.compress(s).catch(e => console.warn('[memory] 压缩失败', e));
       }

@@ -125,8 +125,9 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); }
   background: var(--paper);
   position: sticky; top: 0; z-index: 20;
 }
-.topbar .title { font-size: 14px; letter-spacing: .1em; color: var(--ink-2); }
-.topbar .acts { display: flex; gap: 4px; }
+.topbar .title { font-size: 14px; letter-spacing: .1em; color: var(--ink-2); min-width: 0; }
+.topbar .title .compact { display: none; }
+.topbar .acts { display: flex; gap: 4px; flex-shrink: 0; }
 
 /* ---------- 场景与立绘 ---------- */
 .stage { position: relative; height: 280px; overflow: hidden; flex-shrink: 0; background: var(--paper-2); }
@@ -227,6 +228,72 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); }
 .custom-input { display: flex; gap: 8px; margin-top: 8px; }
 .custom-input input { flex: 1; }
 
+/* ---------- 对话场 ---------- */
+.dialog { max-width: 690px; margin: 18px auto 6px; font-family: var(--sans); }
+.dl-lines { display: flex; flex-direction: column; gap: 10px; }
+.dl-line { display: flex; flex-direction: column; max-width: 86%; text-indent: 0; }
+.dl-line.npc { align-self: flex-start; }
+.dl-line.me  { align-self: flex-end; align-items: flex-end; }
+.dl-name { font-size: 12px; letter-spacing: .12em; color: var(--accent); margin: 0 0 3px 4px; }
+.dl-text {
+  display: inline-block; padding: 9px 14px; line-height: 1.75; font-size: 15px;
+  border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,.55);
+  font-family: var(--serif, inherit);
+}
+.dl-line.npc .dl-text { border-top-left-radius: 3px; }
+.dl-line.me  .dl-text { border-top-right-radius: 3px; background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.dl-line.typing .dl-text { color: var(--ink-4); min-width: 2.6em; }
+.dl-foot { margin-top: 14px; }
+.dl-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.dl-chip {
+  padding: 6px 12px; font-size: 13.5px; border: 1px dashed var(--line); border-radius: 999px;
+  background: rgba(255,255,255,.35); color: var(--ink-2); line-height: 1.5;
+}
+@media (hover: hover) and (pointer: fine) {
+  .dl-chip:hover { border-color: var(--accent); color: var(--ink); background: rgba(255,255,255,.8); }
+}
+.dl-chip:active { border-color: var(--accent); background: #fff; }
+.dl-chip:disabled { opacity: .4; }
+.dl-row { display: flex; gap: 8px; }
+.dl-row input { flex: 1; min-width: 0; }
+.dl-end { font-size: 13px; color: var(--ink-4); padding: 6px 0 0 4px; }
+/* 幻象里的人不是本人 */
+.stage.haunt .portrait, .stage.haunt .portrait-fallback { filter: grayscale(.85) brightness(.75) contrast(1.1); }
+/* 心魔：它的话是黑底，你的话反而是纸色——幻境里谁是主谁是客，一眼能看出来 */
+.dialog.demon .dl-name { color: var(--cinnabar); }
+.dialog.demon .dl-line.npc .dl-text { background: var(--ink); color: var(--paper); border-color: var(--ink); letter-spacing: .04em; }
+.dialog.demon .dl-line.me .dl-text { background: rgba(255,255,255,.7); color: var(--ink); border-color: var(--line); }
+.custom-slot { max-width: 690px; margin: 14px auto 0; font-family: var(--sans); }
+.custom-slot .cs-head { font-size: 13px; color: var(--ink-3); letter-spacing: .06em; margin-bottom: 4px; }
+.custom-slot .cs-head b { color: var(--ink-2); font-weight: 500; }
+.dl-mod {
+  font-size: 13px; color: var(--ink-3); text-align: center; margin: 14px 0 -10px;
+  letter-spacing: .06em;
+}
+
+/* ---------- 传音符 ---------- */
+.msg-card {
+  border: 1px solid var(--line); border-left: 3px solid var(--cinnabar); border-radius: var(--radius);
+  background: rgba(255,255,255,.5); padding: 12px 16px; font-family: var(--sans);
+}
+.msg-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.msg-from { font-size: 14px; letter-spacing: .1em; color: var(--ink-2); }
+.msg-time { font-size: 12px; color: var(--ink-4); }
+.msg-text { font-family: var(--serif, inherit); font-size: 15.5px; line-height: 1.8; color: var(--ink); margin-bottom: 8px; text-indent: 0; }
+.msg-card .btn-row { margin-top: 4px; }
+
+/* ---------- 当下要紧 ---------- */
+.urgent { display: flex; flex-direction: column; gap: 6px; }
+.urgent .it { display: flex; gap: 8px; font-size: 13px; line-height: 1.6; color: var(--ink-2); font-family: var(--sans); }
+.urgent .it::before { content: '·'; color: var(--ink-4); }
+.urgent .it.warn { color: #8a6116; }
+.urgent .it.warn::before { content: '!'; color: #b8891e; font-weight: 600; }
+.urgent .it.danger { color: var(--cinnabar); }
+.urgent .it.danger::before { content: '!'; color: var(--cinnabar); font-weight: 600; }
+.urgent .it.good::before { content: '※'; color: var(--accent); }
+.narrative .urgent { max-width: 690px; margin: 0 auto 8px; }
+.narrative .urgent .it { font-size: 14px; text-indent: 0; }
+
 /* ---------- 按钮 ---------- */
 .btn {
   padding: 7px 16px; border: 1px solid var(--line);
@@ -294,6 +361,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); }
   display: flex; align-items: center; justify-content: center;
 }
 .slot.empty { color: var(--ink-4); }
+.slot.custom { border-style: dashed; color: var(--ink-2); }
 .slot.cls { background: rgba(90,107,122,.09); }
 
 /* ---------- 弹窗 ---------- */
@@ -317,9 +385,12 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); }
   .modal {
     max-width: none; max-height: 82vh;
     border-radius: 14px 14px 0 0; border-bottom: none;
-    padding: 22px calc(20px + var(--sa-right)) calc(24px + var(--sa-bottom)) calc(20px + var(--sa-left));
+    padding: 22px calc(20px + var(--sa-right)) 0 calc(20px + var(--sa-left));
     animation: sheet-up .22s cubic-bezier(.2,.7,.3,1);
   }
+  /* 弹窗的底部内边距在吸底的操作键上，不在弹窗上——sticky 的定位矩形不含
+     滚动容器的内边距，放在弹窗上正文会从操作键底下漏出来一截 */
+  .modal > :last-child:not(.modal-actions) { padding-bottom: calc(24px + var(--sa-bottom)); }
   /* 抽屉顶部的把手，暗示可以下滑关闭 */
   .modal::before {
     content: ''; display: block; width: 36px; height: 4px; margin: -6px auto 14px;
@@ -330,6 +401,8 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); }
   .modal > .modal-actions {
     position: sticky; bottom: 0; z-index: 1;
     background: var(--paper); padding-top: 10px;
+    padding-bottom: calc(16px + var(--sa-bottom));
+    margin-top: 12px !important;
     box-shadow: 0 -8px 12px -8px rgba(43,43,43,.18);
   }
 }
@@ -413,9 +486,18 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); }
      就会被灵动岛压住第一行字。叙事页不用管，顶栏已经让过了。 */
   .col-left, .col-right { padding-top: calc(14px + var(--sa-top)); }
 
-  .topbar { padding-left: calc(16px + var(--sa-left)); padding-right: calc(16px + var(--sa-right)); }
-  .topbar .title { font-size: 12.5px; letter-spacing: .06em; }
-  .topbar .acts .btn { padding: 8px 10px; font-size: 13px; }
+  /* 顶栏两行：第一行日期，第二行动作键。单行放不下五个键加日期，
+     日期会折成五六行，把顶栏撑成半个屏。 */
+  .topbar { flex-wrap: wrap; gap: 8px 0; padding: calc(8px + var(--sa-top)) calc(14px + var(--sa-left)) 8px calc(14px + var(--sa-right)); }
+  .topbar .title { width: 100%; font-size: 12px; letter-spacing: .08em; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .topbar .title .full { display: none; }
+  .topbar .title .compact { display: inline; }
+  .topbar .acts { width: 100%; justify-content: space-between; }
+  .topbar .acts .btn { padding: 8px 10px; font-size: 13px; min-height: 38px; flex: 1; text-align: center; }
+  .topbar .acts .btn.primary { flex: 1.5; }
+  .dl-chip { min-height: 40px; }
+  .rel-dims { grid-template-columns: repeat(2, 1fr); gap: 4px 10px; }
+  .rel-dim { text-align: left; }
 
   .narrative-wrap {
     padding: 18px calc(20px + var(--sa-right)) calc(var(--tabbar) + var(--sa-bottom) + 8px) calc(20px + var(--sa-left));
@@ -425,7 +507,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); }
   .opt { padding: 15px 16px; }          /* 触控热区 ≥44px */
   .btn { padding: 9px 15px; }
 
-  .stage { height: 34vh; min-height: 170px; max-height: 240px; }
+  .stage { height: 30vh; min-height: 150px; max-height: 220px; }
   .portrait, .portrait-fallback { width: 118px; height: 176px; }
   .portraits { right: calc(14px + var(--sa-right)); }
   .stage .scene-name { left: calc(20px + var(--sa-left)); }
@@ -454,8 +536,10 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); }
     grid-template-columns: 1fr minmax(240px, 30vw);
     padding-left: calc(var(--rail) + var(--sa-left));
   }
-  .col-left, .col-right { display: none; border-left: 1px solid var(--line); border-right: none; }
-  .col-main { display: flex !important; }
+  /* 主栏永远占第一列（宽的那列）。DOM 里状态栏排在主栏前面，不调 order 的话
+     「状态」分页会把状态栏放进宽列、主栏挤进 30vw，顶栏直接溢出屏幕。 */
+  .col-left, .col-right { display: none; border-left: 1px solid var(--line); border-right: none; order: 1; }
+  .col-main { display: flex !important; order: 0; }
   .layout.tab-right .col-right { display: block; }
   .layout.tab-left  .col-left  { display: block; }
   /* 「专注」：收起侧栏，整屏留给叙事 */
@@ -467,8 +551,11 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); }
   /* 顶栏在 .col-main 里，而 .layout 已经整体让开了导轨，
      所以这里不要再补 --rail，否则会双倍缩进 */
   .topbar { padding: calc(8px + var(--sa-top)) calc(18px + var(--sa-right)) 8px 18px; }
-  .topbar .title { font-size: 12px; }
-  .topbar .acts .btn { padding: 6px 9px; font-size: 12.5px; }
+  .topbar .title { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .topbar .title .full { display: none; }
+  .topbar .title .compact { display: inline; }
+  .topbar .acts .btn { padding: 6px 9px; font-size: 12.5px; min-height: 36px; }
+  .dl-chip { min-height: 36px; }
 
   /* 横屏高度金贵，舞台压到很薄，只留一条氛围带 */
   .stage { height: 30vh; min-height: 96px; max-height: 150px; }

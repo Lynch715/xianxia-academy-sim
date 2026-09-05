@@ -82,6 +82,7 @@
     /** 版本迁移。新增字段在这里补默认值，老存档才不会炸。 */
     migrate(s) {
       s.meta = s.meta || {};
+      s.rumors = s.rumors || [];        // 1.1 传闻系统，老存档补空表
       const v = s.meta.version || '0.0.0';
       if (v !== G.State.VERSION) {
         s.storylines = s.storylines || {

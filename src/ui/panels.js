@@ -237,10 +237,94 @@
           h('button.btn', { onclick: () => { G.Game.setSchedule(s, G.Game.emptySchedule()); rerender(); } }, '清空')
         ),
         h('hr.hr'),
-        C().panel('本周提示',
-          h('.tiny.muted', this.weekHint(s))
-        )
+        C().panel('当下要紧', this.urgentList(s))
       );
+    },
+
+    /**
+     * 当下要紧：把散在各处的紧迫感聚到一起——倒计时、没了结的事、等你回话的人。
+     * 纯本地计算，不花一个 token。返回 [{text, tone}]，tone 为 good|warn|danger|null。
+     */
+    urgent(s) {
+      const out = [];
+      const push = (text, tone) => out.push({ text, tone: tone || null });
+      const cu = s.cultivation;
+      const week = Math.floor(s.time.absoluteTurn / 21);
+
+      // 修行
+      if (G.Cultivation.canBreakthrough(s)) push('修为已满，可以尝试突破。', 'good');
+      else if (cu.exp >= cu.expMax * 0.85) push('离突破只差一步。', 'good');
+      if (cu.demonHeart >= 80) push('心魔缠身。再不排解，下次突破就是走火。', 'danger');
+      else if (cu.demonHeart >= 60) push('心魔躁动，此时突破极险。', 'danger');
+      else if (cu.demonHeart >= 30) push('道心有隙。休息、与人交心、了结旧账都能缓一缓。', 'warn');
+      if (cu.resting > 0) push(`还在休养，还需 ${cu.resting} 周。`, 'warn');
+      if (cu.injuries.length) push(`身上有 ${cu.injuries.length} 处伤，判定会吃亏。`, 'warn');
+
+      // 学生：考试倒计时与名次预估
+      if (s.player.role === 'student') {
+        const EXAM = [10, 11, 12, 1, 2, 3, 4, 5];
+        let m = s.time.month, weeks = 5 - s.time.week, guard = 0;
+        while (!EXAM.includes(m) && guard++ < 12) { m = m % 12 + 1; weeks += 4; }
+        const kind = (m === 1 || m === 6) ? '期末大考' : '月考';
+        const rank = G.Academy.rankOf(s, G.Academy.scoreOf(s));
+        const band = rank <= 30 ? '前列' : rank <= 100 ? '中上' : rank <= 200 ? '中游' : rank <= G.Academy.TOTAL - 30 ? '靠后' : '垫底';
+        const tone = rank > G.Academy.TOTAL - 30 ? 'danger' : rank > 200 ? 'warn' : null;
+        push(`${kind}还有 ${weeks} 周。照眼下的势头，大约在${band}。`, tone);
+        if (s.academy.warnings >= 1) push('已收到末位警告。再垫底一学期就是劝退。', 'danger');
+        if (G.Time.isVacation(s)) push('游历期，不上课。正是往外跑、探秘境的时候。', 'good');
+      }
+
+      // 教习
+      if (s.player.role === 'teacher' && s.faculty) {
+        const f = s.faculty;
+        const hot = f.disciples.filter(d => !d.graduated && !d.broken && d.pressure >= 60);
+        for (const d of hot) push(`${d.name}压力很大（${Math.round(d.pressure)}）。再逼下去要出事。`, d.pressure >= 70 ? 'danger' : 'warn');
+        if (!f.prepared) push('一份教案都没有。下堂正课会砸。', 'warn');
+        const idle = f.disciples.filter(d => !d.graduated && !d.broken &&
+          s.time.absoluteTurn - (d.lastTutor || d.joinedTurn || 0) >= 6 * 21);
+        if (idle.length) push(`${idle.map(d => d.name).join('、')}已经六周没被你单独指导过。`, 'warn');
+      }
+
+      // 院主
+      if (s.player.role === 'headmaster' && s.gov) {
+        const g = G.Governance.summary(s);
+        if (g?.threat) push(`${g.threat.name}压境，化解进度 ${g.threatProgress}%。`, g.threatProgress < 40 ? 'danger' : 'warn');
+        if (g && g.unrest >= 60) push(`七院人心 ${g.unrest}，${G.State.collegeOf(g.worst).name}最不满。`, g.unrest >= 75 ? 'danger' : 'warn');
+        if (g?.agendaLeft) push(`还有 ${g.agendaLeft} 件院务等你拍板。`);
+      }
+
+      // 人
+      if (s.flags._pendingMsg) push(`${G.NPC.name(s.flags._pendingMsg.npcId)}的传音还没回。`, 'warn');
+      for (const ch of (s.events.activeChains || [])) {
+        const ev = G.DATA.events.find(e => e.id === ch.eventId);
+        if (!ev) continue;
+        const who = (ev.actors || []).map(id => G.NPC.name(id)).join('、');
+        const due = Math.max(0, Math.ceil((ch.dueTurn - s.time.absoluteTurn) / 21));
+        push(`${who ? '与' + who + '的事' : '有件事'}还没了结${due > 0 ? `（约 ${due} 周后有下文）` : '（就在这几天）'}。`);
+      }
+      const cold = G.DATA.npcs.filter(n => {
+        const r = s.relations[n.id];
+        return r && r.favor >= 40 && r.met && s.time.absoluteTurn - (r.lastInteractTurn || 0) >= 6 * 21;
+      }).slice(0, 2);
+      if (cold.length) push(`${cold.map(n => n.name).join('、')}很久没见了，交情会淡。`, 'warn');
+      if (G.Storyline.hasPendingDeduction(s)) push('手上的线索能串起来了——去「暗线」推论。', 'good');
+      const bad = G.Rumor.summary(s).filter(r => r.negative && r.spread >= 3)[0];
+      if (bad) push(`院里在传：${bad.text}（${bad.spread} 人听说）。找听过的人谈谈能压一压。`, 'warn');
+
+      // 钱
+      if (s.player.role === 'student' && G.Economy.totalLow(s) < 20) push('灵石所剩无几。', 'warn');
+
+      // 学院大事
+      const fixed = G.Time.FIXED_BY_MONTH[s.time.month];
+      if (fixed && s.time.week === 1) push('本月有学院大事。');
+
+      if (!out.length) push(week < 2 ? '刚入院，先把这一周排满。' : '难得清静的一周。想做什么都行。');
+      return out;
+    },
+
+    urgentList(s) {
+      const items = this.urgent(s);
+      return h('.urgent', ...items.map(it => h('.it' + (it.tone ? '.' + it.tone : ''), it.text)));
     },
 
     weekHint(s) {
@@ -259,7 +343,12 @@
       const met = G.DATA.npcs.filter(n => s.relations[n.id]?.met || s.relations[n.id]?.favor !== n.initial.favor);
       const list = met.length ? met : G.NPC.classmates(s);
       const sorted = list.slice().sort((a, b) => s.relations[b.id].favor - s.relations[a.id].favor);
+      const rumors = G.Rumor.summary(s);
       return h('div',
+        rumors.length ? C().panel('近来的传闻',
+          ...rumors.map(r => h('.tiny' + (r.negative ? '.danger' : '.muted'), { style: { padding: '2px 0' } },
+            `· ${r.text}（${r.spread} 人听说）`)),
+          h('.tiny.muted', { style: { marginTop: '6px' } }, '坏话传开了，就去找听过的人好好谈一次。')) : null,
         sorted.map(n => C().relCard(s, n.id)),
         !sorted.length ? h('.tiny.muted', '你还没认识什么人。') : null
       );
@@ -364,6 +453,10 @@
         onchange: e => cfg.enabled = e.target.checked });
       const impBox = h_('input', { type: 'checkbox', checked: cfg.useImportantModel, style: { width: 'auto' },
         onchange: e => cfg.useImportantModel = e.target.checked });
+      const dlgBox = h_('input', { type: 'checkbox', checked: cfg.dialogue !== false, style: { width: 'auto' },
+        onchange: e => cfg.dialogue = e.target.checked });
+      const msgBox = h_('input', { type: 'checkbox', checked: cfg.messages !== false, style: { width: 'auto' },
+        onchange: e => cfg.messages = e.target.checked });
 
       const status = h_('.tiny.muted', '未测试');
 
@@ -381,7 +474,14 @@
           h_('div', { style: { display: 'flex', alignItems: 'center', gap: '8px' } },
             impBox, h_('span.small.muted', '心魔关、突破、暗线、结局')),
           h_('div', { style: { marginTop: '6px' } }, impInput)),
-        h_('.field', h_('label', '单回合目标字数'), lenInput),
+        h_('.field', h_('label', '对话场'),
+          h_('div', { style: { display: 'flex', alignItems: 'center', gap: '8px' } },
+            dlgBox, h_('span.small.muted', '事件里的人先开口，你亲口回应；聊得好坏会影响判定'))),
+        h_('.field', h_('label', '传音符'),
+          h_('div', { style: { display: 'flex', alignItems: 'center', gap: '8px' } },
+            msgBox, h_('span.small.muted', '认识的人会主动找你，可回话可不理'))),
+        h_('.field', h_('label', '普通事件叙事字数'), lenInput,
+          h_('.tiny.muted', { style: { marginTop: '4px' } }, '要紧场景自动放大到 1.6 倍。对话场已经把戏演过了，叙事不必再长。')),
         h_('hr.hr'),
         h_('.btn-row',
           h_('button.btn', {
@@ -405,7 +505,7 @@
         )
       );
 
-      G.Theme.modal('设置', '接入你自己的模型密钥，叙事将由 2000 字级动态生成替代模板文本', body, [
+      G.Theme.modal('设置', '接入你自己的模型密钥：人物会真的开口跟你说话，叙事也随之动态生成', body, [
         { label: '保存', primary: true, onClick: () => { G.LLM.save(); G.Theme.toast('已保存'); } }
       ]);
     },

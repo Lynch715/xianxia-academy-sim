@@ -148,8 +148,9 @@
     },
 
     topbar(s) {
+      // 手机上纪年那一串会折成五六行，把顶栏撑成半个屏。给两份文案，CSS 按宽度选。
       return h('.topbar',
-        h('.title', G.Time.label(s)),
+        h('.title', h('span.full', G.Time.label(s)), h('span.compact', G.Time.compactLabel(s))),
         h('.acts',
           h('button.btn.ghost', { onclick: () => this.openCultivate(s) }, '修炼'),
           h('button.btn.ghost', { onclick: () => this.openMarket(s) }, '坊市'),
@@ -227,8 +228,9 @@
     },
 
     idleScreen(s) {
-      this.narr.setText(`${G.Time.label(s)}。\n\n新的一周。`);
-      this.narr.sys(G.Panels.weekHint(s));
+      this.narr.clear();
+      this.narr.sys(`<b>${G.Time.shortLabel(s)}</b>　${s.player.role === 'student' ? `第 ${s.academy.year} 年弟子` : ''}`);
+      this.narr.el.appendChild(G.Panels.urgentList(s));
       this.showIdleActions(s);
     },
 
@@ -239,6 +241,14 @@
       // 大型活动优先于一切
       const banner = G.FestUI.banner(s, k => G.FestUI.start(s, k));
       if (banner) wrap.appendChild(banner);
+
+      // 有人传音
+      if (s.flags._pendingMsg) {
+        const card = G.DialogueUI.messageCard(s, s.flags._pendingMsg,
+          () => this.playMessage(s),
+          () => { G.Dialogue.ignoreMessage(s); this.refreshLeft(); this.refreshRight(); this.showIdleActions(s); });
+        if (card) wrap.appendChild(card);
+      }
 
       // 院首选拔揭晓
       if (s.player.role === 'teacher' && s.flags.head_bid_done && !s.faculty.headBid) {
@@ -293,6 +303,13 @@
         }
 
         if (r.type === 'activity') {
+          // 自拟时段：解析 → 判定 → 一小段叙事
+          if (r.cat === 'custom' && r.detail?.custom) {
+            if (digest.length) { this.narr.sys(digest.join('<br>')); digest.length = 0; }
+            this.scrollDown();
+            await this.playCustomSlot(s, r);
+            continue;
+          }
           // 议事会要停下来让玩家做决定
           if (r.detail?.openAgenda) {
             if (digest.length) { this.narr.sys(digest.join('<br>')); digest.length = 0; }
@@ -321,11 +338,13 @@
       this.refreshLeft();
       this.refreshRight();
       this.refreshTop();
+      this.narr.el.appendChild(G.Panels.urgentList(s));
       this.showIdleActions(s);
       this.scrollDown();
+      this.maybeMessage(s);
     },
 
-    /** 呈现一个事件，等待玩家选择，再渲染结果 */
+    /** 呈现一个事件：开场 → （有模型时）对话场 → 玩家选择 → 渲染结果 */
     playEvent(s, ev) {
       return new Promise(async resolve => {
         this.clearOptions();
@@ -338,8 +357,33 @@
         this.narr.el.appendChild(p);
         this.scrollDown();
 
+        // 对话场：事件里的人先开口，玩家亲口回应。聊得好坏会带进后面的判定。
+        let extra = null;
+        if (G.Dialogue.enabled(s, ev)) {
+          const ss = G.Dialogue.begin(s, {
+            kind: 'event', npcId: ev.actors[0], event: ev, scene: G.Narrator.sceneOf(s, ev)
+          });
+          await G.DialogueUI.run(s, ss, null);
+          if (ss.turns.some(t => t.who === 'player')) {
+            const facts = G.Dialogue.settle(s, ss);
+            const mod = G.Dialogue.modifier(ss);
+            extra = { mods: [mod], dialogue: ss, dialogueFacts: facts };
+            // 聊过之后，选项下面那行"有几分把握"要跟着变——这是玩家能感到"说话有用"的地方
+            for (const o of ev.options) {
+              if (o.check) o._hint = G.Check.vagueHint({ ...o.check, reason: (o.reason || 0) + mod });
+            }
+            this.narr.el.appendChild(h('.dl-mod',
+              G.Dialogue.hint(s, ss) + (ss.applied?.length ? '　' + ss.applied.join('　') : '') + '。你打算——'));
+            this.refreshLeft();
+          } else if (ss.turns.length) {
+            this.narr.el.appendChild(h('.dl-mod', '你打算——'));
+          }
+          this.scrollDown();
+        }
+
+        const done = () => resolve();
         const opts = G.C.options(ev,
-          async id => { await this.resolveAndRender(s, ev, id, null); resolve(); },
+          async id => { await this.resolveAndRender(s, ev, id, null, extra); done(); },
           async text => {
             const intent = await G.Narrator.parseCustom(s, text, ev);
             if (intent.violatesRules) {
@@ -347,22 +391,115 @@
               this.scrollDown();
               // 越界不消耗回合，重新给选项
               const again = G.C.options(ev,
-                async id => { await this.resolveAndRender(s, ev, id, null); resolve(); },
+                async id => { await this.resolveAndRender(s, ev, id, null, extra); done(); },
                 async t2 => {
                   const i2 = await G.Narrator.parseCustom(s, t2, ev);
-                  await this.resolveAndRender(s, ev, 'E', i2.violatesRules ? null : i2);
-                  resolve();
+                  await this.resolveAndRender(s, ev, 'E', i2.violatesRules ? null : i2, extra);
+                  done();
                 });
               this.narr.el.parentNode.appendChild(again);
               this.scrollDown();
               return;
             }
-            await this.resolveAndRender(s, ev, 'E', intent);
-            resolve();
+            await this.resolveAndRender(s, ev, 'E', intent, extra);
+            done();
           });
         this.mainEl.narrWrap.appendChild(opts);
         this.scrollDown();
       });
+    },
+
+    /** 回一道传音：自由对话，聊完按聊得好坏结算关系 */
+    async playMessage(s) {
+      const msg = s.flags._pendingMsg;
+      if (!msg || this.running) return;
+      const npc = G.NPC.get(msg.npcId);
+      if (!npc) return G.Dialogue.ignoreMessage(s);
+      this.running = true;
+      this.refreshTop();
+      this.clearOptions();
+      this.narr.clear();
+
+      const sceneId = G.DATA.static.collegeScene[npc.college] || 'scene_main_plaza';
+      this.setStage(sceneId, [msg.npcId]);
+      this.narr.sys(`<b>传音符 · ${npc.name}</b>`);
+
+      const ss = G.Dialogue.begin(s, {
+        kind: 'message', npcId: msg.npcId, event: null,
+        scene: { id: sceneId, name: G.DATA.static.scenes.find(x => x.id === sceneId)?.name || '' }
+      });
+      await G.DialogueUI.run(s, ss, msg.text);
+      if (ss.turns.some(t => t.who === 'player')) {
+        G.Dialogue.settleMessage(s, ss);
+        this.narr.sys(G.Dialogue.hint(s, ss) + (ss.applied?.length ? '　' + ss.applied.join('　') : ''));
+      } else {
+        // 一句没说就走了，等同不理会
+        G.Dialogue.ignoreMessage(s);
+      }
+      this.running = false;
+      this.refreshLeft(); this.refreshRight(); this.refreshTop();
+      this.showIdleActions(s);
+      this.scrollDown();
+    },
+
+    /** 周末结算后，看看有没有人来传音。有模型才会有；没有就静悄悄的。 */
+    async maybeMessage(s) {
+      const id = G.Dialogue.drawMessenger(s);
+      if (!id) return;
+      const msg = await G.Dialogue.composeMessage(s, id);
+      if (!msg || this.running || G.State.current !== s) return;
+      G.Theme.toast(`收到一道传音符 · ${G.NPC.name(id)}`);
+      this.showIdleActions(s);
+      this.refreshRight();
+      this.scrollDown();
+    },
+
+    /** 自拟时段：一句话的安排，解析成行动，判定，写一小段 */
+    async playCustomSlot(s, r) {
+      const text = r.detail.custom;
+      const when = `${G.Time.DAY_LABEL[r.slot.day - 1]}·${G.Time.PHASE_LABEL[r.slot.phase]}`;
+      const box = h('.custom-slot', h('.cs-head', when, '　你自行安排：', h('b', text)));
+      this.narr.el.appendChild(box);
+      const loading = h('p.sys.loading.dots', '琢磨');
+      this.narr.el.appendChild(loading);
+      this.scrollDown();
+
+      const intent = await G.Narrator.parseCustom(s, text, null);
+      const res = G.Game.resolveCustom(s, text, intent);
+      loading.remove();
+
+      if (res.rejected) {
+        this.narr.el.appendChild(h('p', res.reason));
+        this.narr.sys('这个时段就这么过去了。');
+        this.scrollDown();
+        return;
+      }
+
+      // 有人在场就把 TA 请上台
+      const target = (intent.targets || [])[0];
+      if (target) this.setStage(null, [target], { [target]: G.C.exprFor(res.grade) });
+
+      const payload = {
+        state: s,
+        scene: G.Narrator.sceneOf(s, null),
+        facts: res.facts,
+        event: { seed: `你打算：${text}`, actors: target ? [target] : [] },
+        grade: res.grade,
+        outcome: { text: `${intent.summary}——${G.Check.GRADE_LABEL[res.grade]}` },
+        actors: target ? [target] : [],
+        memory: G.Memory.build(s),
+        important: false,
+        style: { length: 260 }
+      };
+      const p = h('p');
+      this.narr.el.appendChild(p);
+      const narrText = await G.Narrator._render(payload, (piece, full) => { p.textContent = full; this.scrollDown(); });
+      p.remove();
+      G.Theme.paragraphs(narrText).forEach(pp => this.narr.el.appendChild(h('p', pp)));
+      this.narr.sys(`判定：<b>${G.Check.GRADE_LABEL[res.grade]}</b>` + (res.applied.length ? '　' + res.applied.join('　') : ''));
+      G.Memory.push(s, res.facts, narrText.slice(0, 120));
+      this.refreshLeft();
+      this.scrollDown();
     },
 
     /** 院主议事：呈现议题 → 玩家表决 → 结算 */
@@ -406,9 +543,9 @@
       });
     },
 
-    async resolveAndRender(s, ev, optionId, intent) {
+    async resolveAndRender(s, ev, optionId, intent, extra) {
       // 铁律：先 commit，再叙事。叙事失败不影响状态。
-      const res = G.Game.resolveEvent(s, optionId, intent);
+      const res = G.Game.resolveEvent(s, optionId, intent, extra?.mods || null);
       if (!res) return;
 
       // 判定结果决定立绘表情；没有对应表情图时会自动回退到 calm
@@ -433,7 +570,7 @@
           this.narr.el.insertBefore(el, target);
         }
         this.scrollDown();
-      });
+      }, extra);
 
       loading.remove();
       target.remove();
@@ -510,6 +647,9 @@
     },
 
     async runBreakthrough(s, opts) {
+      // 空闲选项（"尝试突破""推演本周"）挂在 narrWrap 上，narr.clear() 清不掉，
+      // 不清的话它们会一直排在心魔关的 A/B/C 前面
+      this.clearOptions();
       this.narr.clear();
       this.setStage(opts.place === 'hall' ? 'scene_meditation_hall' : 'scene_dorm_room', []);
 
@@ -525,12 +665,38 @@
       G.Theme.paragraphs(trialText).forEach(p => this.narr.el.appendChild(h('p', p)));
       this.scrollDown();
 
+      // 与心魔对峙：它开口，你回它。稳住了，成功率会好一点，最险的那条路也不至于直接走火。
+      let steady = null;
+      if (G.LLM.configured && G.LLM.config.enabled && G.LLM.config.dialogue !== false) {
+        const npc = bt.trial.npc;
+        if (npc) {
+          this.setStage(null, [npc.id], { [npc.id]: 'emotion' });
+          this.mainEl?.stage?.classList.add('haunt');   // 幻象：立绘褪色
+        }
+        const ss = G.Dialogue.begin(s, {
+          kind: 'demon', npcId: null, trial: bt.trial, maxTurns: 3,
+          speaker: { name: npc ? npc.name + '（幻象）' : '心魔' }
+        });
+        await G.DialogueUI.run(s, ss, null);
+        if (ss.turns.some(t => t.who === 'player')) {
+          steady = G.Demon.steadiness(s, bt.trial, ss.rapport);
+          this.narr.el.appendChild(h('.dl-mod',
+            G.Dialogue.hint(s, ss) +
+            (steady.demon ? `　心魔${steady.demon > 0 ? '+' : ''}${steady.demon}` : '') +
+            (steady.saves ? '　哪怕走最险的那条路，也不会直接走火' : '') + '。'));
+          G.Memory.push(s, [`突破时与心魔对峙：${G.Dialogue.hint(s, ss)}`], '');
+          this.refreshLeft();
+          this.scrollDown();
+        }
+      }
+
       const wrap = h('.options');
       bt.trial.choices.forEach((c, i) => {
         wrap.appendChild(h('button.opt', {
           onclick: async () => {
             wrap.remove();
             const applied = G.Demon.applyChoice(s, bt.trial, c.tag);
+            if (steady) applied.rateMod += steady.rateMod;
             const res = G.Cultivation.resolveBreakthrough(s, applied);
             await this.showBreakthroughResult(s, res);
           }

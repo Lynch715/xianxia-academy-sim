@@ -227,18 +227,20 @@
     },
 
     /** 玩家选择某个选项 → 判定 → 结算 */
-    resolve(s, ev, optionId, customIntent) {
+    resolve(s, ev, optionId, customIntent, extraMods) {
       const opt = ev.options.find(o => o.id === optionId);
       if (!opt) return null;
 
       let grade = 'plain', checkInfo = null;
+      // 对话场带来的修正：聊得好坏顶得上一档半，但绝不越过 ±12
+      const extra = Array.isArray(extraMods) ? extraMods.map(x => Math.max(-12, Math.min(12, Number(x) || 0))) : [];
 
       if (opt.custom && customIntent) {
         checkInfo = G.Check.roll({
           attrKey: customIntent.check?.attr || null,
           difficulty: customIntent.check?.difficulty ?? 50,
           reason: customIntent.reason ?? 0,
-          modifiers: this.contextModifiers(s, ev)
+          modifiers: this.contextModifiers(s, ev).concat(extra)
         });
         grade = checkInfo.grade;
       } else if (opt.check) {
@@ -246,7 +248,7 @@
           attrKey: opt.check.attr,
           difficulty: opt.check.difficulty,
           reason: opt.reason || 0,
-          modifiers: this.contextModifiers(s, ev)
+          modifiers: this.contextModifiers(s, ev).concat(extra)
         });
         grade = checkInfo.grade;
       } else if (opt.fixedGrade) {
@@ -255,6 +257,7 @@
 
       const outcome = this.pickOutcome(opt, grade);
       const applied = this.applyOutcome(s, ev, outcome, grade);
+      G.Rumor.fromEvent(s, ev, opt, grade, outcome, applied);
 
       // 记录。cooldown 写的是**周**，存的是时段——跟 minWeek 一个道理，
       // 直接当时段用的话 cooldown:40 只隔两周就又跳出来了。

@@ -89,6 +89,7 @@
 
       if (actionKey === 'gossip_behind' || actionKey === 'break_promise') {
         this.setStrained(s, npcId, true);
+        G.Rumor.add(s, 'cruel', npcId);
         G.Demon.add(s, 'guilt', 3, `你对${G.NPC.name(npcId)}做过的事`, npcId);
       }
       return applied;
