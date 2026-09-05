@@ -49,6 +49,8 @@
 
     // ---------- 新档 ----------
     newGame(cfg) {
+      // 新局会覆盖自动存档；先把上一局挪走，误点「入院」也找得回来
+      if (G.Save && G.Save.backupAuto && !cfg.noBackup) G.Save.backupAuto();
       const seed = cfg.seed || (Date.now() ^ (Math.random() * 0xffffffff)) >>> 0;
       G.initRNG(seed, 0);
 

@@ -65,8 +65,11 @@
       this.mobileTab = this.isLandscapePhone() ? 'right' : 'main';
       this.watchOrientation();
       G.LLM.load();
-      const cfg = G.Save.readConfig();
-      if (cfg.lastSlot !== undefined && G.Save.load('auto')) {
+      G.Save.watchExit();
+      // 有自动存档就直接续上，不再经过标题页——玩家关掉再打开，看到的就是刚才那一幕。
+      // 想开新局或找回上一局，设置里有入口。
+      const auto = G.Save.slots().find(x => x.slot === 'auto');
+      if (auto && !auto.empty && G.Save.load('auto') && !G.State.current.ended) {
         this.render();
       } else {
         this.showTitle();
@@ -87,11 +90,22 @@
               '修仙不只是打怪升级。在这座云上的学院里，你要上课，要考试，要修炼，要处理复杂的人际关系，要在理想与现实之间做选择，要在道心与凡心之间找平衡。'),
             h('hr.hr'),
             h('.btn-row', { style: { justifyContent: 'center' } },
-              h('button.btn.primary', { style: { padding: '11px 32px' }, onclick: () => this.showCreate() }, '入 院'),
-              !auto?.empty ? h('button.btn', {
-                style: { padding: '11px 24px' },
+              // 有存档时「继续」是主键，「入院」退居其次并且要确认——误点一下丢掉五年进度太亏
+              !auto?.empty ? h('button.btn.primary', {
+                style: { padding: '11px 28px' },
                 onclick: () => { if (G.Save.load('auto')) this.render(); }
               }, '继续（' + auto.time + '）') : null,
+              h('button.btn' + (auto?.empty ? '.primary' : ''), {
+                style: { padding: '11px 32px' },
+                onclick: () => {
+                  if (auto?.empty) return this.showCreate();
+                  G.Theme.confirm('开一局新的？', `当前这一局（${auto.name}，${auto.time}）会被挪到「上一局」备份里，随时能找回。`, () => this.showCreate());
+                }
+              }, '入 院'),
+              G.Save.hasPrev() ? h('button.btn', {
+                style: { padding: '11px 24px' },
+                onclick: () => { if (G.Save.swapPrev()) this.render(); }
+              }, '找回上一局') : null,
               h('button.btn', { style: { padding: '11px 24px' }, onclick: () => G.Panels.settings() }, '设置')),
             h('.center.tiny.muted', { style: { marginTop: '20px' } },
               G.LLM.configured && G.LLM.config.enabled ? '已接入模型，叙事为动态生成' : '当前为内置文本模式，可在设置中接入模型'))));
@@ -264,8 +278,11 @@
           h('span.key', '※'), '尝试突破',
           h('span.hint', G.Cultivation.rateHint(G.Cultivation.successRate(s, {})))));
       }
+      // 上次推到一半退出的：从断点接着走，别让玩家以为要重来一周
+      const mid = s.flags._midWeek && !(s.time.day === 1 && s.time.phase === 'dawn');
       wrap.appendChild(h('button.opt', { onclick: () => this.runWeek(s) },
-        h('span.key', '▷'), '推演本周', h('span.hint', '按右栏日程逐日推进')));
+        h('span.key', '▷'), mid ? '接着推演本周' : '推演本周',
+        h('span.hint', mid ? `上次停在${G.Time.DAY_LABEL[s.time.day - 1]}·${G.Time.PHASE_LABEL[s.time.phase]}，从这里往后走` : '按右栏日程逐日推进')));
 
       if (G.Time.isVacation(s)) {
         wrap.appendChild(h('button.opt', { onclick: () => G.Explore.picker(s) },
@@ -864,7 +881,7 @@
 
       box.querySelector('.loading').replaceWith(resume);
       box.appendChild(h('.btn-row', { style: { justifyContent: 'center', marginTop: '30px' } },
-        h('button.btn.primary', { onclick: () => { G.Save.del('auto'); this.showTitle(); } }, '重 来'),
+        h('button.btn.primary', { onclick: () => { G.Save.backupAuto(); G.Save.del('auto'); this.showTitle(); } }, '重 来'),
         h('button.btn', { onclick: () => G.Save.exportFile() }, '导出此局')));
     }
   };

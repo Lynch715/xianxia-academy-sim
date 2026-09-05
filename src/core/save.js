@@ -7,6 +7,7 @@
 
   const PREFIX = 'xxxy_save_';
   const AUTO = PREFIX + 'auto';
+  const PREV = PREFIX + 'prev';      // 上一局：开新局时自动备份，误点也找得回来
   const CFG_KEY = 'xxxy_config';
 
   const Save = {
@@ -61,7 +62,50 @@
     autosave() {
       if (!this.enabled || !G.State.current) return;
       clearTimeout(this._throttle);
-      this._throttle = setTimeout(() => this._write(AUTO, G.State.current), 400);
+      this._throttle = setTimeout(() => { this._throttle = null; this._write(AUTO, G.State.current); }, 400);
+    },
+
+    /**
+     * 立刻把一切落盘：自动存档 + 玩家配置（含 API 密钥）。
+     * 退出、切后台、锁屏、关标签页时调用——节流里那 400ms 若正好撞上退出，
+     * 最后一次改动就丢了。这里不等，直接写。
+     */
+    flush() {
+      if (this._throttle) { clearTimeout(this._throttle); this._throttle = null; }
+      if (this.enabled && G.State.current) this._write(AUTO, G.State.current);
+      if (G.LLM && G.LLM.config) G.LLM.save();
+    },
+
+    /** 监听所有"玩家要走了"的信号。pagehide 是 iOS 上唯一靠得住的那个。 */
+    watchExit() {
+      if (this._watching) return;
+      this._watching = true;
+      const f = () => this.flush();
+      window.addEventListener('pagehide', f);
+      window.addEventListener('beforeunload', f);
+      document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') f(); });
+      window.addEventListener('blur', f);
+      // 兜底：每 30 秒也写一次，防止哪个信号在某个浏览器上根本不发
+      setInterval(() => { if (this._throttle) f(); }, 30000);
+    },
+
+    /** 开新局之前把上一局挪到「上一局」槽，误点「入院」也找得回来 */
+    backupAuto(force) {
+      const cur = this._read(AUTO);
+      // 一步没玩的新局不值得备份（否则会把真正的上一局顶掉）；显式对调时例外
+      if (cur && cur.meta && (force || (cur.meta.playedTurns || 0) > 0)) {
+        try { localStorage.setItem(PREV, JSON.stringify(cur)); } catch (e) { /* 容量不够就算了 */ }
+      }
+    },
+    hasPrev() { return !!this._read(PREV); },
+    /** 当前局与上一局对调：先把上一局读出来，再把当前局挪进备份槽，两边都不丢 */
+    swapPrev() {
+      const prev = this._read(PREV);
+      if (!prev) return false;
+      this.backupAuto(true);
+      if (!this.adopt(prev)) return false;
+      this._write(AUTO, G.State.current);
+      return true;
     },
 
     load(slot) {
@@ -104,7 +148,7 @@
       return s;
     },
 
-    del(slot) { localStorage.removeItem(slot === 'auto' ? AUTO : PREFIX + slot); },
+    del(slot) { localStorage.removeItem(slot === 'auto' ? AUTO : slot === 'prev' ? PREV : PREFIX + slot); },
 
     exportJSON() {
       const s = G.State.current;

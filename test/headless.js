@@ -652,6 +652,58 @@ function rumorNet(G, s) {
   s.rumors = [];
 }
 
+// ---------- 进度不丢：中途退出续推、上一局备份、立即落盘 ----------
+function persistence(G, s) {
+  // 长跑可能已经触发结局；进度测试要一个还在进行的局
+  if (s.ended) { s = G.State.newGame({ name: s.player.name, role: 'student', noBackup: true }); G.Game.setSchedule(s, G.Game.autoSchedule(s)); }
+  // 1. 一周推到一半"退出"，读档回来继续，时间只多走 21 个时段，不多不少
+  const t0 = s.time.absoluteTurn;
+  G.Game.beginWeek(s);
+  for (let i = 0; i < 7; i++) {
+    const r = G.Game.step(s);
+    if (r && r.type === 'event') G.Game.resolveEvent(s, r.event.options[0].id);
+  }
+  check(s.flags._midWeek === true, '推演中应打上 _midWeek 标记');
+  G.Save.flush();
+  check(G.Save.load('auto'), '退出前的自动存档应能读回');
+  s = G.State.current;
+  check(s.flags._midWeek === true, '读档后 _midWeek 标记应还在');
+  G.Game.beginWeek(s);
+  check(G.Game.weekQueue.length < 21, `续推时应跳过已推过的时段：还剩 ${G.Game.weekQueue.length}`);
+  let guard = 0, r;
+  while (guard++ < 60) {
+    r = G.Game.step(s);
+    if (!r) break;
+    if (r.type === 'event') G.Game.resolveEvent(s, r.event.options[0].id);
+    if (r.type === 'weekEnd' || r.type === 'ended') break;
+  }
+  check(s.time.absoluteTurn - t0 === 21, `中途退出再续推，一周应恰好 21 个时段，实际 ${s.time.absoluteTurn - t0}`);
+  check(s.flags._midWeek === false, '周末结算后 _midWeek 应清掉');
+
+  // 2. 开新局会把上一局备份；对调后两边都在
+  const nameA = s.player.name;
+  G.Save.flush();
+  G.State.newGame({ name: '乙', role: 'student' });
+  check(G.Save.hasPrev(), '开新局前应把上一局挪进备份槽');
+  G.Save.flush();
+  check(G.Save.swapPrev(), '应能找回上一局');
+  check(G.State.current.player.name === nameA, `找回的应是上一局：${G.State.current.player.name}`);
+  check(G.Save.hasPrev() && G.Save.slots().find(x => x.slot === 'auto').name === nameA, '对调后新局应进备份槽、上一局回到自动档');
+  G.Save.swapPrev();
+  check(G.State.current.player.name === '乙', '再对调一次应回到新局');
+  G.Save.swapPrev();   // 换回原局，后面的检查还要用
+
+  // 3. flush 不等节流，立刻写
+  const cur = G.State.current;
+  const before = G.Save.slots().find(x => x.slot === 'auto').savedAt;
+  G.State.commit([{ path: 'flags._pingTest', op: 'set', value: true }], 'test');
+  G.Save.flush();
+  const raw = JSON.parse(G.Save._read('xxxy_save_auto') ? JSON.stringify(G.Save._read('xxxy_save_auto')) : 'null');
+  check(raw.flags._pingTest === true, 'flush 后自动存档应立刻包含最新改动');
+  check(raw.meta.savedAt >= before, 'flush 应更新保存时间');
+  return cur;
+}
+
 // ---------- 服务商配置 ----------
 function providerConfig(G) {
   for (const [k, p] of Object.entries(G.LLM.PROVIDERS)) {
@@ -969,6 +1021,8 @@ customAction(G, s);
 console.log(`  自定义解析　${failures.some(f => f.includes('自定义')) ? '失败' : '通过'}`);
 injectionGuard(G, s);
 console.log(`  白名单防护　${failures.some(f => f.includes('白名单') || f.includes('夹紧') || f.includes('过滤')) ? '失败' : '通过'}`);
+s = persistence(G, s);
+console.log(`  进度不丢　　${failures.some(f => /续推|_midWeek|备份|找回|flush|自动存档/.test(f)) ? '失败' : '通过'}`);
 rumorNet(G, s);
 console.log(`  传闻网络　　${failures.some(f => f.includes('传闻') || f.includes('解释') || f.includes('听说')) ? '失败' : '通过'}`);
 dialogueGuard(G, s);

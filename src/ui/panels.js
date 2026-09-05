@@ -505,8 +505,35 @@
         )
       );
 
+      // 密钥这种东西，填了就得存。不能指望玩家一定去点「保存」——
+      // 手机上点一下蒙层、往下一滑弹窗就没了，密钥也跟着没了。
+      body.addEventListener('input', () => { clearTimeout(this._cfgT); this._cfgT = setTimeout(() => G.LLM.save(), 300); });
+      body.addEventListener('change', () => G.LLM.save());
+
+      const auto = G.Save.slots().find(x => x.slot === 'auto');
+      body.appendChild(h_('hr.hr'));
+      body.appendChild(h_('.panel-title', '这一局'));
+      body.appendChild(h_('.btn-row',
+        h_('button.btn', {
+          onclick: () => {
+            G.Theme.confirm('开一局新的？', '当前这一局会被挪到「上一局」备份里，随时能在标题页找回。', () => {
+              G.Save.flush(); document.querySelectorAll('.modal-mask').forEach(m => m.remove()); G.UI.showCreate();
+            });
+          }
+        }, '开新局'),
+        G.Save.hasPrev() ? h_('button.btn', {
+          onclick: () => {
+            G.Theme.confirm('找回上一局？', '当前这一局会和上一局对调，不会丢。', () => {
+              if (G.Save.swapPrev()) { document.querySelectorAll('.modal-mask').forEach(m => m.remove()); G.UI.render(); }
+            });
+          }
+        }, '找回上一局') : null,
+        h_('button.btn', { onclick: () => { G.Save.flush(); document.querySelectorAll('.modal-mask').forEach(m => m.remove()); G.UI.showTitle(); } }, '回标题页')));
+      body.appendChild(h_('.tiny.muted', { style: { marginTop: '6px' } },
+        '进度随时自动保存，关掉页面也不会丢' + (auto && !auto.empty ? `（上次保存：${auto.time}）` : '') + '。密钥同样只存在这台设备的浏览器里。'));
+
       G.Theme.modal('设置', '接入你自己的模型密钥：人物会真的开口跟你说话，叙事也随之动态生成', body, [
-        { label: '保存', primary: true, onClick: () => { G.LLM.save(); G.Theme.toast('已保存'); } }
+        { label: '完成', primary: true, onClick: () => { G.LLM.save(); G.Theme.toast('已保存'); } }
       ]);
     },
 

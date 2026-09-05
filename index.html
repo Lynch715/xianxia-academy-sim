@@ -786,6 +786,8 @@ window.G.DATA = {"npcs":[{"id":"npc_shenjinglan","name":"沈惊澜","gender":"ma
 
     // ---------- 新档 ----------
     newGame(cfg) {
+      // 新局会覆盖自动存档；先把上一局挪走，误点「入院」也找得回来
+      if (G.Save && G.Save.backupAuto && !cfg.noBackup) G.Save.backupAuto();
       const seed = cfg.seed || (Date.now() ^ (Math.random() * 0xffffffff)) >>> 0;
       G.initRNG(seed, 0);
 
@@ -1260,6 +1262,7 @@ window.G.DATA = {"npcs":[{"id":"npc_shenjinglan","name":"沈惊澜","gender":"ma
 
   const PREFIX = 'xxxy_save_';
   const AUTO = PREFIX + 'auto';
+  const PREV = PREFIX + 'prev';      // 上一局：开新局时自动备份，误点也找得回来
   const CFG_KEY = 'xxxy_config';
 
   const Save = {
@@ -1314,7 +1317,50 @@ window.G.DATA = {"npcs":[{"id":"npc_shenjinglan","name":"沈惊澜","gender":"ma
     autosave() {
       if (!this.enabled || !G.State.current) return;
       clearTimeout(this._throttle);
-      this._throttle = setTimeout(() => this._write(AUTO, G.State.current), 400);
+      this._throttle = setTimeout(() => { this._throttle = null; this._write(AUTO, G.State.current); }, 400);
+    },
+
+    /**
+     * 立刻把一切落盘：自动存档 + 玩家配置（含 API 密钥）。
+     * 退出、切后台、锁屏、关标签页时调用——节流里那 400ms 若正好撞上退出，
+     * 最后一次改动就丢了。这里不等，直接写。
+     */
+    flush() {
+      if (this._throttle) { clearTimeout(this._throttle); this._throttle = null; }
+      if (this.enabled && G.State.current) this._write(AUTO, G.State.current);
+      if (G.LLM && G.LLM.config) G.LLM.save();
+    },
+
+    /** 监听所有"玩家要走了"的信号。pagehide 是 iOS 上唯一靠得住的那个。 */
+    watchExit() {
+      if (this._watching) return;
+      this._watching = true;
+      const f = () => this.flush();
+      window.addEventListener('pagehide', f);
+      window.addEventListener('beforeunload', f);
+      document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') f(); });
+      window.addEventListener('blur', f);
+      // 兜底：每 30 秒也写一次，防止哪个信号在某个浏览器上根本不发
+      setInterval(() => { if (this._throttle) f(); }, 30000);
+    },
+
+    /** 开新局之前把上一局挪到「上一局」槽，误点「入院」也找得回来 */
+    backupAuto(force) {
+      const cur = this._read(AUTO);
+      // 一步没玩的新局不值得备份（否则会把真正的上一局顶掉）；显式对调时例外
+      if (cur && cur.meta && (force || (cur.meta.playedTurns || 0) > 0)) {
+        try { localStorage.setItem(PREV, JSON.stringify(cur)); } catch (e) { /* 容量不够就算了 */ }
+      }
+    },
+    hasPrev() { return !!this._read(PREV); },
+    /** 当前局与上一局对调：先把上一局读出来，再把当前局挪进备份槽，两边都不丢 */
+    swapPrev() {
+      const prev = this._read(PREV);
+      if (!prev) return false;
+      this.backupAuto(true);
+      if (!this.adopt(prev)) return false;
+      this._write(AUTO, G.State.current);
+      return true;
     },
 
     load(slot) {
@@ -1357,7 +1403,7 @@ window.G.DATA = {"npcs":[{"id":"npc_shenjinglan","name":"沈惊澜","gender":"ma
       return s;
     },
 
-    del(slot) { localStorage.removeItem(slot === 'auto' ? AUTO : PREFIX + slot); },
+    del(slot) { localStorage.removeItem(slot === 'auto' ? AUTO : slot === 'prev' ? PREV : PREFIX + slot); },
 
     exportJSON() {
       const s = G.State.current;
@@ -5686,6 +5732,15 @@ window.G.DATA = {"npcs":[{"id":"npc_shenjinglan","name":"沈惊澜","gender":"ma
           this.weekQueue.push({ day: d, phase: p, entry: sc[d]?.[p] || null });
         }
       }
+      // 上一次推演没走完就退出了（关页面、切后台被杀）：时段数已经推过去了，
+      // 存档里 time.day/phase 停在断点。这里把断点之前的格子跳掉，不然一周
+      // 会被重复推一遍，时间凭空多走 21 个时段。
+      if (s.flags._midWeek) {
+        const pi = p => G.Time.PHASES.indexOf(p);
+        const pos = (s.time.day - 1) * 3 + pi(s.time.phase);
+        this.weekQueue = this.weekQueue.filter(q => (q.day - 1) * 3 + pi(q.phase) > pos);
+      }
+      s.flags._midWeek = true;
       // 本周事件预抽，随机插入到某几个时段之后
       const events = G.Event.drawWeekly(s);
       this._weekEvents = events;
@@ -5811,6 +5866,7 @@ window.G.DATA = {"npcs":[{"id":"npc_shenjinglan","name":"沈惊澜","gender":"ma
     // ---------- 周末结算 ----------
     endWeek(s) {
       const notes = [];
+      s.flags._midWeek = false;
       G.Cultivation.weeklyTick(s);
       notes.push(...G.Rumor.weeklyTick(s));
 
@@ -8720,8 +8776,35 @@ ${turns.join('\n')}
         )
       );
 
+      // 密钥这种东西，填了就得存。不能指望玩家一定去点「保存」——
+      // 手机上点一下蒙层、往下一滑弹窗就没了，密钥也跟着没了。
+      body.addEventListener('input', () => { clearTimeout(this._cfgT); this._cfgT = setTimeout(() => G.LLM.save(), 300); });
+      body.addEventListener('change', () => G.LLM.save());
+
+      const auto = G.Save.slots().find(x => x.slot === 'auto');
+      body.appendChild(h_('hr.hr'));
+      body.appendChild(h_('.panel-title', '这一局'));
+      body.appendChild(h_('.btn-row',
+        h_('button.btn', {
+          onclick: () => {
+            G.Theme.confirm('开一局新的？', '当前这一局会被挪到「上一局」备份里，随时能在标题页找回。', () => {
+              G.Save.flush(); document.querySelectorAll('.modal-mask').forEach(m => m.remove()); G.UI.showCreate();
+            });
+          }
+        }, '开新局'),
+        G.Save.hasPrev() ? h_('button.btn', {
+          onclick: () => {
+            G.Theme.confirm('找回上一局？', '当前这一局会和上一局对调，不会丢。', () => {
+              if (G.Save.swapPrev()) { document.querySelectorAll('.modal-mask').forEach(m => m.remove()); G.UI.render(); }
+            });
+          }
+        }, '找回上一局') : null,
+        h_('button.btn', { onclick: () => { G.Save.flush(); document.querySelectorAll('.modal-mask').forEach(m => m.remove()); G.UI.showTitle(); } }, '回标题页')));
+      body.appendChild(h_('.tiny.muted', { style: { marginTop: '6px' } },
+        '进度随时自动保存，关掉页面也不会丢' + (auto && !auto.empty ? `（上次保存：${auto.time}）` : '') + '。密钥同样只存在这台设备的浏览器里。'));
+
       G.Theme.modal('设置', '接入你自己的模型密钥：人物会真的开口跟你说话，叙事也随之动态生成', body, [
-        { label: '保存', primary: true, onClick: () => { G.LLM.save(); G.Theme.toast('已保存'); } }
+        { label: '完成', primary: true, onClick: () => { G.LLM.save(); G.Theme.toast('已保存'); } }
       ]);
     },
 
@@ -9345,8 +9428,11 @@ ${turns.join('\n')}
       this.mobileTab = this.isLandscapePhone() ? 'right' : 'main';
       this.watchOrientation();
       G.LLM.load();
-      const cfg = G.Save.readConfig();
-      if (cfg.lastSlot !== undefined && G.Save.load('auto')) {
+      G.Save.watchExit();
+      // 有自动存档就直接续上，不再经过标题页——玩家关掉再打开，看到的就是刚才那一幕。
+      // 想开新局或找回上一局，设置里有入口。
+      const auto = G.Save.slots().find(x => x.slot === 'auto');
+      if (auto && !auto.empty && G.Save.load('auto') && !G.State.current.ended) {
         this.render();
       } else {
         this.showTitle();
@@ -9367,11 +9453,22 @@ ${turns.join('\n')}
               '修仙不只是打怪升级。在这座云上的学院里，你要上课，要考试，要修炼，要处理复杂的人际关系，要在理想与现实之间做选择，要在道心与凡心之间找平衡。'),
             h('hr.hr'),
             h('.btn-row', { style: { justifyContent: 'center' } },
-              h('button.btn.primary', { style: { padding: '11px 32px' }, onclick: () => this.showCreate() }, '入 院'),
-              !auto?.empty ? h('button.btn', {
-                style: { padding: '11px 24px' },
+              // 有存档时「继续」是主键，「入院」退居其次并且要确认——误点一下丢掉五年进度太亏
+              !auto?.empty ? h('button.btn.primary', {
+                style: { padding: '11px 28px' },
                 onclick: () => { if (G.Save.load('auto')) this.render(); }
               }, '继续（' + auto.time + '）') : null,
+              h('button.btn' + (auto?.empty ? '.primary' : ''), {
+                style: { padding: '11px 32px' },
+                onclick: () => {
+                  if (auto?.empty) return this.showCreate();
+                  G.Theme.confirm('开一局新的？', `当前这一局（${auto.name}，${auto.time}）会被挪到「上一局」备份里，随时能找回。`, () => this.showCreate());
+                }
+              }, '入 院'),
+              G.Save.hasPrev() ? h('button.btn', {
+                style: { padding: '11px 24px' },
+                onclick: () => { if (G.Save.swapPrev()) this.render(); }
+              }, '找回上一局') : null,
               h('button.btn', { style: { padding: '11px 24px' }, onclick: () => G.Panels.settings() }, '设置')),
             h('.center.tiny.muted', { style: { marginTop: '20px' } },
               G.LLM.configured && G.LLM.config.enabled ? '已接入模型，叙事为动态生成' : '当前为内置文本模式，可在设置中接入模型'))));
@@ -9544,8 +9641,11 @@ ${turns.join('\n')}
           h('span.key', '※'), '尝试突破',
           h('span.hint', G.Cultivation.rateHint(G.Cultivation.successRate(s, {})))));
       }
+      // 上次推到一半退出的：从断点接着走，别让玩家以为要重来一周
+      const mid = s.flags._midWeek && !(s.time.day === 1 && s.time.phase === 'dawn');
       wrap.appendChild(h('button.opt', { onclick: () => this.runWeek(s) },
-        h('span.key', '▷'), '推演本周', h('span.hint', '按右栏日程逐日推进')));
+        h('span.key', '▷'), mid ? '接着推演本周' : '推演本周',
+        h('span.hint', mid ? `上次停在${G.Time.DAY_LABEL[s.time.day - 1]}·${G.Time.PHASE_LABEL[s.time.phase]}，从这里往后走` : '按右栏日程逐日推进')));
 
       if (G.Time.isVacation(s)) {
         wrap.appendChild(h('button.opt', { onclick: () => G.Explore.picker(s) },
@@ -10144,7 +10244,7 @@ ${turns.join('\n')}
 
       box.querySelector('.loading').replaceWith(resume);
       box.appendChild(h('.btn-row', { style: { justifyContent: 'center', marginTop: '30px' } },
-        h('button.btn.primary', { onclick: () => { G.Save.del('auto'); this.showTitle(); } }, '重 来'),
+        h('button.btn.primary', { onclick: () => { G.Save.backupAuto(); G.Save.del('auto'); this.showTitle(); } }, '重 来'),
         h('button.btn', { onclick: () => G.Save.exportFile() }, '导出此局')));
     }
   };

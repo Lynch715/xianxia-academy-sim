@@ -183,6 +183,15 @@
           this.weekQueue.push({ day: d, phase: p, entry: sc[d]?.[p] || null });
         }
       }
+      // 上一次推演没走完就退出了（关页面、切后台被杀）：时段数已经推过去了，
+      // 存档里 time.day/phase 停在断点。这里把断点之前的格子跳掉，不然一周
+      // 会被重复推一遍，时间凭空多走 21 个时段。
+      if (s.flags._midWeek) {
+        const pi = p => G.Time.PHASES.indexOf(p);
+        const pos = (s.time.day - 1) * 3 + pi(s.time.phase);
+        this.weekQueue = this.weekQueue.filter(q => (q.day - 1) * 3 + pi(q.phase) > pos);
+      }
+      s.flags._midWeek = true;
       // 本周事件预抽，随机插入到某几个时段之后
       const events = G.Event.drawWeekly(s);
       this._weekEvents = events;
@@ -308,6 +317,7 @@
     // ---------- 周末结算 ----------
     endWeek(s) {
       const notes = [];
+      s.flags._midWeek = false;
       G.Cultivation.weeklyTick(s);
       notes.push(...G.Rumor.weeklyTick(s));
 
