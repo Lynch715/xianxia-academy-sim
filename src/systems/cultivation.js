@@ -8,7 +8,9 @@
     expMaxFor(realm, layer) {
       switch (realm) {
         case 'qi':       return Math.round(500 * (1 + layer * 0.15));
-        case 'zhuji':    return 8000 * layer;
+        // 原来是 8000×层：全排打坐一周三百来点，五年都出不了筑基，
+        // 金丹、毕业、一代天骄全成了摆设
+        case 'zhuji':    return 2500 * layer;
         case 'jindan':   return 40000 * layer;
         case 'yuanying': return 200000 * layer;
         default:         return 1000000;
@@ -71,7 +73,7 @@
 
     layerPenalty(s) {
       const c = s.cultivation;
-      return c.realm === 'qi' ? c.layer * 2 : c.layer * 8;
+      return c.realm === 'qi' ? c.layer * 2 : c.layer * 4;
     },
 
     successRate(s, opts) {

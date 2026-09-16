@@ -104,11 +104,11 @@
       const user = G.Prompts.dialogueTurn(s, ss, playerText);
       let raw, obj = null;
       try {
-        raw = await G.LLM.call(sys, user, { maxTokens: 450, temperature: 0.9, timeout: 60000 });
+        raw = await G.LLM.call(sys, user, { maxTokens: 450, temperature: 0.9, timeout: 30000 });
         obj = G.LLM._extractJSON(raw);
         if (!obj) {
           raw = await G.LLM.call(sys, user + '\n\n注意：上一次输出不是合法 JSON。只输出一个 JSON 对象。',
-                                 { maxTokens: 450, temperature: 0.5, timeout: 60000 });
+                                 { maxTokens: 450, temperature: 0.5, timeout: 20000 });
           obj = G.LLM._extractJSON(raw);
         }
       } catch (e) {

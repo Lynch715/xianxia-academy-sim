@@ -137,8 +137,28 @@
     },
 
     // ================= 决策议题 =================
+    /* 议题会轮回来：同一件事隔半年可能又被提上案头（经费、人事、招生年年都有）。
+     * 早期版本议过一次就永远不再出现，八个议题三四周议完，之后「议事」空转到卸任。
+     * 接班人例外——定下来就不再议。 */
+    AGENDA_COOLDOWN: 24 * 21,
+
+    availableAgendas(s) {
+      const at = s.gov.agendaAt || {};
+      const now = s.time.absoluteTurn;
+      return AGENDA.filter(a => {
+        if (a.id === 'g_successor' && s.gov.successor) return false;
+        if (at[a.id] !== undefined) return now - at[a.id] >= this.AGENDA_COOLDOWN;
+        // 老存档只有 agendaDone，没有时间戳：当作刚议过
+        return !s.gov.agendaDone.includes(a.id);
+      });
+    },
+
     nextAgenda(s) {
-      const pool = AGENDA.filter(a => !s.gov.agendaDone.includes(a.id));
+      if (!s.gov.agendaAt) {
+        s.gov.agendaAt = {};
+        for (const id of s.gov.agendaDone) s.gov.agendaAt[id] = s.time.absoluteTurn;
+      }
+      const pool = this.availableAgendas(s);
       if (!pool.length) return null;
       // 灵脉议题要等暗线浮现
       const usable = pool.filter(a => a.id !== 'g_vein' || s.storylines.seal.unlocked);
@@ -153,7 +173,10 @@
         modifiers: [(s.attrs.wei ?? 5) * 1.5, -this.avgUnrest(s) * 0.25]
       });
       const mult = Math.max(0, G.Check.GRADE_MULT[r.grade]);
-      const deltas = [{ path: 'gov.agendaDone', op: 'push', value: agenda.id, unique: true }];
+      const deltas = [
+        { path: 'gov.agendaDone', op: 'push', value: agenda.id, unique: true },
+        { path: `gov.agendaAt.${agenda.id}`, op: 'set', value: s.time.absoluteTurn }
+      ];
       const notes = [];
 
       // 预算与私库
@@ -231,8 +254,13 @@
     handleThreat(s, approach) {
       s = G.State.current;
       const k = s.gov.threat;
-      if (!k) return { fail: '眼下没有外患' };
+      if (!k) return approach === 'auto' ? { idle: true } : { fail: '眼下没有外患' };
       const t = THREATS[k];
+      // 随机应变：按外患的路数挑对口的办法
+      if (approach === 'auto') {
+        approach = { force: 'force', politics: 'talk', infiltrate: 'purge' }[t.kind] || 'talk';
+        if (approach === 'force' && (s.attrs.wei ?? 5) < (s.attrs.ren ?? 5) - 4) approach = 'ally';
+      }
 
       const APPROACH = {
         force:    { name: '以力慑之', attr: 'wei', good: ['force'], bad: ['politics'] },
@@ -286,6 +314,33 @@
       G.State.commit(deltas, 'gov.threat.handle');
       if (resolved) G.State.logLine(`【外患平息】${t.name}`, 'major');
       return { grade: r.grade, approach: a, threat: t, progress: prog, resolved, notes };
+    },
+
+    /* 没有待议的事时，议事就是例会。开得好，威望一点点攒起来——
+     * 这是院主唯一稳定的威望来源，否则威望只会被外患和坏决定磨光。 */
+    routine(s) {
+      s = G.State.current;
+      const r = G.Check.roll({
+        attrKey: 'jue', difficulty: 35, reason: 12,
+        modifiers: [-this.avgUnrest(s) * 0.15]
+      });
+      const step = { perfect: 2, good: 1, plain: 0, bad: 0, terrible: 0 }[r.grade];
+      const prog = (s.flags._weiProgress || 0) + step;
+      const deltas = [];
+      const notes = [];
+      if (prog >= 6) {
+        deltas.push({ path: 'attrs.wei', op: 'add', value: 1 });
+        deltas.push({ path: 'flags._weiProgress', op: 'set', value: prog - 6 });
+        notes.push('几次例会下来，底下人说话客气了些。威望+1');
+      } else {
+        deltas.push({ path: 'flags._weiProgress', op: 'set', value: prog });
+      }
+      if (r.grade === 'terrible') {
+        this.addUnrest(s, {}, 2);
+        notes.push('例会上吵了起来');
+      }
+      G.State.commit(deltas, 'gov.routine');
+      return { routine: true, grade: r.grade, notes };
     },
 
     // ================= 巡院与传承 =================
@@ -376,7 +431,7 @@
         reforms: g.reforms,
         successor: g.successor,
         heirReady: s.flags.heir_ready || 0,
-        agendaLeft: AGENDA.length - g.agendaDone.length
+        agendaLeft: this.availableAgendas(s).length
       };
     }
   };

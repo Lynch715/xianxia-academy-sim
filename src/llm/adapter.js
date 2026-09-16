@@ -184,7 +184,17 @@
       if (!this.configured) throw new Error('未配置 API');
 
       const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), opts.timeout || 120000);
+      let why = '';
+      const ms = opts.timeout || 60000;
+      let timer = null;
+      // 流式时按「多久没来新字」计时：长文慢慢吐不算超时，卡住不动才算
+      const kick = () => {
+        clearTimeout(timer);
+        timer = setTimeout(() => { why = 'timeout'; ctrl.abort(); }, ms);
+      };
+      kick();
+      ctrl._stop = () => { why = 'user'; ctrl.abort(); };
+      this._live.add(ctrl);
 
       try {
         const res = await fetch(this.endpoint(), {
@@ -199,7 +209,7 @@
           throw new Error(`接口返回 ${res.status}：${t.slice(0, 200)}`);
         }
 
-        if (opts.stream && res.body) return await this._readStream(res, opts.onChunk);
+        if (opts.stream && res.body) return await this._readStream(res, opts.onChunk, kick);
 
         const json = await res.json();
         const p = PROVIDERS[this.config.provider] || PROVIDERS.custom;
@@ -207,12 +217,23 @@
           return (json.content || []).map(c => c.text || '').join('');
         }
         return json.choices?.[0]?.message?.content || '';
+      } catch (e) {
+        if (why === 'user') throw new Error('没等模型，改用内置文本');
+        if (why === 'timeout') throw new Error(`模型 ${Math.round(ms / 1000)} 秒没回话`);
+        throw e;
       } finally {
         clearTimeout(timer);
+        this._live.delete(ctrl);
       }
     },
 
-    async _readStream(res, onChunk) {
+    // 正在进行的请求。玩家点「不等了」或界面重建时一起掐掉
+    _live: new Set(),
+    abortAll() {
+      for (const c of Array.from(this._live)) c._stop();
+    },
+
+    async _readStream(res, onChunk, kick) {
       const reader = res.body.getReader();
       const dec = new TextDecoder();
       const p = PROVIDERS[this.config.provider] || PROVIDERS.custom;
@@ -221,6 +242,7 @@
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
+        if (kick) kick();
         buf += dec.decode(value, { stream: true });
         const lines = buf.split('\n');
         buf = lines.pop();
@@ -266,7 +288,7 @@
 
     async epilogue(s, ending) {
       const user = G.Prompts.epilogue(s, ending);
-      const text = await this.call(G.Prompts.SYSTEM, user, { important: true, maxTokens: 1200 });
+      const text = await this.call(G.Prompts.SYSTEM, user, { important: true, maxTokens: 1200, timeout: 90000 });
       return this.sanitize(text);
     },
 
@@ -284,7 +306,7 @@
       let raw;
       try {
         raw = await this.call(null, G.Prompts.parseAction(s, freeText, ev), {
-          maxTokens: 500, temperature: 0.2
+          maxTokens: 500, temperature: 0.2, timeout: 25000
         });
       } catch (e) {
         return G.Fallback.parseAction(s, freeText, ev);
@@ -296,7 +318,7 @@
         try {
           raw = await this.call(null,
             G.Prompts.parseAction(s, freeText, ev) + '\n\n注意：上一次输出不是合法 JSON。只输出 JSON 对象。',
-            { maxTokens: 500, temperature: 0 });
+            { maxTokens: 500, temperature: 0, timeout: 15000 });
           obj = this._extractJSON(raw);
         } catch (e) { /* fallthrough */ }
       }

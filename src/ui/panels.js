@@ -278,7 +278,7 @@
       if (s.player.role === 'teacher' && s.faculty) {
         const f = s.faculty;
         const hot = f.disciples.filter(d => !d.graduated && !d.broken && d.pressure >= 60);
-        for (const d of hot) push(`${d.name}压力很大（${Math.round(d.pressure)}）。再逼下去要出事。`, d.pressure >= 70 ? 'danger' : 'warn');
+        for (const d of hot) push(`${d.name}压力很大（${Math.round(d.pressure)}）。再逼下去要出事——日程里排一次「给弟子放假」。`, d.pressure >= 70 ? 'danger' : 'warn');
         if (!f.prepared) push('一份教案都没有。下堂正课会砸。', 'warn');
         const idle = f.disciples.filter(d => !d.graduated && !d.broken &&
           s.time.absoluteTurn - (d.lastTutor || d.joinedTurn || 0) >= 6 * 21);

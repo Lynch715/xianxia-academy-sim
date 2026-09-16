@@ -622,6 +622,12 @@
                 "type": "demon",
                 "value": 8,
                 "source": "repress"
+              },
+              {
+                "type": "flag",
+                "key": "leak_incident",
+                "op": "add",
+                "value": 1
               }
             ]
           }
@@ -1213,6 +1219,12 @@
                 "type": "storyline",
                 "key": "mole",
                 "value": 25
+              },
+              {
+                "type": "flag",
+                "key": "leak_incident",
+                "op": "add",
+                "value": 1
               }
             ]
           },

@@ -729,6 +729,12 @@
                 "key": "mole",
                 "value": 12,
                 "clue": "白鹿卿家族档案"
+              },
+              {
+                "type": "flag",
+                "key": "leak_incident",
+                "op": "add",
+                "value": 1
               }
             ]
           }
@@ -763,6 +769,12 @@
                 "type": "storyline",
                 "key": "mole",
                 "value": 10
+              },
+              {
+                "type": "flag",
+                "key": "leak_incident",
+                "op": "add",
+                "value": 1
               }
             ]
           },

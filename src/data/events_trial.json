@@ -49,7 +49,8 @@
               {
                 "type": "flag",
                 "key": "vein_anomaly",
-                "value": 2
+                "value": 2,
+                "op": "add"
               },
               {
                 "type": "attr",
@@ -69,7 +70,8 @@
               {
                 "type": "flag",
                 "key": "vein_anomaly",
-                "value": 2
+                "value": 2,
+                "op": "add"
               }
             ]
           },
@@ -79,7 +81,8 @@
               {
                 "type": "flag",
                 "key": "vein_anomaly",
-                "value": 1
+                "value": 1,
+                "op": "add"
               }
             ]
           },
@@ -119,7 +122,8 @@
               {
                 "type": "flag",
                 "key": "vein_anomaly",
-                "value": 1
+                "value": 1,
+                "op": "add"
               }
             ]
           }
@@ -161,7 +165,8 @@
               {
                 "type": "flag",
                 "key": "vein_anomaly",
-                "value": 1
+                "value": 1,
+                "op": "add"
               }
             ]
           },
@@ -181,7 +186,8 @@
               {
                 "type": "flag",
                 "key": "vein_anomaly",
-                "value": 1
+                "value": 1,
+                "op": "add"
               }
             ]
           },
@@ -249,7 +255,8 @@
               {
                 "type": "flag",
                 "key": "vein_anomaly",
-                "value": 1
+                "value": 1,
+                "op": "add"
               }
             ]
           },
@@ -270,7 +277,8 @@
               {
                 "type": "flag",
                 "key": "vein_anomaly",
-                "value": 1
+                "value": 1,
+                "op": "add"
               }
             ]
           },
@@ -280,7 +288,8 @@
               {
                 "type": "flag",
                 "key": "vein_anomaly",
-                "value": 1
+                "value": 1,
+                "op": "add"
               }
             ]
           },
@@ -628,7 +637,8 @@
               {
                 "type": "flag",
                 "key": "leak_incident",
-                "value": 1
+                "value": 1,
+                "op": "add"
               },
               {
                 "type": "attr",
@@ -648,7 +658,8 @@
               {
                 "type": "flag",
                 "key": "leak_incident",
-                "value": 1
+                "value": 1,
+                "op": "add"
               }
             ]
           },
@@ -658,7 +669,8 @@
               {
                 "type": "flag",
                 "key": "leak_incident",
-                "value": 1
+                "value": 1,
+                "op": "add"
               }
             ]
           },
@@ -668,7 +680,8 @@
               {
                 "type": "flag",
                 "key": "leak_incident",
-                "value": 1
+                "value": 1,
+                "op": "add"
               },
               {
                 "type": "reputation",
@@ -686,7 +699,8 @@
               {
                 "type": "flag",
                 "key": "leak_incident",
-                "value": 1
+                "value": 1,
+                "op": "add"
               },
               {
                 "type": "flag",
@@ -712,7 +726,8 @@
               {
                 "type": "flag",
                 "key": "leak_incident",
-                "value": 1
+                "value": 1,
+                "op": "add"
               },
               {
                 "type": "exp",
@@ -750,7 +765,8 @@
               {
                 "type": "flag",
                 "key": "leak_incident",
-                "value": 1
+                "value": 1,
+                "op": "add"
               }
             ]
           },
@@ -770,7 +786,8 @@
               {
                 "type": "flag",
                 "key": "leak_incident",
-                "value": 1
+                "value": 1,
+                "op": "add"
               }
             ]
           },
@@ -780,7 +797,8 @@
               {
                 "type": "flag",
                 "key": "leak_incident",
-                "value": 1
+                "value": 1,
+                "op": "add"
               }
             ]
           },
@@ -799,7 +817,8 @@
               {
                 "type": "flag",
                 "key": "leak_incident",
-                "value": 1
+                "value": 1,
+                "op": "add"
               }
             ]
           },
@@ -824,7 +843,8 @@
               {
                 "type": "flag",
                 "key": "leak_incident",
-                "value": 1
+                "value": 1,
+                "op": "add"
               },
               {
                 "type": "flag",

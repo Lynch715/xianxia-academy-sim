@@ -57,6 +57,12 @@
               {
                 "type": "reputation",
                 "value": 4
+              },
+              {
+                "type": "flag",
+                "key": "leak_incident",
+                "op": "add",
+                "value": 1
               }
             ]
           },
@@ -189,6 +195,12 @@
               {
                 "type": "reputation",
                 "value": 6
+              },
+              {
+                "type": "flag",
+                "key": "leak_incident",
+                "op": "add",
+                "value": 1
               }
             ]
           },
@@ -209,6 +221,12 @@
               {
                 "type": "flag",
                 "key": "framed_resolved"
+              },
+              {
+                "type": "flag",
+                "key": "leak_incident",
+                "op": "add",
+                "value": 1
               }
             ]
           },
@@ -588,6 +606,12 @@
                 "npc": "npc_tantaiwujiu",
                 "awe": 12,
                 "favor": 8
+              },
+              {
+                "type": "flag",
+                "key": "leak_incident",
+                "op": "add",
+                "value": 1
               }
             ]
           },
@@ -602,6 +626,12 @@
                 "type": "storyline",
                 "key": "mole",
                 "value": 15
+              },
+              {
+                "type": "flag",
+                "key": "leak_incident",
+                "op": "add",
+                "value": 1
               }
             ]
           },

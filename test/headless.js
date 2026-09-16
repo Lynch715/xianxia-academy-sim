@@ -391,7 +391,7 @@ function effectTypes(G) {
   // broken 应该同时打上事故标记
   GT.Event.applyOutcome(st, fakeEv,
     { effects: [{ type: 'disciple', pick: 'weakest', broken: true }] }, 'good');
-  check(st.flags.disciple_accident === true, 'disciple.broken 未触发事故标记');
+  check(G.Faculty.accidentCount(st) === 1, 'disciple.broken 未触发事故标记');
   auditState(GT, 'effect-teacher');
 
   // 院主：gov
@@ -1071,7 +1071,7 @@ for (const role of ['teacher', 'headmaster']) {
 // 三条路线的专属结局都要能判出来
 const roleEndings = [
   { role: 'teacher',    apply: st => { st.flags.became_head = true; st.academy.year = 9; }, expect: 'college_head' },
-  { role: 'teacher',    apply: st => { st.flags.disciple_accident = true; }, expect: 'teaching_accident' },
+  { role: 'teacher',    apply: st => { st.flags.disciple_accident = 2; }, expect: 'teaching_accident' },
   { role: 'teacher',    apply: st => { st.flags.jindan_disciples = 5; st.academy.year = 9; }, expect: 'disciples_everywhere' },
   { role: 'headmaster', apply: st => { st.reputation.value = 90; st.flags.threat_resolved = true; st.academy.year = 11; }, expect: 'restorer' },
   { role: 'headmaster', apply: st => { st.flags.reforms_passed = 3; st.academy.year = 11; }, expect: 'reformer' },

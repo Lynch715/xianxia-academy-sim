@@ -10,8 +10,9 @@
     pool() { return G.DATA.events; },
 
     // ---------- 条件求值 ----------
-    match(s, ev) {
+    match(s, ev, opt) {
       const c = ev.conditions || {};
+      opt = opt || {};
 
       if (c.role && !c.role.includes(s.player.role)) return false;
       if (c.college && !c.college.includes(s.player.college)) return false;
@@ -22,7 +23,9 @@
       if (c.maxWeek && week > c.maxWeek) return false;
       if (c.minTurn && s.time.absoluteTurn < c.minTurn) return false;
       if (c.maxTurn && s.time.absoluteTurn > c.maxTurn) return false;
-      if (c.phase && !c.phase.includes(s.time.phase)) return false;
+      // 事件是周初一次抽完的，那时恒为清晨。时段要求改由 Game.beginWeek
+      // 在安排插入位置时满足，抽取时不看。
+      if (c.phase && !opt.anyPhase && !c.phase.includes(s.time.phase)) return false;
       if (c.month && !c.month.includes(s.time.month)) return false;
       if (c.year && !c.year.includes(s.academy.year)) return false;
 
@@ -79,14 +82,16 @@
       for (const id of (ev.actors || [])) if (!G.NPC.available(s, id)) return false;
 
       // 动态主角（感情线）：没有合适的人就不触发
-      if (ev.dynamicActor && !this.resolveDynamicActor(s, ev.dynamicActor)) return false;
+      if (ev.dynamicActor && !(opt.actor && G.NPC.available(s, opt.actor)) &&
+          !this.resolveDynamicActor(s, ev.dynamicActor)) return false;
 
       // 冷却
       const cd = s.events.cooldowns[ev.id];
       if (cd && s.time.absoluteTurn < cd) return false;
 
-      // 同一 NPC 三周内不重复（一周 21 个时段）
-      for (const id of (ev.actors || [])) {
+      // 同一 NPC 三周内不重复（一周 21 个时段）。事件链的下一章不受这条限制，
+      // 否则间隔一两周的续章总要多等。
+      if (!opt.chain) for (const id of (ev.actors || [])) {
         const last = s.flags['_npcEvt_' + id] || -9999;
         if (s.time.absoluteTurn - last < 3 * 21) return false;
       }
@@ -112,27 +117,37 @@
       const out = [];
 
       // 1. 固定事件优先
+      // 固定事件也要过身份、周数等条件（冷却和 NPC 间隔除外）；
+      // 不满足的今年就跳过，别把学生的开学典礼塞给院主。
       const fixed = G.Time.pendingFixedEvent(s);
       if (fixed) {
         const ev = this.pool().find(e => e.id === fixed.id);
-        if (ev) { out.push(this.instantiate(s, ev)); G.Time.markFixedDone(s, fixed.key); }
+        G.Time.markFixedDone(s, fixed.key);
+        if (ev && this.match(s, { ...ev, actors: [] }, { anyPhase: true, chain: true })) {
+          out.push(this.instantiate(s, ev));
+        }
       }
 
-      // 2. 事件链续接
+      // 2. 事件链续接。续章迟迟对不上条件（人不在、身份变了）就作废，
+      // 不能一直挂在「当下要紧」里。
+      const CHAIN_EXPIRE = 12 * 21;
       for (const chain of s.events.activeChains.slice()) {
-        if (s.time.absoluteTurn >= chain.dueTurn) {
-          const ev = this.pool().find(e => e.id === chain.eventId);
-          if (ev && this.match(s, ev)) {
-            out.push(this.instantiate(s, ev));
-            s.events.activeChains = s.events.activeChains.filter(x => x !== chain);
-          }
+        if (s.time.absoluteTurn < chain.dueTurn) continue;
+        const ev = this.pool().find(e => e.id === chain.eventId);
+        const drop = () => { s.events.activeChains = s.events.activeChains.filter(x => x !== chain); };
+        if (!ev) { drop(); continue; }
+        if (this.match(s, ev, { anyPhase: true, chain: true, actor: chain.actor })) {
+          out.push(this.instantiate(s, ev, { actor: chain.actor }));
+          drop();
+        } else if (s.time.absoluteTurn > chain.dueTurn + CHAIN_EXPIRE) {
+          drop();
         }
       }
 
       // 3. 随机池
       const n = Math.max(0, G.rng.int(1, 3) - out.length);
       if (n > 0) {
-        const cands = this.pool().filter(e => !e.fixed && !e.chainOnly && this.match(s, e));
+        const cands = this.pool().filter(e => !e.fixed && !e.chainOnly && this.match(s, e, { anyPhase: true }));
         const picked = G.rng.sample(cands, n, e => this.weightOf(s, e));
         for (const e of picked) out.push(this.instantiate(s, e));
       }
@@ -173,7 +188,7 @@
     },
 
     /** 把事件模板实例化（选变体、绑定 NPC、算出选项的模糊提示） */
-    instantiate(s, ev) {
+    instantiate(s, ev, opt) {
       const inst = JSON.parse(JSON.stringify(ev));
       if (inst.variants && inst.variants.length) {
         const v = G.rng.pick(inst.variants);
@@ -183,7 +198,8 @@
       inst.actors = inst.actors || [];
 
       if (inst.dynamicActor) {
-        const id = this.resolveDynamicActor(s, inst.dynamicActor);
+        const id = (opt?.actor && G.NPC.available(s, opt.actor))
+          ? opt.actor : this.resolveDynamicActor(s, inst.dynamicActor);
         if (id && !inst.actors.includes(id)) inst.actors.unshift(id);
         inst._dynamic = id;
         // 把文本里的占位换成具体名字。effect 的 note 也要换——
@@ -267,11 +283,16 @@
       for (const id of ev.actors) s.flags['_npcEvt_' + id] = s.time.absoluteTurn;
 
       // 事件链
-      if (ev.chainNext && (ev.chainNext.on || []).includes(grade)) {
+      // chainNext 可以是一个或多个；options 限定只有选了哪些选项才接续
+      const nexts = Array.isArray(ev.chainNext) ? ev.chainNext : (ev.chainNext ? [ev.chainNext] : []);
+      for (const cn of nexts) {
+        if (!(cn.on || []).includes(grade)) continue;
+        if (cn.options && !cn.options.includes(optionId)) continue;
         s.events.activeChains.push({
           chainId: ev.chainId || ev.id,
-          eventId: ev.chainNext.eventId,
-          dueTurn: s.time.absoluteTurn + (ev.chainNext.delayWeeks || 1) * 21
+          eventId: cn.eventId,
+          actor: ev._dynamic || null,
+          dueTurn: s.time.absoluteTurn + (cn.delayWeeks || 1) * 21
         });
       }
 
@@ -403,7 +424,9 @@
             break;
           }
           case 'flag': {
-            deltas.push({ path: `flags.${eff.key}`, op: 'set', value: eff.value === undefined ? true : eff.value });
+            // op:add 用于计数型 flag（暗线解锁条件之类），set 会把别处攒下的数冲掉
+            if (eff.op === 'add') deltas.push({ path: `flags.${eff.key}`, op: 'add', value: eff.value ?? 1 });
+            else deltas.push({ path: `flags.${eff.key}`, op: 'set', value: eff.value === undefined ? true : eff.value });
             break;
           }
           case 'storyline': {
@@ -442,8 +465,8 @@
             });
             deltas.push({ path: 'faculty.disciples', op: 'set', value: next });
             if (eff.broken) {
-              deltas.push({ path: 'flags.disciple_accident', op: 'set', value: true });
-              summary.push(`${d.name}出事了`);
+              deltas.push({ path: 'flags.disciple_accident', op: 'set', value: G.Faculty.accidentCount(s) + 1 });
+              summary.push(`${d.name}离开了你的门下`);
             } else {
               const bits = [];
               if (eff.exp) bits.push(`修为${eff.exp > 0 ? '+' : ''}${Math.round(eff.exp * scale)}`);

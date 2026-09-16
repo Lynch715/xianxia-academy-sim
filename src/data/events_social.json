@@ -1396,7 +1396,8 @@
               {
                 "type": "flag",
                 "key": "vein_anomaly",
-                "value": 1
+                "value": 1,
+                "op": "add"
               }
             ]
           },

@@ -52,7 +52,7 @@
     {
       id: 'teaching_accident', no: 13, name: '教学事故', icon: '⚠️', type: 'tragedy', prio: 87,
       role: 'teacher',
-      cond: s => s.flags.disciple_accident === true,
+      cond: s => G.Faculty.accidentCount(s) >= 2,
       text: '你把辞呈放在院首桌上时，手是抖的。你不是怕处分。你只是一遍一遍地想，如果那天你再仔细一点。',
       quote: '对不起。这三个字我会说一辈子。', scene: 'scene_mingde'
     },
@@ -75,15 +75,6 @@
     },
 
     // ---------- 情感型 ----------
-    {
-      id: 'forbidden_love', no: 12, name: '禁忌之恋', icon: '💔', type: 'emotion', prio: 80,
-      role: 'teacher',
-      cond: s => s.flags.forbidden_romance_exposed === true,
-      text: s => s.flags.forbidden_choice === 'accept'
-        ? '你收拾行囊时，那个人站在门口。你说"等你毕业"。你知道那可能是三年，也可能是一辈子。'
-        : '你站在全院面前说："道之所在，心之所安。若这是错，我甘受天罚。"',
-      quote: '', scene: 'scene_mingde'
-    },
     {
       id: 'daolv', no: 4, name: '道侣双修', icon: '💕', type: 'emotion', prio: 79,
       cond: s => Object.values(s.relations).some(r => r.romance === 'daolv'),
@@ -191,8 +182,8 @@
       if (s.ended) return true;
       if (s.flags.deviation_fatal || s.flags.expelled || s.flags.sacrificed_self) return true;
       if (s.flags.died_defending || s.flags.forced_abdication) return true;
-      // 弟子在你手上出了事，教习路线到此为止
-      if (s.player.role === 'teacher' && s.flags.disciple_accident) return true;
+      // 弟子在你手上出了两次事，教习路线到此为止
+      if (s.player.role === 'teacher' && G.Faculty.accidentCount(s) >= 2) return true;
       // 走入封印室就不再出来了，这是即时终局
       if (s.flags.choose_guard_seal) return true;
       // 毕业当年做完去向选择即收束

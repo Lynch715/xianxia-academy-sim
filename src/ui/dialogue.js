@@ -48,7 +48,9 @@
 
         // ---- 开场 ----
         let t = typing();
+        let stop = G.UI.slowHint(t, 8000);
         await G.Dialogue.open(s, ss, opener);
+        stop();
         t.remove();
         const first = ss.turns[ss.turns.length - 1];
         if (!first || !first.text) {
@@ -94,7 +96,9 @@
           foot.querySelectorAll('button,input').forEach(x => x.disabled = true);
           addMe(text);
           const tt = typing();
+          const stopHint = G.UI.slowHint(tt, 8000);
           await G.Dialogue.reply(s, ss, text);
+          stopHint();
           tt.remove();
           const last = ss.turns[ss.turns.length - 1];
           if (last && last.who === 'npc' && last.text) addNpc(last.text, last.expr);

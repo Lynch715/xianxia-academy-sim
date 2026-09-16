@@ -11,7 +11,7 @@
     "conditions": {
       "role": ["student", "teacher"], "minWeek": 52,
       "relations": { "npc_sumuhan": { "favor": [50, 100], "trust": [50, 100] } },
-      "notFlags": ["love_su_1"]
+      "notFlags": ["love_su_1", "in_relationship"]
     },
     "seed": "丹房的灯亮了三夜。\n\n第三夜你推门进去时，她正趴在案上睡着——手里还捏着笔，笔尖在纸上洇开一大团墨。\n\n你替她把笔抽出来。她醒了，抬头看你，眼睛里有一瞬的茫然，那种茫然你从没在她脸上见过。\n\n「几时了。」她问。\n\n「寅时。」\n\n她「哦」了一声，低头继续看方子。过了一会儿她忽然说：「你为什么每次都来。」",
     "facts": ["苏暮寒连熬三夜，趴在案上睡着了", "她问你为什么每次都来"],
@@ -131,7 +131,7 @@
     "conditions": {
       "role": ["student", "teacher"], "minWeek": 54,
       "relations": { "npc_liumianyan": { "favor": [55, 100], "trust": [50, 100] } },
-      "notFlags": ["love_liu_1"]
+      "notFlags": ["love_liu_1", "in_relationship"]
     },
     "seed": "她今天没喝酒。\n\n琴在膝上，但她没有弹，只是用指腹一遍遍摩着第七根弦。那根弦比别的旧，颜色也深。\n\n「这根是原配的。」她忽然说，「别的都换过。就这根，换不了。」\n\n她抬头看你：「你知道为什么吗。」\n\n「为什么。」\n\n「因为换了，我就想不起这琴原来是什么声音了。」",
     "facts": ["柳眠烟今天没喝酒", "琴上第七根弦是原配的，她不肯换", "她说换了就想不起原来的声音"],
@@ -199,7 +199,7 @@
           "good": { "narrative": "你退了出去。等她叫你时，匣子已经合上了。\n\n她只说了一句：「他写了半张曲子。」", "effects": [ { "type": "relation", "favor": 18, "trust": 24, "bond": 20 }, { "type": "storyline", "key": "exHead", "value": 18 }, { "type": "flag", "key": "liu_box_opened" } ] },
           "plain": { "narrative": "她开了，看了，合上了。全程没有说话。\n\n回程的路上她也没有说。", "effects": [ { "type": "relation", "favor": 10, "trust": 12 }, { "type": "storyline", "key": "exHead", "value": 10 }, { "type": "flag", "key": "liu_box_opened" } ] },
           "bad": { "narrative": "你退得太远。等你听见动静赶回去，她已经把匣子重新锁上了。\n\n「没什么。」她说。", "effects": [ { "type": "relation", "favor": 5, "trust": 8 }, { "type": "storyline", "key": "exHead", "value": 6 } ] },
-          "terrible": { "narrative": "你退出去的时候，封印室的门被震开了一线。\n\n里面的东西感应到了活人。\n\n她把你推出灵墟，自己留在里面封门。等她出来时天已经黑了，她的头发白了一缕。\n\n匣子丢在了里面。", "effects": [ { "type": "relation", "favor": 10, "bond": 22, "trust": 12 }, { "type": "storyline", "key": "seal", "value": 20 }, { "type": "flag", "key": "vein_anomaly", "value": 2 }, { "type": "demon", "value": 12, "source": "guilt", "note": "她那一缕白掉的头发" } ] }
+          "terrible": { "narrative": "你退出去的时候，封印室的门被震开了一线。\n\n里面的东西感应到了活人。\n\n她把你推出灵墟，自己留在里面封门。等她出来时天已经黑了，她的头发白了一缕。\n\n匣子丢在了里面。", "effects": [ { "type": "relation", "favor": 10, "bond": 22, "trust": 12 }, { "type": "storyline", "key": "seal", "value": 20 }, { "type": "flag", "key": "vein_anomaly", "op": "add", "value": 2 }, { "type": "demon", "value": 12, "source": "guilt", "note": "她那一缕白掉的头发" } ] }
         } }
     ],
     "chainNext": { "on": ["perfect", "good"], "eventId": "evt_love_liu_3", "delayWeeks": 12 }
@@ -251,7 +251,7 @@
     "conditions": {
       "role": ["student", "teacher"], "minWeek": 58,
       "relations": { "npc_zhonglihen": { "favor": [55, 100], "trust": [50, 100] } },
-      "notFlags": ["love_zhong_1"]
+      "notFlags": ["love_zhong_1", "in_relationship"]
     },
     "seed": "他请你喝茶，第七次。\n\n前六次都是有事——查案、问话、点拨。这一次案上什么卷宗都没有。\n\n茶过三巡，他忽然说：「你有没有发现，我从来不问你的事。」\n\n你说是。\n\n「因为我一问，就变成审。」他放下茶盏，「两百年了，我已经不太会用别的方式跟人说话。」\n\n他抬起头，笑容还是那个笑容：「今天我想试一次。」",
     "facts": ["钟离衡第七次请你喝茶，案上没有卷宗", "他说自己已经不会用别的方式跟人说话", "他说今天想试一次"],
@@ -299,26 +299,26 @@
     "options": [
       { "id": "A", "text": "一封一封看完", "reason": 16, "check": { "attr": "shen", "difficulty": 55 },
         "outcomes": {
-          "perfect": { "narrative": "你看了两个时辰。\n\n二十七封信，前十六封是回绝——措辞一次比一次硬。第十七封开始变了，他开始「答应」一些无关紧要的小事。\n\n最后一封的日期是三个月前。内容是一份假的丹方录目录。\n\n你抬起头：「你在喂他们假消息。」\n\n他终于笑了，那种松下来的笑：「十一年了。你是第一个看完就明白的。」\n\n「为什么不上报。」\n\n「因为上报了，这条线就断了。」他把茶推给你，「而这条线，现在通到了赤焰宗宗主的案头。」", "effects": [ { "type": "relation", "favor": 28, "trust": 32, "bond": 26, "note": "你看完就明白了他在做什么" }, { "type": "storyline", "key": "mole", "value": 35, "clue": "钟离衡的密信" }, { "type": "flag", "key": "zhong_innocent_clue" }, { "type": "flag", "key": "zhong_ally" }, { "type": "attr", "key": "shen", "value": 1 } ] },
-          "good": { "narrative": "你看完了，看出他是在周旋，但没看出全部。\n\n他补齐了剩下的部分。", "effects": [ { "type": "relation", "favor": 20, "trust": 25, "bond": 20 }, { "type": "storyline", "key": "mole", "value": 25, "clue": "钟离衡的密信" }, { "type": "flag", "key": "zhong_innocent_clue" }, { "type": "flag", "key": "zhong_ally" } ] },
-          "plain": { "narrative": "信太多，你只看了一半。看完的那一半看不出问题。\n\n他没有解释。", "effects": [ { "type": "relation", "favor": 10, "trust": 12 }, { "type": "storyline", "key": "mole", "value": 12 } ] },
-          "bad": { "narrative": "你看得太快，把第十七封之后的「答应」当成了通敌的证据。\n\n他看着你的表情变化，什么也没说。", "effects": [ { "type": "relation", "favor": -6, "trust": -8 }, { "type": "storyline", "key": "mole", "value": 15 } ] },
-          "terrible": { "narrative": "你只看了三封就合上了。\n\n「够了。」你说。\n\n他点点头，把信收起来：「是够了。」\n\n他送你出门，礼数周全。那二十七封信第二天出现在了执事堂——是他自己交上去的。\n\n查了半年，最后不了了之。但从此他见你只谈公事。", "effects": [ { "type": "relation", "favor": -20, "trust": -20 }, { "type": "storyline", "key": "mole", "value": 20 }, { "type": "demon", "value": 10, "source": "guilt", "note": "你只看了三封" } ] }
+          "perfect": { "narrative": "你看了两个时辰。\n\n二十七封信，前十六封是回绝——措辞一次比一次硬。第十七封开始变了，他开始「答应」一些无关紧要的小事。\n\n最后一封的日期是三个月前。内容是一份假的丹方录目录。\n\n你抬起头：「你在喂他们假消息。」\n\n他终于笑了，那种松下来的笑：「十一年了。你是第一个看完就明白的。」\n\n「为什么不上报。」\n\n「因为上报了，这条线就断了。」他把茶推给你，「而这条线，现在通到了赤焰宗宗主的案头。」", "effects": [ { "type": "flag", "key": "leak_incident", "op": "add", "value": 1 }, { "type": "relation", "favor": 28, "trust": 32, "bond": 26, "note": "你看完就明白了他在做什么" }, { "type": "storyline", "key": "mole", "value": 35, "clue": "钟离衡的密信" }, { "type": "flag", "key": "zhong_innocent_clue" }, { "type": "flag", "key": "zhong_ally" }, { "type": "attr", "key": "shen", "value": 1 } ] },
+          "good": { "narrative": "你看完了，看出他是在周旋，但没看出全部。\n\n他补齐了剩下的部分。", "effects": [ { "type": "flag", "key": "leak_incident", "op": "add", "value": 1 }, { "type": "relation", "favor": 20, "trust": 25, "bond": 20 }, { "type": "storyline", "key": "mole", "value": 25, "clue": "钟离衡的密信" }, { "type": "flag", "key": "zhong_innocent_clue" }, { "type": "flag", "key": "zhong_ally" } ] },
+          "plain": { "narrative": "信太多，你只看了一半。看完的那一半看不出问题。\n\n他没有解释。", "effects": [ { "type": "flag", "key": "leak_incident", "op": "add", "value": 1 }, { "type": "relation", "favor": 10, "trust": 12 }, { "type": "storyline", "key": "mole", "value": 12 } ] },
+          "bad": { "narrative": "你看得太快，把第十七封之后的「答应」当成了通敌的证据。\n\n他看着你的表情变化，什么也没说。", "effects": [ { "type": "flag", "key": "leak_incident", "op": "add", "value": 1 }, { "type": "relation", "favor": -6, "trust": -8 }, { "type": "storyline", "key": "mole", "value": 15 } ] },
+          "terrible": { "narrative": "你只看了三封就合上了。\n\n「够了。」你说。\n\n他点点头，把信收起来：「是够了。」\n\n他送你出门，礼数周全。那二十七封信第二天出现在了执事堂——是他自己交上去的。\n\n查了半年，最后不了了之。但从此他见你只谈公事。", "effects": [ { "type": "flag", "key": "leak_incident", "op": "add", "value": 1 }, { "type": "relation", "favor": -20, "trust": -20 }, { "type": "storyline", "key": "mole", "value": 20 }, { "type": "demon", "value": 10, "source": "guilt", "note": "你只看了三封" } ] }
         } },
       { "id": "B", "text": "不看。直接问他：你是不是内鬼", "reason": 8, "check": { "attr": "shi", "difficulty": 60 },
         "outcomes": {
-          "perfect": { "narrative": "你把信推了回去，问了那一句。\n\n他放下茶盏，认真地看了你很久。\n\n「不是。」他说。就两个字，没有解释，没有辩白。\n\n「好。」你说，「那我信你。」\n\n这次轮到他愣住了。\n\n很久之后他开口，声音有点不稳：「两百年了。」他说，「你是第一个不用看证据就说信我的人。」\n\n他把那叠信推到烛火上：「那就不用看了。」", "effects": [ { "type": "relation", "favor": 32, "trust": 35, "bond": 30, "note": "你不用看证据就说信他，他把信烧了" }, { "type": "storyline", "key": "mole", "value": 25 }, { "type": "flag", "key": "zhong_innocent_clue" }, { "type": "flag", "key": "zhong_ally" }, { "type": "attr", "key": "xin", "value": 1 } ] },
-          "good": { "narrative": "「不是。」他说。\n\n然后他还是让你把信看了——「不为别的，为你自己心里踏实。」", "effects": [ { "type": "relation", "favor": 22, "trust": 26, "bond": 22 }, { "type": "storyline", "key": "mole", "value": 25, "clue": "钟离衡的密信" }, { "type": "flag", "key": "zhong_innocent_clue" }, { "type": "flag", "key": "zhong_ally" } ] },
-          "plain": { "narrative": "「不是。」他说完就沉默了。信还摊在那儿。", "effects": [ { "type": "relation", "favor": 10, "trust": 12 }, { "type": "storyline", "key": "mole", "value": 12 } ] },
-          "bad": { "narrative": "他笑了：「你觉得我会说是吗。」\n\n这个回答什么也没回答。", "effects": [ { "type": "relation", "trust": -5 }, { "type": "storyline", "key": "mole", "value": 8 } ] },
+          "perfect": { "narrative": "你把信推了回去，问了那一句。\n\n他放下茶盏，认真地看了你很久。\n\n「不是。」他说。就两个字，没有解释，没有辩白。\n\n「好。」你说，「那我信你。」\n\n这次轮到他愣住了。\n\n很久之后他开口，声音有点不稳：「两百年了。」他说，「你是第一个不用看证据就说信我的人。」\n\n他把那叠信推到烛火上：「那就不用看了。」", "effects": [ { "type": "flag", "key": "leak_incident", "op": "add", "value": 1 }, { "type": "relation", "favor": 32, "trust": 35, "bond": 30, "note": "你不用看证据就说信他，他把信烧了" }, { "type": "storyline", "key": "mole", "value": 25 }, { "type": "flag", "key": "zhong_innocent_clue" }, { "type": "flag", "key": "zhong_ally" }, { "type": "attr", "key": "xin", "value": 1 } ] },
+          "good": { "narrative": "「不是。」他说。\n\n然后他还是让你把信看了——「不为别的，为你自己心里踏实。」", "effects": [ { "type": "flag", "key": "leak_incident", "op": "add", "value": 1 }, { "type": "relation", "favor": 22, "trust": 26, "bond": 22 }, { "type": "storyline", "key": "mole", "value": 25, "clue": "钟离衡的密信" }, { "type": "flag", "key": "zhong_innocent_clue" }, { "type": "flag", "key": "zhong_ally" } ] },
+          "plain": { "narrative": "「不是。」他说完就沉默了。信还摊在那儿。", "effects": [ { "type": "flag", "key": "leak_incident", "op": "add", "value": 1 }, { "type": "relation", "favor": 10, "trust": 12 }, { "type": "storyline", "key": "mole", "value": 12 } ] },
+          "bad": { "narrative": "他笑了：「你觉得我会说是吗。」\n\n这个回答什么也没回答。", "effects": [ { "type": "flag", "key": "leak_incident", "op": "add", "value": 1 }, { "type": "relation", "trust": -5 }, { "type": "storyline", "key": "mole", "value": 8 } ] },
           "terrible": { "narrative": "你问得咄咄逼人，还带了「果然」两个字。\n\n他的笑第一次彻底消失了。\n\n「果然。」他重复了一遍，「原来你早就这么想了。」\n\n他把信一封封收好：「那这些你就不必看了。」", "effects": [ { "type": "relation", "favor": -25, "trust": -25 }, { "type": "flag", "key": "zhong_hostile" }, { "type": "demon", "value": 10, "source": "grudge", "npc": "npc_zhonglihen" } ] }
         } },
       { "id": "C", "text": "问他为什么现在给你看", "reason": 14, "check": { "attr": "shi", "difficulty": 50 },
         "outcomes": {
-          "perfect": { "narrative": "他沉默了很久。\n\n「因为再过些时候，」他说，「我就不确定自己还能不能全身而退了。」\n\n他把最后一封信抽出来：「这一封，是他们要我提供学院禁制排布图。」\n\n「你给了吗。」\n\n「给了假的。」他把信折好，「但他们迟早会发现。」\n\n他抬起头，笑了一下——这个笑很难看：「所以我想在那之前，让至少一个人知道我不是那样的人。」\n\n「为什么是我。」\n\n「因为我不想让你从别人嘴里听说。」", "effects": [ { "type": "relation", "favor": 30, "trust": 32, "bond": 30, "note": "他说不想让你从别人嘴里听说" }, { "type": "storyline", "key": "mole", "value": 32, "clue": "钟离衡的密信" }, { "type": "flag", "key": "zhong_innocent_clue" }, { "type": "flag", "key": "zhong_ally" }, { "type": "flag", "key": "zhong_at_risk" } ] },
-          "good": { "narrative": "「因为你迟早会知道。」他说，「我宁可你从我这儿知道。」", "effects": [ { "type": "relation", "favor": 20, "trust": 24, "bond": 20 }, { "type": "storyline", "key": "mole", "value": 22, "clue": "钟离衡的密信" }, { "type": "flag", "key": "zhong_innocent_clue" }, { "type": "flag", "key": "zhong_ally" } ] },
-          "plain": { "narrative": "他笑了笑：「到时候了。」这话说了等于没说。", "effects": [ { "type": "relation", "favor": 8, "trust": 10 }, { "type": "storyline", "key": "mole", "value": 10 } ] },
-          "bad": { "narrative": "「你不必知道为什么。」他说，「你只需要决定交不交。」", "effects": [ { "type": "relation", "favor": 4, "trust": 5 }, { "type": "storyline", "key": "mole", "value": 8 } ] },
+          "perfect": { "narrative": "他沉默了很久。\n\n「因为再过些时候，」他说，「我就不确定自己还能不能全身而退了。」\n\n他把最后一封信抽出来：「这一封，是他们要我提供学院禁制排布图。」\n\n「你给了吗。」\n\n「给了假的。」他把信折好，「但他们迟早会发现。」\n\n他抬起头，笑了一下——这个笑很难看：「所以我想在那之前，让至少一个人知道我不是那样的人。」\n\n「为什么是我。」\n\n「因为我不想让你从别人嘴里听说。」", "effects": [ { "type": "flag", "key": "leak_incident", "op": "add", "value": 1 }, { "type": "relation", "favor": 30, "trust": 32, "bond": 30, "note": "他说不想让你从别人嘴里听说" }, { "type": "storyline", "key": "mole", "value": 32, "clue": "钟离衡的密信" }, { "type": "flag", "key": "zhong_innocent_clue" }, { "type": "flag", "key": "zhong_ally" }, { "type": "flag", "key": "zhong_at_risk" } ] },
+          "good": { "narrative": "「因为你迟早会知道。」他说，「我宁可你从我这儿知道。」", "effects": [ { "type": "flag", "key": "leak_incident", "op": "add", "value": 1 }, { "type": "relation", "favor": 20, "trust": 24, "bond": 20 }, { "type": "storyline", "key": "mole", "value": 22, "clue": "钟离衡的密信" }, { "type": "flag", "key": "zhong_innocent_clue" }, { "type": "flag", "key": "zhong_ally" } ] },
+          "plain": { "narrative": "他笑了笑：「到时候了。」这话说了等于没说。", "effects": [ { "type": "flag", "key": "leak_incident", "op": "add", "value": 1 }, { "type": "relation", "favor": 8, "trust": 10 }, { "type": "storyline", "key": "mole", "value": 10 } ] },
+          "bad": { "narrative": "「你不必知道为什么。」他说，「你只需要决定交不交。」", "effects": [ { "type": "flag", "key": "leak_incident", "op": "add", "value": 1 }, { "type": "relation", "favor": 4, "trust": 5 }, { "type": "storyline", "key": "mole", "value": 8 } ] },
           "terrible": { "narrative": "你问得像在找他的动机破绽。\n\n他听出来了。\n\n「你在审我。」他说。这句话说得很平静，但你听出了别的东西——不是愤怒，是某种很久没有过的失望。\n\n他把信收了：「我今天犯了个错。」", "effects": [ { "type": "relation", "favor": -18, "trust": -20 }, { "type": "demon", "value": 10, "source": "guilt", "note": "他说'我今天犯了个错'" } ] }
         } }
     ],

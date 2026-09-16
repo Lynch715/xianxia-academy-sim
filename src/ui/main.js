@@ -11,6 +11,7 @@
     narr: null,
     mainEl: null,
     running: false,
+    runToken: 0,          // 每次推演/突破/传音一个令牌；界面被重建后旧流程据此自行作废
     currentScene: 'scene_main_plaza',
     currentActors: [],
 
@@ -35,6 +36,69 @@
     },
 
     isLandscapePhone() { return this.mql().matches; },
+
+    /* ---------- 推演锁 ----------
+     * 推演中主界面一旦被重建（读档、回标题、进秘境……），挂在旧 DOM 上的
+     * 事件选项就没了，旧流程永远等不到玩家点击，running 也永远清不掉，
+     * 「推演本周」从此灰掉。这里的办法是：
+     *   · 开始一段流程时领一个令牌，结束时交还；
+     *   · 界面重建前先作废当前令牌（abortRun），旧流程醒来发现令牌变了就退出；
+     *   · 本周的事件计划存在存档里（Game.beginWeek），作废后点「接着推演」
+     *     会从断点重新呈现没处理完的事件，不丢事件、不重抽。 */
+    beginRun() {
+      this.running = true;
+      return ++this.runToken;
+    },
+
+    endRun(token) {
+      if (token !== this.runToken) return;
+      this.running = false;
+    },
+
+    alive(token) { return token === this.runToken; },
+
+    abortRun() {
+      if (!this.running) return;
+      this.runToken++;
+      this.running = false;
+      G.Game.pending = null;
+      if (G.LLM.abortAll) G.LLM.abortAll();
+    },
+
+    /** 推演中不能做的事，给句话而不是默默失效 */
+    busy() {
+      if (!this.running) return false;
+      G.Theme.toast('先把眼前这件事处理完');
+      return true;
+    },
+
+    /** 流程里出了异常：停在断点，告诉玩家可以接着走 */
+    fail(e, token) {
+      console.error(e);
+      if (token !== undefined && !this.alive(token)) return;
+      this.runToken++;
+      this.running = false;
+      G.Game.pending = null;
+      try {
+        this.narr?.sys('<span style="color:var(--cinnabar)">这里出了点问题，已经停在断点。点「接着推演本周」可以从这里继续。</span>');
+        this.refreshLeft(); this.refreshRight(); this.refreshTop();
+        this.showIdleActions(G.State.current);
+        this.scrollDown();
+      } catch (e2) { console.error(e2); }
+    },
+
+    /** 模型迟迟不回话时，给玩家一个不等了的出口 */
+    slowHint(anchor, ms) {
+      const timer = setTimeout(() => {
+        if (!anchor.isConnected) return;
+        const b = h('button.btn.ghost.slow-skip', {
+          style: { marginLeft: '10px', fontSize: '12px', padding: '2px 10px' },
+          onclick: () => { b.remove(); G.LLM.abortAll(); }
+        }, '模型响应慢，改用内置文本');
+        anchor.appendChild(b);
+      }, ms || 10000);
+      return () => clearTimeout(timer);
+    },
 
     /** 转屏后要重排：竖屏的底部标签栏和横屏的竖排导轨不是同一套 DOM 语义 */
     watchOrientation() {
@@ -78,6 +142,7 @@
 
     // ---------- 标题页 ----------
     showTitle() {
+      this.abortRun();
       const auto = G.Save.slots().find(x => x.slot === 'auto');
       G.Theme.mount(this.root,
         h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' } },
@@ -118,6 +183,7 @@
 
     // ---------- 主界面 ----------
     render(fresh) {
+      this.abortRun();
       const s = G.State.current;
       if (!s) return this.showTitle();
       if (s.ended) return this.showEnding(G.Ending.evaluate(s));
@@ -152,13 +218,29 @@
       const tabs = h('.mobile-tabs',
         ...tabDefs.map(([k, n]) =>
           h('button' + (this.mobileTab === k ? '.on' : ''), {
-            onclick: () => { this.mobileTab = k; this.render(); }
+            onclick: () => this.switchTab(k)
           }, n)));
 
       G.Theme.mount(this.root, layout, tabs);
 
       if (fresh) this.openingScene(s);
       else this.idleScreen(s);
+    },
+
+    /* 只换 CSS 类，不重建 DOM。早期版本这里调 render()，推演中切一下标签，
+     * 事件选项就被冲掉了，整局卡死。 */
+    switchTab(k) {
+      this.mobileTab = k;
+      const layout = this.root.querySelector('.layout');
+      if (!layout || !layout.querySelector('.col-main .narrative-wrap')) return this.render();
+      layout.className = layout.className.replace(/\btab-\w+/g, '').trim() + ' tab-' + k;
+      this.root.querySelectorAll('.mobile-tabs button').forEach((b, i) => {
+        const keys = ['left', 'main', 'right'];
+        b.classList.toggle('on', keys[i] === k);
+      });
+      if (k === 'left') this.refreshLeft();
+      if (k === 'right') this.refreshRight();
+      if (k === 'main') this.scrollDown();
     },
 
     topbar(s) {
@@ -168,11 +250,11 @@
         h('.acts',
           h('button.btn.ghost', { onclick: () => this.openCultivate(s) }, '修炼'),
           h('button.btn.ghost', { onclick: () => this.openMarket(s) }, '坊市'),
-          h('button.btn.ghost', { onclick: () => G.Explore.picker(s) }, '秘境'),
+          h('button.btn.ghost', { onclick: () => { if (!this.busy()) G.Explore.picker(s); } }, '秘境'),
           h('button.btn.ghost', { onclick: () => G.Panels.settings() }, '设置'),
           h('button.btn.primary', {
             id: 'runWeek', disabled: this.running,
-            onclick: () => this.runWeek(s)
+            onclick: () => this.runWeek(G.State.current)
           }, '推演本周')));
     },
 
@@ -295,63 +377,83 @@
 
     // ---------- 周推演 ----------
     async runWeek(s) {
-      if (this.running) return;
-      this.running = true;
+      s = G.State.current;
+      if (this.running || !s || s.ended) return;
+      // 大型活动只在当月第二到四周开放，推过第四周就错过了
+      const fest = G.Festival.pending(s);
+      if (fest && s.time.week === 4 && !this._festWarned) {
+        this._festWarned = true;
+        const name = { tourney: '七院大比', hunt: '春猎', inter: '外院交流赛' }[fest];
+        G.Theme.confirm('先别急', `${name}这周是最后的机会，推过去就错过了。还是直接推演本周？`,
+          () => this.runWeek(G.State.current));
+        return;
+      }
+      this._festWarned = false;
+      const token = this.beginRun();
       this.refreshTop();
 
-      // 选项容器挂在 narrWrap 上，narr.clear() 清不掉。
-      // 不显式移除的话，上一轮的"推演本周""尝试突破"会一直留在屏幕上，
-      // 而且会抢在新选项前面被点到。
-      this.clearOptions();
-      this.narr.clear();
-      const digest = [];
-      G.Game.beginWeek(s);
+      try {
+        // 选项容器挂在 narrWrap 上，narr.clear() 清不掉。
+        // 不显式移除的话，上一轮的"推演本周""尝试突破"会一直留在屏幕上，
+        // 而且会抢在新选项前面被点到。
+        this.clearOptions();
+        this.narr.clear();
+        const digest = [];
+        G.Game.beginWeek(s);
 
-      let guard = 0;
-      while (guard++ < 300) {
-        const r = G.Game.step(s);
-        if (!r) break;
+        let guard = 0;
+        while (guard++ < 300) {
+          if (!this.alive(token)) return;
+          const r = G.Game.step(s);
+          if (!r) break;
 
-        if (r.type === 'event') {
-          if (digest.length) { this.narr.sys(digest.join('<br>')); digest.length = 0; }
-          this.scrollDown();
-          await this.playEvent(s, r.event);
-          continue;
-        }
-
-        if (r.type === 'activity') {
-          // 自拟时段：解析 → 判定 → 一小段叙事
-          if (r.cat === 'custom' && r.detail?.custom) {
+          if (r.type === 'event') {
             if (digest.length) { this.narr.sys(digest.join('<br>')); digest.length = 0; }
             this.scrollDown();
-            await this.playCustomSlot(s, r);
+            await this.playEvent(s, r.event, token);
+            if (!this.alive(token)) return;
+            // 玩家没能处理掉（界面出错等）：别让同一个事件无限循环
+            if (G.Game.pending === r.event) G.Game.skipEvent(s);
             continue;
           }
-          // 议事会要停下来让玩家做决定
-          if (r.detail?.openAgenda) {
-            if (digest.length) { this.narr.sys(digest.join('<br>')); digest.length = 0; }
-            this.scrollDown();
-            await this.playAgenda(s, r.detail.openAgenda);
+
+          if (r.type === 'activity') {
+            // 自拟时段：解析 → 判定 → 一小段叙事
+            if (r.cat === 'custom' && r.detail?.custom) {
+              if (digest.length) { this.narr.sys(digest.join('<br>')); digest.length = 0; }
+              this.scrollDown();
+              await this.playCustomSlot(s, r, token);
+              continue;
+            }
+            // 议事会要停下来让玩家做决定
+            if (r.detail?.openAgenda) {
+              if (digest.length) { this.narr.sys(digest.join('<br>')); digest.length = 0; }
+              this.scrollDown();
+              await this.playAgenda(s, r.detail.openAgenda, token);
+              continue;
+            }
+            const line = G.Narrator.activityLine(s, r);
+            if (line) digest.push(`${G.Time.DAY_LABEL[r.slot.day - 1]}·${G.Time.PHASE_LABEL[r.slot.phase]}　${line}`);
             continue;
           }
-          const line = G.Narrator.activityLine(s, r);
-          if (line) digest.push(`${G.Time.DAY_LABEL[r.slot.day - 1]}·${G.Time.PHASE_LABEL[r.slot.phase]}　${line}`);
-          continue;
-        }
 
-        if (r.type === 'weekEnd') {
-          if (digest.length) this.narr.sys(digest.join('<br>'));
-          if (r.notes?.length) this.narr.sys('<b>本周结算</b><br>' + r.notes.join('<br>'));
-          break;
-        }
+          if (r.type === 'weekEnd') {
+            if (digest.length) this.narr.sys(digest.join('<br>'));
+            if (r.notes?.length) this.narr.sys('<b>本周结算</b><br>' + r.notes.join('<br>'));
+            break;
+          }
 
-        if (r.type === 'ended') {
-          this.running = false;
-          return this.showEnding(r.ending);
+          if (r.type === 'ended') {
+            this.endRun(token);
+            return this.showEnding(r.ending);
+          }
         }
+      } catch (e) {
+        return this.fail(e, token);
       }
 
-      this.running = false;
+      if (!this.alive(token)) return;
+      this.endRun(token);
       this.refreshLeft();
       this.refreshRight();
       this.refreshTop();
@@ -362,68 +464,103 @@
     },
 
     /** 呈现一个事件：开场 → （有模型时）对话场 → 玩家选择 → 渲染结果 */
-    playEvent(s, ev) {
+    playEvent(s, ev, token) {
       return new Promise(async resolve => {
-        this.clearOptions();
-        this.setStage(ev.scene, ev.actors);
+        let finished = false;
+        const done = () => { if (!finished) { finished = true; resolve(); } };
+        // 任何一步抛错都要把流程交回去，否则 runWeek 永远等在这里
+        const safely = fn => async (...a) => {
+          try { await fn(...a); }
+          catch (e) { console.error(e); this.narr.sys('<span style="color:var(--cinnabar)">这件事没能好好收尾，先往下走。</span>'); G.Game.skipEvent(s); }
+          finally { done(); }
+        };
 
-        // 事件开场
-        const openText = ev.seed || '';
-        this.narr.append('');
-        const p = h('p', openText);
-        this.narr.el.appendChild(p);
-        this.scrollDown();
+        try {
+          this.clearOptions();
+          this.setStage(ev.scene, ev.actors);
 
-        // 对话场：事件里的人先开口，玩家亲口回应。聊得好坏会带进后面的判定。
-        let extra = null;
-        if (G.Dialogue.enabled(s, ev)) {
-          const ss = G.Dialogue.begin(s, {
-            kind: 'event', npcId: ev.actors[0], event: ev, scene: G.Narrator.sceneOf(s, ev)
-          });
-          await G.DialogueUI.run(s, ss, null);
-          if (ss.turns.some(t => t.who === 'player')) {
-            const facts = G.Dialogue.settle(s, ss);
-            const mod = G.Dialogue.modifier(ss);
-            extra = { mods: [mod], dialogue: ss, dialogueFacts: facts };
-            // 聊过之后，选项下面那行"有几分把握"要跟着变——这是玩家能感到"说话有用"的地方
-            for (const o of ev.options) {
-              if (o.check) o._hint = G.Check.vagueHint({ ...o.check, reason: (o.reason || 0) + mod });
-            }
-            this.narr.el.appendChild(h('.dl-mod',
-              G.Dialogue.hint(s, ss) + (ss.applied?.length ? '　' + ss.applied.join('　') : '') + '。你打算——'));
-            this.refreshLeft();
-          } else if (ss.turns.length) {
-            this.narr.el.appendChild(h('.dl-mod', '你打算——'));
-          }
+          // 事件开场
+          this.narr.append('');
+          this.narr.el.appendChild(h('p', ev.seed || ''));
           this.scrollDown();
-        }
 
-        const done = () => resolve();
-        const opts = G.C.options(ev,
-          async id => { await this.resolveAndRender(s, ev, id, null, extra); done(); },
-          async text => {
-            const intent = await G.Narrator.parseCustom(s, text, ev);
-            if (intent.violatesRules) {
-              this.narr.el.appendChild(h('p', intent.rejectReason));
+          // 对话场：事件里的人先开口，玩家亲口回应。聊得好坏会带进后面的判定。
+          let extra = null;
+          if (G.Dialogue.enabled(s, ev)) {
+            try {
+              const ss = G.Dialogue.begin(s, {
+                kind: 'event', npcId: ev.actors[0], event: ev, scene: G.Narrator.sceneOf(s, ev)
+              });
+              await G.DialogueUI.run(s, ss, null);
+              if (!this.alive(token)) return done();
+              if (ss.turns.some(t => t.who === 'player')) {
+                const facts = G.Dialogue.settle(s, ss);
+                const mod = G.Dialogue.modifier(ss);
+                extra = { mods: [mod], dialogue: ss, dialogueFacts: facts };
+                // 聊过之后，选项下面那行"有几分把握"要跟着变——这是玩家能感到"说话有用"的地方
+                for (const o of ev.options) {
+                  if (o.check) o._hint = G.Check.vagueHint({ ...o.check, reason: (o.reason || 0) + mod });
+                }
+                this.narr.el.appendChild(h('.dl-mod',
+                  G.Dialogue.hint(s, ss) + (ss.applied?.length ? '　' + ss.applied.join('　') : '') + '。你打算——'));
+                this.refreshLeft();
+              } else if (ss.turns.length) {
+                this.narr.el.appendChild(h('.dl-mod', '你打算——'));
+              }
               this.scrollDown();
-              // 越界不消耗回合，重新给选项
-              const again = G.C.options(ev,
-                async id => { await this.resolveAndRender(s, ev, id, null, extra); done(); },
-                async t2 => {
-                  const i2 = await G.Narrator.parseCustom(s, t2, ev);
-                  await this.resolveAndRender(s, ev, 'E', i2.violatesRules ? null : i2, extra);
-                  done();
-                });
-              this.narr.el.parentNode.appendChild(again);
-              this.scrollDown();
-              return;
+            } catch (e) {
+              console.error('[dialogue]', e);   // 对话场坏了不影响做选择
             }
-            await this.resolveAndRender(s, ev, 'E', intent, extra);
+          }
+
+          const pickOpt = safely(async id => { await this.resolveAndRender(s, ev, id, null, extra, token); });
+          const oops = e => {
+            console.error(e);
+            this.narr.sys('<span style="color:var(--cinnabar)">这件事没能好好收尾，先往下走。</span>');
+            G.Game.skipEvent(s);
+          };
+          const onCustom = async text => {
+            try {
+              const intent = await this.withSlowHint(() => G.Narrator.parseCustom(s, text, ev));
+              if (!this.alive(token)) return done();
+              if (intent.violatesRules) {
+                this.narr.el.appendChild(h('p', intent.rejectReason));
+                this.scrollDown();
+                // 越界不消耗回合，重新给选项；第二次再越界就按普通自定义处理
+                const again = G.C.options(ev, pickOpt, async t2 => {
+                  try {
+                    const i2 = await this.withSlowHint(() => G.Narrator.parseCustom(s, t2, ev));
+                    if (this.alive(token)) await this.resolveAndRender(s, ev, 'E', i2.violatesRules ? null : i2, extra, token);
+                  } catch (e) { oops(e); }
+                  finally { done(); }
+                });
+                this.mainEl.narrWrap.appendChild(again);
+                this.scrollDown();
+                return;
+              }
+              await this.resolveAndRender(s, ev, 'E', intent, extra, token);
+            } catch (e) { oops(e); }
             done();
-          });
-        this.mainEl.narrWrap.appendChild(opts);
-        this.scrollDown();
+          };
+
+          const opts = G.C.options(ev, pickOpt, onCustom);
+          this.mainEl.narrWrap.appendChild(opts);
+          this.scrollDown();
+        } catch (e) {
+          console.error(e);
+          G.Game.skipEvent(s);
+          done();
+        }
       });
+    },
+
+    /** 包一层"模型慢了可以不等"的提示；提示挂在叙事区最后一行 */
+    async withSlowHint(fn, anchor) {
+      let el = anchor;
+      if (!el) { el = h('p.sys.loading.dots', '琢磨'); this.narr.el.appendChild(el); this.scrollDown(); }
+      const stop = this.slowHint(el);
+      try { return await fn(); }
+      finally { stop(); if (!anchor) el.remove(); }
     },
 
     /** 回一道传音：自由对话，聊完按聊得好坏结算关系 */
@@ -431,29 +568,34 @@
       const msg = s.flags._pendingMsg;
       if (!msg || this.running) return;
       const npc = G.NPC.get(msg.npcId);
-      if (!npc) return G.Dialogue.ignoreMessage(s);
-      this.running = true;
+      if (!npc) { G.Dialogue.ignoreMessage(s); return this.showIdleActions(s); }
+      const token = this.beginRun();
       this.refreshTop();
-      this.clearOptions();
-      this.narr.clear();
+      try {
+        this.clearOptions();
+        this.narr.clear();
 
-      const sceneId = G.DATA.static.collegeScene[npc.college] || 'scene_main_plaza';
-      this.setStage(sceneId, [msg.npcId]);
-      this.narr.sys(`<b>传音符 · ${npc.name}</b>`);
+        const sceneId = G.DATA.static.collegeScene[npc.college] || 'scene_main_plaza';
+        this.setStage(sceneId, [msg.npcId]);
+        this.narr.sys(`<b>传音符 · ${npc.name}</b>`);
 
-      const ss = G.Dialogue.begin(s, {
-        kind: 'message', npcId: msg.npcId, event: null,
-        scene: { id: sceneId, name: G.DATA.static.scenes.find(x => x.id === sceneId)?.name || '' }
-      });
-      await G.DialogueUI.run(s, ss, msg.text);
-      if (ss.turns.some(t => t.who === 'player')) {
-        G.Dialogue.settleMessage(s, ss);
-        this.narr.sys(G.Dialogue.hint(s, ss) + (ss.applied?.length ? '　' + ss.applied.join('　') : ''));
-      } else {
-        // 一句没说就走了，等同不理会
-        G.Dialogue.ignoreMessage(s);
+        const ss = G.Dialogue.begin(s, {
+          kind: 'message', npcId: msg.npcId, event: null,
+          scene: { id: sceneId, name: G.DATA.static.scenes.find(x => x.id === sceneId)?.name || '' }
+        });
+        await G.DialogueUI.run(s, ss, msg.text);
+        if (!this.alive(token)) return;
+        if (ss.turns.some(t => t.who === 'player')) {
+          G.Dialogue.settleMessage(s, ss);
+          this.narr.sys(G.Dialogue.hint(s, ss) + (ss.applied?.length ? '　' + ss.applied.join('　') : ''));
+        } else {
+          // 一句没说就走了，等同不理会
+          G.Dialogue.ignoreMessage(s);
+        }
+      } catch (e) {
+        return this.fail(e, token);
       }
-      this.running = false;
+      this.endRun(token);
       this.refreshLeft(); this.refreshRight(); this.refreshTop();
       this.showIdleActions(s);
       this.scrollDown();
@@ -461,29 +603,29 @@
 
     /** 周末结算后，看看有没有人来传音。有模型才会有；没有就静悄悄的。 */
     async maybeMessage(s) {
-      const id = G.Dialogue.drawMessenger(s);
-      if (!id) return;
-      const msg = await G.Dialogue.composeMessage(s, id);
-      if (!msg || this.running || G.State.current !== s) return;
-      G.Theme.toast(`收到一道传音符 · ${G.NPC.name(id)}`);
-      this.showIdleActions(s);
-      this.refreshRight();
-      this.scrollDown();
+      try {
+        const id = G.Dialogue.drawMessenger(s);
+        if (!id) return;
+        const msg = await G.Dialogue.composeMessage(s, id);
+        if (!msg || this.running || G.State.current !== s) return;
+        G.Theme.toast(`收到一道传音符 · ${G.NPC.name(id)}`);
+        this.showIdleActions(s);
+        this.refreshRight();
+        this.scrollDown();
+      } catch (e) { console.warn('[message]', e); }
     },
 
     /** 自拟时段：一句话的安排，解析成行动，判定，写一小段 */
-    async playCustomSlot(s, r) {
+    async playCustomSlot(s, r, token) {
       const text = r.detail.custom;
       const when = `${G.Time.DAY_LABEL[r.slot.day - 1]}·${G.Time.PHASE_LABEL[r.slot.phase]}`;
       const box = h('.custom-slot', h('.cs-head', when, '　你自行安排：', h('b', text)));
       this.narr.el.appendChild(box);
-      const loading = h('p.sys.loading.dots', '琢磨');
-      this.narr.el.appendChild(loading);
       this.scrollDown();
 
-      const intent = await G.Narrator.parseCustom(s, text, null);
+      const intent = await this.withSlowHint(() => G.Narrator.parseCustom(s, text, null));
+      if (!this.alive(token)) return;
       const res = G.Game.resolveCustom(s, text, intent);
-      loading.remove();
 
       if (res.rejected) {
         this.narr.el.appendChild(h('p', res.reason));
@@ -509,8 +651,15 @@
         style: { length: 260 }
       };
       const p = h('p');
+      const loading = h('p.sys.loading.dots', '落笔');
+      this.narr.el.appendChild(loading);
       this.narr.el.appendChild(p);
-      const narrText = await G.Narrator._render(payload, (piece, full) => { p.textContent = full; this.scrollDown(); });
+      const stop = this.slowHint(loading);
+      let narrText;
+      try {
+        narrText = await G.Narrator._render(payload, (piece, full) => { loading.remove(); p.textContent = full; this.scrollDown(); });
+      } finally { stop(); loading.remove(); }
+      if (!this.alive(token)) return;
       p.remove();
       G.Theme.paragraphs(narrText).forEach(pp => this.narr.el.appendChild(h('p', pp)));
       this.narr.sys(`判定：<b>${G.Check.GRADE_LABEL[res.grade]}</b>` + (res.applied.length ? '　' + res.applied.join('　') : ''));
@@ -520,7 +669,7 @@
     },
 
     /** 院主议事：呈现议题 → 玩家表决 → 结算 */
-    playAgenda(s, agenda) {
+    playAgenda(s, agenda, token) {
       return new Promise(resolve => {
         this.clearOptions();
         this.setStage('scene_headmaster_hall', ['npc_chuheshan', 'npc_bailuqing']);
@@ -529,6 +678,7 @@
         this.scrollDown();
 
         const wrap = h('.options');
+        const affordable = agenda.options.filter(o => !(o.privy && s.gov.privy < o.privy));
         for (const o of agenda.options) {
           const hint = [];
           if (o.privy) hint.push(`动用私库 ${o.privy}`);
@@ -539,17 +689,20 @@
           if (o.reform) hint.push('算一项改革');
 
           wrap.appendChild(h('button.opt', {
-            disabled: o.privy && s.gov.privy < o.privy,
+            // 一个都付不起时全部放开，不能让议事卡在这里
+            disabled: affordable.length > 0 && o.privy && s.gov.privy < o.privy,
             onclick: () => {
               wrap.querySelectorAll('button').forEach(b => b.disabled = true);
-              const r = G.Governance.resolveAgenda(s, agenda, o.id);
-              this.narr.el.appendChild(h('p', '你的决定：' + o.text));
-              this.narr.sys(
-                `判定：<b>${G.Check.GRADE_LABEL[r.grade]}</b>` +
-                (r.notes.length ? '<br>' + r.notes.join('<br>') : '') +
-                `<br>七院人心：${r.unrest}（${G.Governance.moodName(r.unrest).name}）`);
-              this.refreshLeft();
-              this.scrollDown();
+              try {
+                const r = G.Governance.resolveAgenda(s, agenda, o.id);
+                this.narr.el.appendChild(h('p', '你的决定：' + o.text));
+                this.narr.sys(
+                  `判定：<b>${G.Check.GRADE_LABEL[r.grade]}</b>` +
+                  (r.notes.length ? '<br>' + r.notes.join('<br>') : '') +
+                  `<br>七院人心：${r.unrest}（${G.Governance.moodName(r.unrest).name}）`);
+                this.refreshLeft();
+                this.scrollDown();
+              } catch (e) { console.error(e); }
               setTimeout(resolve, 320);
             }
           }, h('span.key', o.id), o.text,
@@ -560,7 +713,7 @@
       });
     },
 
-    async resolveAndRender(s, ev, optionId, intent, extra) {
+    async resolveAndRender(s, ev, optionId, intent, extra, token) {
       // 铁律：先 commit，再叙事。叙事失败不影响状态。
       const res = G.Game.resolveEvent(s, optionId, intent, extra?.mods || null);
       if (!res) return;
@@ -573,21 +726,27 @@
       const loading = h('p.sys.loading.dots', '推演中');
       this.narr.el.appendChild(loading);
       this.scrollDown();
+      const stop = this.slowHint(loading);
 
       let started = false;
       const target = h('p');
-      const text = await G.Narrator.renderResolution(s, res, (piece, full) => {
-        if (!started) { loading.remove(); this.narr.el.appendChild(target); started = true; }
-        const parts = G.Theme.paragraphs(full);
-        target.textContent = parts[parts.length - 1] || '';
-        // 前面的段落补齐
-        while (this.narr.el.querySelectorAll('p.streamed').length < parts.length - 1) {
-          const i = this.narr.el.querySelectorAll('p.streamed').length;
-          const el = h('p.streamed', parts[i]);
-          this.narr.el.insertBefore(el, target);
-        }
-        this.scrollDown();
-      }, extra);
+      let text;
+      try {
+        text = await G.Narrator.renderResolution(s, res, (piece, full) => {
+          if (!this.alive(token)) return;
+          if (!started) { loading.remove(); this.narr.el.appendChild(target); started = true; }
+          const parts = G.Theme.paragraphs(full);
+          target.textContent = parts[parts.length - 1] || '';
+          // 前面的段落补齐
+          while (this.narr.el.querySelectorAll('p.streamed').length < parts.length - 1) {
+            const i = this.narr.el.querySelectorAll('p.streamed').length;
+            const el = h('p.streamed', parts[i]);
+            this.narr.el.insertBefore(el, target);
+          }
+          this.scrollDown();
+        }, extra);
+      } finally { stop(); }
+      if (!this.alive(token)) return;
 
       loading.remove();
       target.remove();
@@ -598,7 +757,9 @@
         this.narr.sys(res.applied.join('　'));
       }
       if (G.Narrator.lastError) {
-        this.narr.sys('<span style="color:var(--cinnabar)">叙事生成失败，已用内置文本代替：' + G.Narrator.lastError + '</span>');
+        this.narr.sys(/^没等模型/.test(G.Narrator.lastError)
+          ? '<span class="muted">（这段用的是内置文本）</span>'
+          : '<span style="color:var(--cinnabar)">叙事生成失败，已用内置文本代替：' + G.Narrator.lastError + '</span>');
       }
 
       this.refreshLeft();
@@ -664,6 +825,18 @@
     },
 
     async runBreakthrough(s, opts) {
+      if (this.running) return;
+      // 心魔关走完之前算作「推演中」：顶栏推演会灰掉，免得把 A/B/C 冲掉
+      const token = this.beginRun();
+      this.refreshTop();
+      try {
+        await this._runBreakthrough(s, opts, token);
+      } catch (e) {
+        this.fail(e, token);
+      }
+    },
+
+    async _runBreakthrough(s, opts, token) {
       // 空闲选项（"尝试突破""推演本周"）挂在 narrWrap 上，narr.clear() 清不掉，
       // 不清的话它们会一直排在心魔关的 A/B/C 前面
       this.clearOptions();
@@ -677,7 +850,9 @@
       this.narr.el.appendChild(loading);
       this.scrollDown();
 
-      const trialText = await G.Narrator.renderDemonTrial(s, bt.trial, null);
+      const stop = this.slowHint(loading);
+      const trialText = await G.Narrator.renderDemonTrial(s, bt.trial, null).finally(stop);
+      if (!this.alive(token)) return;
       loading.remove();
       G.Theme.paragraphs(trialText).forEach(p => this.narr.el.appendChild(h('p', p)));
       this.scrollDown();
@@ -695,6 +870,7 @@
           speaker: { name: npc ? npc.name + '（幻象）' : '心魔' }
         });
         await G.DialogueUI.run(s, ss, null);
+        if (!this.alive(token)) return;
         if (ss.turns.some(t => t.who === 'player')) {
           steady = G.Demon.steadiness(s, bt.trial, ss.rapport);
           this.narr.el.appendChild(h('.dl-mod',
@@ -711,11 +887,15 @@
       bt.trial.choices.forEach((c, i) => {
         wrap.appendChild(h('button.opt', {
           onclick: async () => {
+            if (!this.alive(token)) return;
             wrap.remove();
-            const applied = G.Demon.applyChoice(s, bt.trial, c.tag);
-            if (steady) applied.rateMod += steady.rateMod;
-            const res = G.Cultivation.resolveBreakthrough(s, applied);
-            await this.showBreakthroughResult(s, res);
+            try {
+              const applied = G.Demon.applyChoice(s, bt.trial, c.tag);
+              if (steady) applied.rateMod += steady.rateMod;
+              const res = G.Cultivation.resolveBreakthrough(s, applied);
+              this.endRun(token);
+              await this.showBreakthroughResult(s, res);
+            } catch (e) { this.fail(e, token); }
           }
         }, h('span.key', 'ABC'[i]), c.text));
       });

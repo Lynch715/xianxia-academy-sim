@@ -353,11 +353,15 @@
 
     // ================= 便捷查询 =================
     /** 本月是否有大型活动 */
+    /* 三项活动都是弟子参赛。从当月第二周开到第四周，推过就算错过；
+     * 早期版本只开第二周一周，而且教习、院主也会看到参赛横幅。 */
     pending(s) {
+      if (s.player.role !== 'student') return null;
       const m = s.time.month;
-      if (m === 4 && s.time.week === 2 && !this._doneThisYear(s, 'tourney')) return 'tourney';
-      if (m === 3 && s.time.week === 2 && !this._doneThisYear(s, 'hunt')) return 'hunt';
-      if (m === 5 && s.time.week === 2 && !this._doneThisYear(s, 'inter')) return 'inter';
+      if (s.time.week < 2) return null;
+      if (m === 4 && !this._doneThisYear(s, 'tourney')) return 'tourney';
+      if (m === 3 && !this._doneThisYear(s, 'hunt')) return 'hunt';
+      if (m === 5 && !this._doneThisYear(s, 'inter')) return 'inter';
       return null;
     },
 

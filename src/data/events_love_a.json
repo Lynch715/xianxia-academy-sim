@@ -11,7 +11,7 @@
     "conditions": {
       "role": ["student"], "minWeek": 46,
       "relations": { "npc_shenjinglan": { "favor": [55, 100], "trust": [40, 100] } },
-      "notFlags": ["love_shen_1", "confession_handled"]
+      "notFlags": ["love_shen_1", "in_relationship"]
     },
     "seed": "练剑场的灯还亮着，但没有剑声。\n\n沈惊澜坐在台阶上，手里捏着一封信，捏得纸边都毛了。看见你，他把信折起来塞进袖子——那个动作太快，快得像被抓到了什么。\n\n「北境来的。」他自己说了出来，好像不说会更难受，「家里给了期限。五年结丹，否则换嫡。」\n\n他停了停：「还剩两年。」",
     "facts": ["沈惊澜收到北境家书", "家族给了五年结丹的期限，只剩两年", "他第一次主动说出这件事"],
@@ -131,7 +131,7 @@
     "conditions": {
       "role": ["student"], "minWeek": 42,
       "relations": { "npc_wenjiujiu": { "favor": [55, 100], "trust": [40, 100] } },
-      "notFlags": ["love_wen_1", "confession_handled"]
+      "notFlags": ["love_wen_1", "in_relationship"]
     },
     "seed": "丹房里就她一个人。\n\n她面前摆着三炉丹，成色都很好。但她没有在看那三炉，她在看墙上的榜——丹霞院这一季的排名，她在第九。\n\n「第九。」她听见你进来也没回头，「够好了对吧。」\n\n她转过身，脸上还是那个笑：「可是我今年十八，三灵根。前面八个里有六个是双灵根。」\n\n她把笑收了：「他们说我浪费了好手艺在烂资质上。说了六年了。」",
     "facts": ["温酒酒丹道排名第九", "她第一次说出'浪费了好手艺在烂资质上'", "她把笑收了"],
@@ -245,7 +245,7 @@
     "conditions": {
       "role": ["student"], "minWeek": 60,
       "relations": { "npc_peiwuyou": { "favor": [55, 100], "trust": [45, 100] } },
-      "notFlags": ["love_pei_1", "confession_handled"]
+      "notFlags": ["love_pei_1", "in_relationship"]
     },
     "seed": "观星台上，他把六枚卦钱推到你面前。\n\n「替我算一卦。」\n\n你说你不会。\n\n「不用会。」他说，「你只要把钱撒下去，剩下的我来看。」他顿了顿，「我自己撒不准——手会抖。」\n\n这是你第一次听他承认自己有做不到的事。",
     "facts": ["裴无忧让你替他撒卦", "他说自己撒不准，手会抖", "这是他第一次承认做不到"],

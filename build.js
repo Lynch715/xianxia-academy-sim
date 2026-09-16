@@ -106,13 +106,18 @@ function buildData() {
     if (e.scene && !sceneIds.has(e.scene)) {
       console.warn(`  ! ${e.id} 引用了未知场景：${e.scene}`); warn++;
     }
-    if (e.chainNext && !evIds.has(e.chainNext.eventId)) {
-      // 前向引用是允许的，第二轮再校验
-    }
   }
   for (const e of events) {
-    if (e.chainNext && !evIds.has(e.chainNext.eventId)) {
-      console.warn(`  ! ${e.id} 的 chainNext 指向不存在的事件：${e.chainNext.eventId}`); warn++;
+    // chainNext 可以是单个对象或数组；前向引用允许，所以放在第二轮校验
+    const nexts = Array.isArray(e.chainNext) ? e.chainNext : (e.chainNext ? [e.chainNext] : []);
+    for (const cn of nexts) {
+      if (!evIds.has(cn.eventId)) {
+        console.warn(`  ! ${e.id} 的 chainNext 指向不存在的事件：${cn.eventId}`); warn++;
+      }
+    }
+    // 时段条件只能是清晨/午间/傍晚
+    for (const p of (e.conditions?.phase || [])) {
+      if (!['dawn', 'noon', 'dusk'].includes(p)) { console.warn(`  ! ${e.id} 的时段条件非法：${p}`); warn++; }
     }
   }
 
@@ -160,7 +165,7 @@ function build() {
      user-scalable=no 只对安卓有效，iOS 会忽略它，真正的拦截在 boot.js 的 lockZoom() -->
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>修仙学院模拟器 · 云霄仙院</title>
-<meta name="description" content="单机文字修仙模拟经营。三条身份路线，98 个事件，23 种结局。">
+<meta name="description" content="单机文字修仙模拟经营。三条身份路线，98 个事件，22 种结局。">
 <meta name="theme-color" content="#F5F1E8">
 <meta name="color-scheme" content="light">
 <meta name="format-detection" content="telephone=no">

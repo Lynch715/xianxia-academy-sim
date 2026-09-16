@@ -159,6 +159,7 @@
           return '';
 
         case 'teach': {
+          if (d.relaxed) return '给弟子们放了半天假，院子里难得有笑声。';
           if (d.total !== undefined) return `备课，${G.Check.GRADE_LABEL[d.grade]}。已备 ${d.total} 份教案。`;
           if (d.grown) {
             const g = G.Check.GRADE_LABEL[d.grade];
@@ -179,6 +180,7 @@
 
         case 'gov': {
           if (d.openAgenda) return '';                     // 议事会弹窗处理
+          if (d.routine) return `例会，${G.Check.GRADE_LABEL[d.grade]}。${(d.notes || []).join('，')}`;
           if (d.college) return `巡视${G.State.collegeOf(d.college).name}。${(d.notes || []).join('')}`;
           if (d.threat) {
             return `${d.approach.name}——${G.Check.GRADE_LABEL[d.grade]}。` +

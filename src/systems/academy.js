@@ -147,10 +147,22 @@
       G.State.commit(deltas, 'academy.exam');
       G.State.logLine(`${kind === 'final' ? '期末大考' : '月考'}：第 ${rank} 名 / ${this.TOTAL}`, 'major');
 
-      // 连续两次末位 → 劝退
-      const g = s.academy.grades.slice(-2);
-      if (g.length === 2 && g.every(x => x.rank > this.TOTAL - 30) && s.academy.warnings >= 2) {
-        s.flags.expelled_pending = true;
+      // 连续两次末位 → 劝退预警；预警期间再垫底一次就真的劝退，考好了就撤销。
+      // 早期版本只挂预警不处理，之后每个月都提示一遍「面临劝退」。
+      const bottom = rank > this.TOTAL - 30;
+      if (s.flags.expelled_pending === 'exam') {
+        if (bottom) {
+          G.State.commit([{ path: 'flags.expelled', op: 'set', value: true }], 'academy.expel');
+          G.State.logLine('执事堂的劝退文书送到了你手上', 'danger');
+        } else {
+          delete s.flags.expelled_pending;
+          G.State.logLine('这次没垫底，执事堂撤了劝退预警', 'major');
+        }
+      } else if (!s.flags.expelled_pending) {
+        const g = s.academy.grades.slice(-2);
+        if (g.length === 2 && g.every(x => x.rank > this.TOTAL - 30) && s.academy.warnings >= 2) {
+          s.flags.expelled_pending = 'exam';
+        }
       }
 
       return { rank, score: Math.round(score), rewards, record };

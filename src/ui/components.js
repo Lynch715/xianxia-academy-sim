@@ -257,7 +257,8 @@
         body.appendChild(h('.panel-title', '教学'));
         body.appendChild(h('.btn-row',
           btn(`备课（已备 ${f.prepared}）`, { act: 'prepare' }, '备课质量直接决定下一节正课的效果'),
-          btn('正课教学', { act: 'lecture' }, '会消耗一次备课')));
+          btn('正课教学', { act: 'lecture' }, '会消耗一次备课'),
+          btn('给弟子放假', { act: 'relax' }, '所有弟子压力 -6，这个时段不长修为')));
 
         const active = f.disciples.filter(d => !d.graduated && !d.broken);
         sec('指导弟子',
@@ -295,8 +296,9 @@
             { act: 'patrol', college: c },
             '不满 ' + G.Governance.unrestOf(s, c))));
 
-        if (g.threat) {
-          sec('应对外患 · ' + G.Governance.THREATS[g.threat].name,
+        {
+          sec('应对外患' + (g.threat ? ' · ' + G.Governance.THREATS[g.threat].name : '（眼下没有）'),
+            btn('随机应变', { act: 'diplomacy', approach: 'auto' }, '按外患的路数选最对的应对；没有外患时这一格空转'),
             btn('以力慑之', { act: 'diplomacy', approach: 'force' }),
             btn('交涉斡旋', { act: 'diplomacy', approach: 'talk' }),
             btn('结外援', { act: 'diplomacy', approach: 'ally' }),

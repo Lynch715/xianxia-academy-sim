@@ -171,13 +171,32 @@
       return { grade: r.grade, disciple: d.name, gain, aff, pres };
     },
 
+    /** 出过几次事。老存档里是 true，按一次算 */
+    accidentCount(s) {
+      const v = s.flags.disciple_accident;
+      return v === true ? 1 : (Number(v) || 0);
+    },
+
+    /** 给弟子放半天假：压力降下来，亲近一点 */
+    relax(s) {
+      s = G.State.current;
+      const ds = s.faculty.disciples.map(d => (d.graduated || d.broken) ? d : {
+        ...d,
+        pressure: Math.max(0, d.pressure - 6)
+      });
+      G.State.commit([{ path: 'faculty.disciples', op: 'set', value: ds }], 'faculty.relax');
+      return { relaxed: true };
+    },
+
     setStyle(s, style) {
       if (!TEACH_STYLES[style]) return;
       G.State.commit([{ path: 'faculty.style', op: 'set', value: style }], 'faculty.style');
     },
 
     // ================= 弟子成长 =================
-    expNeed(d) { return G.Cultivation.expMaxFor(d.realm, d.layer); },
+    // 弟子的筑基门槛比玩家高：他们不打坐、不吃丹，全靠你教。按玩家的门槛算，
+    // 八年能带出一串金丹，「桃李满天下」就成了白送。
+    expNeed(d) { return G.Cultivation.expMaxFor(d.realm, d.layer) * (d.realm === 'zhuji' ? (G.DISCIPLE_ZHUJI_MULT || 2.2) : 1); },
 
     checkDiscipleBreakthrough(s) {
       s = G.State.current;
@@ -195,7 +214,10 @@
             x.realm = nx.realm; x.layer = nx.layer;
             news.push(`${x.name}突破至${G.State.realmName(x.realm, x.layer)}`);
             if (x.realm === 'jindan' && x.layer === 1) {
-              news.push(`${x.name}结丹了。这是你带出来的第 ${(s.flags.jindan_disciples || 0) + 1} 个。`);
+              news.push(`${x.name}结丹了。这是你带出来的第 ${(s.flags.jindan_disciples || 0) + 1} 个。按院规，结丹即可出师。`);
+              x.graduated = true;
+              x.pressure = 0;
+              break;
             }
           } else {
             x.exp = Math.floor(x.exp * 0.7);
@@ -243,16 +265,29 @@
         x.highMonths = x.pressure >= 85 ? (x.highMonths || 0) + 1 : 0;
         const risk = (x.pressure - 85) * 0.6 * (1 + style.risk);
         if (x.highMonths >= 2 && G.rng.chance(Math.max(0, risk))) {
-          if (G.rng.chance(22) && !s.flags.disciple_accident) {
+          if (G.rng.chance(22)) {
+            // 出事不再直接终局：人废了、离开你门下，你背着这件事往下走。
+            // 同一任期出第二次，才真的教不下去了（见 Ending.shouldEnd）。
             x.broken = true;
-            news.push(`${x.name}走火入魔，修为尽废。他被抬出你的院子时还在道歉。`);
+            const n = this.accidentCount(s) + 1;
+            news.push(`${x.name}走火入魔，修为尽废。他被抬出你的院子时还在道歉。` +
+              (n === 1 ? '院里记了你一笔。再有下一次，这讲台你就站不住了。' : ''));
             G.Demon.add(s, 'guilt', 14, `${x.name}是在你手上出的事`, null);
-            G.State.commit([{ path: 'flags.disciple_accident', op: 'set', value: true }], 'faculty.accident');
+            G.State.commit([
+              { path: 'flags.disciple_accident', op: 'set', value: n },
+              { path: 'reputation.value', op: 'add', value: -8, clamp: [0, 100] }
+            ], 'faculty.accident');
           } else {
             x.pressure = 45;
             x.highMonths = 0;
             news.push(`${x.name}修炼时出了岔子，好在没伤到根本。你该让他歇歇了。`);
           }
+        }
+        // 跟了你五年还没结丹的，也到了该出师的时候
+        if (!x.broken && s.time.absoluteTurn - x.joinedTurn >= 5 * 48 * 21) {
+          x.graduated = true;
+          x.pressure = 0;
+          news.push(`${x.name}在你门下满五年，出师了。临走前给你磕了个头。`);
         }
         return x;
       });
@@ -261,8 +296,8 @@
       news.push(...this.checkDiscipleBreakthrough(s));
 
       // 补充新弟子
-      const active = ds.filter(d => !d.graduated && !d.broken).length;
-      if (active < 3 && G.rng.chance(50)) {
+      const active = G.State.current.faculty.disciples.filter(d => !d.graduated && !d.broken).length;
+      if (active < 3 && G.rng.chance(active < 2 ? 100 : 50)) {
         const [nd] = this.assignDisciples(s, 1);
         news.push(`院里给你分了个新弟子：${nd.name}，${this.talentName(nd.talent)}。`);
       }
@@ -365,7 +400,7 @@
       const byHead = Math.min(35, f.lecturesGiven * 0.5 + f.duties * 1.0 + avgProg * 1.0); // 院首考评 35%
       const score = Math.max(0, Math.round(byDisciple + byPeer + byHead - broken * 8));
 
-      const tier = score >= 82 ? '优' : score >= 62 ? '良' : score >= 40 ? '中' : '下';
+      const tier = score >= 90 ? '优' : score >= 62 ? '良' : score >= 40 ? '中' : '下';
       const deltas = [
         { path: 'faculty.evaluations', op: 'push',
           value: { year: s.academy.year, score, tier }, maxLen: 20 }

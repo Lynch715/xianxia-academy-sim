@@ -11,7 +11,7 @@
     "conditions": {
       "role": ["student"], "minWeek": 44,
       "relations": { "npc_yesusu": { "favor": [55, 100], "bond": [30, 100] } },
-      "notFlags": ["love_ye_1", "confession_handled"]
+      "notFlags": ["love_ye_1", "in_relationship"]
     },
     "seed": "灵兽园的后院你没来过。\n\n叶素素带你绕过三道篱笆，掀开一片藤蔓——后面是一小块空地，中间有个用石头垒的圈，圈里铺着干草。\n\n「它睡这儿。」她说。那只白色的幼兽正蜷在草上，比你上次见时大了一圈。\n\n「我从来没带过别人来。」她的声音很小，「因为……」\n\n她停住了。幼兽睁开眼睛看了看你，又闭上了。",
     "facts": ["叶素素带你去了从未带人来过的地方", "那只幼兽比之前大了一圈", "她有句话没说完"],
@@ -131,7 +131,7 @@
     "conditions": {
       "role": ["student"], "minWeek": 48,
       "relations": { "npc_zhaomingqi": { "favor": [55, 100], "trust": [45, 100] } },
-      "notFlags": ["love_zhao_1", "confession_handled"]
+      "notFlags": ["love_zhao_1", "in_relationship"]
     },
     "seed": "他请你喝酒，在坊市最贵的那家。\n\n菜点了一桌，酒开了三坛，可他一口没动。\n\n「我算了一笔账。」他忽然说，「这些年我在你身上花了多少，你在我身上花了多少。」\n\n他从袖子里摸出一张纸，上面密密麻麻。\n\n「算不平。」他把纸推过来，「你欠我的，永远还不清；我欠你的，也一样。」\n\n他终于抬头看你：「所以这笔账，我不想算了。」",
     "facts": ["赵鸣岐请你喝酒，一口没动", "他算了一笔你们之间的账", "他说这笔账他不想算了"],

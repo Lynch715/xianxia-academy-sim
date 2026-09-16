@@ -47,7 +47,8 @@
                   } },
     // 生活
     work:        { name: '打工',       cat: 'life', run: (s, a) => G.Economy.work(s, a?.kind || 'field') },
-    market:      { name: '坊市',       cat: 'life', run: () => ({ openPanel: 'market' }) },
+    // 坊市随时能从顶栏进，不占时段。老存档里排过的这一格按空闲处理。
+    market:      { name: '坊市',       cat: 'life', hidden: true, run: () => ({ idle: true }) },
     rest:        { name: '休息',       cat: 'life', run: (s) => {
                     G.State.commit([{ path: 'cultivation.demonHeart', op: 'add', value: -2, clamp: [0, 100] }], 'activity.rest');
                     return { rested: true };
@@ -74,17 +75,18 @@
                     }
                     return G.Faculty.tutor(s, id);
                   } },
+    relax:       { name: '给弟子放假', cat: 'teach', role: 'teacher', run: (s) => G.Faculty.relax(s) },
     research:    { name: '研究',       cat: 'teach', role: 'teacher', run: (s) => G.Faculty.doResearch(s) },
     duty:        { name: '院务',       cat: 'teach', role: 'teacher', run: (s, a) => G.Faculty.duty(s, a?.kind || 'meeting') },
 
     // ---- 院主专属 ----
     council:     { name: '议事',       cat: 'gov', role: 'headmaster', run: (s) => {
                     const a = G.Governance.nextAgenda(s);
-                    return a ? { openAgenda: a } : { idle: true };
+                    return a ? { openAgenda: a } : G.Governance.routine(s);
                   } },
     patrol:      { name: '巡院',       cat: 'gov', role: 'headmaster', run: (s, a) => G.Governance.patrol(s, a?.college) },
     diplomacy:   { name: '应对外患',   cat: 'gov', role: 'headmaster', run: (s, a) =>
-                    G.Governance.handleThreat(s, a?.approach || 'talk') },
+                    G.Governance.handleThreat(s, a?.approach || 'auto') },
     heir:        { name: '培养接班人', cat: 'gov', role: 'headmaster', run: (s) => G.Governance.teachHeir(s) },
 
     // 自拟：玩家用一句话安排这个时段。真正的结算在 Game.resolveCustom，
@@ -117,6 +119,7 @@
       const out = {};
       for (const k in ACTIVITIES) {
         const a = ACTIVITIES[k];
+        if (a.hidden) continue;
         if (!a.role || a.role === role) out[k] = a;
       }
       return out;
@@ -146,13 +149,15 @@
         sc[2].noon = { act: 'tutor' };
         sc[4].noon = { act: 'tutor' };
         sc[5].dawn = { act: 'duty', kind: 'meeting' };
+        sc[6].noon = { act: 'relax' };
 
       } else if (s.player.role === 'headmaster') {
         sc[1].dawn = { act: 'council' };
         sc[2].dawn = { act: 'patrol' };
         sc[4].dawn = { act: 'patrol' };
         sc[5].dawn = { act: 'council' };
-        if (s.gov?.threat) sc[3].dawn = { act: 'diplomacy', approach: 'talk' };
+        // 没有外患时这一格什么也不做；外患一来就按类型自动应对
+        sc[3].dawn = { act: 'diplomacy', approach: 'auto' };
         if (s.gov?.successor) sc[6].dawn = { act: 'heir' };
       }
       return sc;
@@ -188,16 +193,39 @@
       // 会被重复推一遍，时间凭空多走 21 个时段。
       if (s.flags._midWeek) {
         const pi = p => G.Time.PHASES.indexOf(p);
-        const pos = (s.time.day - 1) * 3 + pi(s.time.phase);
+        // 新存档记着确切推过了几格；老存档只能按时间反推
+        const done = s.flags._weekPlan?.pos;
+        const pos = typeof done === 'number' ? done - 1 : (s.time.day - 1) * 3 + pi(s.time.phase);
         this.weekQueue = this.weekQueue.filter(q => (q.day - 1) * 3 + pi(q.phase) > pos);
       }
-      s.flags._midWeek = true;
-      // 本周事件预抽，随机插入到某几个时段之后
-      const events = G.Event.drawWeekly(s);
-      this._weekEvents = events;
-      this._eventSlots = events.map(() => G.rng.int(2, 20)).sort((a, b) => a - b);
-      this._slotIndex = 0;
+      // 本周事件计划存进存档。中途退出、界面重建后接着推，还是这几件事、
+      // 这几个时间点——不重抽，固定事件和事件链也就不会被"抽掉又丢掉"。
+      const plan = s.flags._midWeek && s.flags._weekPlan;
+      if (plan && Array.isArray(plan.events)) {
+        this._weekEvents = plan.events;
+        this._eventSlots = plan.slots;
+        this._slotIndex = plan.done || 0;
+      } else {
+        const events = G.Event.drawWeekly(s);
+        // 事件落在第 k 个时段之后（k=2..20），此时"当前时段"是第 k-1 格。
+        // 有时段要求的事件只能落在对应的格子后面。
+        const pairs = events.map(ev => {
+          const want = ev.conditions?.phase;
+          const ks = [];
+          for (let k = 2; k <= 20; k++) {
+            if (!want || want.includes(G.Time.PHASES[(k - 1) % 3])) ks.push(k);
+          }
+          return { ev, k: G.rng.pick(ks) };
+        }).sort((a, b) => a.k - b.k);
+        this._weekEvents = pairs.map(x => x.ev);
+        this._eventSlots = pairs.map(x => x.k);
+        this._slotIndex = 0;
+        s.flags._weekPlan = { events: this._weekEvents, slots: this._eventSlots, done: 0, pos: 0 };
+      }
+      this.pending = null;
       this._results = [];
+      // 走 commit 才会自动存档
+      G.State.commit([{ path: 'flags._midWeek', op: 'set', value: true }], 'beginWeek');
       return this;
     },
 
@@ -207,11 +235,13 @@
       while (this._slotIndex < this._eventSlots.length &&
              this._eventSlots[this._slotIndex] <= (21 - this.weekQueue.length)) {
         const ev = this._weekEvents[this._slotIndex];
-        this._slotIndex++;
         if (ev) {
+          // 下标要等玩家处理完才往前走（resolveEvent / skipEvent），
+          // 这样没处理完就中断的事件，接着推时还会再出来
           this.pending = ev;
           return { type: 'event', event: ev };
         }
+        this._advanceEvent(s);
       }
 
       if (!this.weekQueue.length) {
@@ -219,6 +249,7 @@
       }
 
       const slot = this.weekQueue.shift();
+      if (s.flags._weekPlan) s.flags._weekPlan.pos = 21 - this.weekQueue.length;
       s.time.day = slot.day;
       s.time.phase = slot.phase;
       s.time.absoluteTurn++;
@@ -247,8 +278,10 @@
       const ev = this.pending;
       if (!ev) return null;
       const res = G.Event.resolve(s, ev, optionId, customIntent, extraMods);
+      if (!res) return null;
       this.pending = null;
-      this._results.push({ type: 'eventResolved', ...res });
+      this._advanceEvent(s);
+      (this._results = this._results || []).push({ type: 'eventResolved', ...res });
       return res;
     },
 
@@ -312,12 +345,24 @@
     },
 
     /** 跳过事件（罕见，用于异常兜底） */
-    skipEvent() { this.pending = null; },
+    skipEvent(s) {
+      if (!this.pending) return;
+      this.pending = null;
+      this._advanceEvent(s || G.State.current);
+    },
+
+    _advanceEvent(s) {
+      this._slotIndex++;
+      if (s?.flags?._weekPlan) {
+        G.State.commit([{ path: 'flags._weekPlan.done', op: 'set', value: this._slotIndex }], 'event.done');
+      }
+    },
 
     // ---------- 周末结算 ----------
     endWeek(s) {
       const notes = [];
       s.flags._midWeek = false;
+      delete s.flags._weekPlan;
       G.Cultivation.weeklyTick(s);
       notes.push(...G.Rumor.weeklyTick(s));
 
@@ -376,9 +421,14 @@
         }
         if (s.time.month === 6) G.State.commit([{ path: 'academy.term', op: 'add', value: 1 }], 'term');
       }
-      // 劝退判定
-      if (s.flags.expelled_pending && !s.flags.expelled) {
-        notes.push('执事堂通知：你已连续两学期垫底，面临劝退。');
+      // 劝退预警
+      if (s.flags.expelled_pending === 'exam' && !s.flags.expelled) {
+        notes.push('执事堂通知：你连着两次考试垫底，下次再垫底就要劝退。');
+      } else if (s.flags.expelled_pending && !s.flags.expelled) {
+        // 被人栽赃引出来的预警：听证会已经开过、或者续章作废了，就撤掉
+        const waiting = s.events.activeChains.some(c => c.eventId === 'evt_expulsion_hearing');
+        if (!waiting) delete s.flags.expelled_pending;
+        else notes.push('执事堂通知：栽赃那件事要开听证会，结果出来之前你都背着劝退的名头。');
       }
       return notes;
     },

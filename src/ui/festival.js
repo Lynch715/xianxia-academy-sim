@@ -186,10 +186,11 @@
       const k = G.Festival.pending(s);
       if (!k) return null;
       const name = { tourney: '七院大比', hunt: '春猎', inter: '外院交流赛' }[k];
+      const last = s.time.week >= 4;
       return h('button.opt', {
         style: { borderColor: 'var(--cinnabar)' },
         onclick: () => onStart(k)
-      }, h('span.key', '★'), name + '就在本周',
+      }, h('span.key', '★'), name + (last ? '（本周是最后机会）' : '正在报名'),
          h('span.hint', k === 'tourney' ? '五轮赛制，一旦开始就要打完'
            : k === 'hunt' ? '三个阶段，越深越险'
            : '与星落书院的一场硬仗'));

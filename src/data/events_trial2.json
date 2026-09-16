@@ -219,11 +219,11 @@
         } },
       { "id": "B", "text": "自己往深处走", "reason": -6, "check": { "attr": "ji", "difficulty": 62 },
         "outcomes": {
-          "perfect": { "narrative": "你在第七层找到了一处没有记载的岔道。\n\n岔道尽头是一间圆室，墙上刻满了灵脉走向——比裴无忧那张图详细十倍。\n\n你把它拓了下来。\n\n出来时你是最后一个，楚河山看着你，看了很久，什么也没问。", "effects": [ { "type": "stone", "value": 600 }, { "type": "exp", "value": 300 }, { "type": "storyline", "key": "seal", "value": 22, "clue": "灵脉走向图" }, { "type": "attr", "key": "ji", "value": 1 }, { "type": "flag", "key": "lingxu_explored", "value": 2 }, { "type": "flag", "key": "lingxu_permit" } ] },
-          "good": { "narrative": "你独自走了三层，捡到了不少东西。", "effects": [ { "type": "stone", "value": 400 }, { "type": "exp", "value": 180 }, { "type": "storyline", "key": "seal", "value": 10 }, { "type": "flag", "key": "lingxu_explored", "value": 1 }, { "type": "flag", "key": "lingxu_permit" } ] },
+          "perfect": { "narrative": "你在第七层找到了一处没有记载的岔道。\n\n岔道尽头是一间圆室，墙上刻满了灵脉走向——比裴无忧那张图详细十倍。\n\n你把它拓了下来。\n\n出来时你是最后一个，楚河山看着你，看了很久，什么也没问。", "effects": [ { "type": "stone", "value": 600 }, { "type": "exp", "value": 300 }, { "type": "storyline", "key": "seal", "value": 22, "clue": "灵脉走向图" }, { "type": "attr", "key": "ji", "value": 1 }, { "type": "flag", "key": "lingxu_explored", "op": "add", "value": 2 }, { "type": "flag", "key": "lingxu_permit" } ] },
+          "good": { "narrative": "你独自走了三层，捡到了不少东西。", "effects": [ { "type": "stone", "value": 400 }, { "type": "exp", "value": 180 }, { "type": "storyline", "key": "seal", "value": 10 }, { "type": "flag", "key": "lingxu_explored", "op": "add", "value": 1 }, { "type": "flag", "key": "lingxu_permit" } ] },
           "plain": { "narrative": "你走岔了，绕回了原地。", "effects": [ { "type": "exp", "value": 60 } ] },
           "bad": { "narrative": "你迷路了，在里面转了两天。出来时错过了归队的时辰，被记了一笔。", "effects": [ { "type": "conduct", "value": -3 }, { "type": "injury", "key": "exhaust", "value": 1, "weeks": 2 } ] },
-          "terrible": { "narrative": "你走到了不该走的地方。\n\n那里的东西看了你一眼——只是看了一眼。\n\n你是被人抬出来的。醒来之后有半个月说不出话。", "effects": [ { "type": "injury", "key": "internal", "value": 3, "weeks": 6 }, { "type": "storyline", "key": "seal", "value": 15 }, { "type": "flag", "key": "vein_anomaly", "value": 2 }, { "type": "demon", "value": 22, "source": "repress", "note": "灵墟深处看了你一眼的东西" } ] }
+          "terrible": { "narrative": "你走到了不该走的地方。\n\n那里的东西看了你一眼——只是看了一眼。\n\n你是被人抬出来的。醒来之后有半个月说不出话。", "effects": [ { "type": "injury", "key": "internal", "value": 3, "weeks": 6 }, { "type": "storyline", "key": "seal", "value": 15 }, { "type": "flag", "key": "vein_anomaly", "op": "add", "value": 2 }, { "type": "demon", "value": 22, "source": "repress", "note": "灵墟深处看了你一眼的东西" } ] }
         } },
       { "id": "C", "text": "留意有没有人掉队", "reason": 16, "check": { "attr": "shen", "difficulty": 48 },
         "outcomes": {

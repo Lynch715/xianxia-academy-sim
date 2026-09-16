@@ -12,9 +12,18 @@
         "student"
       ],
       "notFlags": [
-        "confession_handled"
+        "confession_handled",
+        "in_relationship",
+        "love_shen_1",
+        "love_wen_1",
+        "love_pei_1",
+        "love_ye_1",
+        "love_zhao_1",
+        "love_su_1",
+        "love_liu_1",
+        "love_zhong_1"
       ],
-      "minWeek": 38
+      "minWeek": 60
     },
     "dynamicActor": "romance_top",
     "seed": "她把你叫到石阶上，站了很久没说话。你等着。山下的灯一盏一盏亮起来，等最后一盏也亮了，她才开口——不是问句，是陈述句。说完之后她没有看你，只是低头看着自己的鞋尖。",
@@ -266,14 +275,318 @@
         }
       }
     ],
-    "chainNext": {
-      "on": [
-        "perfect",
-        "good"
+    "chainNext": [
+      {
+        "on": [
+          "perfect",
+          "good",
+          "plain",
+          "bad"
+        ],
+        "options": [
+          "A"
+        ],
+        "eventId": "evt_first_date",
+        "delayWeeks": 2
+      },
+      {
+        "on": [
+          "perfect",
+          "good",
+          "plain",
+          "bad",
+          "terrible"
+        ],
+        "options": [
+          "C"
+        ],
+        "eventId": "evt_confession_followup",
+        "delayWeeks": 3
+      }
+    ]
+  },
+  {
+    "id": "evt_confession_followup",
+    "category": "romance",
+    "weight": 30,
+    "scene": "scene_stone_stairs",
+    "actors": [],
+    "cooldown": 999,
+    "important": true,
+    "chainOnly": true,
+    "conditions": {
+      "role": [
+        "student"
       ],
-      "eventId": "evt_first_date",
-      "delayWeeks": 2
-    }
+      "notFlags": [
+        "confession_handled",
+        "in_relationship"
+      ]
+    },
+    "dynamicActor": "closest",
+    "seed": "{{TA}}又在石阶那儿等你。离上回已经过去三个星期，你一直没给答复，{{TA}}也一直没问。今天是{{TA}}先开的口：「上回那件事，你想好了没有？想不好也行，我就是不想再猜了。」",
+    "facts": [
+      "{{TA}}三个星期前向你表白，你说要想想",
+      "{{TA}}今天来要一个答复"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "这回答应下来",
+        "reason": 12,
+        "check": {
+          "attr": "xin",
+          "difficulty": 30
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "这回你没再躲。你说了「好」。就一个字。她抬起头，眼睛亮得吓人，然后又低下去。「哦。」她说。两个人在石阶上站到很晚，谁也没再说话，但谁也没走。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 20,
+                "trust": 20,
+                "bond": 22,
+                "note": "石阶上，你答应了她",
+                "openRomance": true
+              },
+              {
+                "type": "flag",
+                "key": "confession_handled"
+              },
+              {
+                "type": "flag",
+                "key": "in_relationship"
+              },
+              {
+                "type": "demon",
+                "value": -6,
+                "source": "love"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "这回你没再躲。你答应了。她笑得有点傻，然后转身跑了，跑出十几步又回头挥了下手。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 15,
+                "trust": 15,
+                "bond": 16,
+                "openRomance": true,
+                "note": "你答应了她"
+              },
+              {
+                "type": "flag",
+                "key": "confession_handled"
+              },
+              {
+                "type": "flag",
+                "key": "in_relationship"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "这回你没再躲。你答应得有点犹豫。她察觉到了，但还是笑了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 10,
+                "trust": 8,
+                "bond": 10,
+                "openRomance": true
+              },
+              {
+                "type": "flag",
+                "key": "confession_handled"
+              },
+              {
+                "type": "flag",
+                "key": "in_relationship"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "这回你没再躲。你说好，但话说得别扭。她的笑僵了一下。「你要是为难……」她没说完。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 6,
+                "trust": 2,
+                "bond": 8,
+                "openRomance": true
+              },
+              {
+                "type": "flag",
+                "key": "confession_handled"
+              },
+              {
+                "type": "flag",
+                "key": "in_relationship"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "这回你没再躲。你答应得太快，快到像是敷衍。她看了你很久，说：「你再想想吧。」然后走了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -5,
+                "trust": -8
+              },
+              {
+                "type": "flag",
+                "key": "confession_handled"
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "love",
+                "note": "石阶上那句答得太快的话"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "这回把话说清楚：不行",
+        "reason": 14,
+        "check": {
+          "attr": "shi",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "这回你没再躲。你说了很久，说得很慢。她听完点点头：「我知道了。」顿了顿，「那朋友还是能做的吧？」你说当然。她笑了，这次是真的笑。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -4,
+                "trust": 15,
+                "bond": 10,
+                "note": "你拒绝得很认真，她接住了"
+              },
+              {
+                "type": "flag",
+                "key": "confession_handled"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "这回你没再躲。她听完，说了句「好」。往后你们还是朋友，只是有些话再没提过。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -6,
+                "trust": 8
+              },
+              {
+                "type": "flag",
+                "key": "confession_handled"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "这回你没再躲。她点点头就走了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -10,
+                "trust": 3
+              },
+              {
+                "type": "flag",
+                "key": "confession_handled"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "这回你没再躲。你的理由说得含糊，反而更伤人。她说了声「知道了」，转身下了石阶，走得很快。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -18,
+                "trust": -6
+              },
+              {
+                "type": "flag",
+                "key": "confession_handled"
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "love",
+                "note": "那晚的拒绝"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "这回你没再躲。你说的话里有一句很伤人，说出口你就后悔了。她没有哭，只是很平静地说：「我不该说的。」然后走了。此后很长一段时间，你们连照面都避开。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -30,
+                "trust": -20,
+                "note": "石阶上那句伤人的话"
+              },
+              {
+                "type": "flag",
+                "key": "confession_handled"
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "guilt",
+                "note": "石阶上说出口就后悔的那句话"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "还是说不出口",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你张了张嘴，还是什么也没说出来。\n\n{{TA}}点了点头，说：「那我知道了。」\n\n这回{{TA}}下石阶的时候，没再回头。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -12,
+                "trust": -8,
+                "note": "等了三个星期，你还是没给答复"
+              },
+              {
+                "type": "flag",
+                "key": "confession_handled"
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "love",
+                "note": "石阶上第二次沉默"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "chainNext": [
+      {
+        "on": [
+          "perfect",
+          "good",
+          "plain",
+          "bad"
+        ],
+        "options": [
+          "A"
+        ],
+        "eventId": "evt_first_date",
+        "delayWeeks": 2
+      }
+    ]
   },
   {
     "id": "evt_first_date",

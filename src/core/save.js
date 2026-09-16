@@ -139,6 +139,16 @@
         s.log = s.log || [];
         s.flags = s.flags || {};
         s.reputation = s.reputation || { value:5, tags:[], factions:{traditional:0,reform:0,xiaoyao:0,pragmatic:0} };
+        // 1.2 卡关修复：旧的劝退预警改成带来源；「想想」之后没下文的补一个
+        if (s.flags.expelled_pending === true &&
+            !(s.events.activeChains || []).some(c => c.eventId === 'evt_expulsion_hearing')) {
+          s.flags.expelled_pending = 'exam';
+        }
+        if (s.flags.confession_pending && !s.flags.confession_handled &&
+            !(s.events.activeChains || []).some(c => c.eventId === 'evt_confession_followup')) {
+          s.events.activeChains.push({ chainId: 'evt_confession_received', eventId: 'evt_confession_followup',
+                                       actor: null, dueTurn: (s.time?.absoluteTurn || 0) + 21 });
+        }
         s.meta.version = G.State.VERSION;
         // P5 新增的两条路线状态，老存档补齐
         const cur = G.State.current;
