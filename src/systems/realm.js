@@ -161,7 +161,10 @@
         case 'search': {
           n.searched = true;
           r.qi -= 4;
-          const c = G.Check.roll({ attrKey: 'shen', difficulty: 48 + (r.def.danger - 1) * 20 });
+          const c = G.Check.roll({
+            attrKey: 'shen', difficulty: 48 + (r.def.danger - 1) * 20,
+            modifiers: [G.Beast.has(s, 'find') ? 12 : 0]      // 寻宝的灵兽会刨
+          });
           if (c.grade === 'perfect') {
             const stone = G.rng.int(60, 180);
             r.loot.push({ type: 'stone', value: stone });
@@ -302,13 +305,29 @@
           return `一只半埋在土里的木匣，锁早就朽了。里面是 ${stone} 下品灵石。`;
         }
         case 'trap': {
-          const c = G.Check.roll({ attrKey: 'shen', difficulty: 54 });
+          const warned = G.Beast.has(s, 'scout');
+          const c = G.Check.roll({ attrKey: 'shen', difficulty: 54, modifiers: [warned ? 10 : 0] });
           if (['perfect', 'good'].includes(c.grade)) return '脚下石板的颜色不对。你从旁边绕了过去。';
-          r.hp -= G.rng.int(12, 28);
-          return '脚下一空。等你稳住时，小腿已经在往外渗血了。';
+          const dmg = G.rng.int(12, 28);
+          r.hp -= warned ? Math.round(dmg / 2) : dmg;
+          return warned
+            ? `${s.beast.name}先叫了一声。你收住脚，还是被擦到了，但不深。`
+            : '脚下一空。等你稳住时，小腿已经在往外渗血了。';
         }
         case 'fortune': {
           const c = G.Check.roll({ attrKey: 'ji', difficulty: 58 });
+          // 运气好的时候，捡到的是一张方子，或者一只还没孵的蛋
+          if (['perfect', 'good'].includes(c.grade) && G.rng.chance(35)) {
+            if (!s.beast && G.rng.chance(40)) {
+              const b = G.Beast.obtain(s);
+              if (b.ok) return `石台上搁着一只温的蛋。${b.intro}你把它揣进了怀里。`;
+            }
+            const rec = G.Craft.randomUnknown(s, 'realm', G.State.realmIndex(s.cultivation.realm) + 1);
+            if (rec) {
+              G.Craft.learn(s, rec.id);
+              return `壁龛里塞着半卷兽皮，上面是一张方子：${rec.name}。字写得很急，像是来不及写完就走了。`;
+            }
+          }
           if (c.grade === 'perfect') {
             const item = G.rng.pick(r.def.loot);
             r.loot.push({ type: 'item', id: item, value: 1 });

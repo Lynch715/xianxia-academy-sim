@@ -50,6 +50,16 @@
                     G.State.commit([{ path: 'cultivation.demonHeart', op: 'add', value: -2, clamp: [0, 100] }], 'activity.rest');
                     return { rested: true };
                   } },
+    // 手艺
+    craft:       { name: '炼制',       cat: 'craft', run: (s, a) => {
+                    if (!a?.recipe) return { fail: '没定下炼什么' };
+                    const can = G.Craft.canMake(s, a.recipe);
+                    if (!can.ok) return { fail: can.reason };
+                    return { openCraft: { rid: a.recipe, extra: a.extra || 0 } };
+                  } },
+    feed:        { name: '喂灵兽',     cat: 'life', run: (s) => G.Beast.feed(s) },
+    copybook:    { name: '抄录典籍',   cat: 'study', run: (s) => G.Academy.copyScripture(s) },
+
     // 历练
     quest:       { name: '接取悬赏',   cat: 'trial', run: (s, a) => G.Quest.run(s, a?.tier || 'bing') },
     tower:       { name: '青霄试炼塔', cat: 'trial', run: (s) => G.Quest.tower(s) },
@@ -449,6 +459,10 @@
           const opts = ev.options.filter(o => !o.custom);
           const pick = chooser ? chooser(ev, opts) : G.rng.pick(opts);
           this.resolveEvent(s, pick.id);
+        }
+        // 没有界面的时候（测试、快进），炼制自己炼完
+        if (r.type === 'activity' && r.detail?.openCraft) {
+          G.Craft.auto(s, r.detail.openCraft.rid, r.detail.openCraft.extra);
         }
         // 没有界面的时候（测试、快进），斗法自己打完
         if (r.type === 'activity' && r.detail?.openDuel) {

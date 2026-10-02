@@ -159,6 +159,9 @@
             lifespan: G.Career.LIFESPAN[s.cultivation.realm] || 120, pending: null
           };
         }
+        // 1.5 手艺：老档补上三门熟练度与起手方子
+        if (!s.craft) { const cur = G.State.current; G.State.current = s; try { G.Craft.init(s); } finally { G.State.current = cur; } }
+        if (s.beast === undefined) s.beast = null;
         s.meta.version = G.State.VERSION;
         // P5 新增的两条路线状态，老存档补齐
         const cur = G.State.current;

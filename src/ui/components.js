@@ -312,6 +312,15 @@
           btn('休息', { act: 'rest' }));
       }
 
+      // 手艺：三种身份都能炼
+      sec('手艺',
+        h('button.btn', {
+          onclick: () => { if (modal) modal.close(); G.CraftUI.picker(s, e => onSet(e)); }
+        }, '炼制（挑方子）'),
+        btn('抄录典籍', { act: 'copybook' }, '抄满一本就能改修'),
+        s.beast ? btn('喂' + s.beast.name, { act: 'feed' },
+          s.beast.stage === 'adult' ? '成年了，喂着是增进交情' : '喂到长大') : null);
+
       // 自拟：一句话说你想做什么。推演到这一格时会解析、判定、写一小段。
       const customIn = h('input', { placeholder: '例：去后山找叶素素看看她的灵兽', maxlength: 60,
         onkeydown: e => { if (e.key === 'Enter') submitCustom(); } });

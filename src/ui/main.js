@@ -430,6 +430,13 @@
               await this.playCustomSlot(s, r, token);
               continue;
             }
+            // 开炉／落笔／起火
+            if (r.detail?.openCraft) {
+              if (digest.length) { this.narr.sys(digest.join('<br>')); digest.length = 0; }
+              this.scrollDown();
+              await this.playCraft(s, r.detail.openCraft, token);
+              continue;
+            }
             // 要动手的事：切磋、试炼塔战斗层、甲等以上悬赏
             if (r.detail?.openDuel) {
               if (digest.length) { this.narr.sys(digest.join('<br>')); digest.length = 0; }
@@ -685,6 +692,17 @@
       G.Memory.push(s, res.facts, narrText.slice(0, 120));
       this.refreshLeft();
       this.scrollDown();
+    },
+
+    /** 炼一次：界面接管三步火候，出炉写一句 */
+    async playCraft(s, cfg, token) {
+      this.clearOptions();
+      const out = await G.CraftUI.run(s, cfg);
+      if (!this.alive(token) || !out) return null;
+      this.narr.sys(out.res.notes.join('　') + `　${G.Craft.defs()[out.res.craft].name}熟练度 +${out.res.profGain}`);
+      this.refreshLeft();
+      this.scrollDown();
+      return out.res;
     },
 
     /** 打一场：界面接管 → 结算 → 后续（试炼塔进层、悬赏交差） */
@@ -1045,8 +1063,39 @@
           }, '买')));
       });
 
-      G.Theme.mount(body, wallet, h('hr.hr'), list);
-      G.Theme.modal('山脚坊市', '每月刷新一次货品', body, [{ label: '离开' }]);
+      // 方子摊：坊市的方子用灵石买，执事堂那几张要贡献点
+      const recipes = h('div');
+      const forSale = G.Craft.recipes().filter(r =>
+        !G.Craft.known(s).includes(r.id) && (r.source === 'market' || r.source === 'master'));
+      for (const rec of forSale) {
+        const byPoint = rec.source === 'master';
+        const cost = byPoint ? rec.tier * 120 : rec.tier * 260;
+        recipes.appendChild(h('div', {
+          style: { display: 'flex', alignItems: 'center', gap: '10px', padding: '7px 0', borderBottom: '1px solid var(--line-2)' }
+        },
+          h('span', { style: { flex: 1 } }, rec.name,
+            h('span.tiny.muted', `　${G.Craft.defs()[rec.craft].name} · 需熟练度 ${rec.prof}`)),
+          h('span.mono.small', byPoint ? cost + ' 贡献' : cost + ' 石'),
+          h('button.btn', {
+            onclick: () => {
+              if (byPoint) {
+                if (s.resources.contribution < cost) return G.Theme.toast('贡献点不够', 'danger');
+                G.State.commit([{ path: 'resources.contribution', op: 'add', value: -cost, min: 0 }], 'market.recipe');
+              } else if (!G.Economy.pay(s, cost)) {
+                return G.Theme.toast('灵石不够', 'danger');
+              }
+              G.Craft.learn(s, rec.id);
+              G.Theme.toast(`抄下了${rec.name}的方子`);
+              wallet.textContent = '灵石：' + G.Economy.format(s);
+              this.refreshLeft();
+            }
+          }, '买下')));
+      }
+
+      G.Theme.mount(body, wallet, h('hr.hr'), list,
+        forSale.length ? h('.panel-title', { style: { marginTop: '16px' } }, '方 子') : null,
+        forSale.length ? recipes : null);
+      G.Theme.modal('山脚坊市', '每月刷新一次货品；方子常年有', body, [{ label: '离开' }]);
     },
 
     openCultivate(s) {

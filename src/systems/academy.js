@@ -181,6 +181,43 @@
       ], 'academy.year');
     },
 
+    /* 藏经阁抄录：一个时段抄一阵，抄满了就多一本功法。
+     * 抄得全不全看神识和心境——抄错一个字，整段心法就是废的。 */
+    copyScripture(s) {
+      const owned = s.resources.techniques || [];
+      const pool = (G.DATA.static.techniques || []).filter(t => {
+        if (owned.includes(t.id)) return false;
+        if (t.req?.realm && G.State.realmIndex(s.cultivation.realm) < G.State.realmIndex(t.req.realm)) return false;
+        return true;
+      });
+      if (!pool.length) return { fail: '藏经阁里能抄的，你都抄过了' };
+
+      let cur = s.flags._copying;
+      if (!cur || !pool.find(t => t.id === cur)) cur = G.rng.pick(pool).id;
+      const tech = (G.DATA.static.techniques || []).find(t => t.id === cur);
+
+      const r = G.Check.roll({
+        attrKey: G.State.ATTR_SETS[s.player.role].keys.includes('shen') ? 'shen' : 'xue',
+        difficulty: 46 + (tech.tier === 'xuan' ? 16 : tech.tier === 'huang' ? 6 : 0),
+        modifiers: [s.flags.library_pass ? 8 : 0]
+      });
+      const gain = { perfect: 34, good: 22, plain: 14, bad: 6, terrible: 0 }[r.grade];
+      const prog = Math.min(100, (s.flags[`copy_${cur}`] || 0) + gain);
+      const deltas = [
+        { path: `flags.copy_${cur}`, op: 'set', value: prog },
+        { path: 'flags._copying', op: 'set', value: cur }
+      ];
+      let done = false;
+      if (prog >= 100) {
+        deltas.push({ path: 'resources.techniques', op: 'push', value: cur, unique: true });
+        deltas.push({ path: 'flags._copying', op: 'set', value: null });
+        done = true;
+      }
+      G.State.commit(deltas, 'academy.copy');
+      if (done) G.State.logLine(`抄完了${tech.name}，可以改修了`, 'major');
+      return { grade: r.grade, tech, progress: prog, done };
+    },
+
     /** 毕业条件 */
     canGraduate(s) {
       return s.academy.year >= 5 &&

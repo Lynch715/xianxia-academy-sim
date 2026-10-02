@@ -365,6 +365,16 @@
             summary.push(`${it ? it.name : eff.id} ×${eff.value || 1}`);
             break;
           }
+          case 'recipe': {
+            const rid = eff.id || (G.Craft.randomUnknown(s, eff.source || null, eff.maxTier || 3) || {}).id;
+            if (rid && G.Craft.learn(s, rid)) summary.push('得了一张方子');
+            break;
+          }
+          case 'beast': {
+            const r = G.Beast.obtain(s, eff.id);
+            if (r.ok) summary.push(`${r.beast.name}跟了你`);
+            break;
+          }
           case 'technique': {
             deltas.push({ path: 'resources.techniques', op: 'push', value: eff.id, unique: true });
             summary.push('获得功法');

@@ -634,3 +634,21 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); }
   .mv-desc { display: block; font-size: 11px; color: var(--ink-3);
              overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 }
+
+/* ---------- 炼制 ---------- */
+.craft { border: 1px solid var(--line); background: var(--paper-2); padding: 10px 12px; margin: 14px 0; }
+.craft-head { border-bottom: 1px solid var(--line-2); padding-bottom: 6px; }
+.craft-log { margin: 8px 0; }
+.craft-line { font-size: 13.5px; line-height: 1.9; color: var(--ink-2); }
+.craft-line.sys { color: var(--ink-3); letter-spacing: .06em; }
+.craft-line.good { color: var(--accent); }
+.craft-line.bad { color: var(--cinnabar); }
+.craft-line.ok { color: var(--ink); letter-spacing: .04em; }
+.craft-line.top { color: var(--accent); letter-spacing: .08em; }
+.craft-line.waste { color: var(--cinnabar); letter-spacing: .04em; }
+.craft-heats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 6px; }
+.craft-heat { padding: 8px 6px; border: 1px solid var(--line); background: var(--paper); cursor: pointer; text-align: center; }
+.craft-heat:hover { border-color: var(--accent); }
+.ch-name { display: block; font-size: 14px; }
+.ch-hint { display: block; font-size: 10.5px; color: var(--ink-3); margin-top: 2px; }
+@media (max-width: 460px) { .ch-hint { display: none; } }

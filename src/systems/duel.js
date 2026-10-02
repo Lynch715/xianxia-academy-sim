@@ -57,7 +57,56 @@
       return (t && t.moves) ? t.moves.map(m => ({ ...m, from: t.name })) : [];
     },
 
-    moves(s) { return this.basicMoves().concat(this.techniqueMoves(s)); },
+    /** 法器带的那一式。品阶越高，这一式越重。 */
+    artifactMoves(s) {
+      const eq = s.resources.equipment || {};
+      const out = [];
+      for (const slot in eq) {
+        const id = eq[slot];
+        if (!id) continue;
+        const it = (G.DATA.static.items || []).find(x => x.id === id);
+        if (!it || !it.move) continue;
+        const q = s.resources.artifactQuality?.[id] || 0;
+        out.push({ ...it.move, power: (it.move.power || 1) * (1 + q * 0.1), from: it.name });
+      }
+      return out;
+    },
+
+    moves(s) { return this.basicMoves().concat(this.techniqueMoves(s)).concat(this.artifactMoves(s)); },
+
+    /** 身上带着的符，一场只能用一张 */
+    talismans(s) {
+      return Object.keys(s.resources.items)
+        .filter(k => s.resources.items[k] > 0)
+        .map(k => (G.DATA.static.items || []).find(x => x.id === k))
+        .filter(x => x && x.type === 'talisman');
+    },
+
+    /** 甩一张符。效果全在这里算，模型碰不到。 */
+    useTalisman(s, d, itemId) {
+      if (d.fuUsed) return { fail: '一场只来得及甩一张符' };
+      if (!(s.resources.items[itemId] > 0)) return { fail: '你没有这张符' };
+      const it = (G.DATA.static.items || []).find(x => x.id === itemId);
+      if (!it || !it.talisman) return { fail: '这不是能在场上用的符' };
+      d.fuUsed = true;
+      G.State.commit([{ path: `resources.items.${itemId}`, op: 'add', value: -1, min: 0 }], 'duel.talisman');
+      const e = it.talisman;
+      const out = { name: it.name, text: '' };
+      if (e.dmg) {
+        const dmg = Math.round(this.baseDamage(d.me) * e.dmg);
+        d.foe.hp -= dmg;
+        out.dmg = dmg;
+        out.text = `${it.name}贴了上去，${dmg}。`;
+      }
+      if (e.qi) { d.me.qi = Math.min(d.me.maxQi, d.me.qi + e.qi); out.text += `灵力回了 ${e.qi}。`; }
+      if (e.shield) { d.me.hp = Math.min(d.me.maxHp, d.me.hp + e.shield); out.text += `护身符撑起一层光，${e.shield}。`; }
+      if (e.posture) { d.posture = Math.max(-3, Math.min(3, d.posture + e.posture)); out.text += '你抢了半步。'; }
+      if (e.stun) { d.foe.qi = Math.max(0, d.foe.qi - 18); d.posture = Math.min(3, d.posture + 1); out.text += '他顿了一息。'; }
+      if (e.demon) G.Demon.resolve(s, 'fear', -e.demon);
+      if (e.escape) { d.escape = true; out.text += '气息一散，你想走随时能走。'; }
+      this._checkOver(s, d);
+      return out;
+    },
 
     moveById(s, id) { return this.moves(s).find(m => m.id === id); },
 
@@ -124,7 +173,9 @@
         over: false,
         result: null
       };
+      d.fuUsed = false;
       this.current = d;
+      G.Beast.resetDuel(s);
       return d;
     },
 
@@ -169,6 +220,7 @@
       if ((m.qi || 0) > d.me.qi) return { fail: '灵力不够' };
 
       d.round++;
+      let line_assist = 0, line_guarded = false;
       const foeType = this.foePick(d);
       // 克到对方：好判、打得重、挨得轻；被克：反过来
       const adv = BEATS[m.type] === foeType ? 1 : BEATS[foeType] === m.type ? -1 : 0;
@@ -212,8 +264,19 @@
         - (foeType === 'attack' ? 9 : foeType === 'feint' ? 7 : 0)
         + (foeType === 'guard' ? 9 : foeType === 'evade' ? 4 : 0));
 
+      // 灵兽助攻：偶尔补上一口
+      const assist = G.Beast.assistDamage(s, this.baseDamage(d.me));
+      if (assist) { d.foe.hp -= assist; line_assist = assist; }
+
+      // 灵兽护主：这一下替你挡了
+      let taken = theirsDmg;
+      if (taken > this.baseDamage(d.foe) * 0.8 && G.Beast.tryGuard(s)) {
+        taken = 0;
+        line_guarded = true;
+      }
+
       d.foe.hp -= mineDmg;
-      d.me.hp -= theirsDmg;
+      d.me.hp -= taken;
 
       // 架势：这一合谁打得更漂亮
       const order = ['terrible', 'bad', 'plain', 'good', 'perfect'];
@@ -223,7 +286,8 @@
 
       const line = {
         round: d.round, move: m, foeType, grade: r.grade, foeGrade: fGrade, adv,
-        mineDmg, theirsDmg, posture: d.posture, burst: null
+        mineDmg, theirsDmg: taken, posture: d.posture, burst: null,
+        assist: line_assist, beastGuard: line_guarded
       };
 
       // 破势：架势拉满，占上风的那个结结实实打中一下

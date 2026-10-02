@@ -5,7 +5,7 @@
 (function (G) {
   'use strict';
 
-  const VERSION = '1.3.0';
+  const VERSION = '1.5.0';
 
   const ATTR_SETS = {
     student:    { keys: ['wu','gen','shen','ji','xin','shi'],       points: 30, cap: 10 },
@@ -95,7 +95,8 @@
         resources: {
           stone: { low: 100, mid: 0, high: 0, supreme: 0 },
           contribution: 0,
-          items: { ningqi_dan: 2 },
+          items: { ningqi_dan: 2, ninglu_cao: 4, fuzhi: 3, lingmo: 2 },
+          artifactQuality: {},
           techniques: ['fanji_basic'],
           equipment: { weapon: null, robe: null, accessory: null }
         },
@@ -130,6 +131,7 @@
 
         llmMemory: { summary:'', recentTurns:[], summarizedUpTo:0 },
 
+        beast: null,
         rumors: [],
         log: [],
         flags: {},
@@ -144,6 +146,7 @@
       G.Faculty.init(s);
       G.Governance.init(s);
       G.Career.init(s);
+      G.Craft.init(s);
       return s;
     },
 

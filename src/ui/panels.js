@@ -36,6 +36,15 @@
 
         C().panel('资质', attrs),
 
+        C().panel('手艺',
+          ...G.Craft.summary(s).map(x => C().kv(
+            x.name + (x.home ? '（本院）' : ''),
+            `${x.prof} · ${x.profName}　${x.recipes} 方`)),
+          s.beast ? h('.tiny', { style: { marginTop: '6px' } }, G.Beast.label(s)) : null,
+          h('.btn-row', { style: { marginTop: '8px' } },
+            h('button.btn', { onclick: () => G.CraftUI.stash(s, () => G.UI.refreshLeft()) }, '成品'),
+            h('button.btn', { onclick: () => G.CraftUI.picker(s, null) }, '方子'))),
+
         C().panel('状态',
           h('.kv', h('span.k', '心魔'), h('span.v', `${Math.round(cu.demonHeart)} · ${dh.name}`)),
           C().bar(cu.demonHeart, 100, dh.tone === 'danger' ? 'danger' : dh.tone === 'warn' ? 'warn' : null),

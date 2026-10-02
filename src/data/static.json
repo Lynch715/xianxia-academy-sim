@@ -381,7 +381,7 @@
       "id": "pozhang_dan",
       "name": "破障丹",
       "type": "pill",
-      "price": 200,
+      "price": 319,
       "effect": {
         "breakthrough": 20
       },
@@ -391,7 +391,7 @@
       "id": "ningxin_dan",
       "name": "宁心丹",
       "type": "pill",
-      "price": 120,
+      "price": 148,
       "effect": {
         "demon": -15
       },
@@ -458,6 +458,334 @@
       "type": "gift",
       "price": 40,
       "desc": "空白札记，读书人常用。"
+    },
+    {
+      "id": "ninglu_cao",
+      "name": "凝露草",
+      "type": "material",
+      "price": 8,
+      "desc": "田埂上就有，炼基础丹的底子"
+    },
+    {
+      "id": "chiyan_hua",
+      "name": "赤焰花",
+      "type": "material",
+      "price": 18,
+      "desc": "花瓣捏碎了会烫手"
+    },
+    {
+      "id": "hantie_sha",
+      "name": "寒铁砂",
+      "type": "material",
+      "price": 26,
+      "desc": "铺在炉底能稳住火"
+    },
+    {
+      "id": "kongqing_shi",
+      "name": "空青石",
+      "type": "material",
+      "price": 34,
+      "desc": "画符的人抢着要"
+    },
+    {
+      "id": "shouin_jin",
+      "name": "兽筋",
+      "type": "material",
+      "price": 40,
+      "desc": "妖兽身上最韧的那一条"
+    },
+    {
+      "id": "xuanhu_xian",
+      "name": "玄狐涎",
+      "type": "material",
+      "price": 52,
+      "desc": "一小瓶就得跑一趟外域"
+    },
+    {
+      "id": "leiwen_mu",
+      "name": "雷纹木",
+      "type": "material",
+      "price": 70,
+      "desc": "劈过雷的树心，纹路是黑的"
+    },
+    {
+      "id": "zizhi",
+      "name": "紫芝",
+      "type": "material",
+      "price": 95,
+      "desc": "长在背阴的石缝里，三十年才一株"
+    },
+    {
+      "id": "jinsui",
+      "name": "金髓",
+      "type": "material",
+      "price": 140,
+      "desc": "矿脉最深处那一点，拿命换的"
+    },
+    {
+      "id": "yaodan",
+      "name": "妖丹",
+      "type": "material",
+      "price": 180,
+      "desc": "得先打得过它"
+    },
+    {
+      "id": "canzha",
+      "name": "残渣",
+      "type": "material",
+      "price": 6,
+      "desc": "炼废的东西，收废料的还肯要"
+    },
+    {
+      "id": "shouyu",
+      "name": "兽语草",
+      "type": "material",
+      "price": 22,
+      "desc": "灵兽爱吃，喂了会亲近人"
+    },
+    {
+      "id": "xingshen_dan",
+      "name": "醒神丹",
+      "type": "pill",
+      "price": 60,
+      "effect": {
+        "demon": -8
+      },
+      "desc": "提神，顺带压一压杂念"
+    },
+    {
+      "id": "guyuan_dan",
+      "name": "固元丹",
+      "type": "pill",
+      "price": 165,
+      "effect": {
+        "exp": 45
+      },
+      "desc": "补元气，吃完能多熬几天",
+      "duel": {
+        "qi": 30
+      }
+    },
+    {
+      "id": "xisui_dan",
+      "name": "洗髓丹",
+      "type": "pill",
+      "price": 716,
+      "effect": {
+        "exp": 160
+      },
+      "desc": "洗一次髓，路能走得宽一点"
+    },
+    {
+      "id": "longhu_dan",
+      "name": "龙虎丹",
+      "type": "pill",
+      "price": 508,
+      "effect": {
+        "exp": 120
+      },
+      "desc": "药性烈，吃完浑身发烫"
+    },
+    {
+      "id": "qingyang_dan",
+      "name": "青阳丹",
+      "type": "pill",
+      "price": 677,
+      "effect": {
+        "exp": 240,
+        "demon": -10
+      },
+      "desc": "丹霞院的脸面"
+    },
+    {
+      "id": "jiuzhuan_dan",
+      "name": "九转还魂丹",
+      "type": "pill",
+      "price": 1410,
+      "effect": {
+        "heal": 3,
+        "exp": 300
+      },
+      "desc": "吊着一口气也能拉回来",
+      "duel": {
+        "hp": 45
+      }
+    },
+    {
+      "id": "fu_bao",
+      "name": "爆符",
+      "type": "talisman",
+      "price": 70,
+      "talisman": {
+        "dmg": 1.5
+      },
+      "desc": "贴上去就炸，威力看你画得怎么样"
+    },
+    {
+      "id": "fu_dingshen",
+      "name": "定身符",
+      "type": "talisman",
+      "price": 117,
+      "talisman": {
+        "stun": 1
+      },
+      "desc": "让他动不了一息"
+    },
+    {
+      "id": "fu_hushen",
+      "name": "护身符",
+      "type": "talisman",
+      "price": 80,
+      "talisman": {
+        "shield": 30
+      },
+      "desc": "挨一下不疼"
+    },
+    {
+      "id": "fu_jixing",
+      "name": "疾行符",
+      "type": "talisman",
+      "price": 65,
+      "talisman": {
+        "posture": 2
+      },
+      "desc": "抢半步，架势就起来了"
+    },
+    {
+      "id": "fu_juling",
+      "name": "聚灵符",
+      "type": "talisman",
+      "price": 55,
+      "talisman": {
+        "qi": 30
+      },
+      "desc": "灵力见底时救命"
+    },
+    {
+      "id": "fu_quxie",
+      "name": "驱邪符",
+      "type": "talisman",
+      "price": 230,
+      "talisman": {
+        "demon": -6,
+        "dmg": 1.2
+      },
+      "desc": "对邪祟格外好使"
+    },
+    {
+      "id": "fu_yinxi",
+      "name": "隐息符",
+      "type": "talisman",
+      "price": 326,
+      "talisman": {
+        "escape": 1
+      },
+      "desc": "想走的时候走得掉"
+    },
+    {
+      "id": "fu_leiyin",
+      "name": "雷引符",
+      "type": "talisman",
+      "price": 365,
+      "talisman": {
+        "dmg": 2.0
+      },
+      "desc": "画废十张能成一张"
+    },
+    {
+      "id": "art_qingfeng",
+      "name": "青锋剑",
+      "type": "artifact",
+      "price": 512,
+      "slot": "weapon",
+      "desc": "炼出来的法器，带着一式",
+      "move": {
+        "id": "af_qingfeng",
+        "name": "青锋斩",
+        "type": "attack",
+        "qi": 10,
+        "power": 1.45,
+        "attr": "gen",
+        "desc": "剑比人快"
+      }
+    },
+    {
+      "id": "art_liuyun",
+      "name": "流云靴",
+      "type": "artifact",
+      "price": 499,
+      "slot": "accessory",
+      "desc": "炼出来的法器，带着一式",
+      "move": {
+        "id": "af_liuyun",
+        "name": "流云步",
+        "type": "evade",
+        "qi": 5,
+        "power": 1.0,
+        "attr": "ji",
+        "desc": "脚下生云，退得干净"
+      }
+    },
+    {
+      "id": "art_xuangui",
+      "name": "玄龟甲",
+      "type": "artifact",
+      "price": 520,
+      "slot": "robe",
+      "desc": "炼出来的法器，带着一式",
+      "move": {
+        "id": "af_xuangui",
+        "name": "玄龟伏",
+        "type": "guard",
+        "qi": 0,
+        "power": 1.5,
+        "attr": "gen",
+        "qiBack": 12,
+        "desc": "缩起来谁也打不动"
+      }
+    },
+    {
+      "id": "art_zhenhun",
+      "name": "镇魂铃",
+      "type": "artifact",
+      "price": 603,
+      "slot": "accessory",
+      "desc": "炼出来的法器，带着一式",
+      "move": {
+        "id": "af_zhenhun",
+        "name": "摇铃",
+        "type": "feint",
+        "qi": 9,
+        "power": 1.5,
+        "attr": "shen",
+        "desc": "铃一响，他的心就乱了"
+      }
+    },
+    {
+      "id": "art_wenxin",
+      "name": "问心镜",
+      "type": "artifact",
+      "price": 1150,
+      "slot": "accessory",
+      "desc": "炼出来的法器，带着一式",
+      "move": {
+        "id": "af_wenxin",
+        "name": "照影",
+        "type": "feint",
+        "qi": 11,
+        "power": 1.6,
+        "attr": "xin",
+        "desc": "照出来的是他自己最怕的东西"
+      }
+    },
+    {
+      "id": "art_qiankun",
+      "name": "乾坤袋",
+      "type": "artifact",
+      "price": 300,
+      "slot": "accessory",
+      "desc": "装东西的袋子，秘境里能多带三份收获",
+      "bag": 3
     }
   ],
   "talents": [
@@ -880,6 +1208,435 @@
       "power": 0.8,
       "attr": "shen",
       "desc": "做个样子，骗他接"
+    }
+  ],
+  "recipes": [
+    {
+      "id": "r_ningqi",
+      "craft": "pill",
+      "name": "凝气丹",
+      "tier": 1,
+      "need": {
+        "ninglu_cao": 2
+      },
+      "out": "ningqi_dan",
+      "qty": 2,
+      "prof": 0,
+      "difficulty": 38,
+      "source": "course"
+    },
+    {
+      "id": "r_xingshen",
+      "craft": "pill",
+      "name": "醒神丹",
+      "tier": 1,
+      "need": {
+        "ninglu_cao": 1,
+        "chiyan_hua": 1
+      },
+      "out": "xingshen_dan",
+      "qty": 2,
+      "prof": 0,
+      "difficulty": 42,
+      "source": "course"
+    },
+    {
+      "id": "r_huichun",
+      "craft": "pill",
+      "name": "回春丹",
+      "tier": 1,
+      "need": {
+        "ninglu_cao": 2,
+        "chiyan_hua": 1
+      },
+      "out": "huichun_dan",
+      "qty": 1,
+      "prof": 10,
+      "difficulty": 46,
+      "source": "course"
+    },
+    {
+      "id": "r_ningxin",
+      "craft": "pill",
+      "name": "宁心丹",
+      "tier": 2,
+      "need": {
+        "ninglu_cao": 2,
+        "xuanhu_xian": 1
+      },
+      "out": "ningxin_dan",
+      "qty": 1,
+      "prof": 25,
+      "difficulty": 52,
+      "source": "master"
+    },
+    {
+      "id": "r_guyuan",
+      "craft": "pill",
+      "name": "固元丹",
+      "tier": 2,
+      "need": {
+        "chiyan_hua": 2,
+        "shouin_jin": 1
+      },
+      "out": "guyuan_dan",
+      "qty": 1,
+      "prof": 25,
+      "difficulty": 54,
+      "source": "market"
+    },
+    {
+      "id": "r_pozhang",
+      "craft": "pill",
+      "name": "破障丹",
+      "tier": 2,
+      "need": {
+        "zizhi": 1,
+        "xuanhu_xian": 1
+      },
+      "out": "pozhang_dan",
+      "qty": 1,
+      "prof": 40,
+      "difficulty": 60,
+      "source": "master"
+    },
+    {
+      "id": "r_longhu",
+      "craft": "pill",
+      "name": "龙虎丹",
+      "tier": 3,
+      "need": {
+        "chiyan_hua": 3,
+        "yaodan": 1
+      },
+      "out": "longhu_dan",
+      "qty": 1,
+      "prof": 55,
+      "difficulty": 64,
+      "source": "realm"
+    },
+    {
+      "id": "r_xisui",
+      "craft": "pill",
+      "name": "洗髓丹",
+      "tier": 3,
+      "need": {
+        "zizhi": 2,
+        "jinsui": 1
+      },
+      "out": "xisui_dan",
+      "qty": 1,
+      "prof": 65,
+      "difficulty": 68,
+      "source": "realm"
+    },
+    {
+      "id": "r_qingyang",
+      "craft": "pill",
+      "name": "青阳丹",
+      "tier": 3,
+      "need": {
+        "zizhi": 2,
+        "leiwen_mu": 1,
+        "xuanhu_xian": 1
+      },
+      "out": "qingyang_dan",
+      "qty": 1,
+      "prof": 75,
+      "difficulty": 72,
+      "source": "master"
+    },
+    {
+      "id": "r_jiuzhuan",
+      "craft": "pill",
+      "name": "九转还魂丹",
+      "tier": 3,
+      "need": {
+        "jinsui": 2,
+        "yaodan": 1,
+        "zizhi": 2
+      },
+      "out": "jiuzhuan_dan",
+      "qty": 1,
+      "prof": 90,
+      "difficulty": 80,
+      "source": "realm"
+    },
+    {
+      "id": "r_juling",
+      "craft": "talisman",
+      "name": "聚灵符",
+      "tier": 1,
+      "need": {
+        "fuzhi": 1,
+        "lingmo": 1
+      },
+      "out": "fu_juling",
+      "qty": 2,
+      "prof": 0,
+      "difficulty": 40,
+      "source": "course"
+    },
+    {
+      "id": "r_jixing",
+      "craft": "talisman",
+      "name": "疾行符",
+      "tier": 1,
+      "need": {
+        "fuzhi": 1,
+        "lingmo": 1,
+        "ninglu_cao": 1
+      },
+      "out": "fu_jixing",
+      "qty": 2,
+      "prof": 0,
+      "difficulty": 44,
+      "source": "course"
+    },
+    {
+      "id": "r_hushen",
+      "craft": "talisman",
+      "name": "护身符",
+      "tier": 1,
+      "need": {
+        "fuzhi": 2,
+        "lingmo": 1
+      },
+      "out": "fu_hushen",
+      "qty": 2,
+      "prof": 15,
+      "difficulty": 48,
+      "source": "course"
+    },
+    {
+      "id": "r_bao",
+      "craft": "talisman",
+      "name": "爆符",
+      "tier": 2,
+      "need": {
+        "fuzhi": 2,
+        "lingmo": 1,
+        "chiyan_hua": 1
+      },
+      "out": "fu_bao",
+      "qty": 2,
+      "prof": 25,
+      "difficulty": 54,
+      "source": "master"
+    },
+    {
+      "id": "r_dingshen",
+      "craft": "talisman",
+      "name": "定身符",
+      "tier": 2,
+      "need": {
+        "fuzhi": 2,
+        "kongqing_shi": 1
+      },
+      "out": "fu_dingshen",
+      "qty": 1,
+      "prof": 35,
+      "difficulty": 58,
+      "source": "master"
+    },
+    {
+      "id": "r_quxie",
+      "craft": "talisman",
+      "name": "驱邪符",
+      "tier": 2,
+      "need": {
+        "fuzhi": 2,
+        "kongqing_shi": 1,
+        "xuanhu_xian": 1
+      },
+      "out": "fu_quxie",
+      "qty": 1,
+      "prof": 50,
+      "difficulty": 64,
+      "source": "realm"
+    },
+    {
+      "id": "r_yinxi",
+      "craft": "talisman",
+      "name": "隐息符",
+      "tier": 3,
+      "need": {
+        "fuzhi": 3,
+        "kongqing_shi": 2,
+        "xuanhu_xian": 1
+      },
+      "out": "fu_yinxi",
+      "qty": 1,
+      "prof": 65,
+      "difficulty": 66,
+      "source": "market"
+    },
+    {
+      "id": "r_leiyin",
+      "craft": "talisman",
+      "name": "雷引符",
+      "tier": 3,
+      "need": {
+        "fuzhi": 3,
+        "kongqing_shi": 2,
+        "leiwen_mu": 1
+      },
+      "out": "fu_leiyin",
+      "qty": 1,
+      "prof": 80,
+      "difficulty": 76,
+      "source": "realm"
+    },
+    {
+      "id": "r_liuyun",
+      "craft": "artifact",
+      "name": "流云靴",
+      "tier": 1,
+      "need": {
+        "jianpi": 1,
+        "shouin_jin": 2
+      },
+      "out": "art_liuyun",
+      "qty": 1,
+      "prof": 20,
+      "difficulty": 58,
+      "source": "course"
+    },
+    {
+      "id": "r_qiankun",
+      "craft": "artifact",
+      "name": "乾坤袋",
+      "tier": 1,
+      "need": {
+        "shouin_jin": 2,
+        "kongqing_shi": 1
+      },
+      "out": "art_qiankun",
+      "qty": 1,
+      "prof": 20,
+      "difficulty": 55,
+      "source": "market"
+    },
+    {
+      "id": "r_qingfeng",
+      "craft": "artifact",
+      "name": "青锋剑",
+      "tier": 2,
+      "need": {
+        "jianpi": 1,
+        "hantie_sha": 2,
+        "kongqing_shi": 1
+      },
+      "out": "art_qingfeng",
+      "qty": 1,
+      "prof": 40,
+      "difficulty": 64,
+      "source": "master"
+    },
+    {
+      "id": "r_xuangui",
+      "craft": "artifact",
+      "name": "玄龟甲",
+      "tier": 2,
+      "need": {
+        "shouin_jin": 3,
+        "hantie_sha": 2
+      },
+      "out": "art_xuangui",
+      "qty": 1,
+      "prof": 50,
+      "difficulty": 68,
+      "source": "realm"
+    },
+    {
+      "id": "r_zhenhun",
+      "craft": "artifact",
+      "name": "镇魂铃",
+      "tier": 3,
+      "need": {
+        "jinsui": 1,
+        "leiwen_mu": 1,
+        "kongqing_shi": 2
+      },
+      "out": "art_zhenhun",
+      "qty": 1,
+      "prof": 70,
+      "difficulty": 72,
+      "source": "master"
+    },
+    {
+      "id": "r_wenxin",
+      "craft": "artifact",
+      "name": "问心镜",
+      "tier": 3,
+      "need": {
+        "jinsui": 2,
+        "leiwen_mu": 1,
+        "yaodan": 1
+      },
+      "out": "art_wenxin",
+      "qty": 1,
+      "prof": 85,
+      "difficulty": 78,
+      "source": "realm"
+    }
+  ],
+  "crafts": {
+    "pill": {
+      "name": "炼丹",
+      "attr": "shen",
+      "college": "danxia",
+      "verb": "开炉"
+    },
+    "talisman": {
+      "name": "画符",
+      "attr": "shen",
+      "college": "fulu",
+      "verb": "落笔"
+    },
+    "artifact": {
+      "name": "炼器",
+      "attr": "gen",
+      "college": "tianji",
+      "verb": "起火"
+    }
+  },
+  "beasts": [
+    {
+      "id": "bs_xuebao",
+      "name": "雪斑",
+      "species": "雪原豹",
+      "ability": "guard",
+      "feedNeed": 40,
+      "desc": "护主：斗法时替你挡一次狠的",
+      "intro": "一只眼睛是蓝的，另一只是琥珀色。"
+    },
+    {
+      "id": "bs_tongling",
+      "name": "铜铃",
+      "species": "铜铃雀",
+      "ability": "scout",
+      "feedNeed": 30,
+      "desc": "示警：秘境机关伤害减半",
+      "intro": "叫起来真像铃铛，吵得很。"
+    },
+    {
+      "id": "bs_tuzi",
+      "name": "土子",
+      "species": "寻宝鼹",
+      "ability": "find",
+      "feedNeed": 35,
+      "desc": "寻宝：秘境搜索收获更好",
+      "intro": "爪子很会刨，刨到什么都往你怀里塞。"
+    },
+    {
+      "id": "bs_chiyan",
+      "name": "赤焰",
+      "species": "赤焰狐",
+      "ability": "assist",
+      "feedNeed": 50,
+      "desc": "助攻：斗法时偶尔补一口",
+      "intro": "尾巴尖是红的，生气的时候整条都红。"
     }
   ]
 }

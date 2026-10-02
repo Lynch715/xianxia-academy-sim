@@ -123,7 +123,18 @@
 
           const pills = Object.keys(s.resources.items)
             .filter(k => s.resources.items[k] > 0 && (G.DATA.static.items.find(x => x.id === k) || {}).duel);
+          const fus = d.fuUsed ? [] : G.Duel.talismans(s);
           foot.appendChild(h('.btn-row',
+            ...fus.map(it => h('button.btn', {
+              onclick: () => {
+                const r = G.Duel.useTalisman(s, d, it.id);
+                if (r.fail) return G.Theme.toast(r.fail, 'danger');
+                say(r.text || `你甩出一张${r.name}。`, 'act');
+                drawBars();
+                if (d.over) return finish();
+                renderFoot();
+              }
+            }, '甩' + it.name)),
             ...(d.pillUsed ? [] : pills.map(k => {
               const it = G.DATA.static.items.find(x => x.id === k);
               return h('button.btn', {

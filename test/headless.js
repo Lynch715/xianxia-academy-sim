@@ -15,7 +15,7 @@ const MODULES = [
   'systems/npc.js', 'systems/cultivation.js', 'systems/demon.js', 'systems/relation.js',
   'systems/event.js', 'systems/academy.js', 'systems/economy.js', 'systems/reputation.js', 'systems/rumor.js',
   'systems/storyline.js', 'systems/quest.js', 'systems/realm.js', 'systems/festival.js',
-  'systems/faculty.js', 'systems/governance.js', 'systems/ending.js', 'systems/career.js', 'systems/duel.js', 'systems/game.js',
+  'systems/faculty.js', 'systems/governance.js', 'systems/ending.js', 'systems/career.js', 'systems/duel.js', 'systems/craft.js', 'systems/beast.js', 'systems/game.js',
   'llm/prompts.js', 'llm/adapter.js', 'llm/memory.js', 'llm/fallback.js', 'llm/dialogue.js', 'llm/narrator.js'
 ];
 
