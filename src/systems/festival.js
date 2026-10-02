@@ -119,7 +119,24 @@
     tourneyRound(f) { return TOURNEY_ROUNDS[f.round]; },
 
     /** 玩家在本轮做出选择 */
-    resolveTourney(s, choiceId) {
+    /** 这一轮要不要真打一场。个人战和团战是动手的，其它轮次照旧。 */
+    tourneyDuel(s) {
+      const f = this.current;
+      const round = TOURNEY_ROUNDS[f.round];
+      if (!round || (round.id !== 'duel' && round.id !== 'team')) return null;
+      const foe = round.id === 'duel' ? 'npc_shenjinglan' : 'npc_lingxiaoke';
+      const rel = s.relations[foe];
+      return {
+        kind: 'tourney', friendly: true, npcId: G.NPC.get(foe) ? foe : null,
+        name: G.NPC.name(foe) || '对手', maxRounds: 7,
+        realm: rel?.npcRealm || s.cultivation.realm, layer: rel?.npcLayer || s.cultivation.layer,
+        title: round.id === 'duel' ? '抽签对上的是他。台下安静下来。' : '团战打到最后，剩下你们两个。',
+        scene: 'scene_arena',
+        stakes: { exp: 30, relation: false }
+      };
+    },
+
+    resolveTourney(s, choiceId, forcedGrade) {
       const f = this.current;
       const round = TOURNEY_ROUNDS[f.round];
       const ch = round.choices.find(c => c.id === choiceId) || round.choices[0];
@@ -133,12 +150,14 @@
       if (round.id === 'craft' && s.player.college === 'danxia') mods.push(8);
       if (round.id === 'duel' && s.player.college === 'jianyuan') mods.push(8);
 
-      const c = G.Check.roll({
-        attrKey: ch.attr || round.attr,
-        difficulty: round.difficulty,
-        reason: ch.reason,
-        modifiers: mods
-      });
+      const c = forcedGrade
+        ? { grade: forcedGrade }            // 个人战／团战：台上真打出来的结果
+        : G.Check.roll({
+            attrKey: ch.attr || round.attr,
+            difficulty: round.difficulty,
+            reason: ch.reason,
+            modifiers: mods
+          });
 
       const pts = { perfect: 25, good: 16, plain: 8, bad: 2, terrible: -6 }[c.grade];
       f.score += pts;

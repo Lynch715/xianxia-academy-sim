@@ -16,6 +16,7 @@
     enter(s, kind, onExit) {
       const can = G.Realm.canEnter(s, kind);
       if (!can.ok) { G.Theme.toast(can.reason, 'danger'); return false; }
+      G.Realm.interactive = true;      // 界面在，兽踪交给对招界面
       this.r = G.Realm.gen(s, kind);
       this.onExit = onExit;
       this.render(s);
@@ -114,11 +115,36 @@
       }
     },
 
-    doAct(s, action, target) {
+    async doAct(s, action, target) {
       const r = this.r;
       this.actionsEl.querySelectorAll('button').forEach(b => b.disabled = true);
       const out = G.Realm.act(s, r, action, target);
       this.pushLog(out.text);
+
+      // 碰上东西了：打完再往下走
+      if (r.pendingDuel) {
+        const cfg = r.pendingDuel;
+        G.Theme.clear(this.actionsEl);
+        // 对招界面挂在叙事区上，这里把秘境的日志区临时当成叙事区用
+        const narr = G.UI.narr;
+        G.UI.narr = { el: this.logEl, sys: html => this.logEl.appendChild(G.h('p.sys', { html })) };
+        let d = null;
+        try { d = await G.DuelUI.run(s, cfg); }
+        catch (e) { console.error(e); }
+        G.UI.narr = narr;
+        if (d) {
+          G.Duel.settle(s, d, { ...cfg.stakes, relation: false });
+          const ap = G.Realm.applyDuel(s, r, d);
+          this.pushLog(ap.won ? '它不动了。你喘了口气，继续往里走。' : '你是退着走开的，背上全是冷汗。');
+        } else {
+          r.pendingDuel = null;
+        }
+        if (r.hp <= 0) {
+          r.ended = true;
+          G.Realm._settle(s, r, 'down');
+          this.pushSummary(s);
+        }
+      }
 
       if (out.ended) {
         this.pushSummary(s);
@@ -156,6 +182,7 @@
     },
 
     exit(s) {
+      G.Realm.interactive = false;
       this.r = null;
       if (this.onExit) this.onExit();
       else G.UI.render();

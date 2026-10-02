@@ -111,10 +111,22 @@
       return [];
     },
 
-    pick(s, choiceId) {
+    async pick(s, choiceId) {
       this.optsEl.querySelectorAll('button').forEach(b => b.disabled = true);
+      // 个人战和团战要真打一场，打出来的结果就是这一轮的成绩
+      let forced = null;
+      const duelCfg = this.kind === 'tourney' ? G.Festival.tourneyDuel(s) : null;
+      if (duelCfg) {
+        const narr = G.UI.narr;
+        G.UI.narr = { el: this.logEl, sys: html => this.logEl.appendChild(h('p.sys', { html })) };
+        try {
+          const d = await G.DuelUI.run(s, { ...duelCfg, title: `你选择了：${(G.Festival.TOURNEY_ROUNDS[G.Festival.current.round].choices.find(c => c.id === choiceId) || {}).text || ''}` });
+          forced = G.Duel.settle(s, d, duelCfg.stakes).grade;
+        } catch (e) { console.error(e); }
+        G.UI.narr = narr;
+      }
       const r = this.kind === 'tourney'
-        ? G.Festival.resolveTourney(s, choiceId)
+        ? G.Festival.resolveTourney(s, choiceId, forced)
         : G.Festival.resolveHunt(s, choiceId);
 
       const lines = GRADE_LINE[this.kind][r.grade] || ['……'];

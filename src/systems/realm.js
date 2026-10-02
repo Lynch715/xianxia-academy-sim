@@ -123,6 +123,22 @@
     },
 
     /** 执行一次行动 */
+    /** 把一场秘境里的对招结果落到这次探索上 */
+    applyDuel(s, r, duel) {
+      const res = duel.result || {};
+      const hpLost = Math.round((1 - (res.hpLeft ?? 1)) * 55);
+      r.hp -= hpLost;
+      r.qi -= res.won ? 10 : 22;
+      if (res.won) {
+        r.loot.push({ type: 'exp', value: res.grade === 'perfect' ? 60 : 40 });
+        r.log.push('它倒下了。');
+      } else {
+        r.log.push('你是半爬着退出来的。');
+      }
+      r.pendingDuel = null;
+      return { hpLost, won: !!res.won };
+    },
+
     act(s, r, action, targetNode) {
       if (r.ended) return { text: '', ended: true };
       r.turns++;
@@ -209,6 +225,15 @@
         }
       }
 
+      // 碰上兽踪：界面在就交给界面打（Explore 会看 pendingDuel），
+      // 没界面（测试、快进）就在这里自己打完
+      if (r.pendingDuel && !this.interactive) {
+        const d = G.Duel.auto(s, r.pendingDuel);
+        const ap = this.applyDuel(s, r, d);
+        out.text += ap.won ? ' 几个回合下来，它不动了。' : ' 它比你想的难缠。你退开时身上已经见了血。';
+        out.duel = d;
+      }
+
       r.qi = Math.max(0, r.qi);
 
       // 灵力耗尽的代价
@@ -237,6 +262,22 @@
     _enter(s, r, n) {
       switch (n.type) {
         case 'battle': {
+          // 真打一场。界面在的时候由 Explore 接管，没界面就在 act 末尾自动打完
+          r.pendingDuel = {
+            kind: 'realm', friendly: false,
+            name: G.rng.pick(['一头青毛妖兽', '通体漆黑的东西', '盘在石上的巨蟒', '不知名的凶物']),
+            realm: s.cultivation.realm,
+            layer: Math.max(1, s.cultivation.layer + (r.def.danger > 1.2 ? 2 : 0)),
+            style: G.rng.pick(['fierce', 'fierce', 'even', 'crafty']),
+            tough: 0.8 + (r.def.danger - 1) * 0.5,
+            title: '林子里的动静停了。然后它出来了。',
+            scene: r.def.scene,
+            stakes: { exp: 30 }
+          };
+          return '有东西从阴影里走了出来。';
+        }
+
+        case 'battle_old': {
           const c = G.Check.roll({ attrKey: 'gen', difficulty: 52 + (r.def.danger - 1) * 25 });
           if (c.grade === 'perfect') {
             r.qi -= 10;

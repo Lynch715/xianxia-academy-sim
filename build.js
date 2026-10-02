@@ -34,6 +34,7 @@ const JS_ORDER = [
   'systems/governance.js',
   'systems/ending.js',
   'systems/career.js',
+  'systems/duel.js',
   'systems/game.js',
   'llm/prompts.js',
   'llm/adapter.js',
@@ -48,6 +49,7 @@ const JS_ORDER = [
   'ui/explore.js',
   'ui/festival.js',
   'ui/dialogue.js',
+  'ui/duel.js',
   'ui/main.js',
   'boot.js'
 ];

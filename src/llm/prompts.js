@@ -298,6 +298,36 @@
     },
 
     /** 一回合：对话稿 + 玩家新说的话 */
+    /** 斗法：对手在场上的一句话。只要一句，不要旁白。 */
+    duelTaunt(s, d, kind, line) {
+      const npc = d.foe.npcId ? G.NPC.get(d.foe.npcId) : null;
+      const lines = [];
+      lines.push(`你在文字修仙游戏里扮演正在和${s.player.name}交手的${d.foe.name}。`);
+      if (npc) {
+        lines.push(`性格：${npc.personality}；说话方式：${npc.voice}`);
+      } else {
+        lines.push('这是一个不相熟的对手，说话短促、带着江湖气。');
+      }
+      lines.push(`场面：${d.friendly ? '切磋点到为止' : '真打'}，已经第 ${d.round} 合。` +
+        `你还剩 ${Math.max(0, Math.round(d.foe.hp / d.foe.maxHp * 100))}% 气血，对方还剩 ${Math.max(0, Math.round(d.me.hp / d.me.maxHp * 100))}%。`);
+      const what = {
+        open: '交手刚开始，你先撂一句。',
+        hitFoe: '你刚挨了一记实的。',
+        hitMe: '你刚打中他一记实的。',
+        burstMe: '你被他抓住破绽，结结实实挨了一下，站都站不稳。',
+        burstFoe: '你抓住他的破绽，一下把他打了出去。',
+        low: '他已经撑不住了，你看得出来。',
+        win: '你输了这一场。',
+        lose: '你赢了这一场。'
+      }[kind] || '交手中。';
+      lines.push('眼下：' + what);
+      if (line) lines.push(`刚才这一合：他用了${line.move.name}，你用的是${({ attack: '硬打', guard: '接招', evade: '游斗', feint: '虚招' })[line.foeType]}。`);
+      lines.push('');
+      lines.push('只说一句话，不超过 20 个字，可以是动作（如「他啐了一口」）。不要解释、不要旁白一整段、不要替对方说话。');
+      lines.push('只输出 JSON：{"say":""}');
+      return lines.join('\n');
+    },
+
     dialogueTurn(s, ss, playerText) {
       const who = G.Dialogue.speakerName(ss);
       const lines = [];

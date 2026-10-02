@@ -430,6 +430,13 @@
               await this.playCustomSlot(s, r, token);
               continue;
             }
+            // 要动手的事：切磋、试炼塔战斗层、甲等以上悬赏
+            if (r.detail?.openDuel) {
+              if (digest.length) { this.narr.sys(digest.join('<br>')); digest.length = 0; }
+              this.scrollDown();
+              await this.playDuel(s, r.detail.openDuel, token);
+              continue;
+            }
             // 议事会要停下来让玩家做决定
             if (r.detail?.openAgenda) {
               if (digest.length) { this.narr.sys(digest.join('<br>')); digest.length = 0; }
@@ -678,6 +685,52 @@
       G.Memory.push(s, res.facts, narrText.slice(0, 120));
       this.refreshLeft();
       this.scrollDown();
+    },
+
+    /** 打一场：界面接管 → 结算 → 后续（试炼塔进层、悬赏交差） */
+    async playDuel(s, cfg, token) {
+      this.clearOptions();
+      const d = await G.DuelUI.run(s, cfg);
+      if (!this.alive(token)) return null;
+      const res = G.Duel.settle(s, d, cfg.stakes);
+
+      const after = cfg.after;
+      let tail = '';
+      if (after?.type === 'tower') {
+        const t = G.Quest.towerAfterDuel(s, after.floor, res);
+        tail = t.passed ? `第 ${t.floor} 层过了。` : `你没能过第 ${t.floor} 层。`;
+      } else if (after?.type === 'quest') {
+        const q = G.Quest.questAfterDuel(s, after.tier, res);
+        tail = (res.won ? `${q.tier}悬赏交差了。` : `${q.tier}悬赏砸了。`) + (q.notes.join('　'));
+      }
+      this.narr.sys([tail, res.notes.join('　')].filter(Boolean).join('<br>'));
+
+      // 有模型就写一小段战报，没有就算了——打斗的细节界面上已经一合一合看过了
+      if (G.LLM.configured && G.LLM.config.enabled) {
+        const p = h('p');
+        const loading = h('p.sys.loading.dots', '收势');
+        this.narr.el.appendChild(loading);
+        const stop = this.slowHint(loading);
+        let text = '';
+        try {
+          text = await G.Narrator._render({
+            state: s, scene: G.Narrator.sceneOf(s, null),
+            facts: G.Duel.facts(s, d),
+            event: { seed: cfg.title || '', actors: d.foe.npcId ? [d.foe.npcId] : [] },
+            grade: res.grade, outcome: { text: tail || '' },
+            actors: d.foe.npcId ? [d.foe.npcId] : [],
+            memory: G.Memory.build(s), important: false, style: { length: 220 }
+          }, (piece, full) => { loading.remove(); p.textContent = full; this.scrollDown(); });
+        } finally { stop(); loading.remove(); }
+        if (!this.alive(token)) return null;
+        p.remove();
+        G.Theme.paragraphs(text).forEach(pp => this.narr.el.appendChild(h('p', pp)));
+        G.Memory.push(s, G.Duel.facts(s, d), text.slice(0, 120));
+      }
+
+      this.refreshLeft();
+      this.scrollDown();
+      return res;
     },
 
     /** 院主议事：呈现议题 → 玩家表决 → 结算 */

@@ -25,26 +25,43 @@ window.fetch = () => Promise.reject(new Error('测试环境禁用网络'));
 
 function q(sel) { return window.document.querySelector(sel); }
 function qa(sel) { return Array.from(window.document.querySelectorAll(sel)); }
-function step(name, fn) {
-  try { fn(); console.log('  ✓ ' + name); }
+async function step(name, fn) {
+  try { await fn(); console.log('  ✓ ' + name); }
   catch (e) { errors.push(`${name}：${e.message}`); console.log("  ✗ " + name + "  →  " + e.message); }
+}
+
+/** 屏幕上有对招就打完它：一直点第一个能点的招，直到收势 */
+async function fightIfAny(limit) {
+  for (let i = 0; i < (limit || 40); i++) {
+    // 只认还在打的那一场：收势之后操作区就撤了，日志会留在屏幕上
+    if (!q('.duel .duel-foot')) return i > 0;
+    const done = qa('.duel-foot button').find(b => !b.disabled && /收\s*势/.test(b.textContent));
+    if (done) { done.click(); return true; }
+    const mv = qa('.duel-move').find(b => !b.disabled);
+    if (!mv) {
+      const give = qa('.duel-foot .btn.ghost')[0];
+      if (give) give.click(); else return false;
+    } else mv.click();
+    await new Promise(r => setTimeout(r, 0));
+  }
+  throw new Error('对招打不完');
 }
 
 setTimeout(async () => {
   const G = window.G;
   console.log('\n《修仙学院模拟器》界面冒烟测试\n' + '─'.repeat(46));
 
-  step('标题页渲染', () => {
+  await step('标题页渲染', () => {
     const t = q('#app');
     if (!t || !t.textContent.includes('修仙学院模拟器')) throw new Error('标题未渲染');
   });
 
-  step('进入角色创建', () => {
+  await step('进入角色创建', () => {
     G.UI.showCreate();
     if (!q('#app').textContent.includes('角色创建卷宗')) throw new Error('创建页未渲染');
   });
 
-  step('创建角色并进入主界面', () => {
+  await step('创建角色并进入主界面', () => {
     Object.assign(G.Create.draft, {
       name: '青玄', traits: ['calm', 'sincere'], talent: 'photographic',
       college: 'jianyuan', origin: 'poor_genius',
@@ -60,14 +77,14 @@ setTimeout(async () => {
     if (!q('.stage')) throw new Error('场景舞台缺失');
   });
 
-  step('左栏面板数值渲染', () => {
+  await step('左栏面板数值渲染', () => {
     const t = q('.col-left').textContent;
     for (const k of ['道号', '境界', '修为', '心魔', '声望', '灵石']) {
       if (!t.includes(k)) throw new Error('左栏缺少：' + k);
     }
   });
 
-  step('右栏四个视图都能渲染', () => {
+  await step('右栏四个视图都能渲染', () => {
     for (const v of ['sched', 'rel', 'line', 'log']) {
       G.UI.rightView = v;
       G.UI.refreshRight();
@@ -77,7 +94,7 @@ setTimeout(async () => {
     G.UI.refreshRight();
   });
 
-  step('日程格子可点击', () => {
+  await step('日程格子可点击', () => {
     const slots = qa('.col-right .slot');
     if (slots.length !== 21) throw new Error('日程格子数不对：' + slots.length);
     slots[2].click();
@@ -85,7 +102,7 @@ setTimeout(async () => {
     q('.modal-mask').remove();
   });
 
-  step('选完活动自动退回日程', () => {
+  await step('选完活动自动退回日程', () => {
     qa('.col-right .slot')[2].click();
     const pick = qa('.modal .btn').find(b => b.textContent.includes('休息'));
     if (!pick) throw new Error('选择表里没有「休息」');
@@ -96,7 +113,7 @@ setTimeout(async () => {
     if (!filled || filled === '—') throw new Error('格子没写上活动：' + JSON.stringify(filled));
   });
 
-  step('弹窗里只有操作行会吸底', () => {
+  await step('弹窗里只有操作行会吸底', () => {
     qa('.col-right .slot')[3].click();
     const modal = q('.modal');
     if (!modal) throw new Error('弹窗没开');
@@ -128,7 +145,7 @@ setTimeout(async () => {
     console.log(`  ✓ 推演一周（${evCount} 个事件）`);
   } catch (e) { errors.push('推演一周：' + e.message); console.log('  ✗ 推演一周'); }
 
-  step('事件选项组件渲染', () => {
+  await step('事件选项组件渲染', () => {
     const ev = G.Event.instantiate(s, G.DATA.events.find(e => e.id === 'evt_shen_spar_invite'));
     const el = G.C.options(ev, () => {}, () => {});
     const btns = el.querySelectorAll('.opt');
@@ -136,7 +153,7 @@ setTimeout(async () => {
     if (!el.querySelector('.opt.custom')) throw new Error('缺少自定义行动选项');
   });
 
-  step('自定义行动输入框可展开', () => {
+  await step('自定义行动输入框可展开', () => {
     const ev = G.Event.instantiate(s, G.DATA.events.find(e => e.id === 'evt_shen_spar_invite'));
     const el = G.C.options(ev, () => {}, () => {});
     window.document.body.appendChild(el);
@@ -145,7 +162,7 @@ setTimeout(async () => {
     el.remove();
   });
 
-  step('设置弹窗渲染', () => {
+  await step('设置弹窗渲染', () => {
     G.Panels.settings();
     const t = q('.modal').textContent;
     if (!t.includes('API 密钥')) throw new Error('设置项缺失');
@@ -153,7 +170,7 @@ setTimeout(async () => {
     q('.modal-mask').remove();
   });
 
-  step('坊市与修炼弹窗', () => {
+  await step('坊市与修炼弹窗', () => {
     G.UI.openMarket(s);
     if (!q('.modal')) throw new Error('坊市未打开');
     q('.modal-mask').remove();
@@ -162,7 +179,7 @@ setTimeout(async () => {
     q('.modal-mask').remove();
   });
 
-  step('突破面板（强制满修为）', () => {
+  await step('突破面板（强制满修为）', () => {
     G.State.commit([{ path: 'cultivation.exp', op: 'set', value: s.cultivation.expMax }], 'test');
     if (!G.Cultivation.canBreakthrough(s)) throw new Error('突破条件判定失败');
     G.UI.openBreakthrough(s);
@@ -181,23 +198,26 @@ setTimeout(async () => {
     } catch (e) { errors.push('心魔关流程：' + e.message); console.log('  ✗ 心魔关流程'); }
   })();
 
-  step('秘境入口弹窗', () => {
+  await step('秘境入口弹窗', () => {
     G.Explore.picker(G.State.current);
     const t = q('.modal').textContent;
     if (!t.includes('后山灵窟')) throw new Error('秘境列表未渲染');
     q('.modal-mask').remove();
   });
 
-  step('进入秘境并推进到结束', () => {
+  await step('进入秘境并推进到结束（含兽踪对招）', async () => {
     const st = G.State.current;
     st.cultivation.resting = 0;
     if (!G.Explore.enter(st, 'houshan', () => {})) throw new Error('无法进入后山灵窟');
     if (!q('.narrative-wrap')) throw new Error('秘境界面未渲染');
     let guard = 0;
     while (!G.Explore.r.ended && guard++ < 100) {
+      // 碰上兽踪会进对招，打完再接着走
+      if (await fightIfAny()) { await new Promise(r => setTimeout(r, 0)); continue; }
       const btns = qa('.options .opt').filter(b => !b.disabled);
       if (!btns.length) throw new Error('第 ' + guard + ' 步没有可点的行动，玩家会卡死');
       btns[0].click();
+      await new Promise(r => setTimeout(r, 0));
     }
     if (!G.Explore.r.ended) throw new Error('秘境未能结束');
     const leave = qa('.options .opt');
@@ -212,7 +232,9 @@ setTimeout(async () => {
       G.FestUI.start(G.State.current, kind);
       let guard = 0;
       while (G.Festival.current && guard++ < maxRounds) {
-        const btns = qa('.options .opt').filter(b => !b.disabled);
+        if (await fightIfAny()) { await wait(600); continue; }
+        let btns = qa('.options .opt').filter(b => !b.disabled);
+        if (!btns.length) { await wait(600); btns = qa('.options .opt').filter(b => !b.disabled); }
         if (!btns.length) throw new Error(`第 ${guard} 轮没有可点的选项`);
         btns[0].click();
         await wait(520);
@@ -226,10 +248,10 @@ setTimeout(async () => {
     } catch (e) { errors.push(`${name}：${e.message}`); console.log('  ✗ ' + name); }
   }
 
-  await runFestival('七院大比五轮流程', 'tourney', 12, '总评');
-  await runFestival('春猎三阶段流程', 'hunt', 10, '春猎结算');
+  await runFestival('七院大比五轮流程（个人战真打）', 'tourney', 40, '总评');
+  await runFestival('春猎三阶段流程', 'hunt', 20, '春猎结算');
 
-  step('暗线推论按钮', () => {
+  await step('暗线推论按钮', () => {
     const st = G.State.current;
     st.storylines.seal.unlocked = true;
     G.Storyline.LINES.seal.deductions[0].need.forEach(c => G.Storyline.addClue(st, 'seal', c, 3));
@@ -245,7 +267,7 @@ setTimeout(async () => {
   });
 
   // ---- 教习路线 ----
-  step('切换为教习并进入主界面', () => {
+  await step('切换为教习并进入主界面', () => {
     Object.assign(G.Create.draft, {
       name: '苏问', role: 'teacher', college: 'danxia',
       traits: ['calm', 'sincere'], talent: 'none',
@@ -261,7 +283,7 @@ setTimeout(async () => {
     if (!t.includes('教法')) throw new Error('左栏没有教法切换');
   });
 
-  step('弟子面板可渲染并能当场指导', () => {
+  await step('弟子面板可渲染并能当场指导', () => {
     G.UI.rightView = 'disciples';
     G.UI.refreshRight();
     const t = q('.col-right').textContent;
@@ -280,7 +302,7 @@ setTimeout(async () => {
     G.UI.refreshRight();
   });
 
-  step('教习活动池只给教习的活动', () => {
+  await step('教习活动池只给教习的活动', () => {
     G.UI.rightView = 'sched'; G.UI.refreshRight();
     qa('.col-right .slot')[0].click();
     const t = q('.modal').textContent;
@@ -289,7 +311,7 @@ setTimeout(async () => {
     q('.modal-mask').remove();
   });
 
-  step('开题并推进研究', () => {
+  await step('开题并推进研究', () => {
     const st = G.State.current;
     const topic = G.Faculty.availableTopics(st)[0];
     G.Faculty.startResearch(st, topic.id);
@@ -299,7 +321,7 @@ setTimeout(async () => {
     if (!q('.col-left').textContent.includes(topic.name)) throw new Error('左栏没有显示在研题目');
   });
 
-  step('教习推演一周', () => {
+  await step('教习推演一周', () => {
     const st = G.State.current;
     G.Game.beginWeek(st);
     let guard = 0;
@@ -316,7 +338,7 @@ setTimeout(async () => {
   });
 
   // ---- 院主路线 ----
-  step('切换为院主并进入主界面', () => {
+  await step('切换为院主并进入主界面', () => {
     Object.assign(G.Create.draft, {
       name: '澹台衡', role: 'headmaster', college: 'mingde',
       traits: ['calm', 'sincere'], talent: 'none',
@@ -332,7 +354,7 @@ setTimeout(async () => {
     if (!t.includes('七院人心')) throw new Error('左栏没有七院人心');
   });
 
-  step('院主活动池含巡院与议事', () => {
+  await step('院主活动池含巡院与议事', () => {
     G.UI.rightView = 'sched'; G.UI.refreshRight();
     qa('.col-right .slot')[0].click();
     const t = q('.modal').textContent;
@@ -358,7 +380,7 @@ setTimeout(async () => {
     } catch (e) { errors.push('院主议事流程：' + e.message); console.log('  ✗ 院主议事流程'); }
   })();
 
-  step('院主推演一周', () => {
+  await step('院主推演一周', () => {
     const st = G.State.current;
     const before = st.time.absoluteTurn;
     G.Game.beginWeek(st);
@@ -379,7 +401,7 @@ setTimeout(async () => {
   });
 
   // ---- 生涯贯通 ----
-  step('阶段评述页能出现，并能换身份接着玩', () => {
+  await step('阶段评述页能出现，并能换身份接着玩', () => {
     Object.assign(G.Create.draft, {
       name: '青玄', role: 'student', college: 'jianyuan',
       traits: ['calm', 'sincere'], talent: 'none',
@@ -416,7 +438,7 @@ setTimeout(async () => {
     if (!q('.col-left').textContent.includes('名下弟子')) throw new Error('教习面板没出来');
   });
 
-  step('存档往返（localStorage）', () => {
+  await step('存档往返（localStorage）', () => {
     G.Save.save(1);
     const before = G.State.current.cultivation.exp;
     G.State.current.cultivation.exp = -999;

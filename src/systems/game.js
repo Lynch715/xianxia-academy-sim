@@ -34,16 +34,13 @@
                   } },
     spar:        { name: '与同窗切磋', cat: 'social', run: (s, a) => {
                     const target = a?.npcId || G.rng.pick(G.NPC.classmates(s).map(n => n.id));
-                    const rel = s.relations[target];
-                    const gap = G.State.realmIndex(rel.npcRealm) * 9 + rel.npcLayer
-                              - (G.State.realmIndex(s.cultivation.realm) * 9 + s.cultivation.layer);
-                    const r = G.Check.roll({ attrKey: 'gen', difficulty: 45 + gap * 4 });
-                    const won = ['perfect', 'good'].includes(r.grade);
-                    G.Relation.act(s, target, won ? 'defeat_them' : 'lose_to_them');
-                    if (won) G.Rumor.add(s, 'strong', target);
-                    const exp = Math.round(12 * (won ? 1.2 : 0.8));
-                    G.State.commit([{ path: 'cultivation.exp', op: 'add', value: exp, min: 0 }], 'activity.spar');
-                    return { grade: r.grade, npcId: target, won, exp };
+                    // 真打一场：界面接管，结算在 Duel.settle
+                    return { openDuel: {
+                      kind: 'spar', npcId: target, friendly: true, maxRounds: 6,
+                      title: `${G.NPC.name(target)}把袖子挽了起来。`,
+                      scene: 'scene_arena',
+                      stakes: { exp: 16 }
+                    } };
                   } },
     // 生活
     work:        { name: '打工',       cat: 'life', run: (s, a) => G.Economy.work(s, a?.kind || 'field') },
@@ -452,6 +449,12 @@
           const opts = ev.options.filter(o => !o.custom);
           const pick = chooser ? chooser(ev, opts) : G.rng.pick(opts);
           this.resolveEvent(s, pick.id);
+        }
+        // 没有界面的时候（测试、快进），斗法自己打完
+        if (r.type === 'activity' && r.detail?.openDuel) {
+          const cfg = r.detail.openDuel;
+          const d = G.Duel.auto(s, cfg);
+          G.Duel.settle(s, d, cfg.stakes);
         }
         if (r.type === 'weekEnd' || r.type === 'ended' || r.type === 'stageEnd') return r;
       }

@@ -130,7 +130,37 @@
       "tier": "fan",
       "mult": 1.0,
       "element": null,
-      "desc": "入学即发的基础功法，人人有份。"
+      "desc": "入学即发的基础功法，人人有份。",
+      "moves": [
+        {
+          "id": "yq_ci",
+          "name": "平刺",
+          "type": "attack",
+          "qi": 6,
+          "power": 1.15,
+          "attr": "gen",
+          "desc": "最老实的一式，谁都会"
+        },
+        {
+          "id": "yq_shou",
+          "name": "引气回身",
+          "type": "guard",
+          "qi": 0,
+          "power": 0.8,
+          "attr": "gen",
+          "qiBack": 9,
+          "desc": "退半步，把气接回来"
+        },
+        {
+          "id": "yq_rao",
+          "name": "绕步",
+          "type": "evade",
+          "qi": 4,
+          "power": 0.6,
+          "attr": "ji",
+          "desc": "不接招，先看他怎么打"
+        }
+      ]
     },
     {
       "id": "qingxiao_sword",
@@ -139,7 +169,36 @@
       "mult": 1.5,
       "element": "metal",
       "cost": 80,
-      "desc": "剑渊院基础剑修功法，走的是快而不是重。"
+      "desc": "剑渊院基础剑修功法，走的是快而不是重。",
+      "moves": [
+        {
+          "id": "qx_yixian",
+          "name": "一线天",
+          "type": "attack",
+          "qi": 12,
+          "power": 1.6,
+          "attr": "gen",
+          "desc": "快，只赌一条线"
+        },
+        {
+          "id": "qx_duanliu",
+          "name": "断流",
+          "type": "feint",
+          "qi": 8,
+          "power": 0.9,
+          "attr": "ji",
+          "desc": "剑尖一沉，他的招就断在半路"
+        },
+        {
+          "id": "qx_tagang",
+          "name": "踏罡",
+          "type": "evade",
+          "qi": 6,
+          "power": 0.7,
+          "attr": "ji",
+          "desc": "剑渊的步子，走得比剑快"
+        }
+      ]
     },
     {
       "id": "danxia_yangyuan",
@@ -148,7 +207,38 @@
       "mult": 1.5,
       "element": "wood",
       "cost": 80,
-      "desc": "丹霞院心法，温养为主，突破稳当。"
+      "desc": "丹霞院心法，温养为主，突破稳当。",
+      "moves": [
+        {
+          "id": "dx_wenyang",
+          "name": "温养",
+          "type": "guard",
+          "qi": 0,
+          "power": 1.0,
+          "attr": "xin",
+          "qiBack": 12,
+          "heal": 6,
+          "desc": "守着不动，气血自己回"
+        },
+        {
+          "id": "dx_cunjin",
+          "name": "寸劲",
+          "type": "attack",
+          "qi": 9,
+          "power": 1.2,
+          "attr": "gen",
+          "desc": "短距离发力，不好看但扎实"
+        },
+        {
+          "id": "dx_dingxin",
+          "name": "定心",
+          "type": "guard",
+          "qi": 4,
+          "power": 0.9,
+          "attr": "xin",
+          "desc": "他越急，你越慢"
+        }
+      ]
     },
     {
       "id": "fulu_jingshen",
@@ -157,7 +247,36 @@
       "mult": 1.5,
       "element": null,
       "cost": 80,
-      "desc": "符箓院心法，专修神识。"
+      "desc": "符箓院心法，专修神识。",
+      "moves": [
+        {
+          "id": "fl_fuyin",
+          "name": "符引",
+          "type": "feint",
+          "qi": 9,
+          "power": 1.1,
+          "attr": "shen",
+          "desc": "符纸一扬，他要分神去看"
+        },
+        {
+          "id": "fl_dingshen",
+          "name": "定身符",
+          "type": "guard",
+          "qi": 7,
+          "power": 1.1,
+          "attr": "shen",
+          "desc": "贴上就走不动，哪怕只有半息"
+        },
+        {
+          "id": "fl_shenya",
+          "name": "神识压",
+          "type": "attack",
+          "qi": 11,
+          "power": 1.3,
+          "attr": "shen",
+          "desc": "不碰身体，压的是神"
+        }
+      ]
     },
     {
       "id": "xuanji_tuiyan",
@@ -169,7 +288,37 @@
       "req": {
         "realm": "zhuji"
       },
-      "desc": "天机院不外传之法，藏经阁二层。"
+      "desc": "天机院不外传之法，藏经阁二层。",
+      "moves": [
+        {
+          "id": "xj_xianshou",
+          "name": "先手",
+          "type": "evade",
+          "qi": 7,
+          "power": 0.8,
+          "attr": "shen",
+          "nextCounter": 8,
+          "desc": "算准他下一招往哪落，先挪开"
+        },
+        {
+          "id": "xj_luanshu",
+          "name": "乱数",
+          "type": "feint",
+          "qi": 10,
+          "power": 1.3,
+          "attr": "shen",
+          "desc": "给他一堆假象，让他自己算错"
+        },
+        {
+          "id": "xj_duansuan",
+          "name": "断算",
+          "type": "attack",
+          "qi": 12,
+          "power": 1.4,
+          "attr": "shen",
+          "desc": "推到他最薄的那一处，一下"
+        }
+      ]
     },
     {
       "id": "wuxiang_jing",
@@ -181,7 +330,37 @@
       "req": {
         "realm": "zhuji"
       },
-      "desc": "明德院心法，心境加成极高。"
+      "desc": "明德院心法，心境加成极高。",
+      "moves": [
+        {
+          "id": "wx_budong",
+          "name": "不动",
+          "type": "guard",
+          "qi": 0,
+          "power": 1.4,
+          "attr": "xin",
+          "qiBack": 10,
+          "desc": "他打他的，你是你的"
+        },
+        {
+          "id": "wx_wuxiang",
+          "name": "无相",
+          "type": "feint",
+          "qi": 10,
+          "power": 1.4,
+          "attr": "xin",
+          "desc": "没有招式，所以无从拆解"
+        },
+        {
+          "id": "wx_fanzhao",
+          "name": "返照",
+          "type": "attack",
+          "qi": 11,
+          "power": 1.3,
+          "attr": "xin",
+          "desc": "他的力气原样还给他"
+        }
+      ]
     }
   ],
   "items": [
@@ -193,7 +372,10 @@
       "effect": {
         "exp": 15
       },
-      "desc": "最常见的辅助丹药，无副作用。"
+      "desc": "最常见的辅助丹药，无副作用。",
+      "duel": {
+        "qi": 25
+      }
     },
     {
       "id": "pozhang_dan",
@@ -223,7 +405,10 @@
       "effect": {
         "heal": 1
       },
-      "desc": "疗伤，缩短休养时间一周。"
+      "desc": "疗伤，缩短休养时间一周。",
+      "duel": {
+        "hp": 30
+      }
     },
     {
       "id": "lingmo",
@@ -656,6 +841,45 @@
       "max": 100,
       "name": "名动九州",
       "desc": "修仙界都知道云霄仙院有此人"
+    }
+  ],
+  "basicMoves": [
+    {
+      "id": "b_zhiqu",
+      "name": "直取",
+      "type": "attack",
+      "qi": 5,
+      "power": 0.9,
+      "attr": "gen",
+      "desc": "照直打过去"
+    },
+    {
+      "id": "b_shoushi",
+      "name": "守势",
+      "type": "guard",
+      "qi": 0,
+      "power": 0.8,
+      "attr": "gen",
+      "qiBack": 8,
+      "desc": "稳住，等他露空"
+    },
+    {
+      "id": "b_youshen",
+      "name": "游身",
+      "type": "evade",
+      "qi": 4,
+      "power": 0.6,
+      "attr": "ji",
+      "desc": "让开，换个位置"
+    },
+    {
+      "id": "b_xuzhao",
+      "name": "虚招",
+      "type": "feint",
+      "qi": 5,
+      "power": 0.8,
+      "attr": "shen",
+      "desc": "做个样子，骗他接"
     }
   ]
 }

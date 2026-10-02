@@ -596,3 +596,41 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); }
   .narrative-wrap { padding: 22px 30px 34px; }
   .col-left, .col-right { padding-left: 14px; padding-right: 14px; }
 }
+
+/* ---------- 斗法 ---------- */
+.duel { border: 1px solid var(--line); background: var(--paper-2); padding: 10px 12px; margin: 14px 0; }
+/* 血条贴顶：手机上招式一多，往下滚就看不见还剩多少血了 */
+.duel-bars { position: sticky; top: 0; z-index: 2; background: var(--paper-2);
+             display: flex; flex-direction: column; gap: 5px; padding: 2px 0 6px; }
+.duel-side { display: flex; flex-direction: column; gap: 3px; }
+.duel-name { font-size: 12.5px; letter-spacing: .06em; }
+.duel-bar { height: 6px; background: var(--line-2); position: relative; overflow: hidden; }
+.duel-bar i { display: block; height: 100%; background: var(--cinnabar); transition: width .25s; }
+.duel-bar.qi { height: 3px; }
+.duel-bar.qi i { background: var(--ink-3); }
+.duel-posture { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 1px 0; }
+.duel-post-bar { position: relative; flex: 1; height: 4px; background: var(--line-2); }
+.duel-post-bar i { position: absolute; top: 0; height: 100%; transition: all .25s; }
+.duel-log { margin: 8px 0; }
+.duel-line { font-size: 13.5px; line-height: 1.85; color: var(--ink-2); }
+.duel-line.sys { color: var(--ink-3); letter-spacing: .08em; }
+.duel-line.foe { color: var(--ink); }
+.duel-line.act { color: var(--ink); }
+.duel-line.dmg-me { color: var(--cinnabar); }
+.duel-line.dmg-foe { color: var(--accent); }
+.duel-line.burst { color: var(--cinnabar); letter-spacing: .06em; }
+.duel-moves { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+.duel-move { text-align: left; padding: 6px 9px; border: 1px solid var(--line); background: var(--paper);
+             display: grid; grid-template-columns: auto 1fr; column-gap: 7px; align-items: center; cursor: pointer; }
+.duel-move:hover:not(:disabled) { border-color: var(--accent); }
+.duel-move.off { opacity: .4; }
+.mv-type { grid-row: span 2; font-size: 15px; color: var(--accent); letter-spacing: 0; }
+.mv-name { font-size: 13.5px; }
+.mv-qi { font-size: 10.5px; color: var(--ink-3); }
+.mv-desc { display: none; }
+@media (min-width: 900px) {
+  .duel-move { grid-template-rows: auto auto auto; }
+  .mv-type { grid-row: span 3; font-size: 16px; }
+  .mv-desc { display: block; font-size: 11px; color: var(--ink-3);
+             overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}

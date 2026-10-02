@@ -247,6 +247,7 @@
         sec('历练与生活',
           btn('丙等悬赏', { act: 'quest', tier: 'bing' }),
           btn('乙等悬赏', { act: 'quest', tier: 'yi' }),
+          btn('甲等悬赏（要动手）', { act: 'quest', tier: 'jia' }, '甲等是硬仗，会进对招'),
           btn('试炼塔', { act: 'tower' }),
           btn('打理灵田', { act: 'work', kind: 'field' }),
           btn('藏经阁助理', { act: 'work', kind: 'library' }),

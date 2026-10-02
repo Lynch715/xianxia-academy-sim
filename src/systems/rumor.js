@@ -24,7 +24,8 @@
     strong: { text: (p, x) => `${p}切磋赢了${x}`,           juicy: 1, favor: 0,  trust: 0,  awe: 2, negative: false },
     clash:  { text: (p, x) => `${p}和${x}闹得很不愉快`,     juicy: 1, favor: -1, trust: -1, awe: 0, negative: true },
     cruel:  { text: (p, x) => `${p}对${x}做了件不地道的事`, juicy: 2, favor: -3, trust: -2, awe: 0, negative: true },
-    shady:  { text: (p)    => `${p}做了件说不出口的事`,     juicy: 2, favor: -2, trust: -2, awe: 0, negative: true }
+    shady:  { text: (p)    => `${p}做了件说不出口的事`,     juicy: 2, favor: -2, trust: -2, awe: 0, negative: true },
+    yielded:{ text: (p, x) => `${p}和${x}动手，中途认了输`,  juicy: 1, favor: 0,  trust: 0,  awe: -2, negative: true }
   };
 
   const Rumor = {
