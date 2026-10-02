@@ -5,7 +5,7 @@
 (function (G) {
   'use strict';
 
-  const VERSION = '1.2.0';
+  const VERSION = '1.3.0';
 
   const ATTR_SETS = {
     student:    { keys: ['wu','gen','shen','ji','xin','shi'],       points: 30, cap: 10 },
@@ -64,8 +64,8 @@
         player: {
           name: cfg.name || '无名',
           gender: cfg.gender || 'male',
-          appearAge: cfg.appearAge || 18,
-          trueAge: cfg.trueAge || 18,
+          appearAge: cfg.appearAge || (role === 'student' ? 16 : role === 'teacher' ? 32 : 46),
+          trueAge: cfg.trueAge || (role === 'student' ? 16 : role === 'teacher' ? 120 : 460),
           role,
           college: cfg.college || 'jianyuan',
           origin: cfg.origin || 'poor_genius',
@@ -143,6 +143,7 @@
       G.Academy.initCourses(s);
       G.Faculty.init(s);
       G.Governance.init(s);
+      G.Career.init(s);
       return s;
     },
 
@@ -243,6 +244,11 @@
       // 修为溢出不自动升级 —— 升级必须走突破流程
       const c = s.cultivation;
       c.expMax = G.Cultivation.expMaxFor(c.realm, c.layer);
+      // 寿元跟着境界走，破境当场就该变长，不用等到年底
+      if (s.career && G.Career) {
+        const want = G.Career.lifespanFor(s);
+        if (want > (s.career.lifespan || 0)) s.career.lifespan = want;
+      }
       if (c.exp > c.expMax) c.exp = c.expMax;
       if (c.exp < 0) c.exp = 0;
       c.demonHeart = Math.max(0, Math.min(100, c.demonHeart));

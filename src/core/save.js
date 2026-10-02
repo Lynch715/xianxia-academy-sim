@@ -149,6 +149,16 @@
           s.events.activeChains.push({ chainId: 'evt_confession_received', eventId: 'evt_confession_followup',
                                        actor: null, dueTurn: (s.time?.absoluteTurn || 0) + 21 });
         }
+        // 1.3 生涯贯通：老档按当前身份补一段生涯，年龄按已过年数倒推
+        if (!s.career) {
+          const years = Math.max(0, (s.academy?.year || 1) - 1);
+          const base = { student: 16, teacher: 120, headmaster: 460 }[s.player.role] || 16;
+          s.player.trueAge = s.player.trueAge && s.player.trueAge > 20 ? s.player.trueAge : base + years;
+          s.career = {
+            stage: s.player.role, stageStartTurn: 0, history: [],
+            lifespan: G.Career.LIFESPAN[s.cultivation.realm] || 120, pending: null
+          };
+        }
         s.meta.version = G.State.VERSION;
         // P5 新增的两条路线状态，老存档补齐
         const cur = G.State.current;

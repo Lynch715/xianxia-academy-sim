@@ -187,6 +187,7 @@
       const s = G.State.current;
       if (!s) return this.showTitle();
       if (s.ended) return this.showEnding(G.Ending.evaluate(s));
+      if (G.Career.stageOver(s)) return this.showStageReview(s, G.Career.review(s));
 
       G.Theme.applyCollege(s.player.college);
 
@@ -311,11 +312,15 @@
           scene: 'scene_mingde',
           text: '讲堂里空无一人。\n\n你把教案在案上摊开，又合上。窗外传来弟子们上山的脚步声，一阵一阵。\n\n第一堂课还有半个时辰。你忽然想起自己当年坐在下面的时候，最怕的是什么。'
         },
+        outer: {
+          scene: 'scene_main_plaza',
+          text: '执事堂给你发了一块木牌，上面刻着「外门执事」四个字，漆是新的。\n\n没有讲堂，没有弟子，一间偏院、一份月例、几样跑腿的差事。同届里留下来的不多，走的那几个连告别都没说。\n\n两年。两年后还能再考一次留院。'
+        },
         headmaster: {
           scene: 'scene_headmaster_hall',
           text: '接任的第一个清晨。\n\n大殿很静。案上摞着七院送来的册子，最上面那一本是方砚半夜送来的——学院今年的账。\n\n你翻开第一页，看了很久，然后合上了。\n\n窗外，第一批弟子已经开始晨课。'
         }
-      }[s.player.role];
+      }[s.career?.stage === 'outer' ? 'outer' : s.player.role];
 
       this.setStage(opening.scene, []);
       this.narr.setText(opening.text);
@@ -446,6 +451,13 @@
           if (r.type === 'ended') {
             this.endRun(token);
             return this.showEnding(r.ending);
+          }
+
+          if (r.type === 'stageEnd') {
+            if (digest.length) this.narr.sys(digest.join('<br>'));
+            if (r.notes?.length) this.narr.sys(r.notes.filter(Boolean).join('<br>'));
+            this.endRun(token);
+            return this.showStageReview(s, r.review);
           }
         }
       } catch (e) {
@@ -1022,6 +1034,69 @@
       G.Theme.modal('修炼', '每次修炼收益 ≈ ' + G.Cultivation.gainFor(s, 'dorm') + '（宿舍）', body, [{ label: '关闭' }]);
     },
 
+    // ---------- 阶段评述 ----------
+    /* 一段走完不是结局。这一页给三件事：这几年发生了什么、数值怎么折算、
+     * 下一段去哪。关掉应用再打开还会回到这一页（render 里有兜底）。 */
+    showStageReview(s, review) {
+      this.abortRun();
+      const box = h('.ending',
+        h('.icon', '✦'),
+        h('.no', `${review.name} · ${review.years} 年`),
+        h('.name', `${review.age} 岁`),
+        h('.text', `${review.realm}　${review.repTier}　寿元 ${review.lifespan}`));
+
+      const body = h('.resume');
+      if (review.highlights.length) {
+        body.appendChild(h('.panel-title', '这 几 年'));
+        review.highlights.forEach(x => body.appendChild(h('.tiny', { style: { padding: '3px 0' } }, '· ' + x)));
+      }
+      if (review.closest.length) {
+        body.appendChild(h('hr.hr'));
+        body.appendChild(h('.panel-title', '还 在 身 边'));
+        review.closest.forEach(x => body.appendChild(G.C.kv(x.name, G.Relation.stageName(s.relations[x.id]))));
+      }
+      body.appendChild(h('hr.hr'));
+      body.appendChild(h('.panel-title', '往 下 走'));
+
+      const opts = h('.options', { style: { padding: '8px 0 0' } });
+      for (const o of review.options) {
+        opts.appendChild(h('button.opt', {
+          disabled: !o.ok,
+          onclick: () => this.takeCareerOption(s, o)
+        }, h('span.key', o.kind === 'end' ? '○' : '▷'), o.label,
+           h('span.hint', o.hint + (o.ok ? '' : ' · 条件不足'))));
+      }
+      body.appendChild(opts);
+      box.appendChild(body);
+      G.Theme.mount(this.root, h('div', { style: { overflowY: 'auto', height: '100%' } }, box));
+    },
+
+    async takeCareerOption(s, o) {
+      this.root.querySelectorAll('button').forEach(b => b.disabled = true);
+      let r;
+      try { r = G.Career.advance(s, o.id); } catch (e) { console.error(e); return this.render(); }
+      if (r.fail) { G.Theme.toast(r.fail, 'danger'); return this.showStageReview(s, G.Career.review(s)); }
+      if (r.ended) return this.showEnding(G.Ending.finish(s));
+      if (!r.changedRole) return this.render(true);
+
+      // 换了身份：把折算摊开给玩家看一遍，别让数值悄悄变了
+      const before = r.attrsBefore, after = r.attrsAfter;
+      const body = h('div');
+      body.appendChild(h('.tiny.muted', { style: { marginBottom: '10px' } },
+        '这些年的经历折成了新身份的资质。原来的那套不再用，但折算是按经历算的，不是重掷。'));
+      body.appendChild(h('.panel-title', '折 算 前'));
+      for (const k in before) {
+        if (before[k] === undefined) continue;
+        body.appendChild(G.C.kv(G.State.ATTR_LABEL[k] || k, before[k]));
+      }
+      body.appendChild(h('.panel-title', { style: { marginTop: '12px' } }, '折 算 后'));
+      for (const k in after) body.appendChild(G.C.kv(G.State.ATTR_LABEL[k] || k, after[k]));
+
+      G.Theme.modal(`接下来是${r.toName}`, null, body, [
+        { label: '知道了', primary: true, onClick: () => this.render(true) }
+      ]);
+    },
+
     // ---------- 结局 ----------
     async showEnding(ending) {
       const s = G.State.current;
@@ -1054,6 +1129,11 @@
         r.relations.length ? h('div', { style: { marginTop: '12px' } },
           h('.panel-title', '故 人'),
           ...r.relations.map(x => G.C.kv(x.name, G.Relation.stageName(x)))) : null,
+        (r.career || []).length > 1 ? h('div', { style: { marginTop: '12px' } },
+          h('.panel-title', '一 生'),
+          ...r.career.map(x => G.C.kv(
+            `${x.name}${x.years ? ' · ' + x.years + ' 年' : ''}`,
+            `${x.endAge ? x.endAge + ' 岁' : ''}${x.realm ? '　' + x.realm : ''}`))) : null,
         r.milestones.length ? h('div', { style: { marginTop: '12px' } },
           h('.panel-title', '大 事'),
           ...r.milestones.map(m => h('.tiny', { style: { padding: '3px 0' } }, '· ' + m.text))) : null

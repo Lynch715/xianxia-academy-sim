@@ -15,7 +15,7 @@ const MODULES = [
   'systems/npc.js', 'systems/cultivation.js', 'systems/demon.js', 'systems/relation.js',
   'systems/event.js', 'systems/academy.js', 'systems/economy.js', 'systems/reputation.js', 'systems/rumor.js',
   'systems/storyline.js', 'systems/quest.js', 'systems/realm.js', 'systems/festival.js',
-  'systems/faculty.js', 'systems/governance.js', 'systems/ending.js', 'systems/game.js',
+  'systems/faculty.js', 'systems/governance.js', 'systems/ending.js', 'systems/career.js', 'systems/game.js',
   'llm/prompts.js', 'llm/adapter.js', 'llm/memory.js', 'llm/fallback.js', 'llm/dialogue.js', 'llm/narrator.js'
 ];
 
@@ -952,9 +952,9 @@ function dynamicActorRun(G, s) {
 function endingPaths(G, seed) {
   const cases = [
     { name: '封印守护者', apply: st => { st.storylines.seal.progress = 95; st.flags.choose_guard_seal = true; }, expect: 'seal_keeper' },
-    { name: '打破灵根壁垒', apply: st => { st.storylines.rootSecret.progress = 95; st.flags.root_barrier_broken = true; st.academy.year = 6; }, expect: 'break_root' },
+    { name: '打破灵根壁垒', apply: st => { st.storylines.rootSecret.progress = 95; st.flags.root_barrier_broken = true; st.academy.year = 6; st.flags.force_ending = true; }, expect: 'break_root' },
     { name: '含冤被逐', apply: st => { st.flags.expelled = true; }, expect: 'expelled' },
-    { name: '留院传灯', apply: st => { st.flags.choose_stay_teach = true; st.academy.year = 5; st.flags.graduation_chosen = true; }, expect: 'stay_teach' },
+    { name: '留院传灯', apply: st => { st.flags.choose_stay_teach = true; st.academy.year = 5; st.flags.graduation_chosen = true; st.flags.force_ending = true; }, expect: 'stay_teach' },
     { name: '走火入魔', apply: st => { st.flags.deviation_fatal = true; }, expect: 'deviation_death' }
   ];
   const out = [];
@@ -1070,11 +1070,11 @@ for (const role of ['teacher', 'headmaster']) {
 
 // 三条路线的专属结局都要能判出来
 const roleEndings = [
-  { role: 'teacher',    apply: st => { st.flags.became_head = true; st.academy.year = 9; }, expect: 'college_head' },
+  { role: 'teacher',    apply: st => { st.flags.became_head = true; st.academy.year = 9; st.flags.force_ending = true; }, expect: 'college_head' },
   { role: 'teacher',    apply: st => { st.flags.disciple_accident = 2; }, expect: 'teaching_accident' },
-  { role: 'teacher',    apply: st => { st.flags.jindan_disciples = 5; st.academy.year = 9; }, expect: 'disciples_everywhere' },
-  { role: 'headmaster', apply: st => { st.reputation.value = 90; st.flags.threat_resolved = true; st.academy.year = 11; }, expect: 'restorer' },
-  { role: 'headmaster', apply: st => { st.flags.reforms_passed = 3; st.academy.year = 11; }, expect: 'reformer' },
+  { role: 'teacher',    apply: st => { st.flags.jindan_disciples = 5; st.academy.year = 9; st.flags.force_ending = true; }, expect: 'disciples_everywhere' },
+  { role: 'headmaster', apply: st => { st.reputation.value = 90; st.flags.threat_resolved = true; st.academy.year = 11; st.flags.force_ending = true; }, expect: 'restorer' },
+  { role: 'headmaster', apply: st => { st.flags.reforms_passed = 3; st.academy.year = 11; st.flags.force_ending = true; }, expect: 'reformer' },
   { role: 'headmaster', apply: st => { st.flags.died_defending = true; }, expect: 'die_defending' },
   { role: 'headmaster', apply: st => { st.flags.forced_abdication = true; }, expect: 'abandoned' }
 ];

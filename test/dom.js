@@ -378,6 +378,44 @@ setTimeout(async () => {
     if (st.time.absoluteTurn <= before) throw new Error('时间没有推进');
   });
 
+  // ---- 生涯贯通 ----
+  step('阶段评述页能出现，并能换身份接着玩', () => {
+    Object.assign(G.Create.draft, {
+      name: '青玄', role: 'student', college: 'jianyuan',
+      traits: ['calm', 'sincere'], talent: 'none',
+      spiritRoot: { elements: ['metal'], quality: 'single' },
+      attrs: { wu: 7, gen: 6, shen: 5, ji: 4, xin: 6, shi: 4 }
+    });
+    const st = G.State.newGame(G.Create.draft);
+    G.Game.setSchedule(st, G.Game.autoSchedule(st));
+    // 装成一个「五年读完、结了丹、有点名声」的弟子
+    st.academy.year = 5;
+    st.flags.graduation_chosen = true;
+    st.flags.choose_stay_teach = true;
+    st.cultivation.realm = 'jindan'; st.cultivation.layer = 1;
+    st.reputation.value = 40;
+    st.log.push({ t: 0, text: '月考第三名', kind: 'major' });
+    G.UI.render();
+    const page = q('.ending');
+    if (!page) throw new Error('阶段评述页没出现');
+    if (!page.textContent.includes('弟子')) throw new Error('评述页没写是哪一段');
+    const btns = qa('.options button.opt');
+    const teach = btns.find(b => b.textContent.includes('留院任教'));
+    if (!teach) throw new Error('没有留院任教这个去向');
+    if (teach.disabled) throw new Error('条件够了却点不动：' + teach.textContent);
+    teach.click();
+    if (G.State.current.player.role !== 'teacher') throw new Error('没有换成教习');
+    if (!G.State.current.career.history.length) throw new Error('履历没记下弟子那一段');
+    const keys = G.State.ATTR_SETS.teacher.keys;
+    if (!keys.every(k => typeof G.State.current.attrs[k] === 'number')) throw new Error('教习属性没折算出来');
+    // 折算弹窗里要摊开前后对照
+    const modal = q('.modal');
+    if (!modal || !modal.textContent.includes('折 算 后')) throw new Error('折算对照没给玩家看');
+    qa('.modal-actions button').pop().click();
+    if (!q('.layout')) throw new Error('接着玩之后没回到主界面');
+    if (!q('.col-left').textContent.includes('名下弟子')) throw new Error('教习面板没出来');
+  });
+
   step('存档往返（localStorage）', () => {
     G.Save.save(1);
     const before = G.State.current.cultivation.exp;

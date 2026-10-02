@@ -33,6 +33,7 @@ const JS_ORDER = [
   'systems/faculty.js',
   'systems/governance.js',
   'systems/ending.js',
+  'systems/career.js',
   'systems/game.js',
   'llm/prompts.js',
   'llm/adapter.js',

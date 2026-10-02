@@ -341,6 +341,8 @@
             break;
           }
           case 'attr': {
+            // 事件里写了本身份没有的属性键就忽略——否则状态里会留一个谁也不读的野键
+            if (!G.State.ATTR_SETS[s.player.role].keys.includes(eff.key)) break;
             deltas.push({ path: `attrs.${eff.key}`, op: 'add', value: eff.value });
             summary.push(`${G.State.ATTR_LABEL[eff.key]}${eff.value > 0 ? '+' : ''}${eff.value}`);
             break;

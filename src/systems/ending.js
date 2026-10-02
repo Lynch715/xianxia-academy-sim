@@ -27,6 +27,14 @@
       quote: '', scene: 'scene_cloud_sea_dawn'
     },
 
+    {
+      id: 'lifespan_end', no: 21, name: '寿尽坐化', icon: '🕯️', type: 'hidden', prio: 93,
+      cond: s => G.Career.exhausted(s),
+      text: s => `你活到了 ${G.Career.age(s)} 岁。` +
+        '\n\n最后那几年，来看你的人越来越少——不是疏远，是他们也老了，或者早走了。\n\n你在蒲团上坐下，想起入院第一天石阶上的风。那天你回头看了一眼，云海在脚下翻涌。\n\n这一次你没有回头。',
+      quote: '道没走完。但走到哪儿算哪儿。', scene: 'scene_cloud_sea_dawn'
+    },
+
     // ---------- 悲剧型 ----------
     {
       id: 'deviation_death', no: 6, name: '走火入魔', icon: '🔥', type: 'tragedy', prio: 90,
@@ -186,12 +194,10 @@
       if (s.player.role === 'teacher' && G.Faculty.accidentCount(s) >= 2) return true;
       // 走入封印室就不再出来了，这是即时终局
       if (s.flags.choose_guard_seal) return true;
-      // 毕业当年做完去向选择即收束
-      if (s.player.role === 'student' && s.academy.year >= 5 && s.flags.graduation_chosen) return true;
-      if (s.player.role === 'student' && s.academy.year > 5) return true;
-      // 教习任期八年一议去留，院主十年一交棒
-      if (s.player.role === 'teacher' && s.academy.year > 8) return true;
-      if (s.player.role === 'headmaster' && s.academy.year > 10) return true;
+      // 寿元到头
+      if (G.Career.exhausted(s)) return true;
+      // 阶段到期不再是终局（见 Career.stageOver）；院主任满后选了退隐才算
+      if (s.career?.stage === 'retired') return true;
       if (s.flags.force_ending) return true;
       return false;
     },
@@ -221,6 +227,10 @@
       return {
         name: s.player.name,
         role: s.player.role,
+        career: G.Career.resume(s),
+        age: G.Career.age(s),
+        lifespan: s.career?.lifespan || 0,
+        stage: G.Career.stageName(s),
         realm: G.State.realmName(s.cultivation.realm, s.cultivation.layer),
         years: s.academy.year,
         turns: s.meta.playedTurns,

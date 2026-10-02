@@ -91,6 +91,7 @@ function play(seed, smart) {
                        : bt.trial.choices[0];
       G.Cultivation.resolveBreakthrough(s, G.Demon.applyChoice(s, bt.trial, ch.tag));
     }
+    if (res.type === 'stageEnd') break;          // 弟子这一段走完，平衡只看这一段
     if (res.type === 'ended') { ended = res.ending; break; }
   }
 

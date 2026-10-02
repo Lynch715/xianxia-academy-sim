@@ -381,17 +381,22 @@
       if (s.time.month === 9 && s.time.week === 1 && s.flags._lastYearMark !== s.time.era) {
         s.flags._lastYearMark = s.time.era;
         G.Academy.advanceYear(s);
+        notes.push(...G.Career.yearTick(s));
         notes.push({
           student: `新学年开始，你已是第 ${s.academy.year} 年弟子。`,
           teacher: `新学年开始，这是你在讲台上的第 ${s.academy.year} 年。`,
           headmaster: `新学年开始，你执掌云霄的第 ${s.academy.year} 年。`
-        }[s.player.role]);
+        }[s.career?.stage === 'outer' ? 'outer' : s.player.role] || `又一年过去，这是你在外门的第 ${s.academy.year} 年。`);
       }
 
       G.State.commit([], 'endWeek');
 
       if (G.Ending.shouldEnd(s)) {
         return { type: 'ended', ending: G.Ending.finish(s) };
+      }
+      // 一段走到头：不是终局，而是阶段评述 + 去向选择
+      if (G.Career.stageOver(s)) {
+        return { type: 'stageEnd', review: G.Career.review(s), notes };
       }
       return { type: 'weekEnd', notes, results: this._results };
     },
@@ -406,13 +411,14 @@
       notes.push(...G.Governance.monthlyTick(s));
 
       // 月考
-      if (s.player.role === 'student' && [10, 11, 12, 1, 2, 3, 4, 5].includes(s.time.month)) {
+      if (s.player.role === 'student' && s.career?.stage !== 'outer' &&
+          [10, 11, 12, 1, 2, 3, 4, 5].includes(s.time.month)) {
         const r = G.Academy.exam(s, 'monthly');
         notes.push(`月考揭榜：第 ${r.rank} 名 / ${G.Academy.TOTAL}。${r.rewards.join('，')}`);
       }
       // 期末
       if (s.time.month === 1 || s.time.month === 6) {
-        if (s.player.role === 'student') {
+        if (s.player.role === 'student' && s.career?.stage !== 'outer') {
           const r = G.Academy.exam(s, 'final');
           notes.push(`学期大考：第 ${r.rank} 名。`);
         } else if (s.player.role === 'teacher') {
@@ -447,7 +453,7 @@
           const pick = chooser ? chooser(ev, opts) : G.rng.pick(opts);
           this.resolveEvent(s, pick.id);
         }
-        if (r.type === 'weekEnd' || r.type === 'ended') return r;
+        if (r.type === 'weekEnd' || r.type === 'ended' || r.type === 'stageEnd') return r;
       }
       return { type: 'weekEnd', notes: ['(推演超时)'], results: this._results };
     }
