@@ -482,6 +482,12 @@ body{
 }
 @media (max-width:460px){#topbar h1{display:none}#topbar{gap:6px}.tbtn{padding:5px 9px}}
 @media (max-width:380px){.chapter{padding:18px 12px 14px}}
+.enddoc{margin:18px auto 0;max-width:420px;border:1px solid var(--paper-edge);background:rgba(255,255,255,.35);padding:12px 16px 10px;border-radius:4px}
+.enddoc h4{margin:0 0 8px;text-align:center;letter-spacing:6px;font-weight:600;color:var(--accent)}
+.edrow{display:flex;justify-content:space-between;gap:12px;padding:4px 0;border-bottom:1px dashed var(--paper-edge);font-size:14px}
+.edrow:last-child{border-bottom:0}
+.edrow span{color:var(--ink-soft);flex:0 0 auto}
+.edrow b{font-weight:500;text-align:right}
 </style>
 </head>
 <body>
@@ -840,7 +846,7 @@ const GRADES=['terrible','bad','plain','good','perfect'];
 const GRADE_LABEL={perfect:'圆满',good:'尚可',plain:'平淡',bad:'不利',terrible:'糟糕'};
 const GRADE_MULT={perfect:1.5,good:1,plain:0.4,bad:-0.5,terrible:-1};
 // 历法月里有固定节点的事件（入院大典在开局，这里不排）
-const FIXED_MONTH={fixed_freshman_exam:10,fixed_dongzhi_debate:12,fixed_seven_college_tourney:4};
+const FIXED_MONTH={fixed_freshman_exam:10,fixed_dongzhi_debate:12,fixed_seven_college_tourney:4,evt_graduation_choice:6};
 const PARTY_KEY={traditional:'守旧派',reform:'革新派',xiaoyao:'逍遥派',pragmatic:'务实派'};
 const INJ_NAME={wound:'外伤',internal:'内伤',qi:'灵力反噬',burn:'灼伤',poison:'中毒',mind:'神识受损',meridian:'经脉受损'};
 function evS(){ if(!S.evt) S.evt={counts:{},cd:{},chains:[],lastActor:{},fixedDone:{},hang:null,cur:null,lastFill:-9,frac:0}; return S.evt; }
@@ -1158,7 +1164,8 @@ function breakRate(withPill){
 }
 function breakOption(){
   const pill=!!pillOf(/破障/);
-  return {text:`闭关冲击${nextRealmName()}`,type:'break',months:1,hint:`成算约${breakRate(pill)}%${pill?'（会用掉一颗破障丹）':''}，冲关前要先过一道心魔关`};
+  const risk=num(S.player['心魔'])>=80||num(S.deviations)>=1;
+  return {text:`闭关冲击${nextRealmName()}`,type:'break',months:1,hint:`成算约${breakRate(pill)}%${pill?'（会用掉一颗破障丹）':''}，冲关前要先过一道心魔关${risk?'。心魔太重或者走过一回火，再走火就伤根基':''}`};
 }
 function resolveBreak(steady){
   const p=S.player, pill=pillOf(/破障/), before=realmOf(p.attributes['修为']), next=nextRealmName();
@@ -1186,6 +1193,8 @@ function resolveBreak(steady){
   }else{
     p.attributes['修为']=clampW(num(p.attributes['修为'])-4); p['心魔']=clamp(num(p['心魔'])+22); p.hp=Math.max(1,num(p.hp)-30);
     addAilment('走火入魔',3); ap.push('修为-4','心魔+22','气血-30','走火入魔');
+    S.deviations=num(S.deviations)+1;
+    if(num(p['心魔'])>=95||S.deviations>=2){ S.flags.zouhuo=true; p.attributes['修为']=clampW(Math.max(1,num(p.attributes['修为'])-14)); ap.push('根基毁了，修为散去大半'); }
     ledger(`闭关冲击${next}，走火入魔`);
   }
   rebuildStatus();
@@ -1195,7 +1204,7 @@ function breakResultBlock(r){
   return `【闭关突破（引擎已判定，不可更改）】
 冲击${r.next}，成算${r.rate}%${r.pill?'（服了破障丹）':''}，心魔关里道心${r.steady>0?'稳了'+r.steady:r.steady<0?'乱了'+(-r.steady):'不稳不乱'}；结果【${r.label}】。
 引擎已结算：${r.applied.join('，')}——不要在playerChanges里再写。
-写法：写这一个月的闭关、心魔关之后那道关口和结果（300-450字）。${r.outcome==='great'||r.outcome==='success'?`成了就写破境那一刻的样子和出关后的不同（${r.after}）。`:r.outcome==='deviation'?'走火入魔要写出凶险和代价，人没死但伤得重。':'没成要写清卡在哪、退了多少。'}心魔关里说过的话可以呼应。不要写别的事。
+写法：写这一个月的闭关、心魔关之后那道关口和结果（300-450字）。${S.flags.zouhuo?'这一回伤了根基，修为散了大半，学院会送他下山，这一局到此收尾：写出那一刻和醒来之后，gameOver 填 false，引擎会接着写院志。':''}${r.outcome==='great'||r.outcome==='success'?`成了就写破境那一刻的样子和出关后的不同（${r.after}）。`:r.outcome==='deviation'?'走火入魔要写出凶险和代价，人没死但伤得重。':'没成要写清卡在哪、退了多少。'}心魔关里说过的话可以呼应。不要写别的事。
 `;
 }
 /* ================= 心魔关 =================
@@ -1474,6 +1483,79 @@ function usePill(i){
   ledger(`服下${it.name}：${out.join('，')}`);
   toast(`服下${it.name}：${out.join('，')}`);
   renderPanel(); saveGame();
+}
+
+
+/* ================= 结局 =================
+   学生这一段第 60 个月走完必进结业。去向看第五学年六月顾长青那三份文书选了哪份；结了丹才能留院任教。
+   另外四种提前收场：评议会逐出、冲关走火伤了根基、自己退学、斗法殒命。 */
+const ENDINGS={
+  stay_teach:{name:'结丹留院',grad:true,finale:'他已结丹，选了留院任教。结业那天别人下山，他搬进了教习住的那排屋子',after:'写他留院之后头几年：第一次站上讲堂是什么样子，当年同届的人各自去了哪'},
+  stay_steward:{name:'留院执事',grad:true,finale:'他选了留院，但没结成丹，当不了教习，留下来做执事',after:'写他留院做执事的头几年，和那些下了山的同届还有没有往来'},
+  sect:{name:'入宗门',grad:true,finale:'他接了宗门的招揽。结业那天背着行李下山，去宗门报到',after:'写他进宗门之后头几年，云霄仙院的人和事在他身上留下了什么'},
+  rogue:{name:'自己下山',grad:true,finale:'三份文书他都没接，结业那天一个人下了山',after:'写他自己闯的头几年，走到了哪里，有没有回过望仙峰'},
+  graduate:{name:'毕业下山',grad:true,finale:'去向没定，结业那天跟着大家一起下了山',after:'写他下山之后头几年过成了什么样'},
+  expelled:{name:'被逐出院',after:'写他被逐之后的日子，院里的人怎么说他，他自己怎么看这件事'},
+  zouhuo:{name:'走火入魔',after:'写他根基毁了之后的日子：修为散了大半，学院送他下山，他怎么接着活'},
+  dropout:{name:'中途退学',after:'写他离开学院之后的日子，和他为什么走'},
+  fallen:{name:'殒命',after:'写他死后院里的人怎么记得他'},
+  other:{name:'此局终了',after:'写他这些年的样子'}
+};
+const GRAD_M=60;
+function hz(n){ n=Math.round(num(n)); const d='零一二三四五六七八九'; if(n<10) return d[n]; if(n<20) return '十'+(n%10?d[n%10]:''); if(n<100) return d[Math.floor(n/10)]+'十'+(n%10?d[n%10]:''); return String(n); }
+// 修为的月进项：悟性、灵根定底子，境界越高越慢（筑基约四成、金丹两成）
+const REALM_SLOW=[1,0.42,0.2,0.1,0.05,0.03,0.02];
+function xwRate(){
+  const p=S.player; let r=(num(p.attributes['悟性'])>=70?1.5:1)*Math.max(0.7,rootCoef())*REALM_SLOW[realmIdx(p)];
+  const lr=lifeRatio(); if(lr>=0.45) r*=0.7; if(lr>=0.6) r*=0.6;
+  return r;
+}
+function gradEnding(){
+  const f=S.flags||{};
+  if(f.choose_stay_teach) return realmIdx()>=2?'stay_teach':'stay_steward';
+  if(f.choose_sect) return 'sect';
+  if(f.choose_rogue) return 'rogue';
+  return 'graduate';
+}
+function linesSolved(){ return Object.keys(LINES).filter(k=>S.lines&&S.lines[k]&&S.lines[k].solved); }
+function partnerOf(){
+  const xs=(S.npcs||[]).filter(n=>n.alive&&n['爱恋值']!=null).sort((a,b)=>num(b['爱恋值'])-num(a['爱恋值']));
+  return xs.length&&(num(xs[0]['爱恋值'])>=50||S.flags.daolv_done)?xs[0]:null;
+}
+// 结业评定：境界占大头，名次、声望、暗线往上加，劣迹往下扣
+function gradeScore(){
+  const p=S.player, r=playerRank(), i=realmIdx(p), xw=num(p.attributes['修为']);
+  return i*30+Math.min(20,Math.max(0,xw-(i?REALM_GATES[i-1]:0))*0.5)
+    +(r==null?0:r<=3?20:r<=10?10:0)+num(p['声望'])*0.35-num(p['劣迹'])*0.4+linesSolved().length*8+(S.flags.qiangtoucao?-5:0);
+}
+function gradeLetter(){ const s=gradeScore(); return s>=78?'甲等':s>=52?'乙等':s>=28?'丙等':'丁等'; }
+function endDoc(type){
+  const p=S.player, E=ENDINGS[type]||ENDINGS.other, r=playerRank(), rows=[];
+  const m=num(S.months), y=Math.floor(m/12), mm=m%12;
+  rows.push(['结局',E.name]);
+  rows.push(['在院',`${y?hz(y)+'年':''}${mm?hz(mm)+'个月':''}`||'不到一个月']);
+  rows.push(['境界',realmOf(p.attributes['修为'])]);
+  rows.push(['学院',`${S.college}${S.sect?' · '+sectRank(num(S.sect.contrib)):''}`]);
+  rows.push(['同届榜',r==null?'榜上无名':`第${hz(r)}`]);
+  if(E.grad) rows.push(['结业评定',gradeLetter()]);
+  const sv=linesSolved();
+  const seen=Object.keys(LINES).filter(k=>S.lines&&S.lines[k]&&S.lines[k].unlocked);
+  rows.push(['暗线',sv.length?'看清了'+sv.map(k=>'「'+LINES[k].name+'」').join(''):(seen.length?`察觉了${hz(seen.length)}条，都没看到底`:'一条也没察觉')]);
+  const pt=partnerOf(); if(pt) rows.push([S.flags.daolv_done?'道侣':'相好',pt.name]);
+  const rv=Object.entries((S.rivals&&S.rivals.list)||{}).filter(([k,v])=>v.att!=='neutral').map(([k,v])=>`${k}${ATT_NAME[v.att]}`);
+  if(rv.length) rows.push(['同届',rv.join('，')]);
+  const ps=(S.world.parties||[]).filter(x=>Math.abs(num(x.lean))>=25).map(x=>x.name+(num(x.lean)>0?'认你':'不待见你'));
+  if(ps.length||S.flags.qiangtoucao) rows.push(['四派',ps.concat(S.flags.qiangtoucao?['院里说你是墙头草']:[]).join('，')]);
+  return rows;
+}
+function finaleNote(){
+  const t=gradEnding();
+  return `- ⚑ 这一回合走完，第五学年就结束了，是结业那一天。去向已经定了：${ENDINGS[t].finale}。本回合写结业典礼前后和离别（或留下）的那一刻，把还挂着的人和事都落个着落；不要另起新事。gameOver 填 false，引擎会接着写院志。\n`;
+}
+function lastYearNote(){
+  const left=GRAD_M-num(S.months);
+  if(left>12||left<=0) return '';
+  return `- 现在是第五学年，离结业还有${left}个月。${S.flags.graduation_chosen?'去向已定（'+ENDINGS[gradEnding()].name+'）。':'去向还没定，六月会有人来问。'}长线的事该往收尾上走，新开的线别铺太远。\n`;
 }
 
 /* ================= 配置 ================= */
@@ -3497,13 +3579,15 @@ ${(S.ledger||[]).slice(-M.ledger).join('\n')||'（尚无）'}`;
 function judgeBlock(judge){
   const f=fateInfo(judge.fate);
   if(judge.evtResult||judge.hauntResult) return `- 这一回合的判定已经做完（见下面引擎给的那一块），不另掷骰，check 为 null。\n- 时间没有流逝，不要写「数日后」之类。\n- 主角气血：${S.player.hp}/100\n`;
-  if(judge.breakResult||judge.craftResult) return `- 这一回合的判定已经做完（见下面引擎给的那一块），不另掷骰，check 为 null。\n- 本回合历时：1个月\n- 主角气血：${S.player.hp}/100\n`;
+  if(judge.breakResult||judge.craftResult) return `- 这一回合的判定已经做完（见下面引擎给的那一块），不另掷骰，check 为 null。\n- 本回合历时：1个月\n- 主角气血：${S.player.hp}/100\n`+(judge.finale?finaleNote():'');
   let s=judge.convo?`- 天命骰：无（谈话余波不掷骰）\n`:`- 天命骰：${judge.fate}（${f.label}）——${fdm().freeAct?(judge.fate>=15?f.desc:'本局言出法随：这点背运只落在旁枝琐事上，玩家写下的事照样办成'):f.desc}\n`;
   // 引擎自己看出来在原地打转，就下一条硬指令
   if(judge.nudge){
     s+=`- ⚑ 引擎检测到最近几回剧情雷同（相似度${judge.stuck}%），本回合必须打破：${judge.nudge}\n`;
     s+=`  这不是建议，是本回合的硬要求；写完检查一遍：这一段跟上一段比，到底有什么真的不一样了。\n`;
   }
+  s+=judge.finale?finaleNote():lastYearNote();
+  if(judge.maybeDropout) s+=`- 玩家的行动里提到退学：如果是主角自己要退学离开云霄仙院，本回合就写他离院，gameOver 填 true，ending 写离院那一刻；如果说的是别人，忽略这一条。\n`;
   if(judge.home) s+=`- ⚑ 主角已经连着两个回合在院外：本回合必须让他回到云霄仙院（差事办完、假期到了、被召回都行），scene.location 写回院里的地方。\n`;
   if(judge.doom) s+=`- 引擎已定死的实损：${doomText(judge.doom)}。剧情必须交代这是怎么发生的，不许化解、不许找补。\n`;
   else if(judge.fate<=3&&!judge.convo) s+=fdm().freeAct
@@ -3743,12 +3827,15 @@ async function foldHistoryInner(){
   }catch(e){ console.warn('卷录压缩失败',e); }
 }
 
-function bioPrompt(cause){
-  const p=S.player;
+function bioPrompt(cause,type,doc){
+  const p=S.player, E=ENDINGS[type]||ENDINGS.other;
   return `${fillRules(WORLD_RULES.split('属性规则')[0])}
-主角${p.name}在云霄仙院的这一段到此为止。结局：${cause}
+主角${p.name}在云霄仙院的这一段到此为止。结局：${E.name}。${cause}
+【引擎记下的档】
+${(doc||[]).map(([k,v])=>k+'：'+v).join('\n')}
 ${stateBlocks()}
-请用平实的白话写一篇《${p.name}小传》（300-500字），像院志里给一位弟子留的一页：据前情提要与人物关系写此人在院里的这些年，功过、性情与遗憾，写到身边人后来怎样。末尾给一句题记（20字内）与一句总评（15字内）。
+请用平实的白话写一篇《${p.name}小传》（350-550字），像院志里给一位弟子留的一页。前半写他在院里这些年：做成了什么、没做成什么、跟谁好跟谁结了梁子，挑两三件具体的事写，不要流水账。后半${E.after}；身边几个要紧的人后来怎样，各写一两句。档里写的境界、名次、去向、评定都不能改。
+不要写成颂词，不要排比，不要「他的故事告诉我们」之类的收尾。末尾给一句题记（20字内）与一句总评（15字内），总评要像院志里执笔的人随手写的，不要四字成语堆砌。
 ${JSON_RULE}
 输出：{"biography":"","epitaph":"","verdict":""}`;
 }
@@ -4108,8 +4195,8 @@ function applyTurn(d, action, judge){
     let dv=num(ch.attributes[k]);
     if(!dv||p.attributes[k]===undefined||k==='悟性') continue;
     if(k==='修为'&&dv>0){
-      const cap=Math.round(growthCap()*months*fdm().growth);
-      dv=Math.min(dv,fate>=19?cap+2:cap,3*months);
+      const E=evS(), raw=xwRate()*months*fdm().growth*(fate>=19?1.4:1);
+      E.gfrac=num(E.gfrac)+Math.min(dv,raw,3*months); dv=Math.floor(E.gfrac); E.gfrac-=dv;
       dv=Math.min(dv,Math.max(0,realmCeil(p)-num(p.attributes[k])));   // 境界门口卡住
       if(dv<=0){ if(!S.gateNoted){ S.gateNoted=true; news(`${p.name}的修为到了${REALM_BIG[realmIdx(p)]}的顶，卡在瓶颈上了`); } continue; }
     }
@@ -4377,10 +4464,17 @@ const ACHIEVEMENTS=[
  ['quest1','初偿所愿',s=>s.stats.questsDone>=1,'完成一条宿命'],
  ['quest3','所愿皆成',s=>s.stats.questsDone>=3,'完成三条宿命'],
  ['year2','老生',s=>num(s.months)>=12,'熬过第一学年'],
- ['year5','结业',s=>num(s.months)>=60,'熬完五个学年'],
+ ['year5','第五学年',s=>num(s.months)>=48,'升到第五学年'],
   ['near_death','大难不死',s=>s.player.hp<=10&&s.player.hp>0&&!s.over,'气血跌至10以下仍活着'],
  ['deduce','想通了',s=>Object.keys(s.flags||{}).some(k=>/^deduce_/.test(k)),'第一次把暗线的线索串起来'],
  ['craft','开炉',s=>!!(s.craft&&Object.values(s.craft.prof).some(v=>v>0)),'第一次炼制'],
+ ['grad','结业',s=>s.over&&ENDINGS[s.endType]&&ENDINGS[s.endType].grad,'熬到第五学年结业'],
+ ['stay','留下来',s=>s.over&&s.endType==='stay_teach','结了丹，留院任教'],
+ ['rogue','自己走',s=>s.over&&s.endType==='rogue','三份文书都不接，自己下山'],
+ ['jia','甲等',s=>s.over&&ENDINGS[s.endType]&&ENDINGS[s.endType].grad&&gradeLetter()==='甲等','结业评定甲等'],
+ ['solved','看清了',s=>linesSolved().length>=1,'看清一条暗线的底细'],
+ ['solved4','什么都知道了',s=>linesSolved().length>=4,'四条暗线都看清'],
+ ['daolv','结了道侣',s=>!!(s.flags&&s.flags.daolv_done),'和人结为道侣'],
  ['ally','有了交情',s=>!!(s.rivals&&Object.values(s.rivals.list).some(v=>v.att==='ally')),'和同届对手合作过一回'],
 ];
 function checkAchievements(){
@@ -4898,7 +4992,7 @@ function showDuelGo(){
 }
 function showDuelDeath(){
   $('duelActions').innerHTML=`<div class="duelend"><div class="verdict">殒命</div><p>${esc(duel.resultText)}</p><button class="mbtn primary" id="duelGo">盖棺定论</button></div>`;
-  $('duelGo').onclick=()=>{ $('duelMask').classList.remove('on'); finalizeDuelHp(); S.player.hp=0; S.duelState=null; war=null; S.war=null; S.recent.push({action:duel.action,narrative:'【斗法实录】'+duel.log.map(r=>r.plain).join('\n')+'\n'+duel.resultText}); gameOverFlow(duel.resultText); };
+  $('duelGo').onclick=()=>{ $('duelMask').classList.remove('on'); finalizeDuelHp(); S.player.hp=0; S.duelState=null; war=null; S.war=null; S.recent.push({action:duel.action,narrative:'【斗法实录】'+duel.log.map(r=>r.plain).join('\n')+'\n'+duel.resultText}); gameOverFlow(duel.resultText,'fallen'); };
 }
 // 胜后处置面板（留手/重创/杀）
 function showWinChoice(){
@@ -6150,12 +6244,18 @@ function renderWorld(){
   $('wAch').innerHTML=ACHIEVEMENTS.map(([id,name,_,desc])=>`<span class="ach ${S.achievements.includes(id)?'on':''}" title="${esc(desc)}">${S.achievements.includes(id)?'✦ ':''}${name}</span>`).join('');
   renderHall();
 }
+function hallRead(){ try{ const h=JSON.parse(localStorage.getItem(LS_HALL)||'[]'); return Array.isArray(h)?h:[]; }catch(_){ return []; } }
 function renderHall(){
-  const hall=JSON.parse(localStorage.getItem(LS_HALL)||'[]');
+  const hall=hallRead();
   const el=$('wHall'); if(!el) return;
-  el.innerHTML=hall.length?hall.slice().reverse().slice(0,12).map(h=>`<div class="hall"><b>${esc(h.name)}</b> · ${esc(h.title)} · ${h.age}岁 · 历${h.turns}回 · 评分${h.score}<br><span style="color:var(--ink-soft)">${esc(h.verdict||'')}${h.epitaph?'　「'+esc(h.epitaph)+'」':''}</span></div>`).join(''):'<div class="empty">院史上还没有你这一届的名字</div>';
+  if(!hall.length){ el.innerHTML='<div class="empty">院史上还没有你这一届的名字</div>'; return; }
+  const n=hall.length;
+  el.innerHTML=`<div style="font-size:12px;color:var(--ink-soft);margin-bottom:4px">从你入院算起，院志里记了 ${hz(Math.min(n,99))} 个人</div>`+hall.slice().reverse().slice(0,15).map((h,i)=>{
+    const head=h.v===2?`<b>${esc(h.name)}</b> · ${esc(h.college||'')} · ${esc(h.realm||'')} · <span style="color:var(--accent)">${esc(h.ending||'')}</span>${h.grade?' · '+esc(h.grade):''}${h.rank?' · 同届第'+hz(h.rank):''}`
+      :`<b>${esc(h.name)}</b> · ${esc(h.title||'')} · 历${h.turns}回`;
+    return `<div class="hall"><small style="color:var(--ink-soft)">第${hz(n-i)}位　</small>${head}<br><span style="color:var(--ink-soft)">${esc(h.verdict||'')}${h.epitaph?'　「'+esc(h.epitaph)+'」':''}</span></div>`;
+  }).join('');
 }
-
 /* 剧情渲染 */
 function narrativeHtml(text){
   const hl=s=>s.replace(/「([^」]*)」/g,'<q>$1</q>').replace(/“([^”]*)”/g,'<q>$1</q>');
@@ -6296,11 +6396,12 @@ function renderOptions(opts){
   box.innerHTML='';
   opts=(opts||[]).filter(o=>o&&o.type!=='break');
   if(canBreak()&&!S.over&&!(S.evt&&S.evt.cur)) opts=opts.concat([breakOption()]);
-  if(S.over){ box.innerHTML='<div style="text-align:center;color:#bfa876;padding:8px;letter-spacing:3px">这一局已经结束，可点右上「另起一局」重新入院</div>'; return; }
+  if(S.over){ box.innerHTML='<button class="opt" id="againBtn" style="text-align:center"><span class="num">❈</span>再入一届</button><div style="text-align:center;color:#bfa876;padding:6px;font-size:13px">这一局的院志已经记进「仙院 · 院史」</div>'; $('againBtn').onclick=()=>openCreate(); $('inputbar').style.display='none'; return; }
+  $('inputbar').style.display='';
   (opts||[]).forEach((o,i)=>{
     if(!o||!o.text) return;
     const b=document.createElement('button');
-    b.className='opt';
+    b.className='opt'; b.dataset.type=o.type||'normal';
     let tag='';
     const mo=optMonths(o);
     if(mo>1) tag+=`<span class="tag rest">耗时 ${mo} 月</span>`;
@@ -6875,7 +6976,8 @@ function fallbackOptions(){
   return o;
 }
 function makeJudge(opt){
-  const judge={fate:d20(),check:null,worldEvent:pickWorldEvent(),duel:false,months:Math.min(optMonths(opt),monthsToFixed(num(S.months)))};
+  const judge={fate:d20(),check:null,worldEvent:pickWorldEvent(),duel:false,months:Math.max(1,Math.min(optMonths(opt),monthsToFixed(num(S.months)),GRAD_M-num(S.months)))};
+  if(num(S.months)+judge.months>=GRAD_M) judge.finale=true;
   const stuck=stuckLevel();
   if(stuck>=0.5){ judge.stuck=Math.round(stuck*100); judge.nudge=pickNudge(); }
   if(num(S.outTurns)>=2) judge.home=true;
@@ -6972,8 +7074,9 @@ async function act(action, opt){
   // 上回摆出来的事件玩家没接：挂着，下回合再给一次
   const E=evS();
   if(E.cur){ E.hang={inst:E.cur,turn:S.turn}; E.cur=null; }
-  judge.event=pickEvent(num(S.months)+num(judge.months));
+  judge.event=judge.finale?null:pickEvent(num(S.months)+num(judge.months));
   if(judge.event) judge.worldEvent=null;
+  if(/退学/.test(action||'')) judge.maybeDropout=true;
   await runTurn(action, judge, {});
 }
 async function evChoose(opt){
@@ -6988,6 +7091,7 @@ async function evChoose(opt){
 
 async function runTurn(action, judge, extra){
   extra=extra||{};
+  if(S&&!S.over&&num(judge.months)>0&&num(S.months)+num(judge.months)>=GRAD_M) judge.finale=true;
   $('choices').innerHTML='';
   setBusy(true, extra.duelData?'正在记下这一场斗法……':'正在推演……');
   beginChapter('第 '+cnNum(S.turn)+' 回',S.date,action,judge);
@@ -7014,9 +7118,11 @@ async function runTurn(action, judge, extra){
       for(const a of (judge.event.actors||[])){ const c=meetCanon(a); if(c) c.lastSeen=S.turn; }
       S.lastOptions=evOptions(judge.event).concat(S.lastOptions.filter(o=>o.type!=='duel').slice(0,2));
     }
-    if(S.flags&&S.flags.expelled&&!S.over){ saveGame(); renderPanel(); await gameOverFlow(`${S.player.name}被逐出了云霄仙院`); setBusy(false); return; }
-    if(d.gameOver){ saveGame(); await gameOverFlow(d.ending||'此局终了'); setBusy(false); return; }
-    if(S.oldAgeDeath){ S.oldAgeDeath=false; saveGame(); await gameOverFlow(`寿元尽了，${S.player.name}在${(S.scene&&S.scene.location)||'院中'}坐化`); setBusy(false); return; }
+    if(S.flags&&S.flags.expelled&&!S.over){ saveGame(); renderPanel(); await gameOverFlow(`${S.player.name}被逐出了云霄仙院`,'expelled'); setBusy(false); return; }
+    if(S.flags&&S.flags.zouhuo&&!S.over){ saveGame(); renderPanel(); await gameOverFlow(`冲关走火入魔，伤了根基，学院把${S.player.name}送下了山`,'zouhuo'); setBusy(false); return; }
+    if(d.gameOver){ saveGame(); await gameOverFlow(d.ending||'此局终了',/退学|离院/.test(action||'')?'dropout':(S.player.hp<=0?'fallen':'other')); setBusy(false); return; }
+    if(S.oldAgeDeath){ S.oldAgeDeath=false; saveGame(); await gameOverFlow(`寿元尽了，${S.player.name}在${(S.scene&&S.scene.location)||'院中'}坐化`,'fallen'); setBusy(false); return; }
+    if(!S.over&&num(S.months)>=GRAD_M){ const t=gradEnding(); renderOptions([]); saveGame(); renderPanel(); await gameOverFlow(`第五学年结束，${S.player.name}结业。${ENDINGS[t].finale}。`,t); setBusy(false); return; }
     // 模型发起斗法
     if(d.duel&&d.duel.opponent&&!extra.duelData){
       const n=findNpc(d.duel.opponent);
@@ -7056,22 +7162,28 @@ async function runTurn(action, judge, extra){
   setBusy(false);
 }
 
-async function gameOverFlow(cause){
-  S.over=true; S.ending=cause;
+async function gameOverFlow(cause,type){
+  type=ENDINGS[type]?type:'other';
+  const E=ENDINGS[type], p=S.player;
+  S.over=true; S.ending=cause; S.endType=type;
+  const doc=endDoc(type), grade=E.grad?gradeLetter():'';
+  checkAchievements();
   renderOptions([]);
   setBusy(true,'正在给你写院志里的那一页……');
   const div=document.createElement('div'); div.className='chapter';
-  div.innerHTML=`<div class="chapmark">院志</div><div class="chaptime">${esc(S.date)}</div><div class="endingblock" style="margin-top:20px"><h4>—— ${esc(S.player.name)}小传 ——</h4><div class="ntext"><p style="color:var(--ink-soft)">……</p></div></div>`;
+  div.innerHTML=`<div class="chapmark">院志</div><div class="chaptime">${esc(S.date)}</div>
+  <div class="enddoc"><h4>${E.grad?'结业文书':'院中记档'}</h4>${doc.map(([k,v])=>`<div class="edrow"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join('')}</div>
+  <div class="endingblock" style="margin-top:20px"><h4>—— ${esc(p.name)}小传 ——</h4><div class="ntext"><p style="color:var(--ink-soft)">……</p></div></div>`;
   $('story').appendChild(div); div.scrollIntoView({behavior:'smooth',block:'end'});
   const nt=div.querySelector('.ntext');
   let bio={biography:'',epitaph:'',verdict:''};
-  try{ bio=fixNames(await llmJSON(bioPrompt(cause),raw=>{ const t=extractPartialField(raw,'biography'); if(t) nt.innerHTML=narrativeHtml(t); },{maxTokens:3000})); }catch(e){ bio.biography='（小传没写成：'+e.message+'）'; }
+  try{ bio=fixNames(await llmJSON(bioPrompt(cause,type,doc),raw=>{ const t=extractPartialField(raw,'biography'); if(t) nt.innerHTML=narrativeHtml(t); },{maxTokens:3000})); }catch(e){ bio.biography='（小传没写成：'+e.message+'）'; }
   const score=scoreOf();
   nt.innerHTML=narrativeHtml(bio.biography||'');
   div.querySelector('.endingblock').insertAdjacentHTML('beforeend',`${bio.epitaph?`<div class="epitaph">「${esc(bio.epitaph)}」</div>`:''}<div class="scoreline">${esc(bio.verdict||'')}　·　评分 ${score}　·　历 ${S.turn} 回　·　成就 ${S.achievements.length}</div>`);
-  const hall=JSON.parse(localStorage.getItem(LS_HALL)||'[]');
-  hall.push({name:S.player.name,title:titleOf(S.player),age:S.player.age,turns:S.turn,score,verdict:bio.verdict||'',epitaph:bio.epitaph||'',cause,ts:Date.now()});
-  try{ localStorage.setItem(LS_HALL,JSON.stringify(hall.slice(-50))); }catch(_){}
+  const hall=hallRead();
+  hall.push({v:2,name:p.name,gender:p.gender,college:S.college,realm:realmOf(p.attributes['修为']),ending:E.name,type,grade,rank:playerRank(),months:num(S.months),turns:S.turn,score,verdict:bio.verdict||'',epitaph:bio.epitaph||'',cause,ts:Date.now()});
+  try{ localStorage.setItem(LS_HALL,JSON.stringify(hall.slice(-60))); }catch(_){}
   S.bio=bio; S.pending=null; logChapter(div); saveGame(); renderPanel(); renderOptions([]);
   setBusy(false);
 }
@@ -7352,7 +7464,7 @@ $('panelToggle').onclick=()=>setDrawer(!$('sidebar').classList.contains('open'))
 $('sideMask').onclick=()=>setDrawer(false);
 $('sendBtn').onclick=()=>act($('freeInput').value,null);
 $('freeInput').addEventListener('keydown',e=>{ if(e.key==='Enter') act($('freeInput').value,null); });
-$('btnNew').onclick=()=>{ if(!S||confirm('另起一局将覆盖当前进度（可先在「存档」里存入存档位或导出）。确定？')) openCreate(); };
+$('btnNew').onclick=()=>{ if(!S||S.over||confirm('另起一局将覆盖当前进度（可先在「存档」里存入存档位或导出）。确定？')) openCreate(); };
 function download(name,text,type){
   const blob=new Blob([text],{type:type||'text/plain;charset=utf-8'});
   const a=document.createElement('a');

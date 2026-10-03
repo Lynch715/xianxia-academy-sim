@@ -37,6 +37,12 @@ jobs:
       - name: 端到端自测（假模型）
         run: node test/run.js
 
+      - name: 整局自动跑到结业（假模型）
+        run: node test/full.js
+
+      - name: 手机五个尺寸遮挡检查
+        run: node test/mobile.js
+
       - name: 收拾要发布的文件
         run: |
           mkdir -p _site
