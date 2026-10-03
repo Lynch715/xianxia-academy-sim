@@ -214,7 +214,8 @@
           deltas.push({ path: `relations.${npc.id}.favor`, op: 'add', value: -3, clamp: [-100, 100] });
         }
 
-        // 修为自行推进
+        // 修为自行推进（四个对手由 Rival 单独驱动，这里跳过，免得长两遍）
+        if (G.Rival.isRival(npc.id)) continue;
         const pace = npc.growth?.realmPerYear || 1;
         if (G.rng.chance(pace * 6)) {
           const nx = G.Cultivation.nextRealm(r.npcRealm, r.npcLayer);

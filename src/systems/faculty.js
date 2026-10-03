@@ -462,7 +462,8 @@
           (s.faculty.papers || 0) * 4,
           this.excellentStreak(s) * 5,
           (s.flags.jindan_disciples || 0) * 6,
-          a.faction ? (s.reputation.factions[a.faction] || 0) * 0.15 : 0
+          a.faction ? (s.reputation.factions[a.faction] || 0) * 0.15 : 0,
+          G.Faction.support(s) * 4
         ]
       });
 

@@ -144,6 +144,16 @@
         }
       }
 
+      // 2.5 同届相撞与派系表态：按自己的节奏插进来，和别的事件走一样的流程
+      if (out.length < 2 && G.Rival.due(s)) {
+        const ev = G.Rival.makeEvent(s);
+        if (ev) out.push(this.instantiate(s, ev));
+      }
+      if (out.length < 2 && G.Faction.due(s)) {
+        const ev = G.Faction.makeEvent(s);
+        if (ev) out.push(this.instantiate(s, ev));
+      }
+
       // 3. 随机池
       const n = Math.max(0, G.rng.int(1, 3) - out.length);
       if (n > 0) {
@@ -363,6 +373,14 @@
             deltas.push({ path: `resources.items.${eff.id}`, op: 'add', value: eff.value || 1, min: 0 });
             const it = G.DATA.static.items.find(i => i.id === eff.id);
             summary.push(`${it ? it.name : eff.id} ×${eff.value || 1}`);
+            break;
+          }
+          case 'rival': {
+            summary.push(...G.Rival.resolveContest(s, eff.act, grade));
+            break;
+          }
+          case 'faction': {
+            summary.push(...G.Faction.resolve(s, eff.act, grade));
             break;
           }
           case 'recipe': {

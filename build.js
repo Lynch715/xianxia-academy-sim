@@ -36,6 +36,8 @@ const JS_ORDER = [
   'systems/career.js',
   'systems/duel.js',
   'systems/craft.js',
+  'systems/rival.js',
+  'systems/faction.js',
   'systems/beast.js',
   'systems/game.js',
   'llm/prompts.js',

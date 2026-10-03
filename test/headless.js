@@ -15,7 +15,7 @@ const MODULES = [
   'systems/npc.js', 'systems/cultivation.js', 'systems/demon.js', 'systems/relation.js',
   'systems/event.js', 'systems/academy.js', 'systems/economy.js', 'systems/reputation.js', 'systems/rumor.js',
   'systems/storyline.js', 'systems/quest.js', 'systems/realm.js', 'systems/festival.js',
-  'systems/faculty.js', 'systems/governance.js', 'systems/ending.js', 'systems/career.js', 'systems/duel.js', 'systems/craft.js', 'systems/beast.js', 'systems/game.js',
+  'systems/faculty.js', 'systems/governance.js', 'systems/ending.js', 'systems/career.js', 'systems/duel.js', 'systems/craft.js', 'systems/beast.js', 'systems/rival.js', 'systems/faction.js', 'systems/game.js',
   'llm/prompts.js', 'llm/adapter.js', 'llm/memory.js', 'llm/fallback.js', 'llm/dialogue.js', 'llm/narrator.js'
 ];
 
@@ -531,6 +531,8 @@ function dialogueGuard(G, s) {
   const id = 'npc_liumianyan';
   const r = s.relations[id];
   const keepTrust = r.trust, keepFavor = r.favor, keepClues = s.storylines.exHead.clues.slice();
+  // 这条线索可能在前面的模拟里已经由事件给过了，先摘掉再验交心的门槛
+  s.storylines.exHead.clues = s.storylines.exHead.clues.filter(c => c !== '柳眠烟的醉话');
   r.trust = 10; delete s.flags['_reveal_' + id];
   const s1 = G.Dialogue.begin(s, { kind: 'event', npcId: id, event: null, scene: null });
   s1.turns.push({ who: 'player', text: '你' }, { who: 'npc', text: '嗯' });
@@ -910,6 +912,8 @@ function deductionRun(G, s) {
   // 灌入某条暗线所需的全部线索，验证推论能被触发
   const key = 'seal';
   s.storylines[key].unlocked = true;
+  // 这一局里封印线可能已经推满了，推论就看不出增量——先退回去一截
+  if (s.storylines[key].progress > 60) s.storylines[key].progress = 60;
   const need = G.Storyline.LINES[key].deductions[0].need;
   for (const c of need) G.Storyline.addClue(s, key, c, 5);
 

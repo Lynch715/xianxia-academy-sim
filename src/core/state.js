@@ -5,7 +5,7 @@
 (function (G) {
   'use strict';
 
-  const VERSION = '1.5.0';
+  const VERSION = '1.6.0';
 
   const ATTR_SETS = {
     student:    { keys: ['wu','gen','shen','ji','xin','shi'],       points: 30, cap: 10 },
@@ -147,6 +147,8 @@
       G.Governance.init(s);
       G.Career.init(s);
       G.Craft.init(s);
+      G.Rival.init(s);
+      G.Faction.init(s);
       return s;
     },
 

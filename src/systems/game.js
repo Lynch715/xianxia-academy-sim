@@ -414,6 +414,7 @@
       G.Demon.monthlyTick(s);
       G.Reputation.monthlyTick(s);
       notes.push(...G.Relation.npcTick(s));
+      notes.push(...G.Rival.monthlyTick(s));
       notes.push(...G.Faculty.monthlyTick(s));
       notes.push(...G.Governance.monthlyTick(s));
 

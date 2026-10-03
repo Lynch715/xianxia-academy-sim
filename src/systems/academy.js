@@ -86,6 +86,13 @@
     },
 
     /** 分数 → 名次。用正态分布，均值随学年上移。 */
+    /** 纯按分数在三百人里的位置，不做 NPC 占位——同届榜给对手排名用 */
+    rankForScore(s, score) {
+      const mean = 42 + (s.academy.year - 1) * 4, sd = 18;
+      const pct = 1 - this._normCdf((score - mean) / sd);
+      return Math.max(1, Math.min(this.TOTAL, Math.round(pct * this.TOTAL)));
+    },
+
     rankOf(s, score) {
       const yearShift = (s.academy.year - 1) * 4;
       // 三百人不是静止的靶子——他们也在进步。sd 放宽，避免玩家一到筑基就霸榜。
@@ -145,6 +152,7 @@
       deltas.push({ path: 'academy.grades', op: 'push', value: record, maxLen: 30 });
 
       G.State.commit(deltas, 'academy.exam');
+      G.Rival.refreshRanks(s);
       G.State.logLine(`${kind === 'final' ? '期末大考' : '月考'}：第 ${rank} 名 / ${this.TOTAL}`, 'major');
 
       // 连续两次末位 → 劝退预警；预警期间再垫底一次就真的劝退，考好了就撤销。
@@ -199,7 +207,7 @@
       const r = G.Check.roll({
         attrKey: G.State.ATTR_SETS[s.player.role].keys.includes('shen') ? 'shen' : 'xue',
         difficulty: 46 + (tech.tier === 'xuan' ? 16 : tech.tier === 'huang' ? 6 : 0),
-        modifiers: [s.flags.library_pass ? 8 : 0]
+        modifiers: [s.flags.library_pass ? 8 : 0, G.Faction.studyBonus(s)]
       });
       const gain = { perfect: 34, good: 22, plain: 14, bad: 6, terrible: 0 }[r.grade];
       const prog = Math.min(100, (s.flags[`copy_${cur}`] || 0) + gain);

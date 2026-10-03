@@ -106,12 +106,16 @@
         // 正路是当过院首再接掌；没当过院首但教学评价连年优、声望又高的，七院也会推举
         const byHead = !!s.flags.became_head && merit;
         const byMerit = G.Faculty.excellentStreak(s) >= 3 && rep >= 70;
-        const okHead = byHead || byMerit;
+        // 站稳了队也是一条路：几派都认你，推举票就在那儿
+        const byVote = G.Faction.support(s) >= 2 && rep >= 50;
+        const okHead = byHead || byMerit || byVote;
         out.push({
           id: 'headmaster', label: '接掌云霄', kind: 'advance', role: 'headmaster', ok: okHead,
-          hint: okHead ? (byHead ? '七院把担子交到你手上' : '你没当过院首，但这些年的评价摆在那里，七院推举了你')
+          hint: okHead ? (byHead ? '七院把担子交到你手上'
+                   : byVote ? '你没当过院首，但几派都认你，推举票够了'
+                   : '你没当过院首，但这些年的评价摆在那里，七院推举了你')
             : (!s.flags.became_head
-                ? '要么当过院首，要么连续三学期评价优且声望 70 以上'
+                ? '要么当过院首，要么连续三学期评价优且声望 70 以上，要么几派都认你（推举票 2 以上、声望 50）'
                 : '当过院首，但功绩不够：著述三部、带出一个金丹、或声望 60')
         });
         out.push({ id: 'retire_teach', label: '教满这一任，就此作罢', kind: 'end', ok: true, hint: '以教习身份收尾' });

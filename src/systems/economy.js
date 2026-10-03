@@ -91,9 +91,10 @@
       const seedTurn = Math.floor(s.time.absoluteTurn / 84);
       const rng = new G.RNG((s.meta.seed ^ (seedTurn * 7919)) >>> 0);
       const n = rng.int(6, 9);
+      const fm = G.Faction.priceMult(s);
       return rng.sample(base, n).map(i => ({
         ...i,
-        price: Math.max(1, Math.round(i.price * (0.85 + rng.float() * 0.4))),
+        price: Math.max(1, Math.round(i.price * (0.85 + rng.float() * 0.4) * fm)),
         qty: rng.int(1, 5)
       }));
     },

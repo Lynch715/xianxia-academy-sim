@@ -166,6 +166,7 @@
     right(s, view, setView, rerender) {
       const nudge = G.Storyline.hasPendingDeduction(s);
       const list = [['sched', '日程'], ['rel', '关系']];
+      if (s.player.role === 'student' || s.career?.stage === 'outer') list.push(['peers', '同届']);
       if (s.player.role === 'teacher') list.push(['disciples', '弟子']);
       list.push(['line', '暗线'], ['log', '记事']);
 
@@ -177,12 +178,69 @@
 
       let body;
       if (view === 'sched')          body = this.schedView(s, rerender);
+      else if (view === 'peers')     body = this.peersView(s);
       else if (view === 'rel')       body = this.relView(s);
       else if (view === 'disciples') body = this.discipleView(s, rerender);
       else if (view === 'line')      body = this.lineView(s);
       else                           body = this.logView(s);
 
       return h('div', tabs, body);
+    },
+
+    /* 同届：榜上有名有姓的那几个、他们在想什么、四派现在什么行情。
+     * 名次是算出来的，但前面站着的人是具体的。 */
+    peersView(s) {
+      const C = G.C;
+      const board = G.Rival.board(s);
+      const rows = h('div');
+      for (const r of board) {
+        rows.appendChild(h('div', {
+          style: {
+            display: 'flex', alignItems: 'baseline', gap: '8px', padding: '6px 0',
+            borderBottom: '1px solid var(--line-2)',
+            background: r.you ? 'var(--paper-2)' : null
+          }
+        },
+          h('span.mono.small', { style: { width: '42px', color: r.you ? 'var(--accent)' : 'var(--ink-3)' } }, '第 ' + r.rank),
+          h('span', { style: { flex: 1 } }, r.name + (r.you ? '（你）' : ''),
+            r.you ? null : h('span.tiny.muted', `　${G.Rival.attitudeName(r.attitude)}`)),
+          h('span.tiny.muted', r.realm)));
+      }
+
+      const rivals = h('div');
+      for (const r of G.Rival.list(s)) {
+        const rel = s.relations[r.id] || {};
+        rivals.appendChild(h('.rel', { style: { marginTop: '10px' } },
+          h('.rel-head',
+            h('span.rel-name', G.NPC.name(r.id)),
+            h('span.rel-stage', G.Rival.attitudeName(r.attitude))),
+          h('.tiny.muted', `${G.State.realmName(r.realm, r.layer)} · 第 ${r.rank} 名 · 擅长${r.focus}`),
+          h('.tiny', { style: { marginTop: '4px' } }, '他想：' + r.goal),
+          h('.tiny.muted', { style: { marginTop: '4px' } },
+            `你压过他 ${r.beaten} 次，他压过你 ${r.lost} 次` +
+            (r.helpLeft ? `　· 欠你 ${r.helpLeft} 次人情` : '') +
+            (rel.strained ? '　· 关系紧张' : ''))));
+      }
+
+      const fac = h('div');
+      for (const f of G.Faction.summary(s)) {
+        fac.appendChild(h('div', { style: { padding: '6px 0', borderBottom: '1px solid var(--line-2)' } },
+          h('div', f.name + (f.favored ? '　· 认你' : ''),
+            h('span.tiny.muted', `　${f.head}　倾向 ${f.lean}`)),
+          h('.tiny.muted', f.creed)));
+      }
+      const perks = G.Faction.perkLines(s);
+
+      void C;
+      return h('div',
+        h('.panel-title', '同 届 榜'),
+        rows,
+        h('.panel-title', { style: { marginTop: '16px' } }, '几 个 人'),
+        rivals,
+        h('.panel-title', { style: { marginTop: '16px' } }, '四 派'),
+        fac,
+        perks.length ? h('div', { style: { marginTop: '8px' } },
+          ...perks.map(x => h('.tiny', { style: { padding: '2px 0' } }, '· ' + x))) : null);
     },
 
     /** 弟子名册。压力条是这一屏最该盯着的东西。 */
@@ -303,6 +361,8 @@
         if (g && g.unrest >= 60) push(`七院人心 ${g.unrest}，${G.State.collegeOf(g.worst).name}最不满。`, g.unrest >= 75 ? 'danger' : 'warn');
         if (g?.agendaLeft) push(`还有 ${g.agendaLeft} 件院务等你拍板。`);
       }
+
+      for (const x of G.Rival.urgent(s)) push(x.text, x.tone);
 
       // 人
       if (s.flags._pendingMsg) push(`${G.NPC.name(s.flags._pendingMsg.npcId)}的传音还没回。`, 'warn');

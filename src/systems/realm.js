@@ -163,7 +163,7 @@
           r.qi -= 4;
           const c = G.Check.roll({
             attrKey: 'shen', difficulty: 48 + (r.def.danger - 1) * 20,
-            modifiers: [G.Beast.has(s, 'find') ? 12 : 0]      // 寻宝的灵兽会刨
+            modifiers: [G.Beast.has(s, 'find') ? 12 : 0, G.Faction.realmBonus(s) * 0.5]
           });
           if (c.grade === 'perfect') {
             const stone = G.rng.int(60, 180);

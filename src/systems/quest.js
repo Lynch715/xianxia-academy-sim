@@ -71,8 +71,9 @@
       const notes = [];
 
       if (mult > 0) {
-        const stone = Math.round(G.rng.int(t.stone[0], t.stone[1]) * mult);
-        const contrib = Math.round(t.contrib * mult);
+        const fm = G.Faction.rewardMult(s);
+        const stone = Math.round(G.rng.int(t.stone[0], t.stone[1]) * mult * fm);
+        const contrib = Math.round(t.contrib * mult * fm);
         deltas.push({ path: 'resources.stone.low', op: 'add', value: stone });
         deltas.push({ path: 'resources.contribution', op: 'add', value: contrib });
         notes.push(`灵石 +${stone}，贡献点 +${contrib}`);

@@ -798,7 +798,7 @@ window.G.DATA = {"npcs":[{"id":"npc_shenjinglan","name":"沈惊澜","gender":"ma
 (function (G) {
   'use strict';
 
-  const VERSION = '1.5.0';
+  const VERSION = '1.6.0';
 
   const ATTR_SETS = {
     student:    { keys: ['wu','gen','shen','ji','xin','shi'],       points: 30, cap: 10 },
@@ -940,6 +940,8 @@ window.G.DATA = {"npcs":[{"id":"npc_shenjinglan","name":"沈惊澜","gender":"ma
       G.Governance.init(s);
       G.Career.init(s);
       G.Craft.init(s);
+      G.Rival.init(s);
+      G.Faction.init(s);
       return s;
     },
 
@@ -1482,6 +1484,11 @@ window.G.DATA = {"npcs":[{"id":"npc_shenjinglan","name":"沈惊澜","gender":"ma
         // 1.5 手艺：老档补上三门熟练度与起手方子
         if (!s.craft) { const cur = G.State.current; G.State.current = s; try { G.Craft.init(s); } finally { G.State.current = cur; } }
         if (s.beast === undefined) s.beast = null;
+        // 1.6 同窗与派系
+        if (!s.rivals || !s.faction) {
+          const cur = G.State.current; G.State.current = s;
+          try { G.Rival.init(s); G.Faction.init(s); } finally { G.State.current = cur; }
+        }
         s.meta.version = G.State.VERSION;
         // P5 新增的两条路线状态，老存档补齐
         const cur = G.State.current;
@@ -2256,7 +2263,8 @@ window.G.DATA = {"npcs":[{"id":"npc_shenjinglan","name":"沈惊澜","gender":"ma
           deltas.push({ path: `relations.${npc.id}.favor`, op: 'add', value: -3, clamp: [-100, 100] });
         }
 
-        // 修为自行推进
+        // 修为自行推进（四个对手由 Rival 单独驱动，这里跳过，免得长两遍）
+        if (G.Rival.isRival(npc.id)) continue;
         const pace = npc.growth?.realmPerYear || 1;
         if (G.rng.chance(pace * 6)) {
           const nx = G.Cultivation.nextRealm(r.npcRealm, r.npcLayer);
@@ -2460,6 +2468,16 @@ window.G.DATA = {"npcs":[{"id":"npc_shenjinglan","name":"沈惊澜","gender":"ma
         } else if (s.time.absoluteTurn > chain.dueTurn + CHAIN_EXPIRE) {
           drop();
         }
+      }
+
+      // 2.5 同届相撞与派系表态：按自己的节奏插进来，和别的事件走一样的流程
+      if (out.length < 2 && G.Rival.due(s)) {
+        const ev = G.Rival.makeEvent(s);
+        if (ev) out.push(this.instantiate(s, ev));
+      }
+      if (out.length < 2 && G.Faction.due(s)) {
+        const ev = G.Faction.makeEvent(s);
+        if (ev) out.push(this.instantiate(s, ev));
       }
 
       // 3. 随机池
@@ -2681,6 +2699,14 @@ window.G.DATA = {"npcs":[{"id":"npc_shenjinglan","name":"沈惊澜","gender":"ma
             deltas.push({ path: `resources.items.${eff.id}`, op: 'add', value: eff.value || 1, min: 0 });
             const it = G.DATA.static.items.find(i => i.id === eff.id);
             summary.push(`${it ? it.name : eff.id} ×${eff.value || 1}`);
+            break;
+          }
+          case 'rival': {
+            summary.push(...G.Rival.resolveContest(s, eff.act, grade));
+            break;
+          }
+          case 'faction': {
+            summary.push(...G.Faction.resolve(s, eff.act, grade));
             break;
           }
           case 'recipe': {
@@ -2952,6 +2978,13 @@ window.G.DATA = {"npcs":[{"id":"npc_shenjinglan","name":"沈惊澜","gender":"ma
     },
 
     /** 分数 → 名次。用正态分布，均值随学年上移。 */
+    /** 纯按分数在三百人里的位置，不做 NPC 占位——同届榜给对手排名用 */
+    rankForScore(s, score) {
+      const mean = 42 + (s.academy.year - 1) * 4, sd = 18;
+      const pct = 1 - this._normCdf((score - mean) / sd);
+      return Math.max(1, Math.min(this.TOTAL, Math.round(pct * this.TOTAL)));
+    },
+
     rankOf(s, score) {
       const yearShift = (s.academy.year - 1) * 4;
       // 三百人不是静止的靶子——他们也在进步。sd 放宽，避免玩家一到筑基就霸榜。
@@ -3011,6 +3044,7 @@ window.G.DATA = {"npcs":[{"id":"npc_shenjinglan","name":"沈惊澜","gender":"ma
       deltas.push({ path: 'academy.grades', op: 'push', value: record, maxLen: 30 });
 
       G.State.commit(deltas, 'academy.exam');
+      G.Rival.refreshRanks(s);
       G.State.logLine(`${kind === 'final' ? '期末大考' : '月考'}：第 ${rank} 名 / ${this.TOTAL}`, 'major');
 
       // 连续两次末位 → 劝退预警；预警期间再垫底一次就真的劝退，考好了就撤销。
@@ -3065,7 +3099,7 @@ window.G.DATA = {"npcs":[{"id":"npc_shenjinglan","name":"沈惊澜","gender":"ma
       const r = G.Check.roll({
         attrKey: G.State.ATTR_SETS[s.player.role].keys.includes('shen') ? 'shen' : 'xue',
         difficulty: 46 + (tech.tier === 'xuan' ? 16 : tech.tier === 'huang' ? 6 : 0),
-        modifiers: [s.flags.library_pass ? 8 : 0]
+        modifiers: [s.flags.library_pass ? 8 : 0, G.Faction.studyBonus(s)]
       });
       const gain = { perfect: 34, good: 22, plain: 14, bad: 6, terrible: 0 }[r.grade];
       const prog = Math.min(100, (s.flags[`copy_${cur}`] || 0) + gain);
@@ -3190,9 +3224,10 @@ window.G.DATA = {"npcs":[{"id":"npc_shenjinglan","name":"沈惊澜","gender":"ma
       const seedTurn = Math.floor(s.time.absoluteTurn / 84);
       const rng = new G.RNG((s.meta.seed ^ (seedTurn * 7919)) >>> 0);
       const n = rng.int(6, 9);
+      const fm = G.Faction.priceMult(s);
       return rng.sample(base, n).map(i => ({
         ...i,
-        price: Math.max(1, Math.round(i.price * (0.85 + rng.float() * 0.4))),
+        price: Math.max(1, Math.round(i.price * (0.85 + rng.float() * 0.4) * fm)),
         qty: rng.int(1, 5)
       }));
     },
@@ -3772,8 +3807,9 @@ window.G.DATA = {"npcs":[{"id":"npc_shenjinglan","name":"沈惊澜","gender":"ma
       const notes = [];
 
       if (mult > 0) {
-        const stone = Math.round(G.rng.int(t.stone[0], t.stone[1]) * mult);
-        const contrib = Math.round(t.contrib * mult);
+        const fm = G.Faction.rewardMult(s);
+        const stone = Math.round(G.rng.int(t.stone[0], t.stone[1]) * mult * fm);
+        const contrib = Math.round(t.contrib * mult * fm);
         deltas.push({ path: 'resources.stone.low', op: 'add', value: stone });
         deltas.push({ path: 'resources.contribution', op: 'add', value: contrib });
         notes.push(`灵石 +${stone}，贡献点 +${contrib}`);
@@ -4048,7 +4084,7 @@ window.G.DATA = {"npcs":[{"id":"npc_shenjinglan","name":"沈惊澜","gender":"ma
           r.qi -= 4;
           const c = G.Check.roll({
             attrKey: 'shen', difficulty: 48 + (r.def.danger - 1) * 20,
-            modifiers: [G.Beast.has(s, 'find') ? 12 : 0]      // 寻宝的灵兽会刨
+            modifiers: [G.Beast.has(s, 'find') ? 12 : 0, G.Faction.realmBonus(s) * 0.5]
           });
           if (c.grade === 'perfect') {
             const stone = G.rng.int(60, 180);
@@ -5180,7 +5216,8 @@ window.G.DATA = {"npcs":[{"id":"npc_shenjinglan","name":"沈惊澜","gender":"ma
           (s.faculty.papers || 0) * 4,
           this.excellentStreak(s) * 5,
           (s.flags.jindan_disciples || 0) * 6,
-          a.faction ? (s.reputation.factions[a.faction] || 0) * 0.15 : 0
+          a.faction ? (s.reputation.factions[a.faction] || 0) * 0.15 : 0,
+          G.Faction.support(s) * 4
         ]
       });
 
@@ -6064,12 +6101,16 @@ window.G.DATA = {"npcs":[{"id":"npc_shenjinglan","name":"沈惊澜","gender":"ma
         // 正路是当过院首再接掌；没当过院首但教学评价连年优、声望又高的，七院也会推举
         const byHead = !!s.flags.became_head && merit;
         const byMerit = G.Faculty.excellentStreak(s) >= 3 && rep >= 70;
-        const okHead = byHead || byMerit;
+        // 站稳了队也是一条路：几派都认你，推举票就在那儿
+        const byVote = G.Faction.support(s) >= 2 && rep >= 50;
+        const okHead = byHead || byMerit || byVote;
         out.push({
           id: 'headmaster', label: '接掌云霄', kind: 'advance', role: 'headmaster', ok: okHead,
-          hint: okHead ? (byHead ? '七院把担子交到你手上' : '你没当过院首，但这些年的评价摆在那里，七院推举了你')
+          hint: okHead ? (byHead ? '七院把担子交到你手上'
+                   : byVote ? '你没当过院首，但几派都认你，推举票够了'
+                   : '你没当过院首，但这些年的评价摆在那里，七院推举了你')
             : (!s.flags.became_head
-                ? '要么当过院首，要么连续三学期评价优且声望 70 以上'
+                ? '要么当过院首，要么连续三学期评价优且声望 70 以上，要么几派都认你（推举票 2 以上、声望 50）'
                 : '当过院首，但功绩不够：著述三部、带出一个金丹、或声望 60')
         });
         out.push({ id: 'retire_teach', label: '教满这一任，就此作罢', kind: 'end', ok: true, hint: '以教习身份收尾' });
@@ -7028,6 +7069,594 @@ window.G.DATA = {"npcs":[{"id":"npc_shenjinglan","name":"沈惊澜","gender":"ma
 })(window.G = window.G || {});
 
 
+/* ==== systems/rival.js ==== */
+/* ===== systems/rival.js — 同届里看得见的对手 =====
+ * 以前的月考名次是算出来的一个数字，前面那两百九十九个人谁也没有脸。
+ * 这里挑四个同届出来，让他们有自己的修为曲线、名次、脾气和目标：
+ *
+ *   · 每月自己长修为，名次跟着动，长得比你快的会被院里念叨
+ *   · 隔一阵子和你撞上一次：灵脉名额、名师指点、秘境名额、甲等悬赏、院首推举
+ *     你可以让、可以争、可以拉着一起、也可以在背后使手段
+ *   · 他们记事：被你压过几次的会紧张，赢过你的会轻视你，合作过的会在关键处帮你一次
+ */
+(function (G) {
+  'use strict';
+
+  const RIVAL_IDS = ['npc_shenjinglan', 'npc_qinjiusi', 'npc_zhaomingqi', 'npc_wenjiujiu'];
+
+  const SEEDS = {
+    npc_shenjinglan: { focus: '剑', goal: '把剑练到没人能接', pace: 1.35, baseRank: 2 },
+    npc_qinjiusi:    { focus: '院规', goal: '当上执事，把规矩立起来', pace: 1.1, baseRank: 7 },
+    npc_zhaomingqi:  { focus: '经营', goal: '攒够灵石，把家里的铺子赎回来', pace: 0.85, baseRank: 38 },
+    npc_wenjiujiu:   { focus: '丹道', goal: '炼出一炉她爹认得出的丹', pace: 0.9, baseRank: 60 }
+  };
+
+  // 撞上的由头。stake 是赢了能拿到什么，输了就是他拿到。
+  const CONTESTS = {
+    vein:    { name: '灵脉名额', attr: 'gen', difficulty: 52,
+               seed: n => `这个月灵脉节点开放三个名额，报名的有五个人。执事把名单念到最后，剩下一个位置，在你和${n}之间。`,
+               win: '灵脉上坐一个月，修为涨得比平常快',
+               stake: { exp: 160 } },
+    master:  { name: '名师指点', attr: 'shi', difficulty: 55,
+               seed: n => `顾长青这旬只收一个人问剑。你到门口的时候，${n}已经在那儿站着了。`,
+               win: '那一下午的指点，够你琢磨很久',
+               stake: { exp: 90, attr: 1 } },
+    realm:   { name: '秘境名额', attr: 'ji', difficulty: 54,
+               seed: n => `灵墟外围这次只放四个人进去。前三个定了，第四个名字还空着——报名册上你和${n}挨着。`,
+               win: '名额到手，这趟能自己挑路走',
+               stake: { stone: 320, flag: 'realm_slot' } },
+    bounty:  { name: '甲等悬赏', attr: 'gen', difficulty: 56,
+               seed: n => `告示栏上那张甲等悬赏被人揭了一半——${n}的手正按在上面，看见你来，没松手。`,
+               win: '悬赏接下来了，钱和贡献点都是你的',
+               stake: { stone: 480, contribution: 90 } },
+    head:    { name: '院首推举', attr: 'shi', difficulty: 60, roles: ['teacher'],
+               seed: n => `明年的院首推举，院里在私下排人。你听说${n}那边已经在走动了。`,
+               win: '这一票站到了你这边',
+               stake: { reputation: 6, flag: 'head_support' } }
+  };
+
+  const Rival = {
+    RIVAL_IDS, CONTESTS, SEEDS,
+
+    init(s) {
+      if (s.rivals) return;
+      s.rivals = {
+        list: RIVAL_IDS.filter(id => G.NPC.get(id)).map(id => {
+          const r = s.relations[id] || {};
+          return {
+            id, focus: SEEDS[id].focus, goal: SEEDS[id].goal,
+            progress: 0, realm: r.npcRealm || 'qi', layer: r.npcLayer || 3,
+            momentum: 0,            // 近来的势头，影响成长速度
+            attitude: 'neutral',    // neutral 平常 / tense 紧张 / dismissive 轻视 / ally 有交情
+            beaten: 0, lost: 0,     // 你压过他几次／他压过你几次
+            rank: SEEDS[id].baseRank,
+            helpLeft: 0,            // 合作攒下的人情，关键处能用一次
+            note: ''
+          };
+        }),
+        nextContest: 8 * 21,
+        contests: 0
+      };
+    },
+
+    list(s) { this.init(s); return s.rivals.list; },
+    get(s, id) { return this.list(s).find(r => r.id === id); },
+    isRival(id) { return RIVAL_IDS.includes(id); },
+
+    power(r) { return G.State.realmIndex(r.realm) * 9 + r.layer; },
+    playerPower(s) { return G.State.realmIndex(s.cultivation.realm) * 9 + s.cultivation.layer; },
+
+    // ---------- 每月：他们也在长 ----------
+    monthlyTick(s) {
+      if (s.player.role !== 'student' && s.career?.stage !== 'outer') return [];
+      this.init(s);
+      const news = [];
+      const list = s.rivals.list.map(r => {
+        const x = { ...r };
+        const seed = SEEDS[x.id] || { pace: 1 };
+        // 势头：被你压过会憋着劲，压过你会松一点
+        let pace = seed.pace * (1 + x.momentum * 0.25);
+        // 他们不是靶子：被你甩开太远会追，跑到你前面太多会松懈。
+        // 不这么做，五年下来你金丹、他们还在筑基，所谓对手就名存实亡。
+        const gap = this.playerPower(s) - this.power(x);
+        // 追赶的劲头看各人：沈惊澜、秦九思本来就冲着这个来的，
+        // 赵鸣岐忙着做生意、温酒酒守着丹炉，落下了也就落下了
+        const drive = seed.pace >= 1 ? 1 : 0.35;
+        if (gap > 4) pace *= 1 + Math.min(1.1, (gap - 4) * 0.28) * drive;
+        else if (gap < -2) pace *= 0.6;
+        /* 他们的进境不走玩家那套修为账：玩家能靠日程、丹药、秘境堆修为，
+         * 对手要是也按那张表走，五年后就只能在筑基上看着你。这里用一条
+         * 单独的「进境」曲线，一格一格往上走，节奏可控。 */
+        x.progress = (x.progress || 0) + 7 * pace * (0.8 + G.rng.float() * 0.5);
+        if (x.progress >= 100) {
+          x.progress = 0;
+          const nx = G.Cultivation.nextRealm(x.realm, x.layer);
+          if (G.State.realmIndex(nx.realm) <= 2) {
+            x.realm = nx.realm; x.layer = nx.layer;
+            news.push(`${G.NPC.name(x.id)}破境了，如今是${G.State.realmName(x.realm, x.layer)}。`);
+          }
+        }
+        x.momentum = Math.max(-1, Math.min(2, x.momentum * 0.8));
+        return x;
+      });
+
+      const deltas = [{ path: 'rivals.list', op: 'set', value: list }];
+      // 关系里的境界跟着走，切磋、月考、事件用的都是这一份
+      for (const x of list) {
+        deltas.push({ path: `relations.${x.id}.npcRealm`, op: 'set', value: x.realm });
+        deltas.push({ path: `relations.${x.id}.npcLayer`, op: 'set', value: x.layer });
+      }
+      G.State.commit(deltas, 'rival.month');
+      this.refreshRanks(s);
+      return news;
+    },
+
+    /** 名次：你和四个对手排在同一张榜上 */
+    refreshRanks(s) {
+      this.init(s);
+      const mine = G.Academy.scoreOf(s);
+      const EDGE = { npc_shenjinglan: 58, npc_qinjiusi: 50, npc_zhaomingqi: 32, npc_wenjiujiu: 30 };
+      const list = s.rivals.list.map(r => {
+        const x = { ...r };
+        // 和玩家一张榜：境界三成，各人本事和近来的势头是剩下那块
+        const score = Math.min(30, this.power(x) * 2.2) + (EDGE[x.id] || 24)
+          + x.momentum * 3 - x.beaten * 1.2 + x.lost * 1.2;
+        x.score = Math.round(score);
+        x.rank = G.Academy.rankForScore(s, score);
+        // 两个人分数接近时别并列，排在你前面还是后面要看得出来
+        if (Math.abs(score - mine) < 1.5) x.rank = Math.max(1, x.rank + (score >= mine ? -1 : 1));
+        return x;
+      });
+      G.State.commit([{ path: 'rivals.list', op: 'set', value: list }], 'rival.rank');
+      return list;
+    },
+
+    /** 榜单：前十名里有名有姓的那几个 + 你 */
+    board(s) {
+      this.init(s);
+      const mine = G.Academy.lastRank(s) || G.Academy.rankOf(s, G.Academy.scoreOf(s));
+      const rows = this.list(s).map(r => ({
+        id: r.id, name: G.NPC.name(r.id), rank: r.rank,
+        realm: G.State.realmName(r.realm, r.layer),
+        attitude: r.attitude, focus: r.focus, goal: r.goal, you: false
+      }));
+      rows.push({ id: 'me', name: s.player.name, rank: mine, realm: G.State.realmName(s.cultivation.realm, s.cultivation.layer), you: true });
+      return rows.sort((a, b) => a.rank - b.rank);
+    },
+
+    attitudeName(a) {
+      return ({ neutral: '平常', tense: '较着劲', dismissive: '没把你放眼里', ally: '有交情' })[a] || '平常';
+    },
+
+    // ---------- 撞上 ----------
+    due(s) {
+      this.init(s);
+      if (s.ended) return false;
+      return s.time.absoluteTurn >= (s.rivals.nextContest || 0);
+    },
+
+    /** 这次跟谁、为什么撞上 */
+    pickContest(s) {
+      this.init(s);
+      const kinds = Object.keys(CONTESTS).filter(k => {
+        const c = CONTESTS[k];
+        if (c.roles && !c.roles.includes(s.player.role)) return false;
+        if (!c.roles && s.player.role !== 'student' && s.career?.stage !== 'outer') return false;
+        return true;
+      });
+      if (!kinds.length) return null;
+      const pool = this.list(s).filter(r => G.NPC.available(s, r.id));
+      if (!pool.length) return null;
+      // 名次离你越近的越容易撞上；轻视你的那个也爱来
+      const mine = G.Academy.lastRank(s) || 150;
+      const r = G.rng.weighted(pool, x =>
+        Math.max(1, 60 - Math.abs(x.rank - mine) * 0.4) + (x.attitude === 'dismissive' ? 25 : 0) + (x.attitude === 'tense' ? 15 : 0));
+      return { kind: G.rng.pick(kinds), rivalId: (r || pool[0]).id };
+    },
+
+    /** 把这次相撞包成一个事件，走和别的事件一样的流程（对话场、叙事都能用上） */
+    makeEvent(s) {
+      const pick = this.pickContest(s);
+      if (!pick) return null;
+      const c = CONTESTS[pick.kind];
+      const name = G.NPC.name(pick.rivalId);
+      const rv = this.get(s, pick.rivalId);
+      const gap = this.power(rv) - this.playerPower(s);
+
+      s.flags._contest = { kind: pick.kind, rivalId: pick.rivalId };
+      s.rivals.nextContest = s.time.absoluteTurn + G.rng.int(14, 26) * 21;
+      s.rivals.contests = (s.rivals.contests || 0) + 1;
+
+      const eff = act => [{ type: 'rival', act }];
+      const hint = c.win;
+      return {
+        id: 'evt_rival_contest',
+        category: 'rival',
+        scene: pick.kind === 'realm' ? 'scene_mountain_gate' : pick.kind === 'master' ? 'scene_jianyuan' : 'scene_main_plaza',
+        actors: [pick.rivalId],
+        cooldown: 0,
+        _contest: { ...pick },
+        seed: c.seed(name) + (rv.attitude === 'dismissive' ? `\n\n「你也报了？」${name}看了你一眼，没再说下去。` :
+                              rv.attitude === 'tense' ? `\n\n${name}没看你，但你知道他在等你开口。` : ''),
+        facts: [`你和${name}争${c.name}`, `他现在是${G.State.realmName(rv.realm, rv.layer)}`, `赢了：${hint}`],
+        options: [
+          {
+            id: 'A', text: '让给他', reason: 0,
+            outcomes: { fixed: { narrative: `你说你不争。${name}愣了一下，没说谢，但那一眼记住了。`, effects: eff('yield') } }
+          },
+          {
+            id: 'B', text: '争', reason: Math.round(-gap * 1.2),
+            check: { attr: c.attr, difficulty: c.difficulty + gap * 2 },
+            outcomes: {
+              perfect: { narrative: `这一回合没什么悬念。${name}退开半步，把位置让了出来。`, effects: eff('fight') },
+              good:    { narrative: `你争到了。${name}看了你很久才走。`, effects: eff('fight') },
+              plain:   { narrative: `两边僵了半天，最后执事折中：这次算你的，下次是他的。`, effects: eff('fight') },
+              bad:     { narrative: `你没争过。${name}拿走了名额，走的时候什么也没说。`, effects: eff('fight') },
+              terrible:{ narrative: `你不但没争过，话还说重了。围观的人不少。`, effects: eff('fight') }
+            }
+          },
+          {
+            id: 'C', text: '提议一起', reason: 6,
+            check: { attr: 'shi', difficulty: c.difficulty - 6 },
+            outcomes: {
+              perfect: { narrative: `你提了个两个人都能过去的法子。${name}想了想，点头。`, effects: eff('coop') },
+              good:    { narrative: `你们商量了一下，各退一步。`, effects: eff('coop') },
+              plain:   { narrative: `他听完没表态，但也没拒绝。事情最后是一起办的，分得不算清楚。`, effects: eff('coop') },
+              bad:     { narrative: `他不信你。「你图什么？」`, effects: eff('coop') },
+              terrible:{ narrative: `你话没说完他就走了。后来院里有人问你，是不是想占他便宜。`, effects: eff('coop') }
+            }
+          },
+          {
+            id: 'D', text: '在背后使点手段', reason: -4,
+            check: { attr: 'ji', difficulty: c.difficulty + 4 },
+            outcomes: {
+              perfect: { narrative: `名单贴出来的时候，他的名字不在上面。没有人知道为什么。`, effects: eff('sabotage') },
+              good:    { narrative: `事情办成了。他只是觉得运气不好。`, effects: eff('sabotage') },
+              plain:   { narrative: `办成了一半。他起了疑心，但没证据。`, effects: eff('sabotage') },
+              bad:     { narrative: `他看出来了，什么也没说，但眼神变了。`, effects: eff('sabotage') },
+              terrible:{ narrative: `你做的事被人看见了。到晚上，半个院都知道了。`, effects: eff('sabotage') }
+            }
+          }
+        ]
+      };
+    },
+
+    /** 事件效果 type:'rival' 落到这里。四种做法各有各的账。 */
+    resolveContest(s, act, grade) {
+      const info = s.flags._contest;
+      if (!info) return [];
+      this.init(s);
+      const c = CONTESTS[info.kind];
+      const rv = this.get(s, info.rivalId);
+      if (!c || !rv) return [];
+
+      const good = ['perfect', 'good'].includes(grade);
+      const plain = grade === 'plain';
+      const summary = [];
+      const deltas = [];
+      let won = false;
+
+      const payout = () => {
+        const st = c.stake;
+        if (st.exp) { deltas.push({ path: 'cultivation.exp', op: 'add', value: st.exp, min: 0 }); summary.push(`修为+${st.exp}`); }
+        if (st.stone) { deltas.push({ path: 'resources.stone.low', op: 'add', value: st.stone }); summary.push(`灵石+${st.stone}`); }
+        if (st.contribution) { deltas.push({ path: 'resources.contribution', op: 'add', value: st.contribution }); summary.push(`贡献点+${st.contribution}`); }
+        if (st.reputation) { deltas.push({ path: 'reputation.value', op: 'add', value: st.reputation, clamp: [0, 100] }); summary.push(`声望+${st.reputation}`); }
+        if (st.attr) {
+          const k = G.rng.pick(G.State.ATTR_SETS[s.player.role].keys);
+          deltas.push({ path: `attrs.${k}`, op: 'add', value: st.attr });
+          summary.push(`${G.State.ATTR_LABEL[k]}+${st.attr}`);
+        }
+        if (st.flag) deltas.push({ path: `flags.${st.flag}`, op: 'set', value: true });
+      };
+
+      const next = { ...rv };
+      if (act === 'yield') {
+        next.momentum = Math.min(2, next.momentum + 0.6);
+        next.lost += 1;
+        if (next.attitude === 'neutral') next.attitude = 'dismissive';
+        G.Relation.adjust(s, rv.id, { favor: 4, trust: 3 }, `${c.name}你让给了他`);
+        summary.push('他记下了这份让');
+      } else if (act === 'fight') {
+        won = good || plain;
+        if (won) {
+          payout();
+          next.beaten += 1;
+          next.momentum = Math.min(2, next.momentum + 0.5);
+          next.attitude = next.attitude === 'ally' ? 'ally' : 'tense';
+          G.Relation.act(s, rv.id, 'defeat_them');
+          G.Rumor.add(s, 'strong', rv.id);
+        } else {
+          next.lost += 1;
+          next.momentum = Math.max(-1, next.momentum - 0.2);
+          if (next.attitude === 'neutral' || next.attitude === 'tense') next.attitude = 'dismissive';
+          G.Relation.act(s, rv.id, 'lose_to_them');
+          if (grade === 'terrible') { G.Rumor.add(s, 'clash', rv.id); G.Demon.add(s, 'inferior', 5, `${c.name}那次没争过${G.NPC.name(rv.id)}`, rv.id); }
+          summary.push('名额归了他');
+        }
+      } else if (act === 'coop') {
+        if (good) {
+          // 一起办：各拿一半，但人情留下了
+          const half = {};
+          for (const k in c.stake) half[k] = typeof c.stake[k] === 'number' ? Math.round(c.stake[k] * 0.6) : c.stake[k];
+          const keep = c.stake; c.stake = half; payout(); c.stake = keep;
+          next.attitude = 'ally';
+          next.helpLeft = Math.min(2, next.helpLeft + 1);
+          G.Relation.adjust(s, rv.id, { favor: 10, trust: 8, bond: 5 }, `${c.name}你们一起办的`);
+          G.Rumor.add(s, 'close', rv.id);
+          summary.push('往后他欠你一次');
+          won = true;
+        } else {
+          next.momentum = Math.min(2, next.momentum + 0.3);
+          G.Relation.adjust(s, rv.id, { favor: -4, trust: -5 }, `${c.name}那次你想合伙，他没接`);
+          summary.push('没谈拢');
+        }
+      } else if (act === 'sabotage') {
+        if (good) {
+          payout();
+          next.beaten += 1;
+          next.attitude = 'dismissive';
+          G.Demon.add(s, 'guilt', 8, `${c.name}那次你在背后使了手段`, rv.id);
+          summary.push('东西到手了，心里那点事也留下了');
+          won = true;
+        } else {
+          G.Relation.adjust(s, rv.id, { favor: -18, trust: -20 }, `${c.name}那次你在背后动了手脚`);
+          deltas.push({ path: `relations.${rv.id}.strained`, op: 'set', value: true });
+          G.Rumor.add(s, 'cruel', rv.id);
+          G.Demon.add(s, 'guilt', 12, `被人看见的那件事`, rv.id);
+          if (grade === 'terrible') deltas.push({ path: 'academy.conduct', op: 'add', value: -2 });
+          next.attitude = 'tense';
+          summary.push('事情没办成，还被看见了');
+        }
+      }
+
+      const list = s.rivals.list.map(x => x.id === next.id ? next : x);
+      deltas.push({ path: 'rivals.list', op: 'set', value: list });
+      deltas.push({ path: 'flags._contest', op: 'set', value: null });
+      G.State.commit(deltas, 'rival.contest');
+      G.State.logLine(`【${c.name}】与${G.NPC.name(rv.id)}：${act === 'yield' ? '你让了' : won ? '你拿到了' : '没拿到'}`, won ? 'major' : 'info');
+      return summary;
+    },
+
+    /** 合作攒下的人情：关键处能用一次 */
+    callFavor(s, npcId) {
+      const rv = npcId ? this.get(s, npcId) : this.list(s).find(x => x.helpLeft > 0);
+      if (!rv || rv.helpLeft <= 0) return null;
+      const list = s.rivals.list.map(x => x.id === rv.id ? { ...x, helpLeft: x.helpLeft - 1 } : x);
+      G.State.commit([{ path: 'rivals.list', op: 'set', value: list }], 'rival.favor');
+      return { id: rv.id, name: G.NPC.name(rv.id) };
+    },
+
+    /** 当下要紧里的一两句 */
+    urgent(s) {
+      if (s.player.role !== 'student' && s.career?.stage !== 'outer') return [];
+      this.init(s);
+      const out = [];
+      const mine = G.Academy.lastRank(s);
+      const ahead = this.list(s).filter(r => mine && r.rank < mine).sort((a, b) => b.rank - a.rank)[0];
+      if (ahead) out.push({ text: `${G.NPC.name(ahead.id)}排在你前面（第 ${ahead.rank}）。`, tone: null });
+      const hot = this.list(s).find(r => r.attitude === 'dismissive');
+      if (hot) out.push({ text: `${G.NPC.name(hot.id)}最近没把你放在眼里。`, tone: 'warn' });
+      const owed = this.list(s).find(r => r.helpLeft > 0);
+      if (owed) out.push({ text: `${G.NPC.name(owed.id)}还欠你一次人情。`, tone: 'good' });
+      return out;
+    }
+  };
+
+  G.Rival = Rival;
+
+})(window.G = window.G || {});
+
+
+/* ==== systems/faction.js ==== */
+/* ===== systems/faction.js — 四派与站队 =====
+ * 守旧、革新、逍遥、务实，各有掌舵人和当期的诉求。
+ * 每学期有人来问你一句话，你表不表态都算一种表态。
+ *
+ * 站队不是换个称号：倾向到了，坊市、悬赏、秘境、抄书各有各的便利；
+ * 院首和院主的推举票也从这里来。两边都想要的人，两边都不给好处。
+ */
+(function (G) {
+  'use strict';
+
+  const FACTIONS = {
+    traditional: { name: '守旧派', head: 'npc_guchangqing', creed: '规矩是拿命换来的，动一条就塌一块' },
+    reform:      { name: '革新派', head: 'npc_bailuqing',   creed: '三百年没改过的东西，不等于对' },
+    xiaoyao:     { name: '逍遥派', head: 'npc_liumianyan',  creed: '修的是自己的道，不是院里的账' },
+    pragmatic:   { name: '务实派', head: 'npc_fangyan',     creed: '先把饭做熟，再谈道理' }
+  };
+
+  // 每学期提上来的事。support 是顺着他说，oppose 是当面驳回去。
+  const DEMANDS = [
+    { id: 'd_quota', key: 'traditional', text: '按资历排灵脉名额，别让新人插队',
+      counter: 'reform', seed: '顾长青把名册推过来：「灵脉名额，老规矩是按资历。今年有人提议按修为排。你怎么看。」' },
+    { id: 'd_open', key: 'reform', text: '藏经阁二层对所有人开放',
+      counter: 'traditional', seed: '白鹿卿开门见山：「二层锁了三百年，锁出什么来了？我要开。你站哪边。」' },
+    { id: 'd_relax', key: 'xiaoyao', text: '取消月考，修到哪儿算哪儿',
+      counter: 'traditional', seed: '柳眠烟靠在栏杆上：「月考这东西，考出来的是谁睡得少。取消算了——你说呢？」' },
+    { id: 'd_budget', key: 'pragmatic', text: '把论道会的钱挪去修丹房',
+      counter: 'xiaoyao', seed: '方砚一边翻账一边说：「论道会一年吃掉八百石，丹房的炉子裂了三年没换。你说先修哪个。」' },
+    { id: 'd_disc', key: 'traditional', text: '私自下山者一律按院规处置',
+      counter: 'xiaoyao', seed: '秦九思代顾长青来问：「私自下山的，这个月有十一个。按规矩是罚，有人说罚得太狠。你呢。」' },
+    { id: 'd_trade', key: 'pragmatic', text: '允许弟子在坊市摆摊',
+      counter: 'traditional', seed: '方砚压低声音：「下面有人想摆摊卖自己炼的东西。执事堂没点头也没摇头。你要是开口，分量不一样。」' },
+    { id: 'd_outside', key: 'reform', text: '请外院的人来讲课',
+      counter: 'traditional', seed: '白鹿卿把请帖拍在案上：「星落书院的人愿意来讲三堂课。有人说这是认输。你说是什么。」' },
+    { id: 'd_free', key: 'xiaoyao', text: '课业只记完成，不排名次',
+      counter: 'pragmatic', seed: '柳眠烟难得正经：「名次把人排成一条线，走得慢的就被当成废物。你觉得这事该不该改。」' }
+  ];
+
+  const Faction = {
+    FACTIONS, DEMANDS,
+
+    init(s) {
+      if (s.faction) return;
+      s.faction = { done: [], pending: null, lastTerm: 0, backed: {} };
+    },
+
+    lean(s, key) { return (s.reputation.factions[key] || 0); },
+    dominant(s) { return G.Reputation.dominant(s); },
+
+    /** 某一派对你的倾向够不够深 */
+    favored(s, key, need) { return this.lean(s, key) >= (need || 30); },
+
+    /** 推举票：院首、院主都看这个 */
+    support(s) {
+      const f = s.reputation.factions;
+      let plus = 0, minus = 0;
+      for (const k in FACTIONS) {
+        const v = f[k] || 0;
+        if (v >= 25) plus += 1;
+        if (v <= -25) minus += 1;
+      }
+      return plus - minus;
+    },
+
+    /** 该不该来问你一句了：每学期一次 */
+    due(s) {
+      this.init(s);
+      if (s.ended || s.player.role === 'headmaster') return false;
+      const term = (s.academy.year - 1) * 2 + s.academy.term;
+      return term > (s.faction.lastTerm || 0) && s.time.absoluteTurn > 8 * 21;
+    },
+
+    /** 把这学期的诉求包成事件 */
+    makeEvent(s) {
+      this.init(s);
+      const pool = DEMANDS.filter(d => !s.faction.done.includes(d.id));
+      const d = pool.length ? G.rng.pick(pool) : G.rng.pick(DEMANDS);
+      const term = (s.academy.year - 1) * 2 + s.academy.term;
+      s.faction.lastTerm = term;
+      s.flags._demand = d.id;
+
+      const F = FACTIONS[d.key], C = FACTIONS[d.counter];
+      const head = F.head;
+      const eff = act => [{ type: 'faction', act }];
+      return {
+        id: 'evt_faction_demand',
+        category: 'faction',
+        scene: 'scene_mingde',
+        actors: [head],
+        cooldown: 0,
+        seed: d.seed,
+        facts: [`${F.name}想推的事：${d.text}`, `${C.name}是反对的那一边`, '你的话会被记住'],
+        options: [
+          { id: 'A', text: `顺着说：${d.text}`, reason: 4,
+            check: { attr: 'shi', difficulty: 44 },
+            outcomes: {
+              perfect: { narrative: `你把话说得比他自己还周全。${G.NPC.name(head)}看了你一眼：「这话我记下了。」`, effects: eff('support') },
+              good:    { narrative: `你表了态。他点点头，没多说。`, effects: eff('support') },
+              plain:   { narrative: `你说你赞成。他「嗯」了一声。`, effects: eff('support') },
+              bad:     { narrative: `你赞成得太快，他反倒看了你两眼。`, effects: eff('support') },
+              terrible:{ narrative: `你顺着说，但理由站不住。他没接话，场面有点冷。`, effects: eff('support') }
+            } },
+          { id: 'B', text: '当面驳回去', reason: 0,
+            check: { attr: 'xin', difficulty: 52 },
+            outcomes: {
+              perfect: { narrative: `你把话摆开讲了。他沉默了很久：「……你说的这一条，我回去想想。」`, effects: eff('oppose') },
+              good:    { narrative: `你说了不同意，也说了为什么。他不高兴，但听完了。`, effects: eff('oppose') },
+              plain:   { narrative: `你说了不同意。他点点头，话题就停在那里。`, effects: eff('oppose') },
+              bad:     { narrative: `你驳得太直。他脸上没什么表情。`, effects: eff('oppose') },
+              terrible:{ narrative: `你驳得又直又没道理，连旁边的人都不说话了。`, effects: eff('oppose') }
+            } },
+          { id: 'C', text: '含糊过去', fixedGrade: 'plain',
+            outcomes: { fixed: { narrative: `你说这事你没想明白。他笑了一下：「也行。」\n\n但这种话，说一次两次没什么，说多了就是另一回事。`, effects: eff('dodge') } } }
+        ]
+      };
+    },
+
+    /** 事件效果 type:'faction' 落到这里 */
+    resolve(s, act, grade) {
+      this.init(s);
+      const d = DEMANDS.find(x => x.id === s.flags._demand);
+      if (!d) return [];
+      const mult = { perfect: 1.4, good: 1.1, plain: 0.9, bad: 0.6, terrible: 0.3 }[grade] || 1;
+      const deltas = [{ path: 'faction.done', op: 'push', value: d.id, unique: true },
+                      { path: 'flags._demand', op: 'set', value: null }];
+      const summary = [];
+      const head = FACTIONS[d.key].head;
+
+      if (act === 'support') {
+        const v = Math.round(14 * mult);
+        deltas.push({ path: `reputation.factions.${d.key}`, op: 'add', value: v, clamp: [-100, 100] });
+        deltas.push({ path: `reputation.factions.${d.counter}`, op: 'add', value: -Math.round(v * 0.5), clamp: [-100, 100] });
+        G.Relation.adjust(s, head, { favor: Math.round(6 * mult), trust: 4 }, `${d.text}这件事你站了他`);
+        summary.push(`${FACTIONS[d.key].name}倾向+${v}`);
+      } else if (act === 'oppose') {
+        const v = Math.round(12 * mult);
+        deltas.push({ path: `reputation.factions.${d.counter}`, op: 'add', value: v, clamp: [-100, 100] });
+        deltas.push({ path: `reputation.factions.${d.key}`, op: 'add', value: -Math.round(v * 0.6), clamp: [-100, 100] });
+        G.Relation.adjust(s, head, { favor: grade === 'perfect' ? 2 : -6, trust: grade === 'perfect' ? 6 : -2 },
+          `${d.text}这件事你当面驳了他`);
+        summary.push(`${FACTIONS[d.counter].name}倾向+${v}`);
+      } else {
+        deltas.push({ path: 'flags._dodge_count', op: 'add', value: 1 });
+        const n = (s.flags._dodge_count || 0) + 1;
+        if (n >= 3) {
+          deltas.push({ path: 'reputation.tags', op: 'push', value: '墙头草', unique: true });
+          summary.push('院里开始说你是墙头草');
+          for (const k in FACTIONS) deltas.push({ path: `reputation.factions.${k}`, op: 'add', value: -4, clamp: [-100, 100] });
+        } else {
+          summary.push('你没表态');
+        }
+      }
+
+      G.State.commit(deltas, 'faction.demand');
+      return summary;
+    },
+
+    // ---------- 站队带来的便利 ----------
+    /** 坊市折扣：逍遥派和务实派各有各的门路 */
+    priceMult(s) {
+      let m = 1;
+      if (this.favored(s, 'xiaoyao')) m -= 0.12;
+      if (this.favored(s, 'pragmatic')) m -= 0.08;
+      return Math.max(0.7, m);
+    },
+    /** 悬赏、任务的进账 */
+    rewardMult(s) {
+      let m = 1;
+      if (this.favored(s, 'pragmatic')) m += 0.15;
+      if (this.favored(s, 'traditional')) m += 0.08;
+      return m;
+    },
+    /** 藏经阁与抄书 */
+    studyBonus(s) {
+      return (this.favored(s, 'traditional') ? 8 : 0) + (this.favored(s, 'reform') ? 6 : 0);
+    },
+    /** 秘境名额与外出 */
+    realmBonus(s) {
+      return (this.favored(s, 'reform') ? 10 : 0) + (this.favored(s, 'xiaoyao') ? 6 : 0);
+    },
+
+    /** 面板用 */
+    summary(s) {
+      this.init(s);
+      return Object.keys(FACTIONS).map(k => ({
+        key: k, name: FACTIONS[k].name, creed: FACTIONS[k].creed,
+        head: G.NPC.name(FACTIONS[k].head), lean: Math.round(this.lean(s, k)),
+        favored: this.favored(s, k)
+      }));
+    },
+
+    perkLines(s) {
+      const out = [];
+      if (this.favored(s, 'xiaoyao')) out.push('逍遥派的门路：坊市便宜一成二');
+      if (this.favored(s, 'pragmatic')) out.push('务实派认你：悬赏进账多一成五，坊市再便宜一点');
+      if (this.favored(s, 'traditional')) out.push('守旧派认你：藏经阁好说话，悬赏按老规矩多算一点');
+      if (this.favored(s, 'reform')) out.push('革新派认你：秘境名额和抄书都容易些');
+      const sup = this.support(s);
+      if (sup > 0) out.push(`推举票：${sup} 票（院首、院主都看这个）`);
+      if (sup < 0) out.push(`有 ${-sup} 派不待见你，推举的时候会投反对`);
+      return out;
+    }
+  };
+
+  G.Faction = Faction;
+
+})(window.G = window.G || {});
+
+
 /* ==== systems/beast.js ==== */
 /* ===== systems/beast.js — 灵兽 =====
  * 蛋或幼兽捡回来，喂上一阵子，长成了跟你进秘境、上擂台。
@@ -7565,6 +8194,7 @@ window.G.DATA = {"npcs":[{"id":"npc_shenjinglan","name":"沈惊澜","gender":"ma
       G.Demon.monthlyTick(s);
       G.Reputation.monthlyTick(s);
       notes.push(...G.Relation.npcTick(s));
+      notes.push(...G.Rival.monthlyTick(s));
       notes.push(...G.Faculty.monthlyTick(s));
       notes.push(...G.Governance.monthlyTick(s));
 
@@ -10178,6 +10808,7 @@ ${turns.join('\n')}
     right(s, view, setView, rerender) {
       const nudge = G.Storyline.hasPendingDeduction(s);
       const list = [['sched', '日程'], ['rel', '关系']];
+      if (s.player.role === 'student' || s.career?.stage === 'outer') list.push(['peers', '同届']);
       if (s.player.role === 'teacher') list.push(['disciples', '弟子']);
       list.push(['line', '暗线'], ['log', '记事']);
 
@@ -10189,12 +10820,69 @@ ${turns.join('\n')}
 
       let body;
       if (view === 'sched')          body = this.schedView(s, rerender);
+      else if (view === 'peers')     body = this.peersView(s);
       else if (view === 'rel')       body = this.relView(s);
       else if (view === 'disciples') body = this.discipleView(s, rerender);
       else if (view === 'line')      body = this.lineView(s);
       else                           body = this.logView(s);
 
       return h('div', tabs, body);
+    },
+
+    /* 同届：榜上有名有姓的那几个、他们在想什么、四派现在什么行情。
+     * 名次是算出来的，但前面站着的人是具体的。 */
+    peersView(s) {
+      const C = G.C;
+      const board = G.Rival.board(s);
+      const rows = h('div');
+      for (const r of board) {
+        rows.appendChild(h('div', {
+          style: {
+            display: 'flex', alignItems: 'baseline', gap: '8px', padding: '6px 0',
+            borderBottom: '1px solid var(--line-2)',
+            background: r.you ? 'var(--paper-2)' : null
+          }
+        },
+          h('span.mono.small', { style: { width: '42px', color: r.you ? 'var(--accent)' : 'var(--ink-3)' } }, '第 ' + r.rank),
+          h('span', { style: { flex: 1 } }, r.name + (r.you ? '（你）' : ''),
+            r.you ? null : h('span.tiny.muted', `　${G.Rival.attitudeName(r.attitude)}`)),
+          h('span.tiny.muted', r.realm)));
+      }
+
+      const rivals = h('div');
+      for (const r of G.Rival.list(s)) {
+        const rel = s.relations[r.id] || {};
+        rivals.appendChild(h('.rel', { style: { marginTop: '10px' } },
+          h('.rel-head',
+            h('span.rel-name', G.NPC.name(r.id)),
+            h('span.rel-stage', G.Rival.attitudeName(r.attitude))),
+          h('.tiny.muted', `${G.State.realmName(r.realm, r.layer)} · 第 ${r.rank} 名 · 擅长${r.focus}`),
+          h('.tiny', { style: { marginTop: '4px' } }, '他想：' + r.goal),
+          h('.tiny.muted', { style: { marginTop: '4px' } },
+            `你压过他 ${r.beaten} 次，他压过你 ${r.lost} 次` +
+            (r.helpLeft ? `　· 欠你 ${r.helpLeft} 次人情` : '') +
+            (rel.strained ? '　· 关系紧张' : ''))));
+      }
+
+      const fac = h('div');
+      for (const f of G.Faction.summary(s)) {
+        fac.appendChild(h('div', { style: { padding: '6px 0', borderBottom: '1px solid var(--line-2)' } },
+          h('div', f.name + (f.favored ? '　· 认你' : ''),
+            h('span.tiny.muted', `　${f.head}　倾向 ${f.lean}`)),
+          h('.tiny.muted', f.creed)));
+      }
+      const perks = G.Faction.perkLines(s);
+
+      void C;
+      return h('div',
+        h('.panel-title', '同 届 榜'),
+        rows,
+        h('.panel-title', { style: { marginTop: '16px' } }, '几 个 人'),
+        rivals,
+        h('.panel-title', { style: { marginTop: '16px' } }, '四 派'),
+        fac,
+        perks.length ? h('div', { style: { marginTop: '8px' } },
+          ...perks.map(x => h('.tiny', { style: { padding: '2px 0' } }, '· ' + x))) : null);
     },
 
     /** 弟子名册。压力条是这一屏最该盯着的东西。 */
@@ -10315,6 +11003,8 @@ ${turns.join('\n')}
         if (g && g.unrest >= 60) push(`七院人心 ${g.unrest}，${G.State.collegeOf(g.worst).name}最不满。`, g.unrest >= 75 ? 'danger' : 'warn');
         if (g?.agendaLeft) push(`还有 ${g.agendaLeft} 件院务等你拍板。`);
       }
+
+      for (const x of G.Rival.urgent(s)) push(x.text, x.tone);
 
       // 人
       if (s.flags._pendingMsg) push(`${G.NPC.name(s.flags._pendingMsg.npcId)}的传音还没回。`, 'warn');
