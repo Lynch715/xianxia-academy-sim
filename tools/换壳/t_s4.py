@@ -207,3 +207,15 @@ def apply(T):
   extra=extra||{};""","""async function runTurn(action, judge, extra){
   extra=extra||{};
   if(S&&!S.over&&num(judge.months)>0&&num(S.months)+num(judge.months)>=GRAD_M) judge.finale=true;""")
+    # 固定节点被炼制、冲关这类不排事件的回合跳过去了，两个月内补上
+    rep("""  for(const id in FIXED_MONTH){
+    if(calMonth(m)!==FIXED_MONTH[id]) continue;
+    const key=id+'_'+gradeOf(m); if(E.fixedDone[key]) continue;
+    const ev=evById(id); if(!ev||!evMatch(ev,m,{ignoreCd:true,chain:true})) continue;
+    E.fixedDone[key]=true; return evInstance(ev);
+  }""","""  for(const back of [0,1,2]) for(const id in FIXED_MONTH){
+    const mm=m-back; if(mm<0||calMonth(mm)!==FIXED_MONTH[id]||gradeOf(mm)!==gradeOf(m)) continue;
+    const key=id+'_'+gradeOf(mm); if(E.fixedDone[key]) continue;
+    const ev=evById(id); if(!ev||!evMatch(ev,mm,{ignoreCd:true,chain:true})) continue;
+    E.fixedDone[key]=true; return evInstance(ev);
+  }""")

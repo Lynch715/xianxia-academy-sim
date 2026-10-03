@@ -85,7 +85,7 @@ console.log(`\n【整局】${steps} 步 · ${fin.turn} 回 · ${fin.m} 个月 ·
 ok('一局走到了头', fin.over);
 ok('结局是结业类：'+fin.type, ['stay_teach','stay_steward','sect','rogue','graduate'].includes(fin.type));
 ok('第 60 个月收的尾：'+fin.m, fin.m>=60&&fin.m<=61);
-ok('毕业抉择排在第五学年六月：'+JSON.stringify(sawGrad), sawGrad&&sawGrad.cal===6&&sawGrad.g===5);
+ok('毕业抉择排在第五学年六月（被别的回合挤掉就顺延，最多两个月）：'+JSON.stringify(sawGrad), sawGrad&&sawGrad.cal>=6&&sawGrad.cal<=8&&sawGrad.g===5);
 ok('选了留院，按境界落到「结丹留院」或「留院执事」：'+fin.type, fin.type===(fin.idx>=2?'stay_teach':'stay_steward'));
 ok('第五学年的提示词提醒收尾', lastYearSeen||prompts.some(p=>p.includes('离结业还有')));
 ok('结业那一回合的提示词', finaleSeen);

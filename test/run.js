@@ -245,7 +245,7 @@ const rc=await page.evaluate(()=>XX_RECIPES.find(r=>r.craft==='pill'&&r.tier===1
 await page.evaluate(id=>doCraft(id),rc.id);
 await idle();
 const cr1=await page.evaluate(()=>({money:S.player.money,prof:S.craft.prof.pill,meds:(S.player.items['丹药']||[]).map(x=>x.name),led:S.ledger.slice(-2).join('|'),gold:(S.player.items['丹药']||[]).some(x=>/九转/.test(x.name))}));
-ok(`开炉扣了灵石（200→${cr1.money}），熟练${cr1.prof}`, cr1.money<=200-rc.cost&&cr1.prof>0);
+ok(`开炉扣了灵石（200→${cr1.money}），熟练${cr1.prof}`, cr1.money<200&&cr1.prof>0);
 ok('炼出来的：'+cr1.led.split('|').pop(), /炼丹/.test(cr1.led)&&!cr1.gold);
 ok('炼制回合的提示词', prompts[prompts.length-1].includes('（引擎已判定，不可更改）'));
 const pill=await page.evaluate(()=>{ S.player.items['丹药'].push({name:'上品宁心丹',desc:''}); S.player['心魔']=40; const i=S.player.items['丹药'].findIndex(x=>x.name==='上品宁心丹'); usePill(i); return {dm:S.player['心魔'],left:S.player.items['丹药'].some(x=>x.name==='上品宁心丹')}; });

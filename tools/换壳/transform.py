@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys, re
-import t_html, t_core, t_rules, t_prompts, t_apply, t_ui, t_start, t_events, t_s3, t_s4, t_av
+import t_html, t_core, t_rules, t_prompts, t_apply, t_ui, t_start, t_events, t_s3, t_s4, t_skin, t_av
 SRC='/home/claude/wuxia.html'
 class T:
     s=open(SRC,encoding='utf-8').read()
@@ -23,7 +23,7 @@ class T:
         b=cls.s.find(end,a+len(start))
         if b<0: cls.errs.append('[block end] '+end[:60]); return
         cls.s=cls.s[:a]+new+cls.s[b:]
-for m in (t_html,t_core,t_rules,t_prompts,t_apply,t_ui,t_start,t_events,t_s3,t_s4,t_av):
+for m in (t_html,t_core,t_rules,t_prompts,t_apply,t_ui,t_start,t_events,t_s3,t_s4,t_skin,t_av):
     m.apply(T)
 # 世界数据：塞进第一个脚本开头
 data=open('/home/claude/v2/xxdata.js',encoding='utf-8').read()

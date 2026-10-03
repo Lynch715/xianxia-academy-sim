@@ -10,20 +10,22 @@
 <link rel="apple-touch-icon" id="appIcon" href="assets/icons/apple-touch-icon.png">
 <style>
 :root{
-  --bg:#171310;
-  --paper:#efe5cf;
-  --paper-dark:#e3d5b5;
-  --paper-edge:#c9b88f;
-  --ink:#2e2620;
-  --ink-soft:#5a4c3c;
-  --accent:#9c2f24;
-  --accent-soft:#b8564a;
-  --gold:#8a6d2f;
-  --green:#4a6b45;
-  --pink:#b05a72;
-  --blue:#4a6b8a;
-  --purple:#5a3a6a;
-  --shadow:0 4px 18px rgba(0,0,0,.45);
+  --bg:#EFE9DC;
+  --paper:#F8F5EE;
+  --paper-dark:#F1ECE1;
+  --paper-edge:#D9D2C4;
+  --ink:#2B2B2B;
+  --ink-soft:#6E6963;
+  --ink-faint:#A8A29A;
+  --line:rgba(43,43,43,.13);
+  --accent:#B84A3E;
+  --accent-soft:#C8766B;
+  --gold:#A8875C;
+  --green:#6B8E7A;
+  --pink:#B0707F;
+  --blue:#4A6E8A;
+  --purple:#6E5A80;
+  --shadow:0 2px 18px rgba(43,43,43,.07);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;touch-action:manipulation;-webkit-text-size-adjust:100%}
@@ -46,7 +48,7 @@ body{
 #topbar h1{font-size:22px;letter-spacing:6px;font-weight:700;color:#e8d7ae;text-shadow:0 0 12px rgba(200,160,80,.25)}
 #topbar .seal{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;background:var(--accent);color:#f5e9d0;border-radius:6px;font-size:15px;letter-spacing:0;line-height:1.05;text-align:center;box-shadow:inset 0 0 6px rgba(0,0,0,.4)}
 #topbar .grow{flex:1}
-#gameDate{font-size:14px;color:#bfa876;letter-spacing:2px}
+#gameDate{font-size:14px;color:var(--ink-soft);letter-spacing:2px}
 .tbtn{
   background:#33291d;border:1px solid #55462f;color:#d9c9a3;padding:6px 14px;border-radius:4px;
   font-family:inherit;font-size:14px;cursor:pointer;letter-spacing:2px;transition:.15s;
@@ -66,7 +68,7 @@ body{
   font-family:inherit;font-size:15px;letter-spacing:3px;color:var(--ink-soft);cursor:pointer;position:relative;
 }
 #tabs button:last-child{border-right:none}
-#tabs button.on{color:var(--accent);font-weight:700;background:rgba(156,47,36,.07);box-shadow:inset 0 -3px 0 var(--accent)}
+#tabs button.on{color:var(--accent);font-weight:700;background:rgba(184,74,62,.07);box-shadow:inset 0 -3px 0 var(--accent)}
 #tabs button .dot{position:absolute;top:6px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--accent);display:none}
 #tabs button .dot.on{display:block}
 .tabpane{flex:1;overflow-y:auto;padding:16px 18px;display:none}
@@ -77,9 +79,9 @@ body{
 #pName{font-size:26px;font-weight:700;letter-spacing:3px}
 #pBiaozi{font-size:14px;color:var(--ink-soft);margin-left:8px}
 #pMeta{font-size:14px;color:var(--ink-soft);margin-top:4px;letter-spacing:1px}
-.titlebadge{display:inline-block;background:linear-gradient(90deg,#8a6d2f,#b8963f);color:#fff8e6;border-radius:4px;padding:2px 10px;font-size:13px;letter-spacing:2px;margin-top:6px;box-shadow:0 1px 4px rgba(0,0,0,.3)}
-.titlebadge.evil{background:linear-gradient(90deg,#5a3a6a,#7a3a4a)}
-.trait{display:inline-block;background:rgba(156,47,36,.10);color:var(--accent);border:1px solid rgba(156,47,36,.3);border-radius:12px;padding:1px 10px;font-size:13px;margin:3px 4px 0 0}
+.titlebadge{display:inline-block;background:linear-gradient(90deg,#A8875C,#b8963f);color:#fff8e6;border-radius:4px;padding:2px 10px;font-size:13px;letter-spacing:2px;margin-top:6px;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.titlebadge.evil{background:linear-gradient(90deg,#6E5A80,#7a3a4a)}
+.trait{display:inline-block;background:rgba(184,74,62,.10);color:var(--accent);border:1px solid rgba(184,74,62,.3);border-radius:12px;padding:1px 10px;font-size:13px;margin:3px 4px 0 0}
 .statusfx{display:inline-block;background:rgba(90,60,120,.12);color:#6a4a8a;border:1px solid rgba(90,60,120,.3);border-radius:12px;padding:1px 10px;font-size:13px;margin:3px 4px 0 0}
 #pLooks,#pStory{font-size:14.5px;line-height:1.8;color:var(--ink);text-align:justify}
 .attr{margin-bottom:9px}
@@ -111,12 +113,12 @@ body{
 /* 人脉 */
 .peoplefoot{margin-top:10px;padding-top:8px;border-top:1px dashed var(--paper-edge);font-size:12.5px;color:var(--ink-soft);letter-spacing:.5px}
 .npc{display:flex;align-items:center;gap:10px;padding:8px 6px;border-bottom:1px dashed var(--paper-edge);cursor:pointer;transition:.15s;border-radius:4px}
-.npc:hover{background:rgba(156,47,36,.06)}
+.npc:hover{background:rgba(184,74,62,.06)}
 .avatar{border-radius:50%;background-repeat:no-repeat;background-position:center;flex-shrink:0}
 .avatar.av{color:transparent!important;font-size:0!important}
 .avatar.dead{filter:grayscale(1);opacity:.55}
 .avatar.pt{background-size:200% auto!important;background-position:50% 4%!important;background-color:#e9e1cf}
-.realmtag{display:inline-block;font-size:12px;color:#fff8e6;background:#4a6b8a;border-radius:3px;padding:0 6px;margin-left:6px;vertical-align:2px;letter-spacing:1px}
+.realmtag{display:inline-block;font-size:12px;color:#fff8e6;background:#4A6E8A;border-radius:3px;padding:0 6px;margin-left:6px;vertical-align:2px;letter-spacing:1px}
 .calnote{font-size:12px;color:var(--ink-soft);margin-top:6px;line-height:1.7}
 .npc .avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:#f5e9d0;flex-shrink:0}
 .phead{display:flex;align-items:center;gap:12px}
@@ -144,7 +146,7 @@ body{
 @media (max-width:900px){ .duelface{width:38px;height:38px;font-size:17px} }
 .avpick{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;max-height:188px;overflow-y:auto;padding:7px;background:rgba(0,0,0,.05);border-radius:6px;margin-top:4px}
 .avpick .cell{width:100%;aspect-ratio:1;border-radius:50%;cursor:pointer;border:2px solid transparent;background-repeat:no-repeat;background-position:center}
-.avpick .cell.sel{border-color:var(--accent);box-shadow:0 0 0 2px rgba(156,47,36,.28)}
+.avpick .cell.sel{border-color:var(--accent);box-shadow:0 0 0 2px rgba(184,74,62,.28)}
 .avpick .auto{display:flex;align-items:center;justify-content:center;font-size:11px;line-height:1.2;text-align:center;color:var(--ink-soft);background:var(--paper-dark);border:2px dashed var(--paper-edge)}
 .npc .ninfo{flex:1;min-width:0}
 .npc .nname{font-size:15.5px;font-weight:700}
@@ -162,10 +164,10 @@ body{
 .quest .qd{font-size:13px;color:var(--ink-soft);line-height:1.6;margin:2px 0 5px}
 .quest.done .qt{color:var(--green)}
 .quest.fail .qt{color:var(--ink-soft);text-decoration:line-through}
-.quest.hot .qt{color:#9c2f24}
+.quest.hot .qt{color:#B84A3E}
 .statusfx small{font-weight:400;opacity:.75;font-size:11px}
 .statusfx.ail{background:rgba(90,110,140,.14);border-color:rgba(70,90,120,.35);color:#3f5570}
-.statusfx.scar{background:rgba(156,47,36,.12);border-color:rgba(156,47,36,.35);color:#8a2f24}
+.statusfx.scar{background:rgba(184,74,62,.12);border-color:rgba(184,74,62,.35);color:#8a2f24}
 .rank{display:flex;align-items:center;gap:8px;padding:5px 4px;border-bottom:1px dashed var(--paper-edge);font-size:14px}
 .rank:last-child{border-bottom:none}
 .rank .rn{width:26px;text-align:center;font-weight:700;color:var(--gold);font-variant-numeric:tabular-nums}
@@ -173,7 +175,7 @@ body{
 .rank .rname small{display:block;color:var(--ink-soft);font-size:12px}
 .rank .rv{color:var(--accent);font-weight:700;font-variant-numeric:tabular-nums}
 .rank .mbtn{flex:0 0 auto;letter-spacing:1px}
-.rank.me{background:rgba(156,47,36,.10);border-radius:4px}
+.rank.me{background:rgba(184,74,62,.10);border-radius:4px}
 .rank.deadr{opacity:.5;text-decoration:line-through}
 .faction{margin-bottom:8px;font-size:14px}
 .faction .fl{display:flex;justify-content:space-between}
@@ -184,11 +186,11 @@ body{
 .clanline b{font-weight:700;color:var(--ink)}
 .csort{display:flex;gap:3px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
 .csort button{flex:0 0 auto;padding:3px 7px;font-family:inherit;font-size:12px;letter-spacing:0;border:1px solid var(--paper-edge);border-radius:11px;background:rgba(255,252,240,.6);color:var(--ink-soft);cursor:pointer}
-.csort button.on{border-color:var(--accent);background:rgba(156,47,36,.10);color:var(--accent);font-weight:700}
+.csort button.on{border-color:var(--accent);background:rgba(184,74,62,.10);color:var(--accent);font-weight:700}
 .csort button.auto{margin-left:auto;border-color:var(--gold);color:var(--gold)}
 .disc{padding:6px 4px;border-bottom:1px dashed var(--paper-edge);cursor:pointer}
 .disc:last-of-type{border-bottom:none}
-.disc:hover{background:rgba(156,47,36,.05);border-radius:4px}
+.disc:hover{background:rgba(184,74,62,.05);border-radius:4px}
 .disc.hurt{opacity:.62}
 .disc .dl{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:14.5px}
 .disc .dn{flex:1;min-width:0;font-weight:700}
@@ -203,7 +205,7 @@ body{
 .lrow .lo{color:var(--ink-soft);font-size:12px;font-variant-numeric:tabular-nums}
 .lrow .lv{flex:0 0 auto;width:44px;text-align:center;border-radius:11px;padding:2px 0;font-size:12.5px}
 .lrow.yes .lv{background:rgba(74,107,69,.16);color:#3f6b3a;border:1px solid rgba(74,107,69,.45)}
-.lrow.no .lv{background:rgba(156,47,36,.10);color:#9c2f24;border:1px solid rgba(156,47,36,.4)}
+.lrow.no .lv{background:rgba(184,74,62,.10);color:#B84A3E;border:1px solid rgba(184,74,62,.4)}
 #unifyBody .nrow{display:flex;justify-content:space-between;border-bottom:1px dashed var(--paper-edge);padding:7px 2px;font-size:14px}
 #unifyBody .nrow b{color:var(--ink-soft);font-weight:400;letter-spacing:2px;flex-shrink:0;margin-right:16px}
 #unifyBody .nrow span{text-align:right;line-height:1.7}
@@ -216,7 +218,7 @@ body{
 #warLog .r{border-bottom:1px dashed var(--paper-edge);padding:4px 0}
 #warLog .r:last-child{border-bottom:none}
 #warLog .hd{color:var(--accent);font-weight:700;letter-spacing:2px;border-bottom:none;padding-top:8px}
-#warLog .good{color:#3f6b3a} #warLog .bad{color:#9c2f24}
+#warLog .good{color:#3f6b3a} #warLog .bad{color:#B84A3E}
 #warLog .sum{color:var(--gold);font-weight:700}
 #warLog .sys{color:var(--ink-soft);font-size:13px}
 .cand{display:flex;align-items:center;gap:7px;padding:5px 2px;border-bottom:1px dashed var(--paper-edge);font-size:14px}
@@ -230,7 +232,7 @@ body{
 #discModal .nrow b{color:var(--ink-soft);font-weight:400;letter-spacing:2px;flex-shrink:0;margin-right:16px}
 #discModal .nrow span{text-align:right;line-height:1.7}
 .ach{display:inline-block;border-radius:12px;padding:2px 10px;font-size:12.5px;margin:3px 4px 0 0;border:1px solid var(--paper-edge);color:#a89a80;background:rgba(0,0,0,.03)}
-.ach.on{background:rgba(138,109,47,.15);color:var(--gold);border-color:var(--gold);font-weight:700}
+.ach.on{background:rgba(168,135,92,.15);color:var(--gold);border-color:var(--gold);font-weight:700}
 .hall{font-size:13.5px;padding:6px 0;border-bottom:1px dashed var(--paper-edge);line-height:1.6}
 .hall:last-child{border-bottom:none}
 .hall b{color:var(--accent)}
@@ -248,13 +250,13 @@ body{
 @keyframes fadein{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 .chapter .chapmark{position:absolute;top:-1px;left:26px;background:var(--accent);color:#f5e9d0;padding:3px 12px 6px;font-size:13px;letter-spacing:2px;border-radius:0 0 6px 6px;box-shadow:0 2px 6px rgba(0,0,0,.3)}
 .chapter .chaptime{position:absolute;top:8px;right:18px;font-size:13px;color:var(--ink-soft);letter-spacing:1px}
-.chapter .action-echo{margin:14px 0 8px;padding:8px 14px;border-left:3px solid var(--gold);background:rgba(138,109,47,.08);color:var(--ink-soft);font-size:14.5px;border-radius:0 4px 4px 0}
+.chapter .action-echo{margin:14px 0 8px;padding:8px 14px;border-left:3px solid var(--gold);background:rgba(168,135,92,.08);color:var(--ink-soft);font-size:14.5px;border-radius:0 4px 4px 0}
 .dicebar{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 4px}
 .die{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;padding:2px 9px;border-radius:12px;border:1px solid var(--paper-edge);background:rgba(255,252,240,.6);color:var(--ink-soft);letter-spacing:.5px}
 .die b{font-family:Georgia,serif;font-size:13.5px}
 .die.good{border-color:var(--green);color:var(--green)}
 .die.bad{border-color:var(--accent);color:var(--accent)}
-.die.great{border-color:var(--gold);color:var(--gold);background:rgba(138,109,47,.12);font-weight:700}
+.die.great{border-color:var(--gold);color:var(--gold);background:rgba(168,135,92,.12);font-weight:700}
 .die.world{border-color:var(--blue);color:var(--blue)}
 .ntext{margin-top:10px}
 .ntext p{line-height:2.0;font-size:16.5px;text-align:justify;text-indent:2em;margin-bottom:8px}
@@ -269,7 +271,7 @@ body{
 .questblock li::before{content:"🎯 ";font-size:13px}
 .duelblock{margin-top:12px;background:rgba(0,0,0,.05);border:1px dashed var(--paper-edge);border-radius:6px;padding:10px 14px;font-size:13.5px;color:var(--ink-soft);line-height:1.8}
 .duelblock h4{font-size:14px;color:var(--accent);letter-spacing:2px;margin-bottom:4px}
-.endingblock{border:2px solid var(--accent);border-radius:8px;padding:14px 18px;margin-top:16px;background:rgba(156,47,36,.06)}
+.endingblock{border:2px solid var(--accent);border-radius:8px;padding:14px 18px;margin-top:16px;background:rgba(184,74,62,.06)}
 .endingblock h4{color:var(--accent);letter-spacing:4px;font-size:17px;margin-bottom:8px;text-align:center}
 .epitaph{text-align:center;font-size:15px;color:var(--ink-soft);margin-top:10px;letter-spacing:2px}
 .scoreline{text-align:center;font-size:14px;color:var(--gold);margin-top:8px;letter-spacing:1px}
@@ -284,16 +286,16 @@ body{
 .opt .num{display:inline-block;background:var(--accent);color:#f5e9d0;width:16px;height:16px;border-radius:50%;text-align:center;line-height:16px;font-size:10px;margin-right:6px}
 .opt .hint{display:block;font-size:11px;color:var(--ink-soft);margin-top:1px;padding-left:22px}
 .opt .tag{display:inline-block;font-size:10.5px;padding:0 6px;border-radius:3px;margin-left:6px;color:#fff;vertical-align:1px;letter-spacing:.5px}
-.tag.check{background:var(--blue)} .tag.duel{background:var(--accent)} .tag.talk{background:var(--green)} .tag.rest{background:#7a6a50}
+.tag.check{background:var(--blue)} .tag.duel{background:var(--accent)} .tag.talk{background:var(--green)} .tag.rest{background:#8A8378}
 .opt:disabled{opacity:.5;cursor:default;transform:none}
 #inputbar{display:flex;gap:10px;padding:12px 8% 18px}
 #freeInput{flex:1;border:1px solid #55462f;border-radius:6px;color:#e8dcc0;font-family:inherit;font-size:15.5px;padding:11px 15px;outline:none;background:#241d16}
-#freeInput:focus{border-color:#8a6d2f;box-shadow:0 0 0 2px rgba(138,109,47,.25)}
-#freeInput::placeholder{color:#7a6a50}
+#freeInput:focus{border-color:#A8875C;box-shadow:0 0 0 2px rgba(168,135,92,.25)}
+#freeInput::placeholder{color:#8A8378}
 #sendBtn{background:var(--accent);color:#f5e9d0;border:none;border-radius:6px;padding:0 26px;font-family:inherit;font-size:16px;letter-spacing:4px;cursor:pointer;transition:.15s}
-#sendBtn:hover{background:#b13a2d}
+#sendBtn:hover{background:#A8443A}
 #sendBtn:disabled{background:#5a463c;cursor:default}
-#loading{display:none;align-items:center;gap:12px;padding:8px 8%;color:#bfa876;font-size:14px;letter-spacing:2px}
+#loading{display:none;align-items:center;gap:12px;padding:8px 8%;color:var(--ink-soft);font-size:14px;letter-spacing:2px}
 #loading.on{display:flex}
 .inkball{width:10px;height:10px;border-radius:50%;background:#bfa876;animation:pulse 1s infinite alternate}
 .inkball:nth-child(2){animation-delay:.25s}.inkball:nth-child(3){animation-delay:.5s}
@@ -318,22 +320,22 @@ body{
 .contact{margin-top:18px;padding:12px 14px;border:1px dashed var(--paper-edge);border-radius:6px;background:rgba(0,0,0,.03);font-size:13px;color:var(--ink-soft);line-height:1.7}
 .contact b{color:var(--ink);letter-spacing:1px}
 .contact .wx{display:inline-flex;align-items:center;gap:8px;margin-top:4px}
-.contact .wx code{font-family:ui-monospace,Menlo,monospace;font-size:14px;color:var(--accent);background:rgba(156,47,36,.07);padding:2px 8px;border-radius:4px;letter-spacing:1px}
+.contact .wx code{font-family:ui-monospace,Menlo,monospace;font-size:14px;color:var(--accent);background:rgba(184,74,62,.07);padding:2px 8px;border-radius:4px;letter-spacing:1px}
 .contact .wx button{font:inherit;font-size:12px;padding:3px 10px;border:1px solid var(--paper-edge);border-radius:4px;background:transparent;color:var(--ink-soft);cursor:pointer}
-.contact .wx button:active{background:rgba(156,47,36,.08);border-color:var(--accent)}
+.contact .wx button:active{background:rgba(184,74,62,.08);border-color:var(--accent)}
 .mbtnrow{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
 .seg{display:flex;gap:8px}
 .seg button{flex:1;padding:9px 0;border:1px solid var(--paper-edge);border-radius:5px;background:rgba(255,252,240,.6);font-family:inherit;font-size:15px;letter-spacing:3px;color:var(--ink-soft);cursor:pointer}
-.seg button.sel{border-color:var(--accent);background:rgba(156,47,36,.10);color:var(--accent);font-weight:700}
+.seg button.sel{border-color:var(--accent);background:rgba(184,74,62,.10);color:var(--accent);font-weight:700}
 #bgGrid,#colGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;max-height:38vh;overflow-y:auto;padding:2px}
 .bgopt{border:1px solid var(--paper-edge);border-radius:6px;padding:7px 5px;text-align:center;cursor:pointer;font-size:13.5px;background:rgba(255,252,240,.55);letter-spacing:1px}
 .bgopt small{display:block;color:var(--ink-soft);font-size:10.5px;margin-top:3px;line-height:1.4;letter-spacing:0}
-.bgopt.sel{border-color:var(--accent);background:rgba(156,47,36,.10);color:var(--accent);font-weight:700}
+.bgopt.sel{border-color:var(--accent);background:rgba(184,74,62,.10);color:var(--accent);font-weight:700}
 .bgopt.sel small{color:var(--accent-soft)}
 @media (max-width:520px){#bgGrid,#colGrid{grid-template-columns:repeat(2,1fr)}}
 .mbtn{flex:1;padding:11px 0;border-radius:6px;font-family:inherit;font-size:16px;letter-spacing:4px;cursor:pointer;transition:.15s;border:1px solid var(--paper-edge);background:rgba(255,252,240,.6);color:var(--ink-soft)}
 .mbtn.primary{background:var(--accent);border-color:var(--accent);color:#f5e9d0}
-.mbtn.primary:hover{background:#b13a2d}
+.mbtn.primary:hover{background:#A8443A}
 .mbtn.gold{background:var(--gold);border-color:var(--gold);color:#fff8e6}
 .mbtn:hover{border-color:var(--gold)}
 .mbtn:disabled{opacity:.45;cursor:default}
@@ -409,7 +411,7 @@ body{
 #convoHead .cfav b{font-size:18px;display:block}
 #convoMsgs{flex:1;overflow-y:auto;min-height:260px;max-height:58vh;padding:6px 2px;display:flex;flex-direction:column;gap:9px}
 .bub{max-width:84%;padding:8px 13px;border-radius:10px;font-size:14.5px;line-height:1.75;position:relative}
-.bub.me{align-self:flex-end;background:rgba(156,47,36,.12);border:1px solid rgba(156,47,36,.3);border-bottom-right-radius:3px}
+.bub.me{align-self:flex-end;background:rgba(184,74,62,.12);border:1px solid rgba(184,74,62,.3);border-bottom-right-radius:3px}
 .bub.them{align-self:flex-start;background:rgba(255,252,240,.8);border:1px solid var(--paper-edge);border-bottom-left-radius:3px}
 .bub.sys{align-self:center;background:transparent;color:var(--ink-soft);font-size:12.5px;font-style:italic;padding:2px 8px}
 .bub .thought{display:block;margin-top:6px;padding-top:5px;border-top:1px dashed var(--paper-edge);font-size:12.5px;color:#6a4a8a;font-style:italic}
@@ -424,7 +426,7 @@ body{
 .cbtn.alt{background:rgba(255,252,240,.7);color:var(--ink-soft);border:1px solid var(--paper-edge)}
 .cbtn:disabled{opacity:.5;cursor:default}
 .giftlist{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.giftlist button{border:1px solid var(--gold);background:rgba(138,109,47,.1);color:var(--gold);border-radius:12px;padding:2px 10px;font-family:inherit;font-size:13px;cursor:pointer}
+.giftlist button{border:1px solid var(--gold);background:rgba(168,135,92,.1);color:var(--gold);border-radius:12px;padding:2px 10px;font-family:inherit;font-size:13px;cursor:pointer}
 #toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:99;background:#3a1f1a;color:#f0d9c0;border:1px solid #8a4a3a;border-radius:6px;padding:10px 22px;font-size:14.5px;letter-spacing:1px;display:none;box-shadow:var(--shadow);max-width:80vw}
 #toast.ach{background:#3a2f14;border-color:#b8963f;color:#f5e6b8}
 #panelToggle{display:none}
@@ -472,7 +474,7 @@ body{
   .modal h2{font-size:18px;letter-spacing:3px}
   #npcModal .nrow{font-size:14px}
   .npc:hover{background:transparent}
-  .npc:active{background:rgba(156,47,36,.08)}
+  .npc:active{background:rgba(184,74,62,.08)}
   #duelModal{padding:16px 14px}
   #duelLog{height:160px}
   #convoText{font-size:16px}
@@ -488,6 +490,61 @@ body{
 .edrow:last-child{border-bottom:0}
 .edrow span{color:var(--ink-soft);flex:0 0 auto}
 .edrow b{font-weight:500;text-align:right}
+
+/* ============ 原版色调（1.x）：只改颜色 ============ */
+body{background:var(--bg);background-image:none}
+#topbar{background:#F5F1E8;border-bottom:1px solid var(--line);color:#4A4642}
+#topbar h1{color:var(--ink);text-shadow:none}
+#topbar .seal{color:#F8F5EE;box-shadow:none}
+#gameDate{color:#4A4642}
+.tbtn{background:#EBE5D8;border:1px solid transparent;color:#4A4642}
+.tbtn:hover{background:#E2DBCC;border-color:transparent;color:var(--ink)}
+#sidebar{background:#EFE9DC;border-right:1px solid var(--line);box-shadow:none}
+#tabs{border-bottom:1px solid var(--line)}
+#tabs button{border-right:1px solid var(--line);color:#7A7570}
+#tabs button.on{color:var(--ink);background:rgba(43,43,43,.05);box-shadow:inset 0 -2px 0 var(--ink)}
+.card{background:#F5F1E8;border:1px solid var(--line);border-radius:4px}
+.card h3{color:#4A4642;border-bottom:1px solid var(--line)}
+.titlebadge{background:var(--gold);color:#F8F5EE;box-shadow:none}
+#main{background:#F5F1E8}
+#story::-webkit-scrollbar-thumb,#sidebar .tabpane::-webkit-scrollbar-thumb{background:rgba(43,43,43,.16)}
+.chapter{background:#FBF9F4;border:1px solid var(--line);box-shadow:var(--shadow)}
+.chapter .chapmark{color:#F8F5EE;box-shadow:none}
+.chapter .action-echo{background:rgba(168,135,92,.08)}
+.opt{background:#FBF9F4;border:1px solid rgba(43,43,43,.16);box-shadow:none}
+.opt:hover{border-color:var(--ink);box-shadow:0 2px 10px rgba(43,43,43,.08)}
+.opt .num{color:#F8F5EE}
+.tag.rest{background:#8A8378}
+#freeInput{background:#FBF9F4;border:1px solid rgba(43,43,43,.18);color:var(--ink)}
+#freeInput:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(168,135,92,.18)}
+#freeInput::placeholder{color:var(--ink-faint)}
+#sendBtn{background:var(--ink);color:#F5F1E8}
+#sendBtn:hover{background:#45423E}
+#sendBtn:disabled{background:#B9B3A8}
+#loading{color:#7A7570}
+.inkball{background:var(--gold)}
+.modal-mask{background:rgba(43,43,43,.32)}
+.modal{background:#F8F5EE;border:1px solid var(--line);box-shadow:0 12px 40px rgba(43,43,43,.18)}
+.mbtn{background:#FBF9F4}
+.mbtn.primary{background:var(--ink);border-color:var(--ink);color:#F5F1E8}
+.mbtn.primary:hover{background:#45423E}
+.mbtn.gold{color:#F8F5EE}
+.cbtn{background:var(--ink);color:#F5F1E8}
+.cbtn.alt{background:#FBF9F4;color:var(--ink-soft);border:1px solid var(--line)}
+.dspeed button.on{background:var(--ink)}
+#convoHead .avatar,.npc .avatar,.phead .avatar,.npchead .avatar,.duelface{color:#F8F5EE}
+.bub.them{background:#FBF9F4}
+.bub .thought.locked{color:var(--ink-faint)}
+.ach{color:var(--ink-faint)}
+#toast{background:#2B2B2B;color:#F5F1E8;border-color:#2B2B2B;box-shadow:0 6px 24px rgba(43,43,43,.25)}
+#toast.ach{background:#2B2B2B;border-color:var(--gold);color:#EBDDBF}
+#sideMask{background:rgba(43,43,43,.28)}
+.enddoc{background:#FBF9F4}
+@media (max-width:900px){
+  #panelToggle{background:var(--ink);border-color:var(--ink);color:#F5F1E8}
+  #sidebar{box-shadow:6px 0 30px rgba(43,43,43,.18)}
+  #inputbar{background:linear-gradient(180deg,rgba(245,241,232,0),rgba(245,241,232,.96) 40%)}
+}
 </style>
 </head>
 <body>
@@ -760,7 +817,7 @@ body{
     <div id="discBody"></div>
     <div class="mbtnrow">
       <button class="mbtn" onclick="document.getElementById('discMask').classList.remove('on')">合上</button>
-      <button class="mbtn" id="discExpel" style="color:#9c2f24;border-color:#9c2f24">逐出门墙</button>
+      <button class="mbtn" id="discExpel" style="color:#B84A3E;border-color:#B84A3E">逐出门墙</button>
     </div>
   </div>
 </div>
@@ -949,10 +1006,10 @@ function monthsToFixed(from){
 function pickEvent(m){
   const E=evS();
   // 1. 固定节点
-  for(const id in FIXED_MONTH){
-    if(calMonth(m)!==FIXED_MONTH[id]) continue;
-    const key=id+'_'+gradeOf(m); if(E.fixedDone[key]) continue;
-    const ev=evById(id); if(!ev||!evMatch(ev,m,{ignoreCd:true,chain:true})) continue;
+  for(const back of [0,1,2]) for(const id in FIXED_MONTH){
+    const mm=m-back; if(mm<0||calMonth(mm)!==FIXED_MONTH[id]||gradeOf(mm)!==gradeOf(m)) continue;
+    const key=id+'_'+gradeOf(mm); if(E.fixedDone[key]) continue;
+    const ev=evById(id); if(!ev||!evMatch(ev,mm,{ignoreCd:true,chain:true})) continue;
     E.fixedDone[key]=true; return evInstance(ev);
   }
   // 2. 事件链的下一章
@@ -1851,9 +1908,9 @@ function inferGender(o,femaleRate){
   return (avHash(nm)%100)/100<rate?'女':'男';
 }
 function avRing(n,me){
-  if(me) return '#9c2f24';
-  if(n&&n['爱恋值']!=null) return '#b05a72';
-  return n&&n.alignment==='邪道'?'#5a3a6a':(n&&n.alignment==='正派'?'#4a6b45':'#7a6a50');
+  if(me) return '#B84A3E';
+  if(n&&n['爱恋值']!=null) return '#B0707F';
+  return n&&n.alignment==='邪道'?'#6E5A80':(n&&n.alignment==='正派'?'#6B8E7A':'#8A8378');
 }
 function avCellStyle(slot){
   const i=AV_SLOTS.indexOf(slot);
@@ -4858,8 +4915,8 @@ function renderDuel(onlyFighters){
   const p=S.player, o=duel.opp, E=duel.eng, v=duelView();
   const bar=(val,max,color,cls,sh)=>`<div class="bar ${cls||''}"><i style="width:${clamp(val/max*100,0,100)}%;background:${color}"></i>${sh?`<b class="shl" style="width:${clamp(sh,0,100)}%"></b>`:''}</div>`;
   const side=(u,who,face,name,sub,hp,qi,sh,cds,right,sts)=>`<div class="fhead${right?' ro':''}"><div class="dface" id="face_${who}">${face}<em class="dsk"></em></div><div><div class="fname">${esc(name)}${(sts||[]).map(t=>`<span class="sttag">${t}</span>`).join('')}</div><div class="fsub">${esc(sub)}</div></div></div>
-    <div class="blab"><span>气血${sh?` <span class="shtag">灵罩${sh}</span>`:''}</span><span>${hp}/100</span></div>${bar(hp,100,hp<30?'#9c2f24':'#4a6b45','',sh)}
-    <div class="blab"><span>灵力</span><span>${qi}</span></div>${bar(qi,100,'#4a6b8a','qi')}
+    <div class="blab"><span>气血${sh?` <span class="shtag">灵罩${sh}</span>`:''}</span><span>${hp}/100</span></div>${bar(hp,100,hp<30?'#B84A3E':'#6B8E7A','',sh)}
+    <div class="blab"><span>灵力</span><span>${qi}</span></div>${bar(qi,100,'#4A6E8A','qi')}
     ${duelChips(u,cds,right)}`;
   $('fP').innerHTML=side(E.P,'p',avatarFace(p,'duelface',null,true),p.name,`${realmOf(S.player.attributes['修为'])} · 修为${duel.pW}`,v.pHp,v.pQi,v.pSh,v.pCd,false,v.pSt);
   $('fO').innerHTML=side(E.O,'o',avatarFace(o,'duelface'),o.name,`${o.identity||''} · ${realmOf(duel.oppW)}`,v.oHp,v.oQi,v.oSh,v.oCd,true,v.oSt);
@@ -5913,7 +5970,7 @@ $('convoGiftBtn').onclick=()=>{
 <script>
 "use strict";
 /* ================= 渲染 ================= */
-const ATTR_COLORS={'世故':'#4a6b8a','神识':'#6a5a8a','悟性':'#8a6d2f','修为':'#9c2f24','根骨':'#7a5a3a','心境':'#3f6b6b'};
+const ATTR_COLORS={'世故':'#4A6E8A','神识':'#6E6A8A','悟性':'#A8875C','修为':'#B84A3E','根骨':'#7a5a3a','心境':'#3f6b6b'};
 function barColor(k){return ATTR_COLORS[k]||'#5a7a5a';}
 function deltaTag(d){ return d?`<span class="delta ${d>0?'up':'dn'}">${d>0?'▲':'▼'}${Math.abs(d)}</span>`:''; }
 
@@ -5938,7 +5995,7 @@ function renderPanel(){
      engS.map(t=>`<span class="statusfx">${esc(t)}</span>`).join('')
     +(S.ailments||[]).map(a=>`<span class="statusfx ail" title="${esc(a.desc||'')}">${esc(a.name)}<small>　还需将养约 ${Math.max(1,Math.ceil(num(a.months)))} 月</small></span>`).join('')
     +(S.scars||[]).map(x=>`<span class="statusfx scar" title="${esc(x.text||'')}">${esc(x.name)}<small>　终身</small></span>`).join('');
-  const vit=[['气血',p.hp,p.hp<30?'#9c2f24':'#4a6b45'],['心魔',num(p['心魔']),num(p['心魔'])>=70?'#7a2a5a':'#6a5a8a'],['声望',p['声望'],'#8a6d2f'],['劣迹',p['劣迹'],'#5a3a6a']];
+  const vit=[['气血',p.hp,p.hp<30?'#B84A3E':'#6B8E7A'],['心魔',num(p['心魔']),num(p['心魔'])>=70?'#7a2a5a':'#6E6A8A'],['声望',p['声望'],'#A8875C'],['劣迹',p['劣迹'],'#6E5A80']];
   $('pVitals').innerHTML=vit.map(([k,v,c])=>`<div class="attr"><div class="lab"><b>${k}</b><span>${v}${deltaTag(lastDeltas[k])}</span></div><div class="bar"><i style="width:${v}%;background:${c}"></i></div></div>`).join('');
   let ah='';
   const lvNow=powerLevel();
@@ -5955,12 +6012,12 @@ function renderPanel(){
   const per=upkeepPerMonth();
   const canLast=per>0?Math.floor(p.money/per):99;
   $('pMoney').innerHTML=`${p.money.toLocaleString('zh-CN')} 块灵石 ${md?`<span class="delta ${md>0?'up':'dn'}">${md>0?'▲':'▼'}${Math.abs(md).toLocaleString('zh-CN')}</span>`:''}`
-    +`<div style="font-size:12px;color:${canLast<2?'#9c2f24':'var(--ink-soft)'};margin-top:3px">月耗约 ${per} 块 · ${canLast>=99?'尚可支撑':(canLast<1?'已经见底':'还够撑 '+canLast+' 个月')}</div>`;
+    +`<div style="font-size:12px;color:${canLast<2?'#B84A3E':'var(--ink-soft)'};margin-top:3px">月耗约 ${per} 块 · ${canLast>=99?'尚可支撑':(canLast<1?'已经见底':'还够撑 '+canLast+' 个月')}</div>`;
   $('pArts').innerHTML=(p.arts&&p.arts.length)?p.arts.map(a=>{
     const lv=num(a.level), d=lastDeltas['功法·'+a.name];
     return `<div class="artrow"><b>${esc(a.name)}</b> <span class="trait">${esc(a.style||'刚猛')}</span>
       <div class="lab" style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink-soft)"><span>熟练</span><span>${lv}${deltaTag(d)}</span></div>
-      <div class="bar" style="height:5px"><i style="width:${lv}%;background:#8a6d2f"></i></div>
+      <div class="bar" style="height:5px"><i style="width:${lv}%;background:#A8875C"></i></div>
       <div class="idesc">${esc(a.desc||'')}${a.style?`　<span style="color:#8a7a60">（${esc(STYLE_DESC[a.style]||'')}）</span>`:''}</div></div>`;
   }).join(''):'<div class="empty">尚未修习功法</div>';
   if(hasClan()){
@@ -5977,7 +6034,7 @@ function renderPanel(){
       $('pSect').innerHTML=`<div class="artrow"><b>${esc(S.sect.name)}</b> <span class="trait">${esc(rk)}</span>
         <div class="idesc">${esc(ck?ck.field:'')}${f&&f.leader?' · 院首'+esc(f.leader):''}　${esc(dateStr().split(' · ')[1]||'')}</div>
         <div class="lab" style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink-soft)"><span>院中贡献</span><span>${S.sect.contrib}${nx?' / '+nx.need:''}${deltaTag(lastDeltas['院中贡献'])}</span></div>
-        <div class="bar" style="height:5px"><i style="width:${nx?Math.min(100,S.sect.contrib/nx.need*100):100}%;background:#4a6b45"></i></div>
+        <div class="bar" style="height:5px"><i style="width:${nx?Math.min(100,S.sect.contrib/nx.need*100):100}%;background:#6B8E7A"></i></div>
         <div class="idesc">${nx?`再积 ${nx.need-S.sect.contrib} 贡献可升为${nx.name}`:'已是首席弟子'}　月例 ${sectStipend()} 块</div>
         <div class="calnote">${esc(calendarNote(S.months))}</div></div>`;
     } else $('pSect').innerHTML='<div class="empty">—</div>';
@@ -6006,7 +6063,7 @@ function manualHtml(list){
     const dc=Math.max(20,m.need+diff().dc+fdm().studyDC);
     let hit=0; for(let r=1;r<=20;r++){ if(r===20||(r!==1&&val+rollMod(r)>=dc)) hit++; }
     const chance=hit*5;
-    return `<div class="item"><span class="itag" style="background:#8a6d2f">籍</span><b>${esc(x.name)}</b>
+    return `<div class="item"><span class="itag" style="background:#A8875C">籍</span><b>${esc(x.name)}</b>
       <span style="color:var(--accent);font-size:13px">（${esc(m.style)}·修为+${m.power}）</span>
       <div class="idesc">${esc(x.desc||'')}</div>
       <div class="idesc" style="color:#8a7a60">闭关 ${m.months} 个月 · 成算约 <b style="color:var(--accent)">${chance}%</b><br>悟性+神识/4 = ${val}　难度 ${dc}${m.mastered?'　✦ 已参透':''}</div>
@@ -6015,10 +6072,10 @@ function manualHtml(list){
 }
 function renderBag(){
   const it=S.player.items;
-  $('bagWeapons').innerHTML=itemHtml(it['法器'],'#9c2f24','器');
+  $('bagWeapons').innerHTML=itemHtml(it['法器'],'#B84A3E','器');
   $('bagManuals').innerHTML=manualHtml(it['典籍']);
   $('bagManuals').querySelectorAll('button[data-mi]').forEach(b=>b.onclick=()=>studyManual(+b.dataset.mi));
-  $('bagMeds').innerHTML=itemHtml(it['丹药'],'#4a6b45','丹');
+  $('bagMeds').innerHTML=itemHtml(it['丹药'],'#6B8E7A','丹');
   $('bagMeds').querySelectorAll('.item').forEach((el,i)=>{ const x=(it['丹药']||[])[i]; const pe=x&&pillEff(x.name); if(!pe||(pe.eff.breakthrough&&!pe.eff.exp)) return; const b=document.createElement('button'); b.className='mbtn'; b.style.cssText='padding:2px 10px;font-size:12.5px;margin-top:4px'; b.textContent='服下'; b.onclick=()=>usePill(i); el.appendChild(b); });
   const pr=craftS().prof;
   $('bagCraft').innerHTML=['pill','talisman','artifact'].map(k=>{
@@ -6028,9 +6085,9 @@ function renderBag(){
       (list.some(r=>!recipeTierOk(r))?`<div class="qd" style="font-size:12px;color:var(--ink-soft)">还有 ${list.filter(r=>!recipeTierOk(r)).length} 张方子：内门弟子能学二阶，真传弟子能学三阶</div>`:'')+`</div>`;
   }).join('')+'<div style="font-size:12px;color:var(--ink-soft)">一次花一个月；残品也能用，废了就什么都没有。成算是出下品以上的把握。</div>';
   $('bagCraft').querySelectorAll('button[data-cr]').forEach(b=>b.onclick=()=>doCraft(b.dataset.cr));
-  $('bagPoisons').innerHTML=itemHtml(it['符箓'],'#5a3a6a','符');
-  $('bagBooks').innerHTML=itemHtml(it['杂书'],'#4a6b8a','书');
-  $('bagMisc').innerHTML=itemHtml(it['其他'],'#7a6a50','物');
+  $('bagPoisons').innerHTML=itemHtml(it['符箓'],'#6E5A80','符');
+  $('bagBooks').innerHTML=itemHtml(it['杂书'],'#4A6E8A','书');
+  $('bagMisc').innerHTML=itemHtml(it['其他'],'#8A8378','物');
 }
 function favColor(n){
   if(n['爱恋值']!=null) return 'var(--pink)';
@@ -6039,7 +6096,7 @@ function favColor(n){
   if(f<=15) return 'var(--accent)';
   return 'var(--ink-soft)';
 }
-function npcColor(n){ return n['爱恋值']!=null?'var(--pink)':(n.alignment==='邪道'?'#5a3a6a':(n.alignment==='正派'?'#4a6b45':'#7a6a50')); }
+function npcColor(n){ return n['爱恋值']!=null?'var(--pink)':(n.alignment==='邪道'?'#6E5A80':(n.alignment==='正派'?'#6B8E7A':'#8A8378')); }
 function renderPeople(){
   const list=$('npcList');
   if(!S.npcs.length){ list.innerHTML='<div class="empty">还谁都不认识</div>'; $('graphWrap').innerHTML=''; return; }
@@ -6064,15 +6121,15 @@ function renderGraph(){
   const cx=W/2,cy=H/2,rx=W/2-54,ry=H/2-42;
   let edges='',nodes='';
   // 底下垫两圈淡淡的同心环，空处不至于太空
-  const rings=`<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="none" stroke="#c9b88f" stroke-width="1" stroke-dasharray="3 5" opacity=".55"/>
-    <ellipse cx="${cx}" cy="${cy}" rx="${rx*0.55}" ry="${ry*0.55}" fill="none" stroke="#c9b88f" stroke-width="1" stroke-dasharray="2 6" opacity=".35"/>`;
+  const rings=`<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="none" stroke="#D9D2C4" stroke-width="1" stroke-dasharray="3 5" opacity=".55"/>
+    <ellipse cx="${cx}" cy="${cy}" rx="${rx*0.55}" ry="${ry*0.55}" fill="none" stroke="#D9D2C4" stroke-width="1" stroke-dasharray="2 6" opacity=".35"/>`;
   alive.forEach((n,i)=>{
     const a=-Math.PI/2+i*2*Math.PI/alive.length;
     const x=cx+rx*Math.cos(a),y=cy+ry*Math.sin(a);
     const love=n['爱恋值']!=null;
     const val=love?n['爱恋值']:n['好感度'];
     let ec='#8a7a60';
-    if(!n.alive) ec='#aaa'; else if(love) ec='#b05a72'; else if(val>=70) ec='#4a6b45'; else if(val<=15) ec='#9c2f24';
+    if(!n.alive) ec='#aaa'; else if(love) ec='#B0707F'; else if(val>=70) ec='#6B8E7A'; else if(val<=15) ec='#B84A3E';
     const w=1+val/40;
     const r=n.alive?(13+Math.round(val/12)):13;   // 交情越深，人越显眼
     edges+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="${ec}" stroke-width="${n.alive?w:1}" stroke-dasharray="${n.alive?'none':'4 4'}" opacity=".65" stroke-linecap="round"/>`;
@@ -6085,13 +6142,13 @@ function renderGraph(){
       <image href="${AV_SHEET}" x="${x-r-col*d}" y="${y-r-row*d}" width="${AV_COLS*d}" height="${AV_ROWS*d}"
         clip-path="url(#gav${i})" opacity="${n.alive?1:.5}" style="${n.alive?'':'filter:grayscale(1)'}"/>
       <circle cx="${x}" cy="${y}" r="${r-1}" fill="none" stroke="${n.alive?ring:'#999'}" stroke-width="2.5"/>`;
-    })():`<circle cx="${x}" cy="${y}" r="${r}" fill="${n.alive?ring:'#999'}" stroke="#efe5cf" stroke-width="1.5"/>
+    })():`<circle cx="${x}" cy="${y}" r="${r}" fill="${n.alive?ring:'#999'}" stroke="#F8F5EE" stroke-width="1.5"/>
       <text x="${x}" y="${y+5}" text-anchor="middle" font-size="13" fill="#f5e9d0">${esc(n.name[0]||'？')}</text>`;
     nodes+=`<g class="gnode" data-i="${i}" style="cursor:pointer">
-      <circle cx="${x}" cy="${y}" r="${r+3}" fill="#efe5cf" opacity=".9"/>
+      <circle cx="${x}" cy="${y}" r="${r+3}" fill="#F8F5EE" opacity=".9"/>
       ${face}
       <text x="${x}" y="${y+32}" text-anchor="middle" font-size="11" fill="#5a4c3c">${esc(n.name)}</text>
-      <text x="${x}" y="${y-24}" text-anchor="middle" font-size="10" fill="#8a6d2f">${esc(n.relation)}</text>
+      <text x="${x}" y="${y-24}" text-anchor="middle" font-size="10" fill="#A8875C">${esc(n.relation)}</text>
     </g>`;
   });
   const mSlot=avSlotOf(S.player), mi=AV_SLOTS.indexOf(mSlot), mr=21;
@@ -6099,10 +6156,10 @@ function renderGraph(){
     const d=mr*2, col=mi%AV_COLS, row=Math.floor(mi/AV_COLS);
     return `<clipPath id="gavme"><circle cx="${cx}" cy="${cy}" r="${mr}"/></clipPath>
     <image href="${AV_SHEET}" x="${cx-mr-col*d}" y="${cy-mr-row*d}" width="${AV_COLS*d}" height="${AV_ROWS*d}" clip-path="url(#gavme)"/>
-    <circle cx="${cx}" cy="${cy}" r="${mr-1}" fill="none" stroke="#9c2f24" stroke-width="3"/>`;
-  })():`<circle cx="${cx}" cy="${cy}" r="${mr}" fill="#9c2f24" stroke="#e8d7ae" stroke-width="2"/>
+    <circle cx="${cx}" cy="${cy}" r="${mr-1}" fill="none" stroke="#B84A3E" stroke-width="3"/>`;
+  })():`<circle cx="${cx}" cy="${cy}" r="${mr}" fill="#B84A3E" stroke="#F8F5EE" stroke-width="2"/>
     <text x="${cx}" y="${cy+5}" text-anchor="middle" font-size="14" fill="#f5e9d0">${esc(S.player.name[0])}</text>`;
-  const me=`<circle cx="${cx}" cy="${cy}" r="26" fill="#9c2f24" opacity=".16"/>${meFace}`;
+  const me=`<circle cx="${cx}" cy="${cy}" r="26" fill="#B84A3E" opacity=".16"/>${meFace}`;
   $('graphWrap').innerHTML=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${rings}${edges}${me}${nodes}</svg>`;
   $('graphWrap').querySelectorAll('.gnode').forEach(el=>el.onclick=()=>showNpc(S.npcs[+el.dataset.i]));
 }
@@ -6172,7 +6229,7 @@ function showNpc(n){
   const ven=(S.vendettas||[]).find(x=>x.name===n.name&&x.heat>0);
   if(ven&&n.alive){
     const cost=Math.max(10,Math.round(ven.heat*1.5));
-    html+=`<div class="secret" style="color:#9c2f24">⚑ 此人正在找你算账：${esc(ven.reason)}（怨气 ${Math.min(100,Math.round(ven.heat))}/100）
+    html+=`<div class="secret" style="color:#B84A3E">⚑ 此人正在找你算账：${esc(ven.reason)}（怨气 ${Math.min(100,Math.round(ven.heat))}/100）
       <br><button class="mbtn" id="npcAppease" style="margin-top:6px;padding:4px 12px;font-size:13px" ${S.player.money<cost?'disabled':''}>赔礼 · ${cost} 块灵石</button>
       <span style="font-size:12px;color:#8a7a60">${S.player.money<cost?'（灵石不够）':'（备礼赔罪，怨气大减）'}</span></div>`;
   }
@@ -6206,7 +6263,7 @@ function showNpc(n){
 }
 function renderWorld(){
   // 宿命
-  $('wQuests').innerHTML=S.quests.length?S.quests.map(q=>`<div class="quest ${q.status==='完成'?'done':q.status==='失败'?'fail':''}"><div class="qt"><span>${esc(q.title)}</span><small>${q.status==='进行中'?q.progress+'%':q.status}</small></div><div class="qd">${esc(q.desc)}</div><div class="bar"><i style="width:${pw(q.progress)}%;background:${q.status==='完成'?'#4a6b45':'#8a6d2f'}"></i></div></div>`).join(''):'<div class="empty">尚无宿命，随剧情而生</div>';
+  $('wQuests').innerHTML=S.quests.length?S.quests.map(q=>`<div class="quest ${q.status==='完成'?'done':q.status==='失败'?'fail':''}"><div class="qt"><span>${esc(q.title)}</span><small>${q.status==='进行中'?q.progress+'%':q.status}</small></div><div class="qd">${esc(q.desc)}</div><div class="bar"><i style="width:${pw(q.progress)}%;background:${q.status==='完成'?'#6B8E7A':'#A8875C'}"></i></div></div>`).join(''):'<div class="empty">尚无宿命，随剧情而生</div>';
   // 同届榜
   const rk=S.world&&S.world.ranking||[];
   if(!rk.length){ $('wRanking').innerHTML='<div class="empty">同届榜还没排出来</div><button class="mbtn" id="forgeWorld" style="width:100%;margin-top:6px">排一下</button>'; const b=$('forgeWorld'); if(b) b.onclick=forgeWorld; }
@@ -6224,9 +6281,9 @@ function renderWorld(){
   $('wLinesCard').style.display=lsShow.length?'':'none';
   $('wLines').innerHTML=lsShow.map(x=>{
     const dd=(DEDUCE[x.k]||[]).map((d,i)=>({d,i,done:!!S.flags['deduce_'+x.k+'_'+i],have:d.need.filter(c=>x.l.clues.includes(c))}));
-    const rows=dd.filter(y=>y.have.length).map(y=>y.done?`<div class="qd" style="color:#5a3a6a">✦ ${esc(y.d.text)}</div>`:
+    const rows=dd.filter(y=>y.have.length).map(y=>y.done?`<div class="qd" style="color:#6E5A80">✦ ${esc(y.d.text)}</div>`:
       (y.have.length===y.d.need.length?`<button class="mbtn gold" data-dk="${x.k}" data-di="${y.i}" style="padding:3px 10px;font-size:12.5px;margin:4px 0">把「${y.d.need.map(esc).join('」和「')}」串起来</button>`:`<div class="qd">「${esc(y.have[0])}」好像还缺一样东西才说得通</div>`)).join('');
-    return `<div class="quest"><div class="qt"><span>${x.l.unlocked?esc(LINES[x.k].name):'？？？'}${x.l.solved?' <small style="color:#5a3a6a">已看清</small>':''}</span><small>${x.l.progress}%</small></div><div class="qd">${x.l.unlocked?esc(LINES[x.k].hint):'几件说不清的小事，凑不到一块'}</div>${x.l.clues.length?`<div class="qd">线索：${x.l.clues.map(esc).join('；')}</div>`:''}${rows}<div class="bar"><i style="width:${pw(x.l.progress)}%;background:#5a3a6a"></i></div></div>`;
+    return `<div class="quest"><div class="qt"><span>${x.l.unlocked?esc(LINES[x.k].name):'？？？'}${x.l.solved?' <small style="color:#6E5A80">已看清</small>':''}</span><small>${x.l.progress}%</small></div><div class="qd">${x.l.unlocked?esc(LINES[x.k].hint):'几件说不清的小事，凑不到一块'}</div>${x.l.clues.length?`<div class="qd">线索：${x.l.clues.map(esc).join('；')}</div>`:''}${rows}<div class="bar"><i style="width:${pw(x.l.progress)}%;background:#6E5A80"></i></div></div>`;
   }).join('');
   $('wLines').querySelectorAll('button[data-dk]').forEach(b=>b.onclick=()=>deduce(b.dataset.dk,+b.dataset.di));
   const fs=S.world&&S.world.factions||[];
@@ -6236,10 +6293,10 @@ function renderWorld(){
   const vd=(S.vendettas||[]).filter(v=>v.heat>0);
   $('wVendetta').innerHTML=vd.length?vd.slice().sort((a,b)=>b.heat-a.heat).map(v=>{
     const n=findNpc(v.name), h=Math.min(100,Math.round(v.heat));
-    return `<div class="quest ${h>=70?'hot':''}"><div class="qt"><span>${esc(v.name)}${n&&!n.alive?'〔亡故〕':''}${v.lethal?' <small style="color:#9c2f24">死仇</small>':''}</span><small>${h}%</small></div>
+    return `<div class="quest ${h>=70?'hot':''}"><div class="qt"><span>${esc(v.name)}${n&&!n.alive?'〔亡故〕':''}${v.lethal?' <small style="color:#B84A3E">死仇</small>':''}</span><small>${h}%</small></div>
       <div class="qd">${esc(v.reason)}</div>
-      <div class="qd" style="color:${v.eta!=null&&num(v.eta)<=1?'#9c2f24':'var(--ink-soft)'}">${esc(vStateText(v))}${n?`　${realmOf(n['修为'])}${num(n['修为'])<num(S.player.attributes['修为'])*0.6?'（远不如你）':''}`:''}</div>
-      <div class="bar"><i style="width:${h}%;background:${h>=70?'#9c2f24':'#8a6d2f'}"></i></div></div>`;
+      <div class="qd" style="color:${v.eta!=null&&num(v.eta)<=1?'#B84A3E':'var(--ink-soft)'}">${esc(vStateText(v))}${n?`　${realmOf(n['修为'])}${num(n['修为'])<num(S.player.attributes['修为'])*0.6?'（远不如你）':''}`:''}</div>
+      <div class="bar"><i style="width:${h}%;background:${h>=70?'#B84A3E':'#A8875C'}"></i></div></div>`;
   }).join('')+'<div style="font-size:12px;color:var(--ink-soft);margin-top:4px">怨气满了他才会找上门。修为差你太多的不敢亲自来，但可能托人。与其修好（好感≥45）或赔礼可平息。</div>':'<div class="empty">暂时没人跟你过不去</div>';
   $('wAch').innerHTML=ACHIEVEMENTS.map(([id,name,_,desc])=>`<span class="ach ${S.achievements.includes(id)?'on':''}" title="${esc(desc)}">${S.achievements.includes(id)?'✦ ':''}${name}</span>`).join('');
   renderHall();
@@ -6396,7 +6453,7 @@ function renderOptions(opts){
   box.innerHTML='';
   opts=(opts||[]).filter(o=>o&&o.type!=='break');
   if(canBreak()&&!S.over&&!(S.evt&&S.evt.cur)) opts=opts.concat([breakOption()]);
-  if(S.over){ box.innerHTML='<button class="opt" id="againBtn" style="text-align:center"><span class="num">❈</span>再入一届</button><div style="text-align:center;color:#bfa876;padding:6px;font-size:13px">这一局的院志已经记进「仙院 · 院史」</div>'; $('againBtn').onclick=()=>openCreate(); $('inputbar').style.display='none'; return; }
+  if(S.over){ box.innerHTML='<button class="opt" id="againBtn" style="text-align:center"><span class="num">❈</span>再入一届</button><div style="text-align:center;color:var(--ink-soft);padding:6px;font-size:13px">这一局的院志已经记进「仙院 · 院史」</div>'; $('againBtn').onclick=()=>openCreate(); $('inputbar').style.display='none'; return; }
   $('inputbar').style.display='';
   (opts||[]).forEach((o,i)=>{
     if(!o||!o.text) return;
@@ -6444,7 +6501,7 @@ function openFound(){
   const why=foundBlock();
   const r=foundReq(), cost=Math.round(r.money*0.6);
   $('foundWhy').innerHTML = why
-    ? `<span style="color:#9c2f24">${esc(why)}</span>`
+    ? `<span style="color:#B84A3E">${esc(why)}</span>`
     : `置办山门需纹银 <b>${cost}</b> 两，立时扣除。`;
   $('foundGo').disabled=!!why;
   if(!$('foundName').value) $('foundName').value=randClanName();
@@ -6511,11 +6568,11 @@ function renderClan(){
       ${c.creed?`<div class="idesc" style="color:var(--gold)">门规：${esc(c.creed)}</div>`:''}
     </div>
     <div class="lab" style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink-soft);margin-top:6px"><span>势力</span><span>${c.power}</span></div>
-    <div class="bar" style="height:6px"><i style="width:${c.power}%;background:${c.alignment==='邪道'?'#5a3a6a':c.alignment==='正派'?'#4a6b45':'#7a6a50'}"></i></div>
+    <div class="bar" style="height:6px"><i style="width:${c.power}%;background:${c.alignment==='邪道'?'#6E5A80':c.alignment==='正派'?'#6B8E7A':'#8A8378'}"></i></div>
     <div class="lab" style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink-soft);margin-top:5px"><span>威望</span><span>${c.fame}</span></div>
-    <div class="bar" style="height:6px"><i style="width:${c.fame}%;background:#8a6d2f"></i></div>
+    <div class="bar" style="height:6px"><i style="width:${c.fame}%;background:#A8875C"></i></div>
     <div class="clanline"><span>公帐</span><b>${c.treasury} 两</b></div>
-    <div class="clanline"><span>上回进出</span><b style="color:${net>=0?'var(--green)':'#9c2f24'}">进 ${c.lastIncome} · 出 ${c.lastCost}${num(c.lastUnpaid)>0?`　<span style="color:#9c2f24">欠饷 ${c.lastUnpaid}</span>`:''}</b></div>
+    <div class="clanline"><span>上回进出</span><b style="color:${net>=0?'var(--green)':'#B84A3E'}">进 ${c.lastIncome} · 出 ${c.lastCost}${num(c.lastUnpaid)>0?`　<span style="color:#B84A3E">欠饷 ${c.lastUnpaid}</span>`:''}</b></div>
     <div class="clanline"><span>门下</span><b>${ds.length} / ${clanCap()} 人　能战 ${fit.length} 人</b></div>
     <div style="font-size:12px;color:var(--ink-soft);margin-top:5px;line-height:1.6">月入按 势力＋威望＋经商弟子 算，月支按 位阶＋山门维护 算。公帐不够先掏你自己的腰包，都不够就是欠饷——门下会寒心，久了要散。</div>`;
 
@@ -6526,10 +6583,10 @@ function renderClan(){
         const cap=discCap(d), hurt=num(d.hurt);
         return `<div class="disc${hurt>=50?' hurt':''}" data-id="${esc(d.id)}">
           <div class="dl">
-            <span class="dn">${esc(d.name)}<small>${d.rank}·${JOB_ICON[d.job]||''}${d.job}${hurt>0?`　<i style="color:#9c2f24;font-style:normal">伤${hurt}</i>`:''}</small></span>
+            <span class="dn">${esc(d.name)}<small>${d.rank}·${JOB_ICON[d.job]||''}${d.job}${hurt>0?`　<i style="color:#B84A3E;font-style:normal">伤${hurt}</i>`:''}</small></span>
             <span class="dv">${d['修为']}<small>/${cap}</small></span>
           </div>
-          <div class="bar" style="height:5px"><i style="width:${Math.min(100,d['修为']/Math.max(1,cap)*100)}%;background:#9c2f24"></i></div>
+          <div class="bar" style="height:5px"><i style="width:${Math.min(100,d['修为']/Math.max(1,cap)*100)}%;background:#B84A3E"></i></div>
           <div class="dmeta"><span>资质 ${d.talent}·${talentWord(d.talent)}</span><span>忠诚 ${d.loyalty}·${loyWord(d.loyalty)}</span></div>
         </div>`;
       }).join('')
@@ -6559,7 +6616,7 @@ function showDisc(id){
     <div class="nrow"><b>修为</b><span>${d['修为']}　<small style="color:var(--ink-soft)">此生到顶 ${cap}${cap>=mine-1?'（已逼到你身后）':''}</small></span></div>
     <div class="nrow"><b>资质</b><span>${d.talent} · ${talentWord(d.talent)}</span></div>
     <div class="nrow"><b>忠诚</b><span>${d.loyalty} · ${loyWord(d.loyalty)}　<small style="color:var(--ink-soft)">他最多能服你 ${loyaltyCeil(d)} 分</small></span></div>
-    ${num(d.hurt)>0?`<div class="nrow"><b>伤势</b><span style="color:#9c2f24">${d.hurt}${num(d.hurt)>=50?'　重伤，不能出战':'　将养中'}</span></div>`:''}
+    ${num(d.hurt)>0?`<div class="nrow"><b>伤势</b><span style="color:#B84A3E">${d.hurt}${num(d.hurt)>=50?'　重伤，不能出战':'　将养中'}</span></div>`:''}
     <div class="nrow"><b>来历</b><span>${esc(d.from)}</span></div>
     <div class="field" style="margin-top:14px"><label>差事</label>
       <div class="seg wrap" id="discJob">${CLAN_JOBS.map(j=>`<button data-v="${j}" class="${d.job===j?'sel':''}">${j}</button>`).join('')}</div>
@@ -6651,7 +6708,7 @@ function renderWarCard(){
       const why=allied?'已臣服本派':warBlock(f), ff=foeWarForce(f), odd=mine/Math.max(1,mine+ff);
       return `<div class="foe">
         <div class="fl"><span><b>${esc(f.name)}</b> <small>${esc(f.alignment)} · ${esc(f.leader||'掌门不详')}</small></span><small>势力 ${f.power}</small></div>
-        <div class="bar" style="height:6px"><i style="width:${Math.round(odd*100)}%;background:${odd>=0.6?'#4a6b45':odd>=0.45?'#8a6d2f':'#9c2f24'}"></i></div>
+        <div class="bar" style="height:6px"><i style="width:${Math.round(odd*100)}%;background:${odd>=0.6?'#6B8E7A':odd>=0.45?'#A8875C':'#B84A3E'}"></i></div>
         <div class="fmeta"><span>敌 ${ff} · 我 ${mine}　${odd>=0.62?'稳操胜券':odd>=0.52?'略占上风':odd>=0.45?'胜负难料':odd>=0.35?'不容乐观':'以卵击石'}</span>
           <button class="mbtn" data-war="${esc(f.name)}" ${why?'disabled':''} title="${esc(why)}">${why?esc(why.length>12?why.slice(0,12)+'…':why):'出兵 '+warCost(f)+'两'}</button></div>
       </div>`;
