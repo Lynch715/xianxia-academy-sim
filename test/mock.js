@@ -36,6 +36,14 @@ function pickBody(prompt){
     npcUpdates:[],newNpcs:[],npcEvents:[],rumors:[],newVendettas:[],questUpdates:[],newQuests:[],rankingUpdates:[],rankingAdd:[],duel:null,
     options:[{text:aftVary(0),hint:'',type:'normal',months:1},{text:aftVary(1),hint:'',type:'rest',months:1},{text:aftVary(2),hint:'',type:'normal',months:1}],
     gameOver:false,ending:null}; }
+  if(prompt.includes('的心魔。你借了')) return {reply:'（它笑了一下）「你爹卖地那天，你在哪？」',steady:prompt.includes('【他这一句】（他还没开口')?0:1,end:false};
+  if(prompt.includes('（引擎已判定，不可更改）】')&&!prompt.includes('【院中事件的结果')) return {
+    narrative:'关口过去了。\n她睁开眼，天已经亮了。',summary:'引擎结果回合',
+    scene:{location:'丹霞院·丹房',unresolved:['爹的那笔债']},check:null,
+    playerChanges:{attributes:{修为:9},心魔:-20,money:900,fame:{声望:9},itemsAdd:{丹药:[{name:'九转金丹',desc:'编的'}]}},npcUpdates:[{name:'沈惊澜',好感度:30}],
+    newNpcs:[],npcEvents:[],rumors:[],newVendettas:[],questUpdates:[],newQuests:[],rankingUpdates:[],rankingAdd:[],duel:null,
+    options:[{text:'回宿舍歇着',hint:'',type:'rest',months:1},{text:'去膳堂吃饭',hint:'',type:'normal',months:1},{text:'去藏经阁转转',hint:'',type:'normal',months:2}],
+    gameOver:false,ending:null};
   if(prompt.includes('【院中事件的结果')) return {
     narrative:'事情就这么过去了。\n'+((prompt.match(/已定结果：([^\n]*)/)||[])[1]||''),summary:'院中事件的结果',
     scene:{location:'主殿广场',unresolved:['爹的那笔债']},check:null,

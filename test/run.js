@@ -160,21 +160,101 @@ const pace=await page.evaluate(()=>{
     turns++; S.turn++;
     const k=Math.min(1+(Math.random()<0.3?1:0),monthsToFixed(S.months));
     const inst=pickEvent(S.months+k); S.months+=k;
-    if(inst){ evs++; seen[inst.id]=1; if(inst.fixed) fixed.push(inst.id+'@'+calMonth(S.months)); const o=pick(inst.opts); const r=evResolve(inst,o.id); turns++; if(S.flags.expelled) break; }
+    if(inst){ evs++; seen[inst.id]=1; if(inst.fixed) fixed.push(inst.id+'@'+calMonth(S.months)); const o=pick(inst.opts); const r=evResolve(inst,o.id); turns++; if(S.flags.expelled){ S.flags.expelled=false; S.flags.wasExpelled=true; } }
     for(const n of S.npcs){ if(n.cohort) n['好感度']=Math.min(100,num(n['好感度'])+1); }
   }
-  const out={turns,evs,uniq:Object.keys(seen).length,fixed,months:S.months,expelled:!!S.flags.expelled,lines:JSON.stringify(S.lines)};
+  const out={turns,evs,uniq:Object.keys(seen).length,fixed,months:S.months,expelled:!!S.flags.wasExpelled,rc:Object.keys(seen).filter(x=>/rival|faction/.test(x)).length,lines:JSON.stringify(S.lines)};
   S=JSON.parse(keep); return out;
 });
 ok(`五年 ${pace.turns} 回合里有 ${pace.evs} 件事、${pace.uniq} 件不重样`, pace.evs>=25&&pace.uniq>=18);
 ok('固定节点都排上了：'+pace.fixed.join('、'), pace.fixed.some(x=>/dongzhi/.test(x))&&pace.fixed.some(x=>/tourney/.test(x)));
-console.log('    暗线：'+pace.lines+(pace.expelled?'（这一局被逐了）':''));
+console.log('    暗线：'+pace.lines+(pace.expelled?'（中途触发过逐出）':''));
 
 console.log('\n【境界瓶颈】');
 const gate=await page.evaluate(()=>{ S.player.attributes['修为']=35; const d={playerChanges:{attributes:{修为:3}},narrative:'',options:[]}; const b=S.player.attributes['修为']; applyTurn(d,'苦修',{fate:20,months:3}); renderPanel(); return {b,a:S.player.attributes['修为'],txt:$('pAttrs').textContent}; });
 ok(`练气九层顶上卡住（${gate.b}→${gate.a}）`, gate.a===35);
 ok('面板写出瓶颈', gate.txt.includes('瓶颈'));
-await page.evaluate(()=>{ S.player.attributes['修为']=Math.min(S.player.attributes['修为'],14); saveGame(); });
+
+console.log('\n【突破与心魔关】');
+const bo=await page.evaluate(()=>{ S.evt.cur=null; S.player['心魔']=10; S.player.attributes['心境']=60; (S.player.items['丹药']=S.player.items['丹药']||[]).push({name:'破障丹',desc:''}); renderOptions(S.lastOptions); return {can:canBreak(),opt:S.lastOptions.length,txt:$('choices').textContent,rate:breakRate(true)}; });
+ok('卡在瓶颈上多了冲关选项：'+bo.txt.match(/闭关冲击[^成]*成算约\d+%/), bo.can&&/闭关冲击筑基/.test(bo.txt));
+await page.evaluate(()=>{ const o=Array.from(document.querySelectorAll('#choices .opt')).find(e=>/闭关冲击/.test(e.textContent)); o.click(); });
+await page.waitForFunction(()=>convo&&convo.demon&&!busy,null,{timeout:15000});
+const dm1=await page.textContent('#convoMsgs');
+ok('心魔先开口', dm1.includes('你爹卖地'));
+for(let i=0;i<3;i++){ await page.fill('#convoText','我知道。我认。'); await page.click('#convoSend'); await page.waitForFunction(()=>!busy,null,{timeout:15000}); }
+await page.waitForFunction(()=>!convo,null,{timeout:8000});
+await idle();
+const br1=await page.evaluate(()=>({xw:S.player.attributes['修为'],realm:realmOf(S.player.attributes['修为']),idx:S.player.realmIdx,dm:S.player['心魔'],money:S.player.money,pill:(S.player.items['丹药']||[]).some(x=>x.name==='破障丹'),gold:(S.player.items['丹药']||[]).some(x=>/九转/.test(x.name)),led:S.ledger.slice(-3).join('|'),dice:$('story').lastElementChild.textContent}));
+const bp=prompts[prompts.length-1];
+ok('三句之后道心+3 进了提示词', /心魔关里道心稳了3/.test(bp));
+ok('破障丹用掉了', !br1.pill);
+ok('结果回合模型的数值一概不收（修为/灵石/丹药）', br1.money<900&&!br1.gold);
+ok('突破结算：'+br1.realm+' · '+br1.led.split('|').pop(), /闭关冲击筑基/.test(br1.led)&&(br1.idx===1?br1.xw===36:br1.xw<35));
+const brs=await page.evaluate(()=>{ const c={great:0,success:0,fail:0,deviation:0}; const save=JSON.stringify(S);
+  for(let i=0;i<400;i++){ S=JSON.parse(save); S.player.attributes['修为']=35; S.player.realmIdx=0; S.player['心魔']=30; c[resolveBreak(0).outcome]++; }
+  S=JSON.parse(save); return c; });
+ok(`冲关四档都出得来：${JSON.stringify(brs)}`, brs.success>40&&brs.fail>40&&brs.great>0);
+const hi=await page.evaluate(()=>{ const save=JSON.stringify(S); let dev=0; for(let i=0;i<300;i++){ S=JSON.parse(save); S.player.attributes['修为']=35; S.player.realmIdx=0; S.player['心魔']=90; if(resolveBreak(-4).outcome==='deviation') dev++; } S=JSON.parse(save); return dev; });
+ok('心魔 90 时冲关多半走火：'+hi+'/300', hi>100);
+await page.evaluate(()=>{ S.player.attributes['修为']=Math.min(S.player.attributes['修为'],14); S.player.realmIdx=0; saveGame(); });
+
+console.log('\n【心魔找上门】');
+await page.evaluate(()=>{ S.player['心魔']=88; S.lastHaunt=-99; S.evt.cur=null; window._pe=pickEvent; pickEvent=()=>null; });
+await page.evaluate(()=>{ const o=Array.from(document.querySelectorAll('#choices .opt')).find(e=>!/闭关/.test(e.textContent)); o.click(); });
+await page.waitForFunction(()=>convo&&convo.demon&&!busy,null,{timeout:20000}).catch(async e=>{ console.log(await page.evaluate(()=>({dm:S.player['心魔'],cur:S.evt.cur&&S.evt.cur.id,busy,lh:S.lastHaunt,m:S.months}))); throw e; });
+ok('心魔过 85，夜里自己找上门', await page.evaluate(()=>{ pickEvent=window._pe; window._hd=S.player['心魔']; return convo.mode==='haunt'; }));
+await page.fill('#convoText','你说得对，可我还是要走下去。'); await page.click('#convoSend'); await page.waitForFunction(()=>!busy,null,{timeout:15000});
+await page.click('#convoEnd'); await idle();
+const ht=await page.evaluate(()=>({d0:window._hd,dm:S.player['心魔'],last:S.lastHaunt,m:S.months}));
+ok(`对峙之后心魔往下压了：${ht.d0}→${ht.dm}`, ht.dm<ht.d0&&ht.last===ht.m);
+ok('心魔关回合的提示词', prompts[prompts.length-1].includes('【心魔关（引擎已判定'));
+
+console.log('\n【暗线推论】');
+const dd=await page.evaluate(()=>{ S.lines.mole=S.lines.mole||{progress:0,clues:[],unlocked:false}; S.lines.mole.unlocked=true; const p0=S.lines.mole.progress;
+  addClue('mole','钟离衡的密信',5); const n=meetCanon('白鹿卿',true); n.secretKnown=false; clueFromSecret(n); addClue('mole','白鹿卿家族档案',5);
+  renderWorld(); const btn=!!document.querySelector('#wLines button[data-dk="mole"]'); deduce('mole',0);
+  return {p0,p1:S.lines.mole.progress,btn,flag:!!S.flags.deduce_mole_0,block:linesBlock(),clues:S.lines.mole.clues}; });
+ok('线索凑齐出现「串起来」按钮', dd.btn);
+ok(`推论跳进度 ${dd.p0}→${dd.p1}`, dd.p1>=dd.p0+40&&dd.flag);
+ok('秘密露了落线索：'+dd.clues.join('、'), dd.clues.includes('学院禁制排布'));
+ok('推论写进提示词', dd.block.includes('落款的日子'));
+
+console.log('\n【同届相争 · 四派表态】');
+const ct=await page.evaluate(()=>{ S.rivals=null; const R=rivS(); R.next=0; let inst=null; for(let i=0;i<20&&!inst;i++) inst=makeContest(num(S.months)+i);
+  const res={}; for(const g of GRADES){ const save=JSON.stringify(S); const o=[]; contestApply({t:'contest',act:'coop',kind:'bounty',who:inst.actors[0]},g,o); res[g]=o.join('，'); S=JSON.parse(save); }
+  const o2=[]; contestApply({t:'contest',act:'sabotage',kind:'vein',who:'沈惊澜'},'terrible',o2);
+  return {inst:inst&&{id:inst.id,who:inst.actors[0],opts:inst.opts.map(x=>x.text)},res,sab:o2.join('，'),att:rivS().list['沈惊澜'].att,eb:inst?eventBlock(inst).slice(0,200):''}; });
+ok('排得出同届相争：'+(ct.inst&&ct.inst.who)+' · '+(ct.inst&&ct.inst.opts.join('/')), ct.inst&&ct.inst.opts.length===4);
+ok('合作办好了：'+ct.res.good, /欠你一次/.test(ct.res.good));
+ok('背后使手段被撞破：'+ct.sab, /劣迹\+12/.test(ct.sab)&&ct.att==='tense');
+const dmd=await page.evaluate(()=>{ S.party=null; let inst=makeDemand(4); const ids=[]; const save=JSON.stringify(S.world.parties);
+  const o=[]; demandApply({act:'support',id:'d_open'},'good',o);
+  const lean=S.world.parties.find(x=>x.name==='革新派').lean;
+  for(let i=0;i<3;i++) demandApply({act:'dodge',id:DEMANDS[i].id},'plain',[]);
+  return {inst:inst&&inst.seed.slice(0,30),o:o.join('，'),lean,qtc:!!S.flags.qiangtoucao,again:makeDemand(5)}; });
+ok('学期里来了一回表态：'+dmd.inst, !!dmd.inst);
+ok('顺着革新派说：'+dmd.o, dmd.lean>0);
+ok('含糊三回成了墙头草', dmd.qtc);
+ok('同一学期不问第二回', !dmd.again);
+
+console.log('\n【炼制与服丹】');
+const cr0=await page.evaluate(()=>{ S.player.money=200; S.sect.contrib=0; renderPanel(); return {txt:$('bagCraft').textContent,locked:XX_RECIPES.filter(r=>!recipeTierOk(r)).length}; });
+ok('行囊里有炼制卡，二三阶锁着：'+cr0.locked+'张', /开炉/.test(cr0.txt)&&cr0.locked>0);
+const rc=await page.evaluate(()=>XX_RECIPES.find(r=>r.craft==='pill'&&r.tier===1&&/凝气/.test(r.name))||XX_RECIPES.find(r=>r.craft==='pill'&&r.tier===1));
+await page.evaluate(id=>doCraft(id),rc.id);
+await idle();
+const cr1=await page.evaluate(()=>({money:S.player.money,prof:S.craft.prof.pill,meds:(S.player.items['丹药']||[]).map(x=>x.name),led:S.ledger.slice(-2).join('|'),gold:(S.player.items['丹药']||[]).some(x=>/九转/.test(x.name))}));
+ok(`开炉扣了灵石（200→${cr1.money}），熟练${cr1.prof}`, cr1.money<=200-rc.cost&&cr1.prof>0);
+ok('炼出来的：'+cr1.led.split('|').pop(), /炼丹/.test(cr1.led)&&!cr1.gold);
+ok('炼制回合的提示词', prompts[prompts.length-1].includes('（引擎已判定，不可更改）'));
+const pill=await page.evaluate(()=>{ S.player.items['丹药'].push({name:'上品宁心丹',desc:''}); S.player['心魔']=40; const i=S.player.items['丹药'].findIndex(x=>x.name==='上品宁心丹'); usePill(i); return {dm:S.player['心魔'],left:S.player.items['丹药'].some(x=>x.name==='上品宁心丹')}; });
+ok('服下宁心丹，心魔'+pill.dm, pill.dm<40&&!pill.left);
+
+console.log('\n【回院】');
+const home=await page.evaluate(()=>{ S.outTurns=2; const j=makeJudge({text:'在山下多待几天',type:'normal',months:1}); return {home:j.home,req:judgeBlock(j)}; });
+ok('连着两回合在院外，下一回合拉回来', home.home&&/必须让他回到云霄仙院/.test(home.req));
+await page.evaluate(()=>{ S.outTurns=0; S.player.attributes['修为']=Math.min(S.player.attributes['修为'],14); saveGame(); });
 
 console.log('\n【面谈】');
 await page.evaluate(()=>openConvo(findNpc('沈惊澜')));
