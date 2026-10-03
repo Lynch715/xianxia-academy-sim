@@ -76,6 +76,9 @@ const EVENT_FILES = [
   'data/events_faculty2.json',
   'data/events_governance.json',
   'data/events_governance2.json',
+  'data/events_faculty3.json',
+  'data/events_gov3.json',
+  'data/events_filler.json',
   'data/events_fixed.json'
 ];
 

@@ -1,0 +1,1039 @@
+[
+  {
+    "id": "fl_s_rain",
+    "category": "filler",
+    "weight": 10,
+    "scene": "scene_stone_stairs",
+    "actors": [],
+    "cooldown": 8,
+    "conditions": {
+      "role": [
+        "student"
+      ]
+    },
+    "filler": true,
+    "maxTimes": 99,
+    "seed": "下山的石阶湿了一半。\n\n前面那个抱着书的师姐停下来，回头看伞。\n\n你只有一把。",
+    "facts": [
+      "石阶上下雨",
+      "你只有一把伞"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "把伞递过去，自己跑",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "她接了，说明天还你。\n\n你淋到讲堂的时候，衣服能挤出水。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 3
+              },
+              {
+                "type": "exp",
+                "value": 6
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "并着走",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "伞往她那边偏了些。两个人的肩都湿了一片。\n\n到岔路口她说了句谢，走得很快。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 5
+              },
+              {
+                "type": "exp",
+                "value": 4
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "fl_s_bowl",
+    "category": "filler",
+    "weight": 10,
+    "scene": "scene_dorm_room",
+    "actors": [],
+    "cooldown": 8,
+    "conditions": {
+      "role": [
+        "student"
+      ]
+    },
+    "filler": true,
+    "maxTimes": 99,
+    "seed": "舍友的饭钵在桌上放了三天。\n\n里面的米汤结了一层皮。\n\n他这几天都在闭关。",
+    "facts": [
+      "舍友的钵放了三天",
+      "他在闭关"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "顺手洗了",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你把钵洗干净，倒扣在窗台上晒。\n\n他出关看见，什么也没说，第二天多带了一份饼回来。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 3
+              },
+              {
+                "type": "exp",
+                "value": 5
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "不管",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "钵一直放在那儿，又三天。\n\n后来是他自己端走的。",
+            "effects": [
+              {
+                "type": "exp",
+                "value": 3
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "fl_s_bell",
+    "category": "filler",
+    "weight": 10,
+    "scene": "scene_main_plaza",
+    "actors": [],
+    "cooldown": 8,
+    "conditions": {
+      "role": [
+        "student"
+      ]
+    },
+    "filler": true,
+    "maxTimes": 99,
+    "seed": "晨钟比平日早了一刻。\n\n广场上一半人往讲堂跑，一半人站着不动。\n\n没人知道哪个是对的。",
+    "facts": [
+      "钟早响了一刻",
+      "人分成两半"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "跟着跑的那一半走",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你跑到讲堂，门还锁着。\n\n等了一刻钟，钟又响了一遍。",
+            "effects": [
+              {
+                "type": "exp",
+                "value": 4
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "去问守钟的",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "守钟的老执事说绳子换了新的，手重了。\n\n你是那天唯一知道原因的人。",
+            "effects": [
+              {
+                "type": "exp",
+                "value": 6
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "fl_s_copy",
+    "category": "filler",
+    "weight": 10,
+    "scene": "scene_library_interior",
+    "actors": [],
+    "cooldown": 8,
+    "conditions": {
+      "role": [
+        "student"
+      ]
+    },
+    "filler": true,
+    "maxTimes": 99,
+    "seed": "你抄到一半，笔尖的毫散了。\n\n换一支要走两条廊。\n\n案上有人落下的一支，笔锋还好。",
+    "facts": [
+      "笔坏了",
+      "案上有别人的笔"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "用了，抄完还回去",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你抄完把笔放回原处，压了一张纸条。\n\n第二天纸条不见了，笔也不见了。",
+            "effects": [
+              {
+                "type": "exp",
+                "value": 8
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "走两条廊去换",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "来回花了小半个时辰。回来那页已经干了，字接得有点生。",
+            "effects": [
+              {
+                "type": "exp",
+                "value": 5
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "fl_s_cat",
+    "category": "filler",
+    "weight": 10,
+    "scene": "scene_jianyuan",
+    "actors": [],
+    "cooldown": 8,
+    "conditions": {
+      "role": [
+        "student"
+      ]
+    },
+    "filler": true,
+    "maxTimes": 99,
+    "seed": "剑院的檐下蹲着一只瘦猫，盯着你手里的肉干。\n\n它不叫，也不走。\n\n肉干是你明天的口粮。",
+    "facts": [
+      "檐下有只瘦猫",
+      "肉干是你明天的饭"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "掰一半给它",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "它吃完在你脚边蹭了一下，走了。\n\n往后你每次路过剑院，它都在那个位置。",
+            "effects": [
+              {
+                "type": "exp",
+                "value": 4
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "收进怀里",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你走开几步回头看，它还蹲在原处。",
+            "effects": [
+              {
+                "type": "exp",
+                "value": 3
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "fl_s_queue",
+    "category": "filler",
+    "weight": 10,
+    "scene": "scene_market",
+    "actors": [],
+    "cooldown": 8,
+    "conditions": {
+      "role": [
+        "student"
+      ]
+    },
+    "filler": true,
+    "maxTimes": 99,
+    "seed": "坊市领月例的队排到了桥上。\n\n前面有人让出位置，说替你占着，让你先去买炭。\n\n他是上月跟你争过名次的那个。",
+    "facts": [
+      "队排到桥上",
+      "让位的是上月跟你争名次的人"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "去买炭",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "炭买回来，位置还在。他把号牌递给你，没说别的。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 3
+              },
+              {
+                "type": "exp",
+                "value": 4
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "自己排着",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你排到晌午。炭价涨了两成。",
+            "effects": [
+              {
+                "type": "stone",
+                "low": -20
+              },
+              {
+                "type": "exp",
+                "value": 3
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "fl_s_wall",
+    "category": "filler",
+    "weight": 10,
+    "scene": "scene_meditation_hall",
+    "actors": [],
+    "cooldown": 8,
+    "conditions": {
+      "role": [
+        "student"
+      ]
+    },
+    "filler": true,
+    "maxTimes": 99,
+    "seed": "静室的墙上有人刻了一行小字：第七天最难。\n\n刻痕很旧。\n\n今天是你的第五天。",
+    "facts": [
+      "墙上刻着「第七天最难」",
+      "今天是你的第五天"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "坐到第七天",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "第七天过得比前六天都快。你没觉出难在哪儿。\n\n下来的时候腿麻了很久。",
+            "effects": [
+              {
+                "type": "exp",
+                "value": 14
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "今天就下来",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你下来的时候天还亮着。\n\n那行字你记了很久。",
+            "effects": [
+              {
+                "type": "exp",
+                "value": 6
+              },
+              {
+                "type": "rest",
+                "value": 10
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "fl_s_name",
+    "category": "filler",
+    "weight": 10,
+    "scene": "scene_mingde",
+    "actors": [],
+    "cooldown": 8,
+    "conditions": {
+      "role": [
+        "student"
+      ]
+    },
+    "filler": true,
+    "maxTimes": 99,
+    "seed": "明德院的名册贴出来了，你的名字写错了一个字。\n\n改要去执事堂，排半个时辰。\n\n不改也没人会问。",
+    "facts": [
+      "名册上你的名字写错了",
+      "改要排半个时辰"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "去改",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "执事翻了半天册子，改完说了句「下次早点来」。\n\n名册重贴的时候，你的名字是对的。",
+            "effects": [
+              {
+                "type": "exp",
+                "value": 4
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "就这么挂着",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "那个错字挂了一整年。后来有人照着念，念成了别人。",
+            "effects": [
+              {
+                "type": "exp",
+                "value": 3
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "fl_t_late",
+    "category": "filler",
+    "weight": 10,
+    "scene": "scene_mingde",
+    "actors": [],
+    "cooldown": 8,
+    "conditions": {
+      "role": [
+        "teacher"
+      ]
+    },
+    "filler": true,
+    "maxTimes": 99,
+    "seed": "早课点名，最后一排空着两个位置。\n\n门口站着一个，低着头不进来。\n\n底下三十双眼睛在看。",
+    "facts": [
+      "有弟子迟到不敢进门",
+      "三十个人在看"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "让他进来坐下",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你指了指空位，接着讲。\n\n下课他留到最后，说家里有事。你说知道了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 2
+              },
+              {
+                "type": "exp",
+                "value": 6
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "让他在门口站完这堂课",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "他站了一个时辰。\n\n往后那一排再没有空过位置。",
+            "effects": [
+              {
+                "type": "exp",
+                "value": 5
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "fl_t_ink",
+    "category": "filler",
+    "weight": 10,
+    "scene": "scene_library_interior",
+    "actors": [],
+    "cooldown": 8,
+    "conditions": {
+      "role": [
+        "teacher"
+      ]
+    },
+    "filler": true,
+    "maxTimes": 99,
+    "seed": "备课到夜里，砚台见底。\n\n库房的钥匙在执事手里，他睡了。\n\n案上有半块别人的墨。",
+    "facts": [
+      "墨用完了",
+      "案上有别人的半块墨"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "用了，第二天补一块",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "第二天你放了一整块回去。\n\n那人后来专门来道谢，谢的是那块比原来好。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 2
+              },
+              {
+                "type": "exp",
+                "value": 6
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "就着剩的水写完",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "最后几页字淡得几乎看不见。\n\n上课时你凭记性讲的。",
+            "effects": [
+              {
+                "type": "exp",
+                "value": 8
+              },
+              {
+                "type": "rest",
+                "value": -6
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "fl_t_gift",
+    "category": "filler",
+    "weight": 10,
+    "scene": "scene_mingde",
+    "actors": [],
+    "cooldown": 8,
+    "conditions": {
+      "role": [
+        "teacher"
+      ]
+    },
+    "filler": true,
+    "maxTimes": 99,
+    "seed": "下课后案上多了一包糖，没有署名。\n\n月考在三天后。\n\n糖是坊市最便宜的那种。",
+    "facts": [
+      "案上多了一包无名的糖",
+      "月考在三天后"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "上课时放到讲台上，谁都能拿",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你说这是谁带来的，大家分了。\n\n一堂课下来糖没了，也没人说什么。",
+            "effects": [
+              {
+                "type": "exp",
+                "value": 6
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "收进抽屉",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "月考过后你才吃。糖已经化成了一块。",
+            "effects": [
+              {
+                "type": "exp",
+                "value": 4
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "fl_t_quiet",
+    "category": "filler",
+    "weight": 10,
+    "scene": "scene_meditation_hall",
+    "actors": [],
+    "cooldown": 8,
+    "conditions": {
+      "role": [
+        "teacher"
+      ]
+    },
+    "filler": true,
+    "maxTimes": 99,
+    "seed": "你去静室查夜，第三间亮着灯。\n\n里面坐的那个已经三天没下过山。\n\n按院规该赶他回去睡。",
+    "facts": [
+      "第三间静室还亮着灯",
+      "按院规该赶他回去"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "敲门把他赶回去",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "他出来的时候眼睛是红的，走路打晃。\n\n第二天的课他睡着了，你没叫他。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 2
+              },
+              {
+                "type": "exp",
+                "value": 5
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "在外面坐到他出来",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你在廊下坐了两个时辰。他出来看见你，愣住了。\n\n「明天还来？」\n\n「来。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 4
+              },
+              {
+                "type": "exp",
+                "value": 7
+              },
+              {
+                "type": "rest",
+                "value": -8
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "fl_t_paper",
+    "category": "filler",
+    "weight": 10,
+    "scene": "scene_mingde",
+    "actors": [],
+    "cooldown": 8,
+    "conditions": {
+      "role": [
+        "teacher"
+      ]
+    },
+    "filler": true,
+    "maxTimes": 99,
+    "seed": "一份卷子答得干净，字也漂亮，只有最后一题空着。\n\n卷尾写了一行小字：这题我不会，别给我分。\n\n按分数他正好差一分及格。",
+    "facts": [
+      "卷子最后一题空着",
+      "差一分及格"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "照分数记，不及格",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你按分数记了。\n\n下一个月他的卷子最后一题答满了，答错了一半。",
+            "effects": [
+              {
+                "type": "exp",
+                "value": 6
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "给那行小字一分",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你在那行字旁边画了个圈。\n\n他来问过一次，你说写这句话的人值一分。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 3
+              },
+              {
+                "type": "exp",
+                "value": 6
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "fl_g_tea",
+    "category": "filler",
+    "weight": 10,
+    "scene": "scene_headmaster_hall",
+    "actors": [],
+    "cooldown": 8,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ]
+    },
+    "filler": true,
+    "maxTimes": 99,
+    "seed": "七院的月报送来了，六本整齐，一本卷了角。\n\n卷角那本是明德院的。\n\n送报的执事在门口等着。",
+    "facts": [
+      "明德院的月报卷了角",
+      "执事在门口等"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "让他重抄一份",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "三天后新的送来了，纸是好纸。\n\n卷角那本你留在抽屉里。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "就看这本",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你把卷角压平，一页一页看完。\n\n里面有一行写得比别的六本都实。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -1
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "fl_g_lamp",
+    "category": "filler",
+    "weight": 10,
+    "scene": "scene_headmaster_hall",
+    "actors": [],
+    "cooldown": 8,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ]
+    },
+    "filler": true,
+    "maxTimes": 99,
+    "seed": "夜里批完最后一本，灯油见底。\n\n窗外山门还有一盏亮着。\n\n守门的那一班该换了。",
+    "facts": [
+      "灯油快没了",
+      "山门还有一盏亮着"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "让人去换班",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你叫人去了。那边的灯灭了，又亮起来。\n\n你的灯是最后灭的。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -1
+              },
+              {
+                "type": "rest",
+                "value": -4
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "走到山门去看看",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "守门的那个站着睡着了，手里还握着杆。\n\n你没叫醒他，回来路上让厨房给他留了碗热的。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 1
+              },
+              {
+                "type": "rest",
+                "value": -6
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "fl_g_child",
+    "category": "filler",
+    "weight": 10,
+    "scene": "scene_main_plaza",
+    "actors": [],
+    "cooldown": 8,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ]
+    },
+    "filler": true,
+    "maxTimes": 99,
+    "seed": "广场上一个新来的小弟子在数台阶，数到一百二又忘了。\n\n他不认得你。\n\n「大叔，这儿一共多少级？」",
+    "facts": [
+      "新弟子在数台阶",
+      "他不认得你"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "告诉他",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "「一百四十四。」\n\n他数到一百四十四，回头朝你笑了一下，跑了。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "让他自己数",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "他数到第三遍才数清。\n\n半年后你在月考名册上看见了他的名字，排在前十。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -1
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "fl_g_seal",
+    "category": "filler",
+    "weight": 10,
+    "scene": "scene_headmaster_hall",
+    "actors": [],
+    "cooldown": 8,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ]
+    },
+    "filler": true,
+    "maxTimes": 99,
+    "seed": "批到第十七份，印泥干了。\n\n剩下的三份一份比一份急。\n\n添印泥要等人去库房。",
+    "facts": [
+      "印泥干了",
+      "还有三份急件"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "等",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "等了半个时辰。三份都在当天发了出去。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -1
+              },
+              {
+                "type": "rest",
+                "value": -4
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "压到明天",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "明天早上三份都成了四份。\n\n其中一份边上多了一行字：昨日已急。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 2
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "fl_g_old",
+    "category": "filler",
+    "weight": 10,
+    "scene": "scene_mountain_gate",
+    "actors": [],
+    "cooldown": 8,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ]
+    },
+    "filler": true,
+    "maxTimes": 99,
+    "seed": "山门口来了个老头，说三十年前在这儿扫过地。\n\n他想进去看看那棵树。\n\n名册上查不到他的名字。",
+    "facts": [
+      "有人说三十年前在这儿扫地",
+      "名册上查不到他"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "带他进去",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "那棵树还在，比他记的粗了一圈。\n\n他在树下站了一刻钟，出来时道了谢，没多留。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 2
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "按规矩拦下",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "他在门口朝里望了望，说那棵树在左边第三进。\n\n他说得对。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": 2,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+]

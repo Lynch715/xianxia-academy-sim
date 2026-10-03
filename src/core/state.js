@@ -5,7 +5,7 @@
 (function (G) {
   'use strict';
 
-  const VERSION = '1.6.0';
+  const VERSION = '1.7.0';
 
   const ATTR_SETS = {
     student:    { keys: ['wu','gen','shen','ji','xin','shi'],       points: 30, cap: 10 },
@@ -120,7 +120,7 @@
 
         time: { era: 3701, month: 9, week: 1, day: 1, phase: 'dawn', absoluteTurn: 0 },
 
-        events: { activeChains: [], cooldowns: {}, seen: [], pendingFixed: [], queue: [] },
+        events: { activeChains: [], cooldowns: {}, counts: {}, seen: [], pendingFixed: [], queue: [] },
 
         storylines: {
           seal:       { unlocked:false, progress:0, clues:[] },

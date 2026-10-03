@@ -370,6 +370,12 @@
       wrap.appendChild(h('button.opt', { onclick: () => this.runWeek(s) },
         h('span.key', '▷'), mid ? '接着推演本周' : '推演本周',
         h('span.hint', mid ? `上次停在${G.Time.DAY_LABEL[s.time.day - 1]}·${G.Time.PHASE_LABEL[s.time.phase]}，从这里往后走` : '按右栏日程逐日推进')));
+      // 教习、院主这几十年，平常的周占一半。按同一个安排连着过，遇上事就停。
+      if (!mid) {
+        wrap.appendChild(h('button.opt', { onclick: () => this.runWeek(s, 4) },
+          h('span.key', '▷▷'), '照这个安排连过四周',
+          h('span.hint', '中间有事就停下来')));
+      }
 
       if (G.Time.isVacation(s)) {
         wrap.appendChild(h('button.opt', { onclick: () => G.Explore.picker(s) },
@@ -381,7 +387,7 @@
     },
 
     // ---------- 周推演 ----------
-    async runWeek(s) {
+    async runWeek(s, span) {
       s = G.State.current;
       if (this.running || !s || s.ended) return;
       // 大型活动只在当月第二到四周开放，推过第四周就错过了
@@ -406,6 +412,8 @@
         const digest = [];
         G.Game.beginWeek(s);
 
+        let weeksLeft = Math.max(1, span || 1);
+        let hadEvent = false;
         let guard = 0;
         while (guard++ < 300) {
           if (!this.alive(token)) return;
@@ -415,6 +423,7 @@
           if (r.type === 'event') {
             if (digest.length) { this.narr.sys(digest.join('<br>')); digest.length = 0; }
             this.scrollDown();
+            hadEvent = true;
             await this.playEvent(s, r.event, token);
             if (!this.alive(token)) return;
             // 玩家没能处理掉（界面出错等）：别让同一个事件无限循环
@@ -457,8 +466,15 @@
           }
 
           if (r.type === 'weekEnd') {
-            if (digest.length) this.narr.sys(digest.join('<br>'));
+            if (digest.length) { this.narr.sys(digest.join('<br>')); digest.length = 0; }
             if (r.notes?.length) this.narr.sys('<b>本周结算</b><br>' + r.notes.join('<br>'));
+            weeksLeft--;
+            // 连着过：这一周没出事、也没到能突破的时候，就接着往下走
+            if (weeksLeft > 0 && !hadEvent && !s.ended && !G.Cultivation.canBreakthrough(s)) {
+              guard = 0;
+              G.Game.beginWeek(s);
+              continue;
+            }
             break;
           }
 

@@ -1,0 +1,4428 @@
+[
+  {
+    "id": "evt_g_joint",
+    "category": "gov",
+    "weight": 24,
+    "scene": "scene_headmaster_hall",
+    "actors": [
+      "npc_bailuqing"
+    ],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 6
+    },
+    "seed": "七院院首联名的折子送到案上，墨迹还新。\n\n要的是明年的灵石份额，加三成。\n\n白鹿卿站在边上：「名字都签了，就差您一个字。」",
+    "facts": [
+      "七院联名要加三成份额",
+      "白鹿卿在边上等你的字"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "准，但要他们各报一个砍掉的项目",
+        "check": {
+          "attr": "jue",
+          "difficulty": 52
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "七张单子送上来，砍掉的加起来比要的还多。\n\n白鹿卿看完笑了一声：「他们自己把水挤出来了。」",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": 600,
+                "unrestAll": -4
+              },
+              {
+                "type": "attr",
+                "key": "jue",
+                "value": 1
+              },
+              {
+                "type": "faction",
+                "key": "pragmatic",
+                "value": 8
+              }
+            ]
+          },
+          "good": {
+            "narrative": "单子都报了，有真有假。总算挤出来一些。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": 300,
+                "unrestAll": -2
+              },
+              {
+                "type": "faction",
+                "key": "pragmatic",
+                "value": 5
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "报上来的多是虚的。你按原数批了一半。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 2
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "七院嫌麻烦，折子收了回去，账还是那笔账。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 6
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "两个院首当场说这是刁难。话传出去，变成了「院主不给钱」。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 10
+              },
+              {
+                "type": "reputation",
+                "value": -4
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "全准",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你签了。七院那边当天就散了。\n\n方砚抱着账本来找你，坐了半个时辰，一句话也没说。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -800,
+                "unrestAll": -10
+              },
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": -6,
+                "trust": -4
+              },
+              {
+                "type": "faction",
+                "key": "pragmatic",
+                "value": -8
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "一个字不改地退回去",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "折子原样退了回去。\n\n第二天七院的早课都迟了半刻。没人说是为什么。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 12
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 1
+              },
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": 5
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true
+  },
+  {
+    "id": "evt_g_petition2",
+    "category": "gov",
+    "weight": 22,
+    "scene": "scene_main_plaza",
+    "actors": [],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 14
+    },
+    "seed": "广场上跪了四十多个弟子，从清早跪到晌午。\n\n领头那个举着一张纸：请废月考末位警告。\n\n执事不敢赶，七院院首都在看你。",
+    "facts": [
+      "四十多个弟子在广场请愿",
+      "七院都在看你怎么处置"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "亲自下去，当场听他们说",
+        "check": {
+          "attr": "ren",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你走下去，在石阶上坐了。\n\n「说吧。」\n\n领头那个说了半个时辰，说到后面声音都哑了。你让人给他端了水。\n\n当天贴出告示：末位警告改成三次累计，去掉当众宣读那一条。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -10
+              },
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": 1
+              },
+              {
+                "type": "reputation",
+                "value": 6
+              },
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 8
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你听完了，应了其中一条。人散了。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -6
+              },
+              {
+                "type": "reputation",
+                "value": 3
+              },
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 5
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你听了，说会议。人散得不情不愿。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -2
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你下去了，但没说出什么。跪着的人又多了十几个。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 4
+              },
+              {
+                "type": "reputation",
+                "value": -2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你的话被听成了敷衍。那天夜里有人在告示墙上写了字。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 10
+              },
+              {
+                "type": "reputation",
+                "value": -5
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "让执事堂按院规处置",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "执事堂一个一个记了名字。跪着的人散了，名字留在册上。\n\n那一年剩下的日子，广场上很干净。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 8
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 1
+              },
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": 8
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "guilt",
+                "note": "那册名字"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "把领头的叫到殿上来谈",
+        "check": {
+          "attr": "jue",
+          "difficulty": 46
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "那孩子进殿时腿在抖，出去时腰是直的。\n\n你给了他一句话：「你写一份章程，写得通，我就用。」\n\n一个月后他真写出来了。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -8
+              },
+              {
+                "type": "reputation",
+                "value": 5
+              },
+              {
+                "type": "flag",
+                "key": "student_charter"
+              },
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 6
+              }
+            ]
+          },
+          "good": {
+            "narrative": "谈完了，他回去劝散了人。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -5
+              },
+              {
+                "type": "reputation",
+                "value": 2
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "谈了很久，没谈出什么。人自己散了。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "他不肯一个人进殿，底下人也不肯散。僵到天黑。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 5
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "他进殿后再没出来——被执事带走了。外面的人以为你把人扣了。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 14
+              },
+              {
+                "type": "reputation",
+                "value": -6
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true
+  },
+  {
+    "id": "evt_g_seating",
+    "category": "gov",
+    "weight": 20,
+    "scene": "scene_headmaster_hall",
+    "actors": [
+      "npc_chuheshan"
+    ],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 20
+    },
+    "seed": "星落书院的人后天到。\n\n楚河山拿着座次图来问：他们那位年纪比你大三百岁，位置怎么排。\n\n图上空着主位旁边那一格。",
+    "facts": [
+      "外宗来访，座次没定",
+      "对方年纪比你大三百岁"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "按辈分，让他坐上首",
+        "check": {
+          "attr": "de",
+          "difficulty": 44
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把自己的位置往下挪了一格。\n\n对方进殿看见，站住了，然后把位置又推了回来。\n\n这一来一回，后面的事都好谈了。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 5
+              },
+              {
+                "type": "attr",
+                "key": "de",
+                "value": 1
+              },
+              {
+                "type": "gov",
+                "threatProgress": 10
+              }
+            ]
+          },
+          "good": {
+            "narrative": "座次让了。对方很受用。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 3
+              },
+              {
+                "type": "gov",
+                "threatProgress": 6
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "座次让了，对方坦然坐了。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "院里有人私下说你低了头。",
+            "effects": [
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": -5
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -1
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你让了位，对方却带着弟子坐满了整个上首。那天的议程全照他们的来。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -1
+              },
+              {
+                "type": "gov",
+                "unrestAll": 6
+              },
+              {
+                "type": "reputation",
+                "value": -4
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "按院主之位，自己坐主位",
+        "check": {
+          "attr": "wei",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你坐在主位上，开口第一句是请对方指教。\n\n一场下来，位置没动，话说得却客气。送客时对方说：「云霄有主。」",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 1
+              },
+              {
+                "type": "reputation",
+                "value": 6
+              },
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": 6
+              }
+            ]
+          },
+          "good": {
+            "narrative": "主位没让。谈得还算顺。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 1
+              },
+              {
+                "type": "reputation",
+                "value": 2
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "座次是定了，气氛有点冷。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "对方全程没怎么开口。送走之后楚河山叹了口气。",
+            "effects": [
+              {
+                "type": "gov",
+                "threatProgress": -5
+              },
+              {
+                "type": "relation",
+                "favor": -3
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "对方中途称病退席。第二天星落那边的信就到了，措辞很硬。",
+            "effects": [
+              {
+                "type": "gov",
+                "threatProgress": -15
+              },
+              {
+                "type": "reputation",
+                "value": -5
+              },
+              {
+                "type": "gov",
+                "unrestAll": 4
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "撤了上首，摆一张圆案",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "殿上临时换了张圆案，谁也不坐上首。\n\n对方愣了一下，笑着坐下了。\n\n守旧那几位一晚上都没怎么说话。",
+            "effects": [
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 10
+              },
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": -8
+              },
+              {
+                "type": "gov",
+                "threatProgress": 8
+              },
+              {
+                "type": "reputation",
+                "value": 3
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true
+  },
+  {
+    "id": "evt_g_deficit",
+    "category": "gov",
+    "weight": 22,
+    "scene": "scene_headmaster_hall",
+    "actors": [
+      "npc_fangyan"
+    ],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 24
+    },
+    "seed": "方砚把三本账摊在案上，手按着最薄的那一本。\n\n「这三年，少了九千四百石。」\n\n他没抬头：「经手的里面有我。」",
+    "facts": [
+      "账上三年亏空九千四百石",
+      "经手人里有方砚自己"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "让他把名字一个个报出来",
+        "check": {
+          "attr": "jue",
+          "difficulty": 56
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "他报了七个名字，自己排在第三个。\n\n查下来，他那一笔是替前任院主垫的，没人知道。\n\n其余六个，你处置了四个。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": 2000,
+                "unrestAll": 4
+              },
+              {
+                "type": "attr",
+                "key": "jue",
+                "value": 1
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 15,
+                "clue": "旧院志缺页"
+              },
+              {
+                "type": "relation",
+                "favor": 10,
+                "trust": 10
+              }
+            ]
+          },
+          "good": {
+            "narrative": "名字报了，查了一半。追回了一些。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": 1200,
+                "unrestAll": 3
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 8
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "账查了三个月，追回三成。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": 600,
+                "unrestAll": 2
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "查到一半，线索断在一个已经死了的人身上。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 4
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "fear"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "查出来的名字里有三个是七院的院首。殿上吵了两天，什么也没追回来。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 14
+              },
+              {
+                "type": "reputation",
+                "value": -5
+              },
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": -8
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "把账压下去，从私库补上",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你从私库拨了钱，把账面填平。\n\n方砚把三本账收回去的时候说：「这事不会只有一次。」",
+            "effects": [
+              {
+                "type": "gov",
+                "privy": -2500
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "repress",
+                "note": "填平的那本账"
+              },
+              {
+                "type": "relation",
+                "favor": 4,
+                "trust": -2
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "先办他",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你当天就免了方砚的职。\n\n账还是那笔账，只是再没有人能看懂了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -20,
+                "trust": -20,
+                "note": "你先办了他"
+              },
+              {
+                "type": "gov",
+                "unrestAll": 8
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 1
+              },
+              {
+                "type": "flag",
+                "key": "fangyan_removed"
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true,
+    "important": true
+  },
+  {
+    "id": "evt_g_strike",
+    "category": "gov",
+    "weight": 22,
+    "scene": "scene_headmaster_hall",
+    "actors": [
+      "npc_zhonglihen"
+    ],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 30
+    },
+    "seed": "早课的钟响过三遍，明德院一个教习也没到。\n\n钟离衡站在廊下，手里捧着茶。\n\n「月例压了两个月了，院主。」",
+    "facts": [
+      "明德院的教习集体没去上课",
+      "月例压了两个月"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "当天把钱补齐",
+        "check": {
+          "attr": "jue",
+          "difficulty": 48
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你从私库里先垫，当天午时发到人手里。\n\n下午的课全补上了。钟离衡那杯茶一口没喝，凉了。",
+            "effects": [
+              {
+                "type": "gov",
+                "privy": -1800,
+                "unrestAll": -12
+              },
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": 1
+              },
+              {
+                "type": "reputation",
+                "value": 4
+              }
+            ]
+          },
+          "good": {
+            "narrative": "钱补上了。课第二天恢复。",
+            "effects": [
+              {
+                "type": "gov",
+                "privy": -1500,
+                "unrestAll": -8
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "补了一半，另一半许了日子。",
+            "effects": [
+              {
+                "type": "gov",
+                "privy": -800,
+                "unrestAll": -3
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "钱凑得不够，发下去反倒更乱。",
+            "effects": [
+              {
+                "type": "gov",
+                "privy": -800,
+                "unrestAll": 3
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你从别处挪的钱，把另一边的窟窿扯大了。两个院都停了课。",
+            "effects": [
+              {
+                "type": "gov",
+                "privy": -1200,
+                "unrestAll": 10
+              },
+              {
+                "type": "reputation",
+                "value": -4
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "按院规处置带头的",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "钟离衡被记了一次，罚俸三月。\n\n第二天所有人都去上课了，一个不少。\n\n也一句话不多说。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -14,
+                "trust": -10
+              },
+              {
+                "type": "gov",
+                "unrestAll": 6
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 1
+              },
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": 6
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "自己去上那堂课",
+        "check": {
+          "attr": "wei",
+          "difficulty": 52
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你走进讲堂，底下坐满了弟子。\n\n你讲了一个时辰的院规，从第一条讲到最后一条，讲到钱该怎么发。\n\n讲完廊下站了七八个教习。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -10
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 1
+              },
+              {
+                "type": "reputation",
+                "value": 7
+              },
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 6
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你上了那堂课。讲完之后事情松动了。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -6
+              },
+              {
+                "type": "reputation",
+                "value": 3
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你上了课。弟子听了，教习没来。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -2
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你讲到一半，底下有弟子问：「那月例什么时候发？」",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 4
+              },
+              {
+                "type": "reputation",
+                "value": -2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你站在讲台上，没讲完。那是你第一次在人前说不下去。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 8
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -1
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "inferior"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true,
+    "important": true
+  },
+  {
+    "id": "evt_g_debt",
+    "category": "gov",
+    "weight": 20,
+    "scene": "scene_mountain_gate",
+    "actors": [],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 34
+    },
+    "seed": "山门口来了一群人，领头的拿着三十年前的借据。\n\n上面是前任院主的印。\n\n「八千石，加利。」",
+    "facts": [
+      "有人拿着三十年前的借据上门",
+      "印是前任院主的"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "认，分五年还",
+        "check": {
+          "attr": "yuan",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你当场写了章程：五年，每年一笔，利按旧例。\n\n对方本来预备闹，话都没用上，收了章程就走了。\n\n这件事后来被写进了院志。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -1200
+              },
+              {
+                "type": "reputation",
+                "value": 6
+              },
+              {
+                "type": "attr",
+                "key": "de",
+                "value": 1
+              },
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": 6
+              }
+            ]
+          },
+          "good": {
+            "narrative": "分期谈成了。山门口清净了。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -1500
+              },
+              {
+                "type": "reputation",
+                "value": 3
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "谈了三天，按他们的数还。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -2200
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "他们嫌年限太长，在山门口搭了棚子。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 5
+              },
+              {
+                "type": "reputation",
+                "value": -2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "消息传到坊市，说云霄还不起债。这个月的采买价钱都涨了。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -2600,
+                "unrestAll": 8
+              },
+              {
+                "type": "reputation",
+                "value": -5
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "查借据的真假",
+        "check": {
+          "attr": "ren",
+          "difficulty": 54
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "印是真的，字不是。\n\n三十年前的笔迹册还在，比对出来差了两处。\n\n那群人连夜走了。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 5
+              },
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": 1
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 8
+              }
+            ]
+          },
+          "good": {
+            "narrative": "查出借据有疑，对方松了口，只拿走一半。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -900
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "查不出真假。最后还是还了。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -2000
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "查的时候拖了半个月。他们在山门口坐了半个月。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 6
+              },
+              {
+                "type": "gov",
+                "budget": -2000
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "借据是真的。你拖的这半个月，利又多了一笔。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -2800
+              },
+              {
+                "type": "reputation",
+                "value": -4
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "让他们去官府告",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你把门关了。\n\n三个月后官府的文书到了，判云霄还钱，加滞纳。\n\n那期间山门口的棚子一直没拆。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -3000,
+                "unrestAll": 8
+              },
+              {
+                "type": "reputation",
+                "value": -6
+              },
+              {
+                "type": "attr",
+                "key": "de",
+                "value": -1
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true
+  },
+  {
+    "id": "evt_g_retire",
+    "category": "gov",
+    "weight": 20,
+    "scene": "scene_headmaster_hall",
+    "actors": [
+      "npc_chuheshan"
+    ],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 40
+    },
+    "seed": "楚河山把辞呈放在案上，自己站着。\n\n「老了。」\n\n他在学院待了四百年，前后换了三任院主。",
+    "facts": [
+      "楚河山请辞",
+      "他在学院四百年了"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "留他",
+        "check": {
+          "attr": "ren",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "「你走了，那几个院首谁压得住。」\n\n他想了很久，把辞呈收回去：「再三年。三年之后，您得放我走。」\n\n你说好。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 12,
+                "trust": 10
+              },
+              {
+                "type": "gov",
+                "unrestAll": -8
+              },
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他答应再留两年。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 8,
+                "trust": 6
+              },
+              {
+                "type": "gov",
+                "unrestAll": -5
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他没答应，也没坚持要走。事情悬着。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "你劝的话他都听过。辞呈还在案上。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -3
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你说学院离不开他。他说了一句：「上一任也这么说。」\n\n第二天他就走了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -10
+              },
+              {
+                "type": "gov",
+                "unrestAll": 10
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "准，办一场送行",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "送行那天七院的人都来了。\n\n他喝了三杯，话还是那么少。走的时候把一串钥匙留在案上，一把一把告诉你是哪里的。\n\n最后一把他拿了很久：「这把是灵墟的。您留着，别常去。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 10,
+                "trust": 8
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 12,
+                "clue": "楚河山的沉默"
+              },
+              {
+                "type": "gov",
+                "unrestAll": 4
+              },
+              {
+                "type": "attr",
+                "key": "de",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "准，但请他推一个人接手",
+        "check": {
+          "attr": "yuan",
+          "difficulty": 48
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "他推了一个你没想到的名字——明德院一个年轻教习。\n\n「我看了他六年。」\n\n那人后来成了你最省心的一处。",
+            "effects": [
+              {
+                "type": "gov",
+                "successor": "disciple",
+                "unrestAll": -6
+              },
+              {
+                "type": "attr",
+                "key": "yuan",
+                "value": 1
+              },
+              {
+                "type": "relation",
+                "favor": 8
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他推了一个人。还算稳妥。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -3
+              },
+              {
+                "type": "relation",
+                "favor": 5
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他说让你自己选。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "他推的人另有打算，推辞了。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 3
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "他推的那个人，上任三个月就出了事。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 10
+              },
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": -1
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true,
+    "important": true
+  },
+  {
+    "id": "evt_g_anon",
+    "category": "gov",
+    "weight": 20,
+    "scene": "scene_headmaster_hall",
+    "actors": [],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 48
+    },
+    "seed": "案上多了一封没有落款的信。\n\n信里说你拿学院的灵脉做了私交，列了三件事、两个日子。\n\n两个日子都对。",
+    "facts": [
+      "有人匿名告发你",
+      "信里的日子是对的"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "把信贴出去，自己说清楚",
+        "check": {
+          "attr": "wei",
+          "difficulty": 56
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "信贴在议事厅门口，你站在下面把三件事一件一件讲了。\n\n讲完没人说话。第二天信被人撕了，撕的是七院自己的人。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 8
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 1
+              },
+              {
+                "type": "gov",
+                "unrestAll": -8
+              },
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 6
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你讲清楚了，院里信了大半。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 4
+              },
+              {
+                "type": "gov",
+                "unrestAll": -4
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你说了，信的人信，不信的还是不信。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "有一件你说不清。那一件恰好是真的。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -4
+              },
+              {
+                "type": "gov",
+                "unrestAll": 5
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "guilt"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你越说越乱。第二天多了七封一样的信。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -8
+              },
+              {
+                "type": "gov",
+                "unrestAll": 12
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "fear"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "查是谁写的",
+        "check": {
+          "attr": "ren",
+          "difficulty": 54
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "笔迹查到了。是个在账房做了二十年的老人。\n\n你没动他，只把他调去守藏经阁。他临走时说：「我写的都是真的。」\n\n「我知道。」",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": 1
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "guilt"
+              },
+              {
+                "type": "gov",
+                "unrestAll": -3
+              },
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 10
+              }
+            ]
+          },
+          "good": {
+            "narrative": "查到了人。处置得不轻不重。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -2
+              },
+              {
+                "type": "storyline",
+                "key": "mole",
+                "value": 6
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "查了一个月，没查出来。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "查错了人。那人闹到了议事厅上。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 8
+              },
+              {
+                "type": "reputation",
+                "value": -4
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你查人的事传了出去。院里开始数你查了谁。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 12
+              },
+              {
+                "type": "reputation",
+                "value": -6
+              },
+              {
+                "type": "faction",
+                "key": "xiaoyao",
+                "value": -8
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "烧了",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你把信在灯上点着，看它烧完。\n\n那两个日子你自己记着。往后灵脉的事，你再没沾过手。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "repress",
+                "note": "烧掉的那封信"
+              },
+              {
+                "type": "attr",
+                "key": "xiu",
+                "value": 0
+              },
+              {
+                "type": "flag",
+                "key": "anon_burned"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true,
+    "important": true
+  },
+  {
+    "id": "evt_g_famine",
+    "category": "gov",
+    "weight": 22,
+    "scene": "scene_headmaster_hall",
+    "actors": [],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 36
+    },
+    "seed": "山下连旱两年。春天开始，山门口每天都有背着孩子来的人。\n\n他们不要吃的，只想把孩子留下。\n\n「哪怕扫地也行。」",
+    "facts": [
+      "山下旱了两年，有人来送孩子",
+      "院里的粮和名额都是有数的"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "开一批杂役名额，管饭",
+        "check": {
+          "attr": "de",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你开了六十个名额，分到七院做杂役，管饭，识字的另记。\n\n三年后这批人里出了两个入了门。\n\n那年的院志上写了一句：院纳六十人。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -1500,
+                "unrestAll": -6
+              },
+              {
+                "type": "attr",
+                "key": "de",
+                "value": 1
+              },
+              {
+                "type": "reputation",
+                "value": 8
+              },
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 6
+              }
+            ]
+          },
+          "good": {
+            "narrative": "名额开了，孩子留下了。账紧了一些。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -1200,
+                "unrestAll": -3
+              },
+              {
+                "type": "reputation",
+                "value": 4
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "开了三十个。山门口还是有人。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -700
+              },
+              {
+                "type": "reputation",
+                "value": 2
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "粮没算清楚，三个月后断了顿。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -1200,
+                "unrestAll": 6
+              },
+              {
+                "type": "reputation",
+                "value": -2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "来的人比预想多三倍。山门口挤出了事，踩伤了人。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 12
+              },
+              {
+                "type": "reputation",
+                "value": -6
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "放粮，不收人",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你让人在山下设了三处粥棚，粮从院里出。\n\n孩子一个没收。粥棚摆到秋天，人慢慢少了。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -2000,
+                "unrestAll": -2
+              },
+              {
+                "type": "reputation",
+                "value": 5
+              },
+              {
+                "type": "attr",
+                "key": "de",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "关山门",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "山门关了二十天。\n\n再开的时候，门口的人都散了。石阶上有人用炭写了一行字，被雨冲掉了一半。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 6
+              },
+              {
+                "type": "reputation",
+                "value": -8
+              },
+              {
+                "type": "demon",
+                "value": 12,
+                "source": "guilt",
+                "note": "石阶上那行被雨冲掉的字"
+              },
+              {
+                "type": "attr",
+                "key": "de",
+                "value": -1
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true
+  },
+  {
+    "id": "evt_g_lease",
+    "category": "gov",
+    "weight": 20,
+    "scene": "scene_headmaster_hall",
+    "actors": [
+      "npc_bailuqing"
+    ],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 52
+    },
+    "seed": "有宗门想租云霄西边那条次脉，一年八千石。\n\n白鹿卿算过了：八千石能把丹房、符房、藏经阁一起翻修。\n\n那条脉现在给的是外门弟子用。",
+    "facts": [
+      "有人出八千石一年租次脉",
+      "那条脉现在给外门弟子用"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "租",
+        "check": {
+          "attr": "yuan",
+          "difficulty": 52
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "合约写了五条退路，租期三年。\n\n翻修当年就动工了。外门弟子挪到东边，脉薄一些，但多了两间静室。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": 3500,
+                "unrestAll": 4
+              },
+              {
+                "type": "faction",
+                "key": "pragmatic",
+                "value": 10
+              },
+              {
+                "type": "attr",
+                "key": "yuan",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "租出去了，钱到账。东边的静室也修了。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": 2800,
+                "unrestAll": 6
+              },
+              {
+                "type": "faction",
+                "key": "pragmatic",
+                "value": 6
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "租了。外门那边怨声不小。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": 2400,
+                "unrestAll": 10
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "合约里有一条没看清：三年后他们有优先续租权。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": 2400,
+                "unrestAll": 12
+              },
+              {
+                "type": "flag",
+                "key": "lease_trap"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "对方把脉用狠了。一年之后那条脉薄了三成。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": 2400,
+                "unrestAll": 16
+              },
+              {
+                "type": "reputation",
+                "value": -6
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "不租",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你把人送到山门。\n\n白鹿卿一路没说话，到门口才问：「那丹房的炉子呢？」\n\n「再想。」",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -5
+              },
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": 6
+              },
+              {
+                "type": "gov",
+                "unrestAll": -4
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "让七院表决",
+        "check": {
+          "attr": "jue",
+          "difficulty": 46
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "七院吵了一下午，最后四比三，租。\n\n但表决的时候定了一条：钱全部用在外门。\n\n这条是你加的。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": 3000,
+                "unrestAll": -4
+              },
+              {
+                "type": "attr",
+                "key": "jue",
+                "value": 1
+              },
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 5
+              }
+            ]
+          },
+          "good": {
+            "narrative": "表决过了。四比三。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": 2800,
+                "unrestAll": 2
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "三比四，没租成。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -2
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "票数相持，拖了两个月才决。对方等不及走了。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 4
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "表决时两个院首吵翻了。这事没成，梁子结下了。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 10
+              },
+              {
+                "type": "faction",
+                "key": "pragmatic",
+                "value": -6
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true
+  },
+  {
+    "id": "evt_g_defy",
+    "category": "gov",
+    "weight": 22,
+    "scene": "scene_headmaster_hall",
+    "actors": [
+      "npc_bailuqing"
+    ],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 44
+    },
+    "seed": "议事到一半，白鹿卿把册子合上。\n\n「这条我不执行。」\n\n殿上七个人，没有一个出声。",
+    "facts": [
+      "白鹿卿当众说不执行",
+      "殿上七个人都在看"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "当场问为什么",
+        "check": {
+          "attr": "jue",
+          "difficulty": 52
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "「说理由。」\n\n她说了三条。第二条你没想到。\n\n你把那一条改了，剩下的照原样推。散会时她第一个起身。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "jue",
+                "value": 1
+              },
+              {
+                "type": "relation",
+                "favor": 8,
+                "trust": 8
+              },
+              {
+                "type": "gov",
+                "unrestAll": -5
+              },
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 6
+              }
+            ]
+          },
+          "good": {
+            "narrative": "她说了理由，有道理。条文改了一处。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 5,
+                "trust": 4
+              },
+              {
+                "type": "gov",
+                "unrestAll": -2
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "她说了几句场面话。事情搁置。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "她说得比你准备的多。殿上有人点头。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -1
+              },
+              {
+                "type": "gov",
+                "unrestAll": 4
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你问到第三句，她反问你一句。你没答上来。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -1
+              },
+              {
+                "type": "reputation",
+                "value": -5
+              },
+              {
+                "type": "gov",
+                "unrestAll": 8
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "免她的职",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "当天的文书就发了下去。\n\n革新那一派半年没在议事上说过话。白鹿卿去了藏经阁，每天来得最早。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -18,
+                "trust": -12
+              },
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": -15
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 1
+              },
+              {
+                "type": "gov",
+                "unrestAll": 8
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "散会，私下找她",
+        "check": {
+          "attr": "ren",
+          "difficulty": 48
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "夜里在她院子里谈的。她把真正的理由说了——那条会卡死三个寒门弟子。\n\n第二天的议事，那条由她自己提的修改案通过了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 12,
+                "trust": 10
+              },
+              {
+                "type": "gov",
+                "unrestAll": -6
+              },
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": 1
+              },
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 8
+              }
+            ]
+          },
+          "good": {
+            "narrative": "私下谈开了。条文改了，面子也都保住了。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 7,
+                "trust": 6
+              },
+              {
+                "type": "gov",
+                "unrestAll": -3
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "谈了，她没松口，但也不再提。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "她说该在殿上说的话，不该私下说。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": -4
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你私下找她的事被传成了「院主服软」。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -1
+              },
+              {
+                "type": "gov",
+                "unrestAll": 6
+              },
+              {
+                "type": "reputation",
+                "value": -4
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true
+  },
+  {
+    "id": "evt_g_stele",
+    "category": "gov",
+    "weight": 18,
+    "scene": "scene_headmaster_hall",
+    "actors": [
+      "npc_tantaiwujiu"
+    ],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 60
+    },
+    "seed": "有人提议给上一任院主立碑。\n\n碑文空着一段：他失踪那十年怎么写。\n\n澹台无咎在边上听着，一句话没说。",
+    "facts": [
+      "院里要给前任院主立碑",
+      "失踪那十年的碑文怎么写"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "照实写",
+        "check": {
+          "attr": "wei",
+          "difficulty": 54
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "碑上刻的是：某年某月入灵墟，不知所终。院中争议至今。\n\n立碑那天澹台无咎看了很久，说了句：「他要是看见，会同意。」",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 6
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 18,
+                "clue": "澹台无咎的回答"
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "照实写了。有人不满意，但碑立住了。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 3
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 10
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "写得含糊，也算照实。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 5
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "碑文送审时被改了三遍，最后那段删了。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 3
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "立碑那天有人当众念出被删的那一段。场面很难看。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 10
+              },
+              {
+                "type": "reputation",
+                "value": -4
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "空着那一段",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "碑立了，中间空出一尺。\n\n有人问为什么空着。你说等有人写得出来再刻。\n\n那一尺空了很多年。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 8
+              },
+              {
+                "type": "attr",
+                "key": "yuan",
+                "value": 1
+              },
+              {
+                "type": "reputation",
+                "value": 2
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "不立",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你把提议压下了。\n\n那块备好的石料一直靠在库房墙边，蒙了灰。",
+            "effects": [
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": -8
+              },
+              {
+                "type": "gov",
+                "unrestAll": 4
+              },
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "repress",
+                "note": "库房墙边那块石料"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true
+  },
+  {
+    "id": "evt_g_beastwave",
+    "category": "gov",
+    "weight": 22,
+    "scene": "scene_headmaster_hall",
+    "actors": [],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 14
+    },
+    "seed": "北麓的猎户连着三夜没敢上山。\n\n巡山的回来说看见了成群的影子，往学院这边走。\n\n外门弟子住的那一排，离北麓最近。",
+    "facts": [
+      "北麓有兽群往学院来",
+      "外门那一排离得最近"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "把外门的人先撤进内门",
+        "check": {
+          "attr": "jue",
+          "difficulty": 46
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "当夜就撤完了。第三天兽群过山，外门那排屋子塌了两间，没人伤着。\n\n外门弟子那年的月例，你从私库里添了一份。",
+            "effects": [
+              {
+                "type": "gov",
+                "privy": -600,
+                "unrestAll": -8
+              },
+              {
+                "type": "reputation",
+                "value": 6
+              },
+              {
+                "type": "attr",
+                "key": "jue",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "撤了。屋子塌了，人都在。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -5
+              },
+              {
+                "type": "reputation",
+                "value": 3
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "撤了一半。另一半自己搬了过来。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -2
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "撤得慌，路上挤伤了几个。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 3
+              },
+              {
+                "type": "injury",
+                "severity": "light"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "调度乱了，兽群来的时候还有十几个人在外门。\n\n死了一个。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 12
+              },
+              {
+                "type": "reputation",
+                "value": -6
+              },
+              {
+                "type": "demon",
+                "value": 12,
+                "source": "guilt",
+                "note": "北麓那一夜"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "带人去北麓迎上去",
+        "check": {
+          "attr": "xiu",
+          "difficulty": 54
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你在半山腰立了阵，七院的人跟着。\n\n兽群撞上来，散了。回来的时候天刚亮，弟子们在山门口站成两排。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 10
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 1
+              },
+              {
+                "type": "gov",
+                "unrestAll": -10
+              }
+            ]
+          },
+          "good": {
+            "narrative": "迎上去打散了。有人挂了彩。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 5
+              },
+              {
+                "type": "gov",
+                "unrestAll": -6
+              },
+              {
+                "type": "injury",
+                "severity": "light"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "兽群自己转向了。你们在山上守了两夜。",
+            "effects": [
+              {
+                "type": "rest",
+                "value": -15
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "阵没立稳，退到了半道。好在兽群也没追。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 4
+              },
+              {
+                "type": "injury",
+                "severity": "light"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你在北麓伤了一处，回来躺了半个月。那半个月的事全压着。",
+            "effects": [
+              {
+                "type": "injury",
+                "severity": "heavy"
+              },
+              {
+                "type": "gov",
+                "unrestAll": 10
+              },
+              {
+                "type": "reputation",
+                "value": -4
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "闭山门，等它过去",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "山门关了五天。\n\n北麓的猎户户户都有损失。后来有人在山门口留了一担野菜，没留话。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 4
+              },
+              {
+                "type": "reputation",
+                "value": -4
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true
+  },
+  {
+    "id": "evt_g_poach",
+    "category": "gov",
+    "weight": 22,
+    "scene": "scene_headmaster_hall",
+    "actors": [
+      "npc_bailuqing"
+    ],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 26
+    },
+    "seed": "星落书院开的价是云霄的三倍。\n\n白鹿卿把名单摊开：被挖的六个，四个是你这几年提上来的。\n\n「他们都还没走。」",
+    "facts": [
+      "外院出三倍的价挖人",
+      "六个里四个是你提的"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "一个一个谈",
+        "check": {
+          "attr": "ren",
+          "difficulty": 52
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你谈了六个晚上。四个留了下来，两个走的，你给写了荐书。\n\n走的那两个后来还回来讲过课。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -8
+              },
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": 1
+              },
+              {
+                "type": "reputation",
+                "value": 6
+              }
+            ]
+          },
+          "good": {
+            "narrative": "留下四个。两个走了。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -5
+              },
+              {
+                "type": "reputation",
+                "value": 3
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "三个留三个走。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -2
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "留了一个。走的人带走了两门课的讲义。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 6
+              },
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": -5
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "六个全走了。你谈的那些话，第二天在星落那边传开了。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 14
+              },
+              {
+                "type": "reputation",
+                "value": -7
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "加俸留人",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你把六个人的俸加到跟外院一样。\n\n人留住了。第二个月另外十几个教习联名来问：凭什么。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -2200,
+                "unrestAll": 6
+              },
+              {
+                "type": "faction",
+                "key": "pragmatic",
+                "value": -6
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "都放走，自己提新人",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "六份辞呈你当天都批了。\n\n空出来的位置你从年轻教习里补，补得比预想快。有两个比走的那几个还好。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 8
+              },
+              {
+                "type": "attr",
+                "key": "yuan",
+                "value": 1
+              },
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 8
+              },
+              {
+                "type": "reputation",
+                "value": -3
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true
+  },
+  {
+    "id": "evt_g_dead",
+    "category": "gov",
+    "weight": 22,
+    "scene": "scene_main_plaza",
+    "actors": [],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 30
+    },
+    "seed": "试炼塔第七层出事，一个弟子没下来。\n\n他家里人从山下走了两天，现在跪在广场上。\n\n塔是三年前你批的加层。",
+    "facts": [
+      "有弟子死在试炼塔",
+      "加层是你批的"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "下去见他的家人，把事说清",
+        "check": {
+          "attr": "de",
+          "difficulty": 54
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你在广场上跪着的人面前站了很久，把塔的事、批的日子、是谁经办，一样一样说了。\n\n他母亲听完说了一句：「他爱那座塔。」\n\n塔封了两层，碑上刻了名字。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 8
+              },
+              {
+                "type": "attr",
+                "key": "de",
+                "value": 1
+              },
+              {
+                "type": "gov",
+                "unrestAll": -6
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "guilt"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你说了，他们听了。抚恤给了双份。",
+            "effects": [
+              {
+                "type": "gov",
+                "privy": -900
+              },
+              {
+                "type": "reputation",
+                "value": 4
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "guilt"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "话说完了，人也走了。什么都没说开。",
+            "effects": [
+              {
+                "type": "gov",
+                "privy": -600
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "guilt"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你说到加层那一段，底下有人哭出了声。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 5
+              },
+              {
+                "type": "demon",
+                "value": 12,
+                "source": "guilt"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你的话被当成了推脱。那家人在广场上坐到第三天才走。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 12
+              },
+              {
+                "type": "reputation",
+                "value": -8
+              },
+              {
+                "type": "demon",
+                "value": 16,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "按院规抚恤，让执事去办",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "抚恤按最高的那一档发了。执事办得很利落。\n\n你没下去。那天夜里你去了试炼塔，在第七层站到天亮。",
+            "effects": [
+              {
+                "type": "gov",
+                "privy": -1200,
+                "unrestAll": 4
+              },
+              {
+                "type": "demon",
+                "value": 14,
+                "source": "repress",
+                "note": "第七层那一夜"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "查塔，停了所有试炼",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "塔停了半年。查出来第七层的阵眼从一开始就少了一处。\n\n经办的那个已经告老。你把他的名字补进了卷宗。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 8
+              },
+              {
+                "type": "attr",
+                "key": "jue",
+                "value": 1
+              },
+              {
+                "type": "reputation",
+                "value": 4
+              },
+              {
+                "type": "flag",
+                "key": "tower_sealed"
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true,
+    "important": true
+  },
+  {
+    "id": "evt_g_clique",
+    "category": "gov",
+    "weight": 22,
+    "scene": "scene_headmaster_hall",
+    "actors": [
+      "npc_guchangqing"
+    ],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 38
+    },
+    "seed": "三个年轻院首这半年总在一处吃饭。\n\n顾长青说得直：「他们在数票。」\n\n数的是下一任院主的票。",
+    "facts": [
+      "三个年轻院首私下走得近",
+      "他们在数下一任的票"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "把三个人一起叫来，摊开说",
+        "check": {
+          "attr": "wei",
+          "difficulty": 54
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把话放在桌上：想接这个位置的，现在说。\n\n三个人没一个开口。散的时候你留了最年轻那个：「你差的不是票。」\n\n那之后他每月来一次。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 1
+              },
+              {
+                "type": "gov",
+                "unrestAll": -8
+              }
+            ]
+          },
+          "good": {
+            "narrative": "说开了。吃饭的局散了。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -5
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他们都说只是吃饭。你也就当是吃饭。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "三个人反问你一句：院主是不是不许同僚吃饭。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -1
+              },
+              {
+                "type": "gov",
+                "unrestAll": 4
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "这事传成了院主猜忌下属。七院里又多了两个去吃饭的。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 12
+              },
+              {
+                "type": "reputation",
+                "value": -5
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "提一个进议事，拆开他们",
+        "check": {
+          "attr": "ren",
+          "difficulty": 48
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你提了最沉得住的那个进议事。\n\n半年之后另外两个自己散了。被提的那个在议事上第一次开口，驳的是你。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": 1
+              },
+              {
+                "type": "gov",
+                "unrestAll": -6
+              },
+              {
+                "type": "faction",
+                "key": "pragmatic",
+                "value": 6
+              }
+            ]
+          },
+          "good": {
+            "narrative": "提了一个，局散了。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -4
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "提上来的那个什么也没变。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "你提的人反倒成了他们三个的声音。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 6
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你挑错了人。议事上从此有一个人替三个人说话。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 10
+              },
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": -1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "不管",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你照旧批文、照旧议事。\n\n那顿饭他们吃了三年。三年后数票的事成了真的，但票不在他们手上。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 4
+              },
+              {
+                "type": "attr",
+                "key": "yuan",
+                "value": 1
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true
+  },
+  {
+    "id": "evt_g_flood",
+    "category": "gov",
+    "weight": 22,
+    "scene": "scene_mountain_gate",
+    "actors": [],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 20
+    },
+    "seed": "连雨十天，山门外那条路塌了半边。\n\n山下的粮车上不来，院里存粮还够二十天。\n\n修路要征人，眼下正是月考前。",
+    "facts": [
+      "上山的路塌了",
+      "存粮还够二十天"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "征弟子修路，月考推迟",
+        "check": {
+          "attr": "jue",
+          "difficulty": 44
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "七百人上了山道，分三班。路第六天就通了。\n\n月考推了半个月，推迟的那张告示底下有人写了四个字：修得挺快。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -6
+              },
+              {
+                "type": "reputation",
+                "value": 5
+              },
+              {
+                "type": "attr",
+                "key": "jue",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "路修通了，月考推了。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -3
+              },
+              {
+                "type": "reputation",
+                "value": 2
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "路通了，比预计晚了几天。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "雨没停，修了两回。弟子怨声不小。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 5
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "塌方又来了一次，压伤了四个。路还是没通。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 12
+              },
+              {
+                "type": "reputation",
+                "value": -5
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "花钱雇山下的人",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "雇了八十个民夫，钱从账上走。\n\n路通了，月考照常。账房那边的脸色不太好看。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -1400,
+                "unrestAll": -4
+              },
+              {
+                "type": "reputation",
+                "value": 3
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "先省粮，等雨停",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "每人每日减两成。减到第十八天，雨停了。\n\n那十八天院里安静得出奇，没人抱怨，也没人说话。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 6
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 1
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true
+  },
+  {
+    "id": "evt_g_seal_round",
+    "category": "gov",
+    "weight": 22,
+    "scene": "scene_headmaster_hall",
+    "actors": [
+      "npc_tantaiwujiu"
+    ],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 44
+    },
+    "seed": "灵墟的封印今年该巡了。\n\n上一回巡印的人是前任院主，他没回来。\n\n澹台无咎把钥匙放在案上，推到你面前。",
+    "facts": [
+      "灵墟封印今年该巡",
+      "上一个去巡的人没回来"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "自己去",
+        "check": {
+          "attr": "xiu",
+          "difficulty": 58
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "封印完好。你在最深处看见了一行字，刻在石上，是前任院主的笔。\n\n「第三道不是封的，是养的。」",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 25,
+                "clue": "第三道封印的刻字"
+              },
+              {
+                "type": "attr",
+                "key": "xiu",
+                "value": 1
+              },
+              {
+                "type": "reputation",
+                "value": 6
+              }
+            ]
+          },
+          "good": {
+            "narrative": "封印无恙。你在里面待了三天。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 14
+              },
+              {
+                "type": "rest",
+                "value": -20
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "巡完了，没看出什么。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 8
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "第二道的阵纹松了一处。你补上了，补得不踏实。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 10
+              },
+              {
+                "type": "gov",
+                "threatProgress": -8
+              },
+              {
+                "type": "injury",
+                "severity": "light"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你在里面困了九天。出来的时候山上已经在议新院主了。",
+            "effects": [
+              {
+                "type": "injury",
+                "severity": "heavy"
+              },
+              {
+                "type": "gov",
+                "unrestAll": 12
+              },
+              {
+                "type": "demon",
+                "value": 10,
+                "source": "fear"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "让澹台无咎去",
+        "check": {
+          "attr": "ren",
+          "difficulty": 46
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "他去了十一天。回来递上一卷图，画的是三道封印的走向。\n\n「第三道，别去。」",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 18,
+                "clue": "澹台无咎画的封印图"
+              },
+              {
+                "type": "relation",
+                "npc": "npc_tantaiwujiu",
+                "favor": 6,
+                "trust": 6
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他回来说无恙。话很少。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 10
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "他巡完了，交了一份很短的话。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 6
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "他回来之后病了半个月，什么也没说。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_tantaiwujiu",
+                "favor": -4
+              },
+              {
+                "type": "storyline",
+                "key": "seal",
+                "value": 6
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "他十四天没回来。第十五天自己走出来的，右手不能动了。",
+            "effects": [
+              {
+                "type": "relation",
+                "npc": "npc_tantaiwujiu",
+                "favor": -8
+              },
+              {
+                "type": "gov",
+                "unrestAll": 8
+              },
+              {
+                "type": "demon",
+                "value": 10,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "今年不巡",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "钥匙你收进了抽屉。\n\n那一年灵墟很安静。安静得你每个月都要开一次抽屉看看。",
+            "effects": [
+              {
+                "type": "gov",
+                "threatProgress": -12
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "fear",
+                "note": "抽屉里的钥匙"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true,
+    "important": true
+  },
+  {
+    "id": "evt_g_takedisciple",
+    "category": "gov",
+    "weight": 22,
+    "scene": "scene_headmaster_hall",
+    "actors": [],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 16
+    },
+    "seed": "有人想拜你为师。\n\n送上来的名字是个外门的，三年里换过四个师父，没一个留住他。\n\n卷宗上写着「性傲，难教」。",
+    "facts": [
+      "有外门弟子想拜你为师",
+      "他三年换过四个师父"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "收",
+        "check": {
+          "attr": "ren",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你收了，只给他一条规矩：每旬来一次，带一件你自己做不成的事。\n\n他来了八年。后来他是七院里最年轻的院首。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": 1
+              },
+              {
+                "type": "reputation",
+                "value": 6
+              },
+              {
+                "type": "relation",
+                "favor": 10,
+                "trust": 8
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你收了。他留住了。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 3
+              },
+              {
+                "type": "relation",
+                "favor": 6
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "收了，教得不深不浅。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 4
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "半年后他自己走了，走得很客气。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "他在你门下出了事，闹到了议事厅。那年你没再收人。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 6
+              },
+              {
+                "type": "reputation",
+                "value": -5
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "让他先在你身边做一年杂事",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "他扫了一年院子、抄了一年文书。\n\n一年之后他没再提拜师的事，但那之后他写的东西你都看得下去。",
+            "effects": [
+              {
+                "type": "relation",
+                "favor": 6,
+                "trust": 6
+              },
+              {
+                "type": "attr",
+                "key": "yuan",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "不收",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你在卷宗上批了两个字：再看。\n\n他后来拜了别人。再见面的时候他已经能叫你一声院主，叫得很平。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -1
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true
+  },
+  {
+    "id": "evt_g_chronicle2",
+    "category": "gov",
+    "weight": 22,
+    "scene": "scene_headmaster_hall",
+    "actors": [
+      "npc_fangyan"
+    ],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 56
+    },
+    "seed": "修院志的人来问这一任怎么写。\n\n方砚把稿子递过来，里面有一段写的是你任上死的那几个人。\n\n「删不删，您说。」",
+    "facts": [
+      "院志要写你这一任",
+      "稿子里有你任上死的人"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "一个字不删",
+        "check": {
+          "attr": "de",
+          "difficulty": 52
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "那一段留在了院志上，连名字带日子。\n\n后来有人照着那几个名字修了碑。修碑的钱是弟子们凑的。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 8
+              },
+              {
+                "type": "attr",
+                "key": "de",
+                "value": 1
+              },
+              {
+                "type": "demon",
+                "value": -10
+              }
+            ]
+          },
+          "good": {
+            "narrative": "留下了。看过的人都没说什么。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 4
+              },
+              {
+                "type": "demon",
+                "value": -6
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "留下了，写得很短。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": -3
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "留下了，也有人说你是在给自己记功。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "那一段被人抄出去，传成了云霄死过多少人。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -6
+              },
+              {
+                "type": "gov",
+                "unrestAll": 6
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "删",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "那一段抽掉了。院志上这一任写得很干净，只有政令和年份。\n\n抽掉的稿子方砚没烧，收在了账房的柜子里。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": 10,
+                "source": "repress",
+                "note": "账房柜子里的那一段"
+              },
+              {
+                "type": "reputation",
+                "value": 2
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "让写的人自己定",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你把稿子推回去：「你写的你定。」\n\n他定了：留三行，名字都在。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 3
+              },
+              {
+                "type": "attr",
+                "key": "de",
+                "value": 1
+              },
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": 5
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true
+  },
+  {
+    "id": "evt_g_oldfriend",
+    "category": "gov",
+    "weight": 22,
+    "scene": "scene_headmaster_hall",
+    "actors": [],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 50
+    },
+    "seed": "一个三百年前的同窗来借人，要你调两个符修过去，说是修一座桥。\n\n他现在在星落做长老。\n\n当年你们一起挨过罚。",
+    "facts": [
+      "旧同窗来借两个符修",
+      "他现在是外院长老"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "借",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "两个人去了四个月，桥修成了。\n\n回来的时候带了星落的符纸两箱，和一句话：「他说下回该他请。」",
+            "effects": [
+              {
+                "type": "gov",
+                "threatProgress": 8
+              },
+              {
+                "type": "reputation",
+                "value": 3
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "自己去一趟",
+        "check": {
+          "attr": "xiu",
+          "difficulty": 48
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你去了半个月，桥是你画的最后一道。\n\n临走他说：「你还是那个样子。」\n\n你说他胖了。",
+            "effects": [
+              {
+                "type": "gov",
+                "threatProgress": 14
+              },
+              {
+                "type": "reputation",
+                "value": 6
+              },
+              {
+                "type": "attr",
+                "key": "xiu",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "桥修成了。两院的话也好说了些。",
+            "effects": [
+              {
+                "type": "gov",
+                "threatProgress": 10
+              },
+              {
+                "type": "reputation",
+                "value": 3
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你去了，桥成了，话没多说。",
+            "effects": [
+              {
+                "type": "gov",
+                "threatProgress": 5
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你走的这半个月，院里压了十七份急件。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 6
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "桥塌了一次，压伤了人。你在那边多留了一个月。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 10
+              },
+              {
+                "type": "reputation",
+                "value": -4
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "不借",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你回了信，写得很客气。\n\n第二年星落那边的回礼少了一半。信还是年年来。",
+            "effects": [
+              {
+                "type": "gov",
+                "threatProgress": -8
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true
+  },
+  {
+    "id": "evt_g_lifespan",
+    "category": "gov",
+    "weight": 22,
+    "scene": "scene_headmaster_hall",
+    "actors": [],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 66
+    },
+    "seed": "你在镜前看见鬓角。\n\n案上还有七十二份没批。\n\n楚河山留下的那本交接册，你一直没翻开。",
+    "facts": [
+      "你开始老了",
+      "交接册你一直没翻"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "翻开它，开始安排后事",
+        "check": {
+          "attr": "yuan",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你把七院的事一桩桩写清，谁接什么，哪条账走到哪一年。\n\n写完厚厚一本，压在镇纸下。\n\n那本册子后来被翻烂了。",
+            "effects": [
+              {
+                "type": "attr",
+                "key": "yuan",
+                "value": 1
+              },
+              {
+                "type": "gov",
+                "unrestAll": -10
+              },
+              {
+                "type": "reputation",
+                "value": 6
+              },
+              {
+                "type": "flag",
+                "key": "succession_ready"
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你写了大半。剩下的留给后面的人。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -6
+              },
+              {
+                "type": "flag",
+                "key": "succession_ready"
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你写了几页，搁下了。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -2
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "写到一半你把它合上了。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "fear"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你翻开第一页，上面是前任院主的字。写的也是交接，写到第三行断了。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": 12,
+                "source": "fear"
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 10
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "先把七十二份批完",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你批到第三天天亮。\n\n最后一份批完，你把交接册又推回了原处。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": -6
+              },
+              {
+                "type": "rest",
+                "value": -25
+              },
+              {
+                "type": "attr",
+                "key": "jue",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "去外头走一趟",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你一个人下山，走了十二天。\n\n回来案上压了九十一份。你一句话没说，坐下批。",
+            "effects": [
+              {
+                "type": "rest",
+                "value": 30
+              },
+              {
+                "type": "gov",
+                "unrestAll": 4
+              },
+              {
+                "type": "demon",
+                "value": -8
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true,
+    "important": true
+  },
+  {
+    "id": "evt_g_appraisal",
+    "category": "gov",
+    "weight": 22,
+    "scene": "scene_headmaster_hall",
+    "actors": [],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 12
+    },
+    "seed": "七院的年考分数送上来了，最后一名是丹霞院。\n\n按旧例，末位要削一成份额。\n\n丹霞院这一年换了三个院首。",
+    "facts": [
+      "丹霞院年考末位",
+      "这一年他们换了三个院首"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "照旧例削",
+        "check": {
+          "attr": "jue",
+          "difficulty": 44
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "份额削了一成，你同时把丹霞的院首定了下来，三年不许再换。\n\n第二年他们从末位升到了第三。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": 400,
+                "unrestAll": -4
+              },
+              {
+                "type": "attr",
+                "key": "jue",
+                "value": 1
+              },
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": 6
+              }
+            ]
+          },
+          "good": {
+            "narrative": "削了。丹霞那边没话说。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": 300,
+                "unrestAll": 2
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "按旧例办了。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": 300,
+                "unrestAll": 4
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "丹霞院首当天递了辞呈。这是今年第四个。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 8
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "削下来的那一成，丹霞先停了弟子的药浴。闹到了议事厅。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 12
+              },
+              {
+                "type": "reputation",
+                "value": -4
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "今年不削，派人去看问题在哪",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你派了两个人在丹霞住了一个月，回来交了一份很厚的东西。\n\n问题在炉子，不在人。炉子是三年前就该换的。",
+            "effects": [
+              {
+                "type": "gov",
+                "budget": -800,
+                "unrestAll": -6
+              },
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": 1
+              },
+              {
+                "type": "faction",
+                "key": "pragmatic",
+                "value": 6
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "把末位那一条废了",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你在议事上宣了：年考照考，末位不再削份额。\n\n守旧那几位当场就反对。废是废了，这笔账记在了你头上。",
+            "effects": [
+              {
+                "type": "faction",
+                "key": "reform",
+                "value": 10
+              },
+              {
+                "type": "faction",
+                "key": "traditional",
+                "value": -10
+              },
+              {
+                "type": "gov",
+                "unrestAll": -6
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true
+  },
+  {
+    "id": "evt_g_studentq",
+    "category": "gov",
+    "weight": 22,
+    "scene": "scene_mingde",
+    "actors": [],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 24
+    },
+    "seed": "你去明德院听课，底下有人举手。\n\n「院主，坐在那个位置上，一天里有多少事是您自己想做的？」\n\n讲堂里没人出声。",
+    "facts": [
+      "有弟子当众问你这个位置值不值",
+      "满堂的人在听"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "照实说",
+        "check": {
+          "attr": "de",
+          "difficulty": 48
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "「上个月三十一天，两天。」\n\n底下有人笑了，笑到一半停住。\n\n「剩下那二十九天，有十九天是替你们办的。」",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 7
+              },
+              {
+                "type": "attr",
+                "key": "de",
+                "value": 1
+              },
+              {
+                "type": "gov",
+                "unrestAll": -5
+              }
+            ]
+          },
+          "good": {
+            "narrative": "你说了个数，不好听，但是真的。那堂课后半段没人打瞌睡。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 4
+              },
+              {
+                "type": "gov",
+                "unrestAll": -3
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你说这事不好算。他点点头坐下了。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "你答得太长，讲堂里开始有人交头接耳。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你答得像一份政令。那孩子后来没再举过手。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": -4
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "guilt"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "把问题还给他",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "「你坐过来试试。」\n\n他真走上来坐了。坐了半刻钟，站起来说坐不住。\n\n「那就先把课听完。」",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 3
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "不答，接着讲课",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你把这句话放过去了，接着往下讲。\n\n下课后他在门口等了你一会儿，你从另一边走的。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "repress"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true
+  },
+  {
+    "id": "evt_g_oldstudent",
+    "category": "gov",
+    "weight": 22,
+    "scene": "scene_headmaster_hall",
+    "actors": [],
+    "cooldown": 999,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "minWeek": 42
+    },
+    "seed": "一个三十年前你教过的弟子回来了，站在殿外不肯进来。\n\n他要告的是现在明德院的院首——当年跟他同届的那个。\n\n告的事是三十年前的。",
+    "facts": [
+      "旧日弟子回来告状",
+      "告的是三十年前的事"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "让他进来，把事听完",
+        "check": {
+          "attr": "ren",
+          "difficulty": 52
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "他讲了两个时辰。三十年前那场比试的名次是改过的，改的人还在位上。\n\n你查了旧册，查到了。名次重排，院首降了一级。\n\n他走的时候说：「我不是为了这个名次。」",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 7
+              },
+              {
+                "type": "attr",
+                "key": "ren",
+                "value": 1
+              },
+              {
+                "type": "gov",
+                "unrestAll": 6
+              },
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 8
+              }
+            ]
+          },
+          "good": {
+            "narrative": "事情查清了，处置得不重。他说够了。",
+            "effects": [
+              {
+                "type": "reputation",
+                "value": 4
+              },
+              {
+                "type": "gov",
+                "unrestAll": 3
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "你听完了，说年头太久，查不动。他没再说话。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "guilt"
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "查了一半，旧册缺了那一年。两边都不满意。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 6
+              },
+              {
+                "type": "reputation",
+                "value": -2
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "这事翻出来，牵出了另外四个人的名次。七院吵了半年。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 14
+              },
+              {
+                "type": "reputation",
+                "value": -5
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "让执事堂按旧案办",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "执事堂查了半个月，回了四个字：年久难核。\n\n他在山门口站了一天才走。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 2
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "guilt"
+              },
+              {
+                "type": "reputation",
+                "value": -2
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "不见",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你让人回他：院主不在。\n\n他把一卷东西留在了门房。你半年后才打开，里面是那一年的比试名册，抄本。",
+            "effects": [
+              {
+                "type": "storyline",
+                "key": "exHead",
+                "value": 6
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "repress",
+                "note": "门房留下的那卷抄本"
+              },
+              {
+                "type": "reputation",
+                "value": -3
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "once": true
+  }
+]

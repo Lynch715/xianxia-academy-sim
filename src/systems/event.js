@@ -15,6 +15,18 @@
       opt = opt || {};
 
       if (c.role && !c.role.includes(s.player.role)) return false;
+      if (c.stage && !c.stage.includes(s.career?.stage || s.player.role)) return false;
+      if (c.notStage && c.notStage.includes(s.career?.stage || s.player.role)) return false;
+
+      // 一局里最多出几次。故事性的事件只出一次，日常的两三次，
+      // 再多就是刷脸——第一版一局 327 次事件里只有 44 个不重样的。
+      const seenTimes = (s.events.counts && s.events.counts[ev.id]) || 0;
+      // 活得越久放得越宽：一条命从弟子走到院主有七八百周，按两次封顶
+      // 后面几百周就只剩兜底小事件了。每一百五十周多给一次。
+      const lived = Math.floor(s.time.absoluteTurn / 21);
+      const slack = Math.floor(lived / 150);
+      const cap = ev.once ? 1 : (ev.maxTimes || (ev.cooldown >= 100 ? 1 + slack : 2 + slack));
+      if (seenTimes >= cap) return false;
       if (c.college && !c.college.includes(s.player.college)) return false;
       // 时间门槛统一用"周"表示 —— absoluteTurn 是时段数，一周 21 个，
       // 直接拿它当门槛会让本该在第 80 周出现的事件在第 6 周就跳出来。
@@ -85,9 +97,9 @@
       if (ev.dynamicActor && !(opt.actor && G.NPC.available(s, opt.actor)) &&
           !this.resolveDynamicActor(s, ev.dynamicActor)) return false;
 
-      // 冷却
+      // 冷却。兜底小事件不受这条限制，否则空白周照样空白。
       const cd = s.events.cooldowns[ev.id];
-      if (cd && s.time.absoluteTurn < cd) return false;
+      if (cd && !opt.ignoreCooldown && s.time.absoluteTurn < cd) return false;
 
       // 同一 NPC 三周内不重复（一周 21 个时段）。事件链的下一章不受这条限制，
       // 否则间隔一两周的续章总要多等。
@@ -157,9 +169,26 @@
       // 3. 随机池
       const n = Math.max(0, G.rng.int(1, 3) - out.length);
       if (n > 0) {
-        const cands = this.pool().filter(e => !e.fixed && !e.chainOnly && this.match(s, e, { anyPhase: true }));
+        const cands = this.pool().filter(e => !e.fixed && !e.chainOnly && !e.filler && this.match(s, e, { anyPhase: true }));
         const picked = G.rng.sample(cands, n, e => this.weightOf(s, e));
         for (const e of picked) out.push(this.instantiate(s, e));
+      }
+
+      // 4. 一件事都没有的一周：给一件小事。三两句，一个小选择，
+      //    总比右栏写着「难得清静的一周」然后什么也不发生强。
+      // 一半左右的空闲周留着空着：按原样过去的平常日子也是日子，
+      // 每周都塞一件小事，小事就成了新的刷脸。上一周刚塞过的更不塞。
+      const lastFill = s.flags._lastFillWeek ?? -99;
+      const nowWeek = Math.floor(s.time.absoluteTurn / 21);
+      if (!out.length && nowWeek - lastFill >= 2 && G.rng.chance(55)) {
+        s.flags._lastFillWeek = nowWeek;
+        const fill = this.pool().filter(e => e.filler && this.match(s, e, { anyPhase: true, ignoreCooldown: true }));
+        if (fill.length) {
+          // 挑这局里出得最少的那几件，免得同一件小事一个月来三回
+          const times = e => (s.events.counts && s.events.counts[e.id]) || 0;
+          const least = Math.min.apply(null, fill.map(times));
+          out.push(this.instantiate(s, G.rng.pick(fill.filter(e => times(e) === least))));
+        }
       }
 
       return out;
@@ -287,8 +316,10 @@
 
       // 记录。cooldown 写的是**周**，存的是时段——跟 minWeek 一个道理，
       // 直接当时段用的话 cooldown:40 只隔两周就又跳出来了。
-      const cd = (ev.cooldown ?? 30) * 21;
+      const cd = (ev.cooldown ?? 45) * 21;
       s.events.cooldowns[ev.id] = s.time.absoluteTurn + cd;
+      s.events.counts = s.events.counts || {};
+      s.events.counts[ev.id] = (s.events.counts[ev.id] || 0) + 1;
       if (!s.events.seen.includes(ev.id)) s.events.seen.push(ev.id);
       for (const id of ev.actors) s.flags['_npcEvt_' + id] = s.time.absoluteTurn;
 
