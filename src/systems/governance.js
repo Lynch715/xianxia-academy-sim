@@ -109,6 +109,7 @@
         threatProgress: 0,
         reforms: 0,
         successor: null,
+        patrolAt: {},
         audits: 0
       };
     },
@@ -350,11 +351,18 @@
       const mult = G.Check.GRADE_MULT[r.grade];
       const deltas = [];
       const notes = [];
+      // 同一个院一个月内再去，听到的还是上次那些话。
+      // 没有这条的话，把一周的格子全排成巡院就能把七院人心按在 0 上，
+      // 人心这条压力线等于不存在。
+      const last = (s.gov.patrolAt || {})[c];
+      const fresh = last === undefined || s.time.absoluteTurn - last >= 4 * 21;
+      deltas.push({ path: `gov.patrolAt.${c}`, op: 'set', value: s.time.absoluteTurn });
 
       if (mult > 0) {
-        this.addUnrest(s, { [c]: -Math.round(12 * mult) });
-        notes.push(`${G.State.collegeOf(c).name}的人心稳了些`);
-        if (r.grade === 'perfect') {
+        this.addUnrest(s, { [c]: -Math.round((fresh ? 12 : 3) * mult) });
+        notes.push(fresh ? `${G.State.collegeOf(c).name}的人心稳了些`
+                         : `${G.State.collegeOf(c).name}你上个月才去过，没听到什么新话`);
+        if (r.grade === 'perfect' && fresh) {
           deltas.push({ path: 'attrs.ren', op: 'add', value: 1 });
           notes.push('你从一个不起眼的弟子身上看出了东西');
         }
@@ -384,14 +392,28 @@
       if (s.player.role !== 'headmaster' || !s.gov) return [];
       const notes = [];
 
-      // 灵脉与坊市收入
-      const income = 800 + Math.round(s.reputation.value * 6) - this.avgUnrest(s) * 4;
-      G.State.commit([{ path: 'gov.budget', op: 'add', value: Math.max(0, income) }], 'gov.income');
-      notes.push(`本月进项 ${Math.max(0, income)}`);
+      // 灵脉与坊市的进项，减去七院的月例、耗材、修缮。
+      // 以前只记进项不记开销，十年下来预算能攒到十万，
+      // 事件里那几千石的取舍一点也不疼。
+      const income = Math.max(0, 800 + Math.round(s.reputation.value * 6) - this.avgUnrest(s) * 4);
+      const spend = 1300 + this.avgUnrest(s) * 3;
+      const net = income - spend;
+      if (s.gov.budget + net < 0) {
+        const short = -(s.gov.budget + net);
+        G.State.commit([{ path: 'gov.budget', op: 'set', value: 0 }], 'gov.income');
+        this.addUnrest(s, {}, 6);
+        notes.push(`本月进项 ${income}，开销 ${spend}，差 ${short} 石——月例压了几天`);
+      } else {
+        G.State.commit([{ path: 'gov.budget', op: 'add', value: net }], 'gov.income');
+        notes.push(`本月进项 ${income}，开销 ${spend}`);
+      }
 
       // 不满自然漂移。没有外患时人心是会自己缓和的——
       // 早期版本让它只涨不落，结果院主路线八成活不过两年。
-      let drift = (s.attrs.wei ?? 5) >= 12 ? -3 : -1;
+      // 不管事就会慢慢散。威望够高的院主不用天天出面也镇得住，
+      // 底下有外患的时候散得更快。（以前这里只会往下走，
+      // 等于人心自己会好，巡院也就无所谓了。）
+      let drift = (s.attrs.wei ?? 5) >= 12 ? -2 : 1;
       if (s.gov.threat) drift += 4;
       this.addUnrest(s, {}, drift);
 

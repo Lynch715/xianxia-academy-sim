@@ -465,6 +465,19 @@
         if (r.type === 'activity' && r.detail?.openCraft) {
           G.Craft.auto(s, r.detail.openCraft.rid, r.detail.openCraft.extra);
         }
+        // 没有界面的时候（测试、快进），院务议题按 reason 自己议掉。
+        // 以前这里漏了 openAgenda：所有无界面的跑分里院主从来不议事，
+        // 人心、预算、接班人全都测不到，结论偏乐观。
+        if (r.type === 'activity' && r.detail?.openAgenda) {
+          const a = r.detail.openAgenda;
+          const opts = a.options || [];
+          let pick = null;
+          if (chooser && opts.length) {
+            pick = chooser({ id: 'agenda_' + a.id, agenda: a, seed: a.text, facts: [], actors: [], options: opts }, opts);
+          }
+          if (!pick) pick = opts.slice().sort((x, y) => (y.reason || 0) - (x.reason || 0))[0];
+          if (pick) G.Governance.resolveAgenda(s, a, pick.id);
+        }
         // 没有界面的时候（测试、快进），斗法自己打完
         if (r.type === 'activity' && r.detail?.openDuel) {
           const cfg = r.detail.openDuel;

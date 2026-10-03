@@ -546,11 +546,24 @@
             ]
           },
           "bad": {
-            "narrative": "你说得断断续续。决议下来了：劝退。",
+            "narrative": "你说得不如自己想的清楚。殿上议了很久。\n\n最后给的是留校察看——没赶你走，但这一年你哪儿也别想去。",
             "effects": [
               {
                 "type": "flag",
-                "key": "expelled"
+                "key": "on_probation"
+              },
+              {
+                "type": "conduct",
+                "value": -8
+              },
+              {
+                "type": "reputation",
+                "value": -6
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "guilt"
               }
             ]
           },
@@ -563,7 +576,25 @@
               }
             ]
           }
-        }
+        },
+        "reasonIf": [
+          {
+            "reputation": 70,
+            "value": 10
+          },
+          {
+            "relation": {
+              "npc": "npc_guchangqing",
+              "dim": "trust",
+              "min": 45
+            },
+            "value": 6
+          },
+          {
+            "flag": "framed_resolved",
+            "value": 8
+          }
+        ]
       },
       {
         "id": "B",
@@ -575,12 +606,12 @@
         },
         "reasonIf": [
           {
-            "flag": "framed_resolved",
+            "flag": "mole_clue_3",
             "value": 10
           },
           {
-            "flag": "zhong_letter_found",
-            "value": 8
+            "reputation": 70,
+            "value": 6
           }
         ],
         "outcomes": {
@@ -649,17 +680,24 @@
             ]
           },
           "bad": {
-            "narrative": "你指错了人。那人当堂反驳，句句在理。",
+            "narrative": "你指的那个人站起来，把话一条条顶回来。\n\n没人信你。给的是留校察看。",
             "effects": [
               {
                 "type": "flag",
-                "key": "expelled"
+                "key": "on_probation"
+              },
+              {
+                "type": "conduct",
+                "value": -10
+              },
+              {
+                "type": "reputation",
+                "value": -8
               },
               {
                 "type": "demon",
-                "value": 12,
-                "source": "guilt",
-                "note": "议事厅上指错的那个人"
+                "value": 10,
+                "source": "guilt"
               }
             ]
           },

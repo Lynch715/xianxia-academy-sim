@@ -436,6 +436,7 @@
             if (r.cat === 'custom' && r.detail?.custom) {
               if (digest.length) { this.narr.sys(digest.join('<br>')); digest.length = 0; }
               this.scrollDown();
+              hadEvent = true;
               await this.playCustomSlot(s, r, token);
               continue;
             }
@@ -443,6 +444,7 @@
             if (r.detail?.openCraft) {
               if (digest.length) { this.narr.sys(digest.join('<br>')); digest.length = 0; }
               this.scrollDown();
+              hadEvent = true;
               await this.playCraft(s, r.detail.openCraft, token);
               continue;
             }
@@ -450,6 +452,7 @@
             if (r.detail?.openDuel) {
               if (digest.length) { this.narr.sys(digest.join('<br>')); digest.length = 0; }
               this.scrollDown();
+              hadEvent = true;
               await this.playDuel(s, r.detail.openDuel, token);
               continue;
             }
@@ -457,6 +460,7 @@
             if (r.detail?.openAgenda) {
               if (digest.length) { this.narr.sys(digest.join('<br>')); digest.length = 0; }
               this.scrollDown();
+              hadEvent = true;
               await this.playAgenda(s, r.detail.openAgenda, token);
               continue;
             }
@@ -470,7 +474,9 @@
             if (r.notes?.length) this.narr.sys('<b>本周结算</b><br>' + r.notes.join('<br>'));
             weeksLeft--;
             // 连着过：这一周没出事、也没到能突破的时候，就接着往下走
-            if (weeksLeft > 0 && !hadEvent && !s.ended && !G.Cultivation.canBreakthrough(s)) {
+            // 大比／春猎的窗口期只开到当月第四周，连过的时候要停下来让玩家决定
+            const festAhead = !!G.Festival.pending(s);
+            if (weeksLeft > 0 && !hadEvent && !festAhead && !s.ended && !G.Cultivation.canBreakthrough(s)) {
               guard = 0;
               G.Game.beginWeek(s);
               continue;

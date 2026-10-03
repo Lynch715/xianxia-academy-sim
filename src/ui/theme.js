@@ -118,7 +118,11 @@
       const mask = h('.modal-mask', {
         onclick: e => { if (e.target === mask) close(); }
       });
-      const close = () => mask.remove();
+      // Esc 等于点蒙层外面。弹窗都是看完就走的东西，
+      // 阶段去向那种要做选择的在正文页上，不在这里。
+      const onKey = e => { if (e.key === 'Escape') close(); };
+      const close = () => { document.removeEventListener('keydown', onKey); mask.remove(); };
+      document.addEventListener('keydown', onKey);
       const box = h('.modal',
         h('h3', title),
         sub ? h('.sub', sub) : null,

@@ -136,6 +136,7 @@
         s.llmMemory = s.llmMemory || { summary:'', recentTurns:[], summarizedUpTo:0 };
         s.events = s.events || { activeChains:[], cooldowns:{}, seen:[], pendingFixed:[], queue:[] };
         s.events.queue = s.events.queue || [];
+        s.events.counts = s.events.counts || {};
         s.log = s.log || [];
         s.flags = s.flags || {};
         s.reputation = s.reputation || { value:5, tags:[], factions:{traditional:0,reform:0,xiaoyao:0,pragmatic:0} };
@@ -167,6 +168,8 @@
           const cur = G.State.current; G.State.current = s;
           try { G.Rival.init(s); G.Faction.init(s); } finally { G.State.current = cur; }
         }
+        // 1.7 巡院按院记时间：老档补个空表
+        if (s.gov && !s.gov.patrolAt) s.gov.patrolAt = {};
         s.meta.version = G.State.VERSION;
         // P5 新增的两条路线状态，老存档补齐
         const cur = G.State.current;

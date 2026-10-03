@@ -411,6 +411,14 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); }
 @media (orientation: landscape) and (max-height: 540px) {
   .modal-mask { padding: 10px calc(10px + var(--sa-right)) 10px calc(var(--rail) + var(--sa-left) + 10px); }
   .modal { max-height: 94vh; padding: 16px 20px; }
+  /* 横屏手机上弹窗只有三百多像素高，设置这种长内容要滚一千多像素才见到
+     「完成」。操作键在这里也吸底。 */
+  .modal > .modal-actions {
+    position: sticky; bottom: 0; z-index: 1;
+    background: var(--paper); padding: 8px 0;
+    margin-top: 10px !important;
+    box-shadow: 0 -8px 12px -8px rgba(43,43,43,.18);
+  }
 }
 .modal h3 { font-size: 16px; font-weight: normal; letter-spacing: .18em;
             margin-bottom: 4px; }
@@ -612,6 +620,9 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); }
 .duel-post-bar { position: relative; flex: 1; height: 4px; background: var(--line-2); }
 .duel-post-bar i { position: absolute; top: 0; height: 100%; transition: all .25s; }
 .duel-log { margin: 8px 0; }
+/* 招式那一排要盖在血条上面，不能反过来。血条是 sticky 贴顶的，
+   往下滚的时候它会压到第一行招式——第一排两个招式点不动，而且看不出为什么。 */
+.duel-foot { position: relative; z-index: 3; background: var(--paper-2); padding-top: 4px; }
 .duel-line { font-size: 13.5px; line-height: 1.85; color: var(--ink-2); }
 .duel-line.sys { color: var(--ink-3); letter-spacing: .08em; }
 .duel-line.foe { color: var(--ink); }

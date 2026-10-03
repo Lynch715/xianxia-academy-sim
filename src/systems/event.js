@@ -270,6 +270,13 @@
               const v = s.attrs[cond.attr.key] ?? 0;
               if (v >= cond.attr.min) o.reason = (o.reason || 0) + cond.value;
             }
+            // 院里知道你是什么人：声望、品行、跟谁交情深，在要紧处要算分量
+            if (cond.reputation && s.reputation.value >= cond.reputation) o.reason = (o.reason || 0) + cond.value;
+            if (cond.conduct && (s.reputation.conduct ?? 60) >= cond.conduct) o.reason = (o.reason || 0) + cond.value;
+            if (cond.relation) {
+              const r = s.relations[cond.relation.npc];
+              if (r && (r[cond.relation.dim || 'trust'] || 0) >= cond.relation.min) o.reason = (o.reason || 0) + cond.value;
+            }
           }
         }
         if (o.check) o._hint = G.Check.vagueHint({ ...o.check, reason: o.reason });
@@ -358,6 +365,9 @@
       if (s.cultivation.resting > 0) mods.push(-10);
       if (s.cultivation.injuries.length) mods.push(-5 * s.cultivation.injuries.length);
       if (s.cultivation.demonHeart >= 60) mods.push(-6);
+      // 心魔压到这个份上，手也不稳了。弟子阶段靠突破走火来兜，
+      // 教习和院主几十年不突破一次，不另外给它牙齿就等于白攒。
+      if (s.cultivation.demonHeart >= 85) mods.push(-4);
       return mods;
     },
 
@@ -410,10 +420,6 @@
             summary.push(...G.Rival.resolveContest(s, eff.act, grade));
             break;
           }
-          case 'faction': {
-            summary.push(...G.Faction.resolve(s, eff.act, grade));
-            break;
-          }
           case 'recipe': {
             const rid = eff.id || (G.Craft.randomUnknown(s, eff.source || null, eff.maxTier || 3) || {}).id;
             if (rid && G.Craft.learn(s, rid)) summary.push('得了一张方子');
@@ -430,7 +436,9 @@
             break;
           }
           case 'relation': {
-            const target = eff.npc || (ev.actors || [])[0];
+            // 没指名也没出场人物的（兜底小事里的「师姐」「舍友」）：
+            // 落到一个已经认识的同类人身上，不然这个选项等于白选。
+            const target = eff.npc || (ev.actors || [])[0] || this.anyPeer(s);
             if (!target) break;
             for (const dim of ['favor', 'trust', 'awe', 'bond']) {
               if (eff[dim] === undefined) continue;
@@ -463,6 +471,10 @@
             break;
           }
           case 'faction': {
+            // 两种写法：派系表态事件给 act（交给 Faction 结算），别的事件直接给 key/value。
+            // 这两条曾经是两个同名 case，后面那个被 switch 吃掉了——
+            // 结果所有事件里的派系倾向有一阵子都没落下去。
+            if (eff.act) { summary.push(...G.Faction.resolve(s, eff.act, grade)); break; }
             deltas.push({ path: `reputation.factions.${eff.key}`, op: 'add', value: eff.value, clamp: [-100, 100] });
             summary.push(`${G.DATA.static.factionLabel[eff.key]}倾向${eff.value > 0 ? '+' : ''}${eff.value}`);
             break;
@@ -564,6 +576,10 @@
               deltas.push({ path: 'gov.threatProgress', op: 'add', value: eff.threatProgress, clamp: [0, 100] });
               summary.push(`外患化解${eff.threatProgress > 0 ? '+' : ''}${eff.threatProgress}`);
             }
+            if (eff.successor && !s.gov.successor) {
+              deltas.push({ path: 'gov.successor', op: 'set', value: eff.successor });
+              summary.push('接班人定了');
+            }
             if (eff.unrest !== undefined || eff.unrestAll !== undefined) {
               G.Governance.addUnrest(s, eff.unrest || {}, eff.unrestAll || 0);
               const v = eff.unrestAll || 0;
@@ -576,6 +592,18 @@
 
       if (deltas.length) G.State.commit(deltas, 'event.effects');
       return summary;
+    },
+
+    /** 没指名的人情落到谁身上：同院、认识的、关系没崩的，优先处得近的 */
+    anyPeer(s) {
+      const track = s.player.role === 'student' ? 'student' : 'faculty';
+      const pool = G.NPC.all().filter(n => n.track === track && s.relations[n.id] &&
+        s.relations[n.id].met && !s.relations[n.id].strained && G.NPC.available(s, n.id));
+      if (!pool.length) return null;
+      const mine = pool.filter(n => n.college === s.player.college);
+      const from = mine.length ? mine : pool;
+      return from.slice().sort((a, b) =>
+        (s.relations[b.id].favor || 0) - (s.relations[a.id].favor || 0))[Math.min(1, from.length - 1)].id;
     },
 
     /** 生成交给叙事层的"确凿事实"列表 */

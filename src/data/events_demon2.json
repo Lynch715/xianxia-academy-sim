@@ -1,0 +1,402 @@
+[
+  {
+    "id": "evt_t_demon_night",
+    "category": "crisis",
+    "weight": 30,
+    "scene": "scene_mingde",
+    "actors": [],
+    "cooldown": 20,
+    "maxTimes": 3,
+    "conditions": {
+      "role": [
+        "teacher"
+      ],
+      "demonHeart": [
+        82,
+        100
+      ]
+    },
+    "seed": "讲到一半你停住了。\n\n底下三十张脸，你一个名字也想不起来。\n\n手里的书翻过去又翻回来，纸角被捏出了印子。",
+    "facts": [
+      "你在课上讲不下去了",
+      "满堂弟子在看着你"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "停了课，自己去后山坐三天",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "后山那三天没人找你。回来的时候课补上了，补得比原来慢。\n\n有个弟子在门口问：「先生，您好些了吗。」",
+            "effects": [
+              {
+                "type": "demon",
+                "value": -18
+              },
+              {
+                "type": "rest",
+                "value": -10
+              },
+              {
+                "type": "attr",
+                "key": "xin",
+                "value": 1
+              },
+              {
+                "type": "relation",
+                "favor": 3
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "让弟子念课本，自己坐在那儿听",
+        "check": {
+          "attr": "xin",
+          "difficulty": 50
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "念到第三段你接了下去，接得很准。\n\n下了课那孩子说：「先生，这段是我念错的。」\n\n「我知道。」",
+            "effects": [
+              {
+                "type": "demon",
+                "value": -8
+              },
+              {
+                "type": "attr",
+                "key": "jiao",
+                "value": 1
+              }
+            ]
+          },
+          "good": {
+            "narrative": "一堂课就这么过去了。你记住了念书那个的名字。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": -4
+              },
+              {
+                "type": "relation",
+                "favor": 2
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "课上完了。你一个字也没记住。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "底下开始走神。有人在后排小声说话。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": 4,
+                "source": "inferior"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你坐在讲台上听完了一堂课。那天的事第二天就传遍了明德院。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "inferior"
+              },
+              {
+                "type": "reputation",
+                "value": -3
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "硬讲完",
+        "check": {
+          "attr": "xiu",
+          "difficulty": 58
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你讲完了，一字没错。下课之后在屋里坐了很久没动。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": -4
+              },
+              {
+                "type": "rest",
+                "value": -12
+              }
+            ]
+          },
+          "good": {
+            "narrative": "讲完了，中间卡了两次。",
+            "effects": [
+              {
+                "type": "rest",
+                "value": -10
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "讲完了，讲得七零八落。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": 3,
+                "source": "inferior"
+              },
+              {
+                "type": "rest",
+                "value": -10
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "讲到后面你自己也不知道讲了什么。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "inferior"
+              },
+              {
+                "type": "rest",
+                "value": -14
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你在讲台上晃了一下，扶住了案角。那天的课提前散了。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": 12,
+                "source": "inferior"
+              },
+              {
+                "type": "injury",
+                "severity": "light"
+              },
+              {
+                "type": "reputation",
+                "value": -4
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt_g_demon_hall",
+    "category": "crisis",
+    "weight": 30,
+    "scene": "scene_headmaster_hall",
+    "actors": [],
+    "cooldown": 20,
+    "maxTimes": 3,
+    "conditions": {
+      "role": [
+        "headmaster"
+      ],
+      "demonHeart": [
+        82,
+        100
+      ]
+    },
+    "seed": "议事上有人叫了你三声。\n\n你抬头，七个人都在等。\n\n案上那份文书你盯了一刻钟，上面的字还是那几个字。",
+    "facts": [
+      "你在议事上走了神",
+      "七院都看见了"
+    ],
+    "options": [
+      {
+        "id": "A",
+        "text": "散会，把这几天的事都往后压",
+        "fixedGrade": "plain",
+        "outcomes": {
+          "fixed": {
+            "narrative": "你让人把案上的东西都收了，一个人在殿里坐到天黑。\n\n压下去的事第三天才办完。没人提那天的事。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": -16
+              },
+              {
+                "type": "gov",
+                "unrestAll": 3
+              },
+              {
+                "type": "rest",
+                "value": 10
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "B",
+        "text": "让方砚替你念完",
+        "check": {
+          "attr": "ren",
+          "difficulty": 46
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "他念得很慢，念到第三条抬头看你一眼，你点了头。\n\n散会后他把文书放在你案上，压了一块镇纸：「明天再看。」",
+            "effects": [
+              {
+                "type": "demon",
+                "value": -10
+              },
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": 5,
+                "trust": 4
+              }
+            ]
+          },
+          "good": {
+            "narrative": "他念完了，议事照常走。",
+            "effects": [
+              {
+                "type": "demon",
+                "value": -5
+              },
+              {
+                "type": "relation",
+                "npc": "npc_fangyan",
+                "favor": 2
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "念完了。殿上安静了一会儿。",
+            "effects": []
+          },
+          "bad": {
+            "narrative": "有人问了一句：「院主近来不大好？」",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 4
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "这事传成了院主撑不住了。七院的议事从那天起少了一个人来。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 10
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -1
+              },
+              {
+                "type": "demon",
+                "value": 6,
+                "source": "fear"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "C",
+        "text": "把文书合上，照旧议下去",
+        "check": {
+          "attr": "jue",
+          "difficulty": 56
+        },
+        "outcomes": {
+          "perfect": {
+            "narrative": "你合上文书，凭记性把三条都议了，议得比写的还清楚。\n\n散会时顾长青留了一句：「您该歇了。」",
+            "effects": [
+              {
+                "type": "demon",
+                "value": -6
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": 1
+              },
+              {
+                "type": "rest",
+                "value": -10
+              }
+            ]
+          },
+          "good": {
+            "narrative": "议完了，没出错。",
+            "effects": [
+              {
+                "type": "rest",
+                "value": -8
+              }
+            ]
+          },
+          "plain": {
+            "narrative": "议完了，有一条议得不清不楚。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 2
+              },
+              {
+                "type": "rest",
+                "value": -8
+              }
+            ]
+          },
+          "bad": {
+            "narrative": "你把两个院的名字说反了。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 5
+              },
+              {
+                "type": "demon",
+                "value": 5,
+                "source": "inferior"
+              }
+            ]
+          },
+          "terrible": {
+            "narrative": "你定的那一条第二天就得改回来。改的文书是白鹿卿替你写的。",
+            "effects": [
+              {
+                "type": "gov",
+                "unrestAll": 8
+              },
+              {
+                "type": "attr",
+                "key": "wei",
+                "value": -1
+              },
+              {
+                "type": "demon",
+                "value": 8,
+                "source": "inferior"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+]

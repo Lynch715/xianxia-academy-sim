@@ -24,7 +24,7 @@ const EVENT_FILES = [
   'events_romance.json', 'events_storyline.json', 'events_crisis.json', 'events_trial2.json',
   'events_love_a.json', 'events_love_b.json', 'events_love_c.json', 'events_bond.json',
   'events_faculty.json', 'events_faculty2.json',
-  'events_governance.json', 'events_governance2.json', 'events_faculty3.json', 'events_gov3.json', 'events_filler.json', 'events_fixed.json'
+  'events_governance.json', 'events_governance2.json', 'events_faculty3.json', 'events_gov3.json', 'events_filler.json', 'events_demon2.json', 'events_fixed.json'
 ];
 
 function makeSandbox() {

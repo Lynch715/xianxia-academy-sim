@@ -5,7 +5,7 @@
 (function (G) {
   'use strict';
 
-  const VERSION = '1.7.0';
+  const VERSION = '1.7.1';
 
   const ATTR_SETS = {
     student:    { keys: ['wu','gen','shen','ji','xin','shi'],       points: 30, cap: 10 },

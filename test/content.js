@@ -94,6 +94,9 @@ const poolOf = r => ALL.filter(e => !e.filler && roleOf(e).includes(r));
     s.academy.year = 4;
     // 挂了月份的（冬天的炭、腊月的账）按它自己的月份试
     const miss = ids.filter(e => {
+      // 有心魔门槛的（心魔压到讲不下去课那种）按它要求的心魔试
+      const dh = e.conditions && e.conditions.demonHeart;
+      s.cultivation.demonHeart = dh ? dh[0] : 10;
       const months = (e.conditions && e.conditions.month) || [s.time.month];
       return !months.some(m => {
         s.time.month = m;

@@ -39,7 +39,9 @@
       return ({ dorm: 1.0, hall: 1.2, vein: 1.5, realm: 2.2, field: 1.1 })[place] || 1.0;
     },
 
-    moodCoef(s) { return 1 - s.cultivation.demonHeart / 250; },
+    // 心魔拖修炼。原来除 250，心魔 85 还能出八成力，
+    // 于是乱来和用心玩最后境界一样高——心魔攒着不疼，这条线就白设了。
+    moodCoef(s) { return Math.max(0.45, 1 - s.cultivation.demonHeart / 180); },
 
     /** 单次修炼收益 */
     gainFor(s, place) {
