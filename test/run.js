@@ -12,7 +12,7 @@ const srv=http.createServer((q,r)=>{
   r.writeHead(200,{'Content-Type':MIME[path.extname(f)]||'application/octet-stream'}); r.end(fs.readFileSync(f));
 });
 const fails=[], oks=[];
-const ok=(n,c)=>{ (c?oks:fails).push(n); console.log((c?'  ✓ ':'  ✗ ')+n); };
+const ok=(n,c)=>{ (c?oks:fails).push(n); console.log((c?'  ✓ ':'  ✗ ')+n); if(!c&&process.env.CI) console.log('::error::'+String(n).replace(/\n/g,' ')); };
 const SHOT=process.env.SHOT_DIR||'';
 let page;
 const idle=()=>page.waitForFunction(()=>!busy&&(typeof convo==='undefined'||!convo),null,{timeout:25000});
@@ -296,4 +296,4 @@ if(process.env.DUMP) fs.writeFileSync(process.env.DUMP,JSON.stringify(prompts));
 console.log(`\n通过 ${oks.length}，失败 ${fails.length}`);
 await br.close(); srv.close();
 process.exit(fails.length?1:0);
-})().catch(e=>{ console.error(e); process.exit(1); });
+})().catch(e=>{ console.error(e); if(process.env.CI) console.log('::error::'+String(e&&e.stack||e).split('\n').slice(0,4).join(' | ')); process.exit(1); });
