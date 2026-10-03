@@ -1,9 +1,7 @@
 # 部署到 GitHub Pages
 #
-# 每次推 main：先跑全套测试，再用 src/ 重新构建 index.html，然后部署。
-# 之所以在 CI 里重新构建而不是直接发仓库里那份，是因为 index.html 是
-# 构建产物——只要有人改了 src/ 忘了跑 build.js，线上就会和源码对不上。
-# 让 CI 来生成，这种漂移就不可能发生。
+# 2.0 不再有构建步骤：根目录的 index.html 就是成品。
+# 推 main 时先用假模型跑一遍端到端自测，过了再发。旧版 1.7.1 以 v1.html 一起发出去，老存档还能接着玩。
 
 name: Pages
 
@@ -17,7 +15,6 @@ permissions:
   pages: write
   id-token: write
 
-# 同时只跑一个部署；新的推送不打断正在进行的那次
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -34,32 +31,16 @@ jobs:
 
       - name: 装测试依赖
         run: |
-          npm install --no-save jsdom playwright
-          npx playwright install --with-deps chromium   # test/render.js 要真浏览器量排版
-          python3 -m pip install --quiet pillow         # test/viewport.js 要用它验图标格式
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
 
-      - name: 构建
-        run: node build.js
-
-      - name: 引擎对拍（240 周）
-        run: node test/headless.js 240
-
-      - name: 平衡对照
-        run: node test/balance.js
-
-      - name: 界面冒烟
-        run: node test/dom.js
-
-      - name: 移动端视口
-        run: node test/viewport.js
-
-      - name: 真机排版（Chromium）
-        run: node test/render.js
+      - name: 端到端自测（假模型）
+        run: node test/run.js
 
       - name: 收拾要发布的文件
         run: |
           mkdir -p _site
-          cp index.html manifest.webmanifest .nojekyll _site/
+          cp index.html v1.html manifest.webmanifest .nojekyll _site/
           cp -r assets _site/
           du -sh _site
 

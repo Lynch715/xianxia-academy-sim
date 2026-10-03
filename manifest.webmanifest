@@ -1,7 +1,7 @@
 {
   "name": "修仙学院模拟器 · 云霄仙院",
   "short_name": "云霄仙院",
-  "description": "单机文字修仙模拟经营。数值由本地引擎裁决，叙事可接入你自己的模型。",
+  "description": "修仙学院里的五年。故事由你自己的模型推演，数值由页面里的引擎记账。",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

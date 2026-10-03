@@ -11,3 +11,4 @@ Thumbs.db
 
 node_modules/
 audit_shots/
+__pycache__/
