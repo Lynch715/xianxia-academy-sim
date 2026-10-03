@@ -36,6 +36,13 @@ function pickBody(prompt){
     npcUpdates:[],newNpcs:[],npcEvents:[],rumors:[],newVendettas:[],questUpdates:[],newQuests:[],rankingUpdates:[],rankingAdd:[],duel:null,
     options:[{text:aftVary(0),hint:'',type:'normal',months:1},{text:aftVary(1),hint:'',type:'rest',months:1},{text:aftVary(2),hint:'',type:'normal',months:1}],
     gameOver:false,ending:null}; }
+  if(prompt.includes('【院中事件的结果')) return {
+    narrative:'事情就这么过去了。\n'+((prompt.match(/已定结果：([^\n]*)/)||[])[1]||''),summary:'院中事件的结果',
+    scene:{location:'主殿广场',unresolved:['爹的那笔债']},check:null,
+    playerChanges:{attributes:{修为:5},心魔:7,money:900,fame:{声望:9}},npcUpdates:[{name:'沈惊澜',好感度:30,信任:20,mood:'愣住'}],
+    newNpcs:[],npcEvents:[],rumors:['有人说新生里出了个怪人'],newVendettas:[],questUpdates:[],newQuests:[],rankingUpdates:[],rankingAdd:[],duel:{opponent:'沈惊澜'},
+    options:[{text:'回宿舍歇着',hint:'',type:'rest',months:1},{text:'去膳堂吃饭',hint:'',type:'normal',months:1},{text:'去藏经阁转转',hint:'',type:'normal',months:2}],
+    gameOver:false,ending:null};
   if(prompt.includes('闭关参悟') || prompt.includes('请推演本回合')){
     turnNo++;
     return {
@@ -51,8 +58,8 @@ function pickBody(prompt){
       rumors:['藏经阁二层要开放了'],
       newVendettas:[],questUpdates:[{title:'五年内筑基',progress:5,status:'进行中'}],newQuests:[],
       rankingUpdates:[{name:'沈惊澜',修为:30}],rankingAdd:[],duel:null,
-      options:[{text:'继续修炼',hint:'',type:'rest',months:2},
-               {text:'去后山找找那株药',hint:'',type:'check',months:1,check:{attr:'神识',need:55}},
+      options:prompt.includes('【本回合院中事件')?[{text:'先不理会，转身走开',hint:'',type:'normal',months:1},{text:'去找温酒酒问问',hint:'',type:'normal',months:1}]:[{text:'继续修炼'+turnNo,hint:'',type:'rest',months:2},
+               {text:'去后山找找那株药'+turnNo,hint:'',type:'check',months:1,check:{attr:'神识',need:55}},
                {text:'找周小满切磋',hint:'',type:'duel',months:1,duel:{opponent:'周小满',lethal:false}}],
       gameOver:false,ending:null};
   }

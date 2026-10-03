@@ -32,22 +32,23 @@ const MONTH_NAMES=['孟春','仲春','季春','孟夏','仲夏','季夏','孟秋
 function ganzhiYear(i){ i=((i%60)+60)%60; return GAN[i%10]+ZHI[i%12]+'年'; }
 function dateOf(ganzhi,months){ return ganzhiYear(ganzhi+Math.floor(months/12))+' '+MONTH_NAMES[((months%12)+12)%12]; }
 function dateStr(){ return dateOf(S.ganzhi||0, S.months||0); }""",
-"""const MONTH_NAMES=['孟春','仲春','季春','孟夏','仲夏','季夏','孟秋','仲秋','季秋','孟冬','仲冬','季冬'];
+"""const MONTH_NAMES=['正月','二月','三月','四月','五月','六月','七月','八月','九月','十月','冬月','腊月'];
 const CN_D='〇一二三四五六七八九';
 function cnYear(y){ return String(y).split('').map(c=>CN_D[+c]).join(''); }
 function gradeOf(months){ return Math.floor(num(months)/12)+1; }
-// 一学年从孟春开学；入院那年是灵元历一一九七年
-function dateOf(_y,months){ months=num(months); const y=XX.year0+Math.floor(months/12), g=gradeOf(months); return `灵元历${cnYear(y)}年 · ${g<=5?'第'+'一二三四五'[g-1]+'学年':'结业之后'} · ${MONTH_NAMES[((months%12)+12)%12]}`; }
+// 学年从九月开学；第 0 个月是入院那年的九月。calMonth 给出历法月 1..12
+function calMonth(months){ return ((8+num(months))%12+12)%12+1; }
+function dateOf(_y,months){ months=num(months); const y=XX.year0+Math.floor((8+months)/12), g=gradeOf(months); return `灵元历${cnYear(y)}年 · ${g<=5?'第'+'一二三四五'[g-1]+'学年':'结业之后'} · ${MONTH_NAMES[calMonth(months)-1]}`; }
 function dateStr(){ return dateOf(0, S.months||0); }
-// 学院的日子：开学、春猎、试炼、交流赛、大比、论道、岁考。模型照着写时令和院里的事
-const CALENDAR={0:'开学（第一学年这个月是入院大典与新生考核）',2:'春猎（后山猎场，三院联办）；季考',4:'夏季试炼（试炼塔开塔）',5:'星落书院交流赛（凌霄客随队来访）；季考',7:'七院大比',8:'季考',10:'冬至论道（论道峰）',11:'岁考；年末封院前的几天'};
+// 学院的日子（历法月）：九月开学，冬至论道，春猎、大比、交流赛，六月岁考，七八月放暑假
+const CALENDAR={9:'新学年开学（第一学年这个月是入院大典）',10:'第一学年有新生摸底考核',12:'冬至论道（论道峰，全院师生都去）',1:'学期末考',3:'春猎（后山猎场）',4:'七院大比',5:'星落书院交流赛（凌霄客随队来访）',6:'学年岁考（第五学年是结业考核）',7:'暑假，弟子可以下山回家',8:'暑假，月底返院'};
 function calendarNote(months){
   months=num(months);
-  const m=((months%12)+12)%12, nx=(m+1)%12;
+  const m=calMonth(months), nx=calMonth(months+1);
   const t=[];
   if(CALENDAR[m]) t.push(`本月：${CALENDAR[m]}`);
   if(CALENDAR[nx]) t.push(`下月：${CALENDAR[nx]}`);
-  return t.join('；')||'本月院里没有固定的大事，照常上课修炼';
+  return t.join('；')||'这个月院里没有固定的大事，照常上课修炼';
 }""")
     rep("""function upkeepPerMonth(){
   const p=S.player; if(!p) return 0;

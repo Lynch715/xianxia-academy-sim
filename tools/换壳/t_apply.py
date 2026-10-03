@@ -101,7 +101,7 @@ def apply(T):
     p['心魔']=clamp(num(p['心魔'])+dd); lastDeltas['心魔']=dd;
   }""")
     rep("""    if(dm>0) dm=Math.min(dm,Math.round((fate>=19?3000:600)*Math.max(0.25,months)*fdm().money*(fdm().freeAct?5:1)));   // 防通胀：横财要有来由""",
-        """    if(dm>0) dm=Math.min(dm,Math.round((fate>=19?120:20)*Math.max(0.25,months)*fdm().money*(fdm().freeAct?5:1)));   // 防通胀：横财要有来由""")
+        """    if(dm>0) dm=Math.min(dm,Math.round((fate>=19?60:20)*Math.max(0.25,months)*fdm().money*(fdm().freeAct?5:1)));   // 防通胀：横财要有来由""")
     rep("""  if(ch.age!=null && num(ch.age)>=p.age) p.age=num(ch.age);
   if(ch.faction) p.faction=ch.faction;
   syncSect();""","""  syncSect();                                   // 学院钉死，模型写的 faction 一概不认""")

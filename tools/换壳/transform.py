@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys, re, os
 sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
-import t_html, t_core, t_rules, t_prompts, t_apply, t_ui, t_start, t_av
+import t_html, t_core, t_rules, t_prompts, t_apply, t_ui, t_start, t_events, t_av
 HERE=os.path.dirname(os.path.abspath(__file__))
 SRC=sys.argv[1] if len(sys.argv)>1 else os.path.join(HERE,'wuxia.html')
 class T:
@@ -25,11 +25,12 @@ class T:
         b=cls.s.find(end,a+len(start))
         if b<0: cls.errs.append('[block end] '+end[:60]); return
         cls.s=cls.s[:a]+new+cls.s[b:]
-for m in (t_html,t_core,t_rules,t_prompts,t_apply,t_ui,t_start,t_av):
+for m in (t_html,t_core,t_rules,t_prompts,t_apply,t_ui,t_start,t_events,t_av):
     m.apply(T)
 # 世界数据：塞进第一个脚本开头
 data=open(os.path.join(HERE,'xxdata.js'),encoding='utf-8').read()
-T.rep('<script>\n"use strict";\n/* ================= 配置 ================= */','<script>\n"use strict";\n'+data+'/* ================= 配置 ================= */')
+evdata=open(os.path.join(HERE,'xxevents.js'),encoding='utf-8').read()
+T.rep('__XX_EVENTS__',data+evdata)
 # 全局换词（在块替换之后：新写的文字已经是新词，不受影响）
 GLOBAL=[('颖悟','悟性'),('才学','神识'),('谈吐','世故'),('武功','修为'),('武学','功法'),('秘籍','典籍'),
         ('侠名','声望'),('恶名','劣迹'),('江湖榜','同届榜'),('比武','斗法'),('内力','灵力'),

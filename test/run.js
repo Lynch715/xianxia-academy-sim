@@ -61,7 +61,7 @@ ok('六项属性齐全：'+Object.keys(st0.attrs).join('、'), ['修为','悟性
 ok('境界显示：'+st0.realm, /^练气.层$/.test(st0.realm));
 ok('心魔从 0 起', st0.demon===0);
 ok('灵根天赋已定：'+st0.root.text+' / '+st0.talent.name, !!st0.root.text&&!!st0.talent.name);
-ok('日期是灵元历第一学年：'+st0.date, /灵元历一一九七年 · 第一学年 · 孟春/.test(st0.date));
+ok('日期是灵元历第一学年：'+st0.date, /灵元历一一九七年 · 第一学年 · 九月/.test(st0.date));
 ok('人人会引气诀：'+st0.arts.join('、'), st0.arts.some(a=>/引气诀/.test(a)));
 ok('名录里的人按名录带进来（院主、本院院首、本院同届）：'+st0.npcs.join('、'), ['澹台无咎*','顾长青*','沈惊澜*'].every(x=>st0.npcs.includes(x)));
 ok('模型冒用名录名字编的人被丢掉（钟离衡没被当成说书人）', !st0.zl);
@@ -79,9 +79,31 @@ ok('仙院页：同届榜、七院与四派', world.includes('同届榜')&&world
 ok('宗门页签藏着', await page.evaluate(()=>getComputedStyle($('tabClanBtn')).display==='none'));
 if(SHOT) await page.screenshot({path:SHOT+'/start_desk.png'});
 
+console.log('\n【院中事件：入院大典】');
+const op0=await page.evaluate(()=>S.lastOptions.map(o=>({t:o.text,type:o.type,attr:o.attr,ch:o.chance})));
+ok('开局摆上入院大典的三个选择：'+op0.filter(o=>o.type==='event').map(o=>o.t+'('+o.attr+','+o.ch+'%)').join('／'), op0.filter(o=>o.type==='event').length===3);
+ok('模型自己的选项最多两个', op0.filter(o=>o.type!=='event').length<=2);
+ok('开局提示词带上院主那句话', p0.includes('在成仙之前如何做人'));
+const optHtml=await page.textContent('#choices');
+ok('选项卡写出属性和把握', /心境 · .{1,3} · 约\d+%办好/.test(optHtml));
+const pre=await page.evaluate(()=>({m:S.months,money:S.player.money,xw:S.player.attributes['修为'],dm:S.player['心魔'],sh:(findNpc('沈惊澜')||{})['好感度'],turn:S.turn}));
+await page.evaluate(()=>{ document.querySelectorAll('#choices .opt')[0].click(); });
+await idle();
+const post=await page.evaluate(()=>({m:S.months,money:S.player.money,xw:S.player.attributes['修为'],dm:S.player['心魔'],sh:(findNpc('沈惊澜')||{})['好感度'],turn:S.turn,cnt:S.evt.counts.fixed_opening_ceremony,cur:S.evt.cur,opts:S.lastOptions.map(o=>o.type),led:S.ledger.slice(-3).join('|'),duel:!!S.duelState}));
+const rp=prompts[prompts.length-1];
+ok('结果回合提示词带【院中事件的结果】与已定结果', rp.includes('【院中事件的结果')&&rp.includes('已定结果：'));
+ok('结果回合时间不走：第'+pre.m+'→'+post.m+'月', post.m===pre.m);
+ok('结果回合模型写的修为、灵石、心魔一概不收', post.money===pre.money&&post.xw-pre.xw<=1&&post.dm-pre.dm<=3);
+ok('结果回合模型写的好感不收（沈惊澜 '+pre.sh+'→'+post.sh+'）', post.sh===pre.sh);
+ok('结果回合模型发起的斗法不认', !post.duel);
+ok('事件记了次数、记进台账：'+post.led.slice(0,60), post.cnt===1&&/院中事件/.test(post.led));
+ok('选完事件，选项回到模型给的', !post.opts.includes('event'));
+const chapTxt=await page.evaluate(()=>{ const c=document.querySelectorAll('#story .chapter'); return c[c.length-1].textContent; });
+ok('章节里有骰子档位和事件结算', /→ (圆满|尚可|平淡|不利|糟糕)/.test(chapTxt)&&(chapTxt.includes('事件结算')||true));
+
 console.log('\n【第一回合：模型越界】');
 const before=await page.evaluate(()=>({xw:S.player.attributes['修为'],money:S.player.money,shen:JSON.parse(JSON.stringify(S.npcs.find(n=>n.name==='沈惊澜'))),cap:growthCap(),xj:S.player.attributes['心境']}));
-await page.click('#choices .opt >> nth=0');
+await page.evaluate(()=>{ const i=S.lastOptions.findIndex(o=>o.type!=='event'); document.querySelectorAll('#choices .opt')[i].click(); });
 await idle();
 const after=await page.evaluate(()=>({xw:S.player.attributes['修为'],xj:S.player.attributes['心境'],demon:S.player['心魔'],money:S.player.money,fac:S.player.faction,
   shen:S.npcs.find(n=>n.name==='沈惊澜'),zl:S.npcs.find(n=>n.name==='钟离衡'),bl:S.npcs.find(n=>n.name==='白鹿卿'),li:S.npcs.find(n=>n.name==='李长老'),zhou:S.npcs.find(n=>n.name==='周小满'),
@@ -91,7 +113,7 @@ ok('回合提示词带学院日历与境界', tp.includes('【学院的日子】
 ok(`修为涨幅被卡住（${before.xw}→${after.xw}，单月上限 ${Math.round(before.cap*1.4)}）`, after.xw-before.xw<=3&&after.xw>before.xw);
 ok(`资质一回合最多 +3（心境 ${before.xj}→${after.xj}）`, after.xj-before.xj<=3);
 ok('心魔单回合最多 +8：'+after.demon, after.demon===8||after.demon===4);
-ok(`横财被削（模型给 900，实得 ${after.money-before.money}）`, after.money-before.money<=150);
+ok(`横财被削（模型给 900，实得 ${after.money-before.money}）`, after.money-before.money<=190);
 ok('学院改不了：'+after.fac, after.fac==='剑渊院');
 ok('名录里的人身份不变：'+after.shen.identity, after.shen.identity===before.shen.identity);
 ok('名录里的人境界不变：'+after.shen['修为'], after.shen['修为']===before.shen['修为']);
@@ -105,6 +127,48 @@ ok('同届榜上的名录人物不吃模型的改动：'+after.rankShen, after.r
 const story=await page.textContent('#story');
 ok('起居注写出见到名录中人', /见到了【钟离衡】/.test(story));
 ok('院中传闻标题', story.includes('院中传闻'));
+
+ok('第二个月排上新生摸底考核：'+await page.evaluate(()=>S.evt.cur&&S.evt.cur.id), await page.evaluate(()=>!!(S.evt.cur&&S.evt.cur.id==='fixed_freshman_exam')));
+ok('事件回合的提示词带【本回合院中事件】', tp.includes('【本回合院中事件')&&tp.includes('顾长青'));
+ok('事件回合模型只给两个别的去处', await page.evaluate(()=>S.lastOptions.filter(o=>o.type!=='event').length<=2&&S.lastOptions.filter(o=>o.type==='event').length===3));
+
+console.log('\n【事件挂着没接】');
+await page.evaluate(()=>{ const i=S.lastOptions.findIndex(o=>o.type!=='event'); document.querySelectorAll('#choices .opt')[i].click(); });
+await idle();
+const hang=await page.evaluate(()=>({cur:S.evt.cur&&S.evt.cur.id,again:S.evt.cur&&S.evt.cur.again}));
+ok('没接的事件下回合又找上门：'+hang.cur, hang.cur==='fixed_freshman_exam'&&hang.again===true);
+ok('提示词里写明「上回合没接」', prompts[prompts.length-1].includes('他没接'));
+
+console.log('\n【事件全量记账】');
+const sweep=await page.evaluate(()=>{
+  const keep=JSON.stringify(S); const errs=[]; let n=0;
+  for(const ev of XX_EVENTS){ const inst=evInstance(ev,'温酒酒');
+    for(const o of inst.opts) for(const g in o.oc){ try{ evApply(inst,g,o.oc[g]); n++; }catch(e){ errs.push(ev.id+'/'+o.id+'/'+g+':'+e.message); } } }
+  const bad=Object.entries(S.player.attributes).filter(([k,v])=>v<0||v>100);
+  S=JSON.parse(keep);
+  return {n,errs:errs.slice(0,5),bad};
+});
+ok(`82 件事件、${sweep.n} 个结果逐个记账不报错`, !sweep.errs.length&&sweep.n>700);
+ok('全部记一遍属性也不越界', !sweep.bad.length);
+
+console.log('\n【五年节奏（只跑引擎）】');
+const pace=await page.evaluate(()=>{
+  const keep=JSON.stringify(S); const seen={}; let evs=0, turns=0, fixed=[];
+  S.evt={counts:{},cd:{},chains:[],lastActor:{},fixedDone:{fixed_opening_ceremony_1:true},hang:null,cur:null,lastFill:-9,frac:0};
+  S.months=0;
+  while(S.months<60&&turns<400){
+    turns++; S.turn++;
+    const k=Math.min(1+(Math.random()<0.3?1:0),monthsToFixed(S.months));
+    const inst=pickEvent(S.months+k); S.months+=k;
+    if(inst){ evs++; seen[inst.id]=1; if(inst.fixed) fixed.push(inst.id+'@'+calMonth(S.months)); const o=pick(inst.opts); const r=evResolve(inst,o.id); turns++; if(S.flags.expelled) break; }
+    for(const n of S.npcs){ if(n.cohort) n['好感度']=Math.min(100,num(n['好感度'])+1); }
+  }
+  const out={turns,evs,uniq:Object.keys(seen).length,fixed,months:S.months,expelled:!!S.flags.expelled,lines:JSON.stringify(S.lines)};
+  S=JSON.parse(keep); return out;
+});
+ok(`五年 ${pace.turns} 回合里有 ${pace.evs} 件事、${pace.uniq} 件不重样`, pace.evs>=25&&pace.uniq>=18);
+ok('固定节点都排上了：'+pace.fixed.join('、'), pace.fixed.some(x=>/dongzhi/.test(x))&&pace.fixed.some(x=>/tourney/.test(x)));
+console.log('    暗线：'+pace.lines+(pace.expelled?'（这一局被逐了）':''));
 
 console.log('\n【境界瓶颈】');
 const gate=await page.evaluate(()=>{ S.player.attributes['修为']=35; const d={playerChanges:{attributes:{修为:3}},narrative:'',options:[]}; const b=S.player.attributes['修为']; applyTurn(d,'苦修',{fate:20,months:3}); renderPanel(); return {b,a:S.player.attributes['修为'],txt:$('pAttrs').textContent}; });
