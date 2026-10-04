@@ -1952,8 +1952,11 @@ function avCellStyle(slot){
   const i=AV_SLOTS.indexOf(slot);
   if(i<0||!AV_SHEET) return null;
   const col=i%AV_COLS, row=Math.floor(i/AV_COLS);
-  const bx=AV_COLS>1?(col/(AV_COLS-1)*100):0, by=AV_ROWS>1?(row/(AV_ROWS-1)*100):0;
-  return `background-image:url(${AV_SHEET});background-size:${AV_COLS*100}% ${AV_ROWS*100}%;background-position:${bx}% ${by}%`;
+  // 拼图边缘会带入相邻格的发髻/衣领；每格向内取景，并按放大后的整图重算位置。
+  const zoom=1.18, inset=(zoom-1)/2;
+  const bx=(col*zoom+inset)/(AV_COLS*zoom-1)*100;
+  const by=(row*zoom+inset)/(AV_ROWS*zoom-1)*100;
+  return `background-image:url(${AV_SHEET});background-size:${AV_COLS*zoom*100}% ${AV_ROWS*zoom*100}%;background-position:${bx}% ${by}%`;
 }
 // 没图就退回原来的首字圆牌，绝不开天窗
 function portraitUrl(n){ return n&&n.canon?`assets/portraits/${n.canon}_calm.webp`:''; }
