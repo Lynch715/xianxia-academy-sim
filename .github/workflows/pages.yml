@@ -1,7 +1,8 @@
 # 部署到 GitHub Pages
 #
 # 2.0 不再有构建步骤：根目录的 index.html 就是成品。
-# 推 main 时先用假模型跑一遍端到端自测，过了再发。旧版 1.7.1 以 v1.html 一起发出去，老存档还能接着玩。
+# 推 main 时验证玩家主导剧情与每日推进；浏览器验收记录见 test/story-qa-results.md。
+# 旧版 1.7.1 以 v1.html 一起发出去，老存档还能接着玩。
 
 name: Pages
 
@@ -29,19 +30,10 @@ jobs:
         with:
           node-version: '20'
 
-      - name: 装测试依赖
+      - name: 玩家主导剧情与每日推进回归
         run: |
-          npm install --no-save playwright
-          npx playwright install --with-deps chromium
-
-      - name: 端到端自测（假模型）
-        run: node test/run.js
-
-      - name: 整局自动跑到结业（假模型）
-        run: node test/full.js
-
-      - name: 手机五个尺寸遮挡检查
-        run: node test/mobile.js
+          node test/story-regression.js
+          node test/time-daily.js
 
       - name: 收拾要发布的文件
         run: |

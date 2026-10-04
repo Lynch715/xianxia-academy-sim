@@ -5,7 +5,10 @@
   "private": true,
   "scripts": {
     "test": "node test/run.js",
-    "shot": "node test/shot.js"
+    "shot": "node test/shot.js",
+    "test:story": "node test/story-regression.js",
+    "test:time": "node test/time-daily.js",
+    "qa:story": "node test/story-preview-server.js"
   },
   "devDependencies": {
     "playwright": "^1.62.1"
