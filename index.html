@@ -1654,7 +1654,7 @@ function sysBase(){ return worldRules()+'\n\n'+rosterBlock(); }
 // 返回一个带 .sys 的字符串对象：照旧能当字符串用（includes、拼接），调用层取 .sys 放进系统消息
 function P(sys,user){ const o=new String(user); o.sys=sys; return o; }
 function addUser(p,x){ return p&&p.sys!=null?P(p.sys,String(p)+x):p+x; }
-const LEDGER_KEEP=50, LEDGER_CH=20, SUM_KEEP=20, SUM_CH=10;
+const LEDGER_KEEP=60, LEDGER_CH=20, SUM_KEEP=30, SUM_CH=10;
 function chunkSlice(arr,keep,ch,off){
   arr=arr||[]; off=num(off);
   const total=off+arr.length;
@@ -1662,8 +1662,8 @@ function chunkSlice(arr,keep,ch,off){
   return arr.slice(start-off);
 }
 function ledgerShort(x){ return String(x).replace(/^第(\d+)回·[^　]*　/,'$1回 '); }
-function ledgerText(){ return chunkSlice(S.ledger,LEDGER_KEEP,LEDGER_CH,S.ledgerOff).map(ledgerShort).join('\n')||'（尚无）'; }
-function summaryText(){ return chunkSlice(S.history,SUM_KEEP,SUM_CH,0).map(h=>`${h.turn}回｜${h.action}｜${h.summary}`).join('\n')||'（无）'; }
+function ledgerText(){ return chunkSlice(S.ledger,LEDGER_KEEP,LEDGER_CH,S.ledgerOff).join('\n')||'（尚无）'; }
+function summaryText(){ return chunkSlice(S.history,SUM_KEEP,SUM_CH,0).map(h=>`第${h.turn}回合｜${h.action}｜${h.summary}`).join('\n')||'（无）'; }
 function memoryBlocks(){
   const M=MEM();
   const vols=(S.volumes||[]).slice(-M.vol).map(v=>`〔第${v.from}至${v.to}回〕${String(v.text||'').slice(0,M.volLen)}`).join('\n')||'（尚无）';
@@ -1674,24 +1674,26 @@ ${ledgerText()}
 【前情提要】
 ${summaryText()}`;
 }
-// 眼下要紧的人：一人一行。名录里的人，性格、说话、喜恶都在系统消息的名录里，这里不重复
+// 眼下要紧的人：一人一行，资料一样不少——性格、相貌、说话、喜恶、派系、来历、秘密、往来
 function npcLine(n){
   const M=MEM();
   const secretOk=n.secretKnown||num(n['信任'])>=fdm().secretGate;
   const f=[];
   f.push(`${n.name}（${n.gender||''}${n.age?'，'+n.age+'岁':''}，${n.identity||''}${n.faction&&!(n.identity||'').includes(n.faction)?'，'+n.faction:''}）`);
-  f.push(`${realmOf(n['修为'])}`);
-  f.push(`与主角：${n.relation||'相识'}，好感${num(n['好感度'])}，信任${num(n['信任'])}${n['爱恋值']!=null?'，爱恋'+num(n['爱恋值']):''}`);
-  if(n.mood) f.push(`心情${n.mood}`);
-  if(!n.canon){
-    if((n.personality||[]).length) f.push(`性格${asArr(n.personality).join('、')}`);
-    const pt=npcPortrait(n); if(pt) f.push(`相貌：${String(pt).slice(0,60)}`);
-    if(n.notes) f.push(`备注：${String(n.notes).slice(0,80)}`);
-  }else if(n.look) f.push(`相貌：${n.look}`);
+  f.push(`${realmOf(n['修为'])}（修为${num(n['修为'])}）`);
+  f.push(`与主角：${n.relation||'相识'}，好感${num(n['好感度'])}，信任${num(n['信任'])}${n['爱恋值']!=null?'，爱恋值'+num(n['爱恋值']):''}`);
+  if(n.mood) f.push(`心情：${n.mood}`);
+  if(asArr(n.personality).length) f.push(`性格：${asArr(n.personality).join('、')}`);
+  const pt=npcPortrait(n); if(pt) f.push(`画像：${pt}`);
+  if(n.voice) f.push(`说话：${n.voice}`);
+  if(asArr(n.likes).length) f.push(`喜欢：${asArr(n.likes).join('、')}`);
+  if(asArr(n.dislikes).length) f.push(`讨厌：${asArr(n.dislikes).join('、')}`);
+  if(n.party) f.push(`派系：${n.party}`);
+  if(n.notes) f.push(`来历/备注：${n.notes}`);
   if(n.secret) f.push(`秘密：${n.secret}（${n.secretKnown?'主角已知':(secretOk?'信任已够，被真心问起可以说':'信任不够，绝不透露')}）`);
-  if((n.fromPlayer||[]).length) f.push(`学自主角：${n.fromPlayer.join('、')}`);
-  const mem=(n.memory||[]).slice(-Math.min(5,M.npcMem));
-  if(mem.length) f.push(`往来：${mem.join('；')}`);
+  if((n.fromPlayer||[]).length) f.push(`学自主角的功法：${n.fromPlayer.join('、')}`);
+  const mem=(n.memory||[]).slice(-M.npcMem);
+  if(mem.length) f.push(`与主角的往来：${mem.join('；')}`);
   return '- '+f.join('｜');
 }
 // 常规回合的固定要求：放进系统消息
@@ -1705,7 +1707,7 @@ const TURN_REQ = `【常规回合的写法】（用户消息末尾的【本回�
 - scene.unresolved 只列**眼下真正还悬着、而且主角接下来打算去管**的事，至多4条；已经办完、已经落空、或者主角已经不在乎的，就别再写进去。
   本回合了结或放下了哪几桩，写进 resolvedInfo（原样照抄未了之事里的那句话），引擎会把它从账上划掉。
 - 数值变化必须符合规则并如实写入playerChanges与npcUpdates（全部用增减量；年龄用绝对值）。受伤写hp负值，休养写hp正值。
-- 主角修炼、切磋、受指点时，用playerChanges.artsTrain长熟练度；新学的功法写artsAdd并注明style与level。修为的增量写playerChanges.attributes.修为（一个月寻常+0到+1）。心魔有变化写playerChanges.心魔。
+- 主角修炼、切磋、受指点时，用playerChanges.artsTrain长熟练度；新学的功法写artsAdd并注明style与level。修为的增量写playerChanges.attributes.修为（一天的寻常行动写0；闭关修炼按月算，一个月寻常+0到+1）。心魔有变化写playerChanges.心魔。
 - 受伤写 statusAdd，格式是 {"name":"伤名（4字以内，如「灵力反噬」「内伤」「中毒」）","desc":"一句话经过","months":将养几个月}；
   不要把整句话塞进伤名里，也不要为同一处伤换个措辞再写一条。伤会自己好，引擎在倒计时，你不必每回合都提。
   剧情里把伤治好了就写 statusRemove（只写伤名），引擎据此销账。
@@ -1724,7 +1726,7 @@ const TURN_REQ = `【常规回合的写法】（用户消息末尾的【本回�
 - 除非主角死亡或玩家明确要求收尾，gameOver必须为false。
 
 {{JSON_RULE}}
-输出格式（只写有变化的字段：没变化的数值、填0或null的字段一律省略，不要照抄整份格式。scene.unresolved 例外，照实写：空数组表示都了结了）：
+输出格式（不需要变化的字段可省略或填0/null；但 narrative、summary、scene、options 必写，npcEvents、rumors 每回合照规矩写。scene.unresolved 省略表示不变，写空数组表示都了结了）：
 {"narrative":"本回合剧情","summary":"一句话概括本回合（30字内）","scene":{"location":"","unresolved":[]},"resolvedInfo":[],"requestUpdates":[],
 "check":null或{"type":"说服","attr":"世故","need":70,"success":true},
 "playerChanges":{"lifespan":0,"lifespanReason":null,"attributes":{"修为":0,"根骨":0,"神识":0,"心境":0,"世故":0},"hp":0,"心魔":0,"fame":{"声望":0,"劣迹":0},"money":0,"contrib":0,"skills":{"技艺名":{"level":增量数字,"desc":"可选，改写说明"}},"artsAdd":[{"name":"","desc":"","style":"","level":0}],"artsTrain":[{"name":"已有功法名","level":熟练度增量}],"personalityAdd":[],"statusAdd":[{"name":"","desc":"","months":0}],"statusRemove":["伤名"],"itemsAdd":{"法器":[{"name":"","desc":"","bonus":0到20的品质}],"典籍":[],"丹药":[],"符箓":[],"杂书":[],"其他":[]},"itemsRemove":[]},
@@ -1738,6 +1740,18 @@ const TURN_REQ = `【常规回合的写法】（用户消息末尾的【本回�
 "options":[],
 "gameOver":false,"ending":null}`;
 function turnSys(){ return sysBase()+'\n\n'+TURN_REQ.replace('{{OPTIONS_RULE}}',OPTIONS_RULE).replace('{{JSON_RULE}}',JSON_RULE).replace('{{NPC_SCHEMA}}',NPC_SCHEMA).replace('{{REQUEST_RULE}}',REQUEST_RULE); }
+const HARD_CHECK=`【落笔前逐条核对（这几条比上面任何描写要求都硬；违反了引擎会退回重写或不认账）】
+1. 判定照办：天命骰、属性判定、斗法、事件结果都由引擎定死。⟦严⟧成就是成，败就是败；失败要有真实代价，不许写成「失败反而更好」。⟦/严⟧
+2. 时间照办：只写引擎给的这段时间里的事（判定里写着历时多久，或者写着时间没有流逝）。一天就是一天，不许写「数日后」「转眼一月」。
+3. 数值照规矩：⟦严⟧修为小步走（一天的行动写0），心魔单回合最多+8，灵石进项几块到几十块；⟦/严⟧境界到顶卡住的，不许写突破；突破和走火只由引擎判。
+4. 人不乱改：名录里的人身份、境界、学院、性格、说话、秘密都照资料；不许新添教习、院首、长老、院主；已登场的人名字不改，相貌照画像。
+5. 不揭暗线：怪事只能写到【已露出来的线索】为止，不许编真相。
+6. 斗法不写胜负：要动手就收在动手前，填 duel。
+7. 往前走一步：紧接上回合结尾；这回合要有新结果；【已成定局的旧事】一条也不能矛盾；已了结、已取消的事不许复活，除非玩家这回明说要重提。
+8. 玩家说了算：先把玩家这次的行动办完、写出直接后果；不替玩家做决定，不擅自收尾。
+9. 只输出一个合法 JSON；npcEvents、rumors 照写；options 按本回合要求给。`;
+function hardCheck(kind){ let t=HARD_CHECK; if(kind==='duel') t=t.replace('6. 斗法不写胜负：要动手就收在动手前，填 duel。','6. 斗法照实录：胜负、伤势照上面的实录写，不许改；本回合 duel 为 null。'); return fillRules(t); }
+function recentLedger(){ const L=(S.ledger||[]).slice(-8); return L.length?`【刚记下的账（最新几条，跟上面账本里的是同一批，这里再提一次）】\n${L.join('\n')}`:''; }
 function turnReq(judge){
   if(judge.convo) return `【本回合要求】这一回合是谈话余波，不按常规回合的写法：\n${convoAfterReq()}`;
   if(judge.evtResult||judge.breakResult||judge.craftResult||judge.hauntResult) return `【本回合要求】这一回合只写结果，不按常规回合的写法：\n${evtAfterReq()}`;
@@ -2145,7 +2159,7 @@ function ledger(t){
 const MEM_PRESET={
   // recentFull：最近几回给全文。给太多会让模型顺着自己上一段的调子往下抄，
   // 六回全是练功，第七回还是练功——事实由台账兜着，正文不必留那么多。
-  long : {vol:10, volLen:600, fold:36, foldTake:14, sum:20, recent:5, recentFull:3, recentBrief:140, npcMem:5, ledger:80, convoRecent:3, convoRecentLen:600, convoSum:10, convoVol:3, convoLedger:20},
+  long : {vol:10, volLen:600, fold:36, foldTake:14, sum:30, recent:5, recentFull:3, recentBrief:140, npcMem:8, ledger:80, convoRecent:3, convoRecentLen:600, convoSum:10, convoVol:3, convoLedger:20},
   short: {vol:8,  volLen:400, fold:26, foldTake:12, sum:16, recent:4, recentFull:2, recentBrief:100, npcMem:4, ledger:30, convoRecent:2, convoRecentLen:300, convoSum:0,  convoVol:0, convoLedger:8}
 };
 function MEM(){ return (S&&S.memLong===false)?MEM_PRESET.short:MEM_PRESET.long; }
@@ -3492,7 +3506,7 @@ const WORLD_RULES = `你是文字修仙游戏《修仙学院模拟器 · 云霄�
 属性规则（数值一律0-100）：
 - 修为：修炼的总进度，引擎把它翻成境界（练气一到九层、筑基、金丹……）。越高越强，斗法看它。可以把功法教给别人，自己不损。
 - 悟性：先天，终生不变，管领悟功法的快慢。根骨：体魄底子，管耐打、体修、扛伤。神识：心神强弱，管课业、炼丹画符、推演、识破幻术。心境：道心稳不稳，管心魔、静修、对峙。世故：人情练达，管说服、打听、交际。
-⟦严⟧- 修为涨得极慢：一个月寻常修炼只有+0到+1，勤修苦练、名师指点、服了好丹药才+2；顿悟、奇遇可以到+3，而且极罕见。境界门口引擎会卡住，要突破才过得去。不可一回合暴涨。⟦/严⟧
+⟦严⟧- 修为涨得极慢：一天的寻常行动修为不涨（写0）；整月寻常修炼只有+0到+1，勤修苦练、名师指点、服了好丹药才+2；顿悟、奇遇可以到+3，而且极罕见。引擎按历时再折算、封顶，你写多了也会被削。境界门口引擎会卡住，要突破才过得去。不可一回合暴涨。⟦/严⟧
 - 气血：0-100，受伤下降，休养、丹药恢复；低于30为重伤，行动受限。
 - 心魔：0-100，越高越乱。受辱、违心、嫉妒、执念、亲近的人出事都会涨（playerChanges.心魔写正数，单回合最多+8）；静修、有人开解、了却心结可以降一点（最多-4）。心魔过70的人暴躁多疑、修炼容易岔气，要写出来。
 - 声望/劣迹：各0-100。在院里露脸、帮了人、守了信涨声望；违反院规、欺凌同门、作弊、私斗被抓涨劣迹。劣迹高了纠察会盯上，教习会冷眼。
@@ -3537,7 +3551,7 @@ NPC规则：
 ⟦严⟧- 人物对主角好感度的变化参考现实人际交往。⟦/严⟧
 宿命规则：主角有若干"宿命"（长线目标，如五年内筑基、在七院大比上赢某人、拜入某位教习门下、查清一桩旧事、替家里争一口气）。剧情有推进时用questUpdates更新progress（0-100，累计增减），完成置status为"完成"，永远无法达成时置"失败"；剧情产生了新的长线目标时用newQuests添加（不要滥加，一局最多同时5条）。
 生计与光阴（引擎记账，你不可篡改）：
-- 时间由引擎按月推进，这一回合过去几个月引擎会告诉你。不要自行决定跳过多少时间，也不要写出具体年月；引擎说这回合两个月，你就写这两个月里的事，可以说「这阵子」「入冬以后」「季考前那几天」。学院的固定日子（开学、春猎、试炼、大比、论道、岁考）引擎会告诉你，照着来。
+- 时间由引擎推进：寻常行动只过一天；玩家选了带时长的修炼、闭关（如「闭关三个月」）才跨月。这一回合过去多久，【本回合引擎判定】里的「本回合历时」会写明。不要自行决定跳过多少时间，也不要写出具体年月；历时一天就只写这一天里的事，不许写「数日后」「转眼一月」；历时三个月才写这三个月，可以说「这阵子」「入冬以后」「季考前那几天」。学院的固定日子（开学、春猎、试炼、大比、论道、岁考）引擎会告诉你，照着来。
 - 学院管吃住，主角花的是丹药、符纸、坊市零用和人情。引擎会按月扣灵石，你不必计算，但剧情要有灵石的分量。
 ⟦严⟧- 若主角身无分文，须写出窘迫：吃最便宜的灵食、去灵田帮工、替人抄书、在坊市摆摊，绝不可凭空有人白送。⟦/严⟧
 ⟦严⟧- 横财要克制：寻常一回合进项在几块到几十块灵石；大额进项必须有来由（悬赏、大比奖励、变卖宝物、家里寄来），不可动辄上千。⟦/严⟧
@@ -3569,6 +3583,7 @@ const JSON_RULE = `你必须只输出一个合法的JSON对象，不要输出任
 const NPC_SCHEMA = `NPC对象格式：{"name":"姓名","gender":"男/女","age":年龄数字,"identity":"身份，如：丹霞院·高一届弟子、膳堂杂役、主角的姐姐","faction":"所属学院或去处，如：丹霞院、院外","alignment":"正派/邪道/中立（正派=守规矩、心正；邪道=心术不正）","personality":["性格1","性格2"],"appearance":"大白话相貌简述","修为":数字(弟子一般4到40),"世故":数字,"signature":"惯用的术法或法器","relation":"与主角关系，如：同院同届/同乡/对头/萍水相逢","好感度":数字,"信任":数字,"爱恋值":null或数字,"mood":"当下心情两字","alive":true,"secret":"此人不为人知的秘密（一句话）","notes":"重要备注"}`;
 
 const OPTIONS_RULE=`options给3至5个，每个：{"text":"选项文字","hint":"一句直白的利弊提示","type":"normal|check|duel|talk|rest","months":耗时月数,"check":null或{"attr":"悟性/根骨/神识/心境/世故/修为","need":难度数字},"duel":null或{"opponent":"在场人物准确姓名","lethal":false或true},"target":null或"talk选项要深谈的人的姓名"}。
+时长：寻常行动都是一天，months 写1即可；要花几个月的修炼、闭关、苦学，必须把时长写进选项文字（如「闭关三个月，冲一冲瓶颈」），引擎只认文字里的时长。
 要求：至少1个稳妥的normal；至少1个有风险的check（need按40容易/55一般/70困难/85极难，hint写清若成若败各会怎样）；若在场有可切磋之人给1个duel；若在场有值得深谈的人给1个talk；主角受伤、疲惫或心魔重时给1个rest（静修/疗伤/闭关）。选项之间要有真正的分歧，不要都是好事。
 **至少有1个选项要把主角带到院里另一处，或者去找一个当前不在场的人**——别让五个选项都困在同一间屋子里。
 不要把上一回合已经给过的选项原样再给一遍；玩家刚做完的事，本回合不要再拿来当选项（连着修炼了两回，就别再给「继续修炼」）。
@@ -3838,7 +3853,9 @@ ${storyBlock()}
 ${parenBlock(action,false)}【本回合引擎判定（不可更改，必须如实体现）】
 ${judgeBlock(judge)}
 ${judge.event?eventBlock(judge.event):''}${judge.evtResult?evtResultBlock(judge.evtResult):''}${judge.breakResult?breakResultBlock(judge.breakResult):''}${judge.craftResult?craftBlock(judge.craftResult):''}${judge.hauntResult?hauntBlock(judge.hauntResult):''}
-${turnReq(judge)}`);
+${turnReq(judge)}
+${recentLedger()}
+${hardCheck()}`);
 }
 
 function duelAftermathPrompt(action, judge, duel){
@@ -3864,13 +3881,15 @@ ${judgeBlock(judge)}
 - duel字段必须为null；若主角已死则gameOver为true并写ending。
 - ${OPTIONS_RULE}
 - 刚交过手的这个对手，本回合不要再给「再打一场」的 duel 选项，除非他明摆着不肯罢休。
+${recentLedger()}
+${hardCheck('duel')}
 
 ${JSON_RULE}
 输出格式同常规回合：
 {"narrative":"","summary":"","scene":{"location":"","unresolved":[]},"check":null,
 "playerChanges":{"attributes":{},"心魔":0,"fame":{"声望":0,"劣迹":0},"money":0,"skills":{},"artsAdd":[],"artsTrain":[],"statusAdd":[],"statusRemove":[],"itemsAdd":{},"itemsRemove":[]},
 "npcUpdates":[],"newNpcs":[],"npcEvents":[],"rumors":[],"newVendettas":[],"questUpdates":[],"newQuests":[],"rankingUpdates":[],"rankingAdd":[],"duel":null,"options":[],"gameOver":false,"ending":null}
-没有变化的字段一律省略。`);
+不需要变化的字段可省略或填0/null。`);
 }
 
 function convoPrompt(npc, line, roll, gift){
@@ -4321,9 +4340,21 @@ function storyIssues(d,action,npc,judge){
   }
   return [...new Set(issues)];
 }
+// 软断言：只在第一稿上查，查到了退回重写一次；第二稿还犯也照收，不至于让这一回合作废
+function softIssues(d,action,npc,judge){
+  if(npc||!judge) return [];
+  const issues=[], text=String(d.narrative||''), p=S.player;
+  const plain=!(judge.evtResult||judge.breakResult||judge.craftResult||judge.hauntResult||judge.convo);
+  if(plain&&num(judge.months)>0&&num(judge.months)<1&&!/几天|数日|多日|半月|一个月|几个月|过些日子|以后再|改天/.test(action||'')
+     &&/数日后|几天后|[两三四五六七八九十0-9]+[天日](?:之)?后|过了(?:好|几|数)[天日]|半个?月(?:后|过去)|一个?月(?:后|过去)|月余|转眼(?:间)?(?:已|就|过了|到了)|旬日/.test(text))
+    issues.push('本回合只过了一天，剧情不许跳过几天或几个月；只写这一天里的事');
+  if(!judge.breakResult&&new RegExp('(?:你|'+String(p.name).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')[^。！？\\n]{0,10}(?:突破到|突破了|晋入|迈入|踏入|跨入|结成)(?:筑基|金丹|元婴|化神|练气[一二三四五六七八九]层)').test(text))
+    issues.push('主角破境只由引擎判定（闭关冲关那一步），剧情不许写主角突破了境界');
+  return issues;
+}
 async function playerDrivenJSON(prompt,action,npc,judge,onPartial,opt){
   let d=fixNames(await llmJSON(prompt,onPartial,opt));
-  const issues=storyIssues(d,action,npc,judge);
+  const issues=storyIssues(d,action,npc,judge).concat(softIssues(d,action,npc,judge));
   if(!issues.length) return d;
   const correction=addUser(prompt,`\n【本次输出需修订】${issues.join('；')}。重写完整JSON；先逐项落实玩家要求，沿其行为推进。不要重复发放已经在事实台账里的奖励。\n【待修订输出】`+JSON.stringify(d));
   d=fixNames(await llmJSON(correction,onPartial,opt));
