@@ -74,7 +74,9 @@ while(steps<320){
   });
   if(pick.craft){ crafts++; await page.evaluate(()=>{ const r=XX_RECIPES.filter(x=>recipeTierOk(x)&&x.cost<=num(S.player.money)&&x.craft==='pill'); doCraft((r.find(x=>/凝气|固元/.test(x.name))||r[0]).id); }); continue; }
   if(pick.k==='event') events++; if(pick.k==='break') breaks++;
-  await page.click(`#choices .opt >> nth=${pick.i}`);
+  // 心魔夜访会在半秒后弹窗，直接点会被遮住；在页面里点，并先确认没有弹窗、不在推演中
+  await page.evaluate(i=>{ if(convo||busy||$('duelMask').classList.contains('on')) return; const b=document.querySelectorAll('#choices .opt')[i]; if(b) b.click(); },pick.i);
+  await page.waitForTimeout(50);
   if(!lastYearSeen&&prompts.some(p=>p.includes('离结业还有'))) lastYearSeen=true;
 }
 await page.waitForFunction(()=>S.over&&!busy,null,{timeout:30000}).catch(()=>{});
