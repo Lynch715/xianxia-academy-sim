@@ -103,14 +103,15 @@ ok('章节里有骰子档位和事件结算', /→ (圆满|尚可|平淡|不利|
 
 console.log('\n【第一回合：模型越界】');
 const before=await page.evaluate(()=>({xw:S.player.attributes['修为'],money:S.player.money,shen:JSON.parse(JSON.stringify(S.npcs.find(n=>n.name==='沈惊澜'))),cap:growthCap(),xj:S.player.attributes['心境']}));
-await page.evaluate(()=>{ const i=S.lastOptions.findIndex(o=>o.type!=='event'); document.querySelectorAll('#choices .opt')[i].click(); });
+// 按日推进：把日子拨到九月最后一天，这一步走完正好进十月，新生考核该来了
+await page.evaluate(()=>{ S.months=29/30; const i=S.lastOptions.findIndex(o=>o.type!=='event'); document.querySelectorAll('#choices .opt')[i].click(); });
 await idle();
 const after=await page.evaluate(()=>({xw:S.player.attributes['修为'],xj:S.player.attributes['心境'],demon:S.player['心魔'],money:S.player.money,fac:S.player.faction,
   shen:S.npcs.find(n=>n.name==='沈惊澜'),zl:S.npcs.find(n=>n.name==='钟离衡'),bl:S.npcs.find(n=>n.name==='白鹿卿'),li:S.npcs.find(n=>n.name==='李长老'),zhou:S.npcs.find(n=>n.name==='周小满'),
   rankShen:(S.world.ranking.find(r=>r.name==='沈惊澜')||{})['修为']}));
 const tp=prompts[prompts.length-1];
 ok('回合提示词带学院日历与境界', tp.includes('【学院的日子】')&&tp.includes('【境界】'));
-ok(`修为涨幅被卡住（${before.xw}→${after.xw}，单月上限 ${Math.round(before.cap*1.4)}）`, after.xw-before.xw<=3&&after.xw>before.xw);
+ok(`一天的行动修为涨不过 1（模型给 +6，${before.xw}→${after.xw}）`, after.xw-before.xw<=1);
 ok(`资质一回合最多 +3（心境 ${before.xj}→${after.xj}）`, after.xj-before.xj<=3);
 ok('心魔单回合最多 +8：'+after.demon, after.demon===8||after.demon===4);
 ok(`横财被削（模型给 900，实得 ${after.money-before.money}）`, after.money-before.money<=190);
@@ -128,16 +129,15 @@ const story=await page.textContent('#story');
 ok('起居注写出见到名录中人', /见到了【钟离衡】/.test(story));
 ok('院中传闻标题', story.includes('院中传闻'));
 
-ok('第二个月排上新生摸底考核：'+await page.evaluate(()=>S.evt.cur&&S.evt.cur.id), await page.evaluate(()=>!!(S.evt.cur&&S.evt.cur.id==='fixed_freshman_exam')));
+ok('进了十月，新生摸底考核照日子找上门：'+await page.evaluate(()=>S.evt.cur&&S.evt.cur.id), await page.evaluate(()=>!!(S.evt.cur&&S.evt.cur.id==='fixed_freshman_exam')));
 ok('事件回合的提示词带【本回合院中事件】', tp.includes('【本回合院中事件')&&tp.includes('顾长青'));
 ok('事件回合模型只给两个别的去处', await page.evaluate(()=>S.lastOptions.filter(o=>o.type!=='event').length<=2&&S.lastOptions.filter(o=>o.type==='event').length===3));
 
-console.log('\n【事件挂着没接】');
+console.log('\n【事件没接】');
 await page.evaluate(()=>{ const i=S.lastOptions.findIndex(o=>o.type!=='event'); document.querySelectorAll('#choices .opt')[i].click(); });
 await idle();
-const hang=await page.evaluate(()=>({cur:S.evt.cur&&S.evt.cur.id,again:S.evt.cur&&S.evt.cur.again}));
-ok('没接的事件下回合又找上门：'+hang.cur, hang.cur==='fixed_freshman_exam'&&hang.again===true);
-ok('提示词里写明「上回合没接」', prompts[prompts.length-1].includes('他没接'));
+const hang=await page.evaluate(()=>({cur:S.evt.cur&&S.evt.cur.id,d:S.evt.dismissed&&S.evt.dismissed.fixed_freshman_exam}));
+ok('没接的事件搁下，不再缠着：'+JSON.stringify(hang.d&&{closed:hang.d.closed}), !!hang.d&&hang.cur!=='fixed_freshman_exam');
 
 console.log('\n【事件全量记账】');
 const sweep=await page.evaluate(()=>{
@@ -159,7 +159,7 @@ const pace=await page.evaluate(()=>{
   while(S.months<60&&turns<400){
     turns++; S.turn++;
     const k=Math.min(1+(Math.random()<0.3?1:0),monthsToFixed(S.months));
-    const inst=pickEvent(S.months+k); S.months+=k;
+    const inst=pickEvent(S.months+k,"",k); S.months+=k;
     if(inst){ evs++; seen[inst.id]=1; if(inst.fixed) fixed.push(inst.id+'@'+calMonth(S.months)); const o=pick(inst.opts); const r=evResolve(inst,o.id); turns++; if(S.flags.expelled){ S.flags.expelled=false; S.flags.wasExpelled=true; } }
     for(const n of S.npcs){ if(n.cohort) n['好感度']=Math.min(100,num(n['好感度'])+1); }
   }

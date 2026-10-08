@@ -1035,37 +1035,47 @@ function reopenRequestedEvents(action){
     }
   }
 }
-function pickEvent(m,action){
+// 玩家明说不理、拒绝的时候不排事件；其余时候日子到了事情照样找上门（先写完玩家的行动，再让它出现）
+function eventRefused(action){ return /不再|别再|不要再|不理|不管|拒绝|放弃|先不|转身走|不参加|不参与/.test(String(action||'')); }
+// 随机事件的概率按这一回合过去的天数折算：平均一个月一到两件；整月的闭关照旧六成
+function randEventChance(k){ k=num(k); return k>=1?0.6:1-Math.exp(-1.2*k); }
+function pickEvent(m,action,k){
   const E=evS(); E.hang=null;
-  // 固定节点存在，但不能抢走玩家的行动；只有主动参与才进入事件。
+  if(k==null) k=DAY_MONTH;
+  const refused=eventRefused(action);
+  // 1. 固定日子：入院大典、新生考核、冬至论道、七院大比、毕业抉择——到了就排，玩家可以不接
   for(const back of [0,1,2]) for(const id in FIXED_MONTH){
     const mm=m-back; if(mm<0||calMonth(mm)!==FIXED_MONTH[id]||gradeOf(mm)!==gradeOf(m)) continue;
     const key=id+'_'+gradeOf(mm); if(E.fixedDone[key]) continue;
     const ev=evById(id); if(!ev||!evMatch(ev,mm,{ignoreCd:true,chain:true})) continue;
-    const inst=evInstance(ev); if(!eventRelevant(inst,action)) continue;
-    E.fixedDone[key]=true; return inst;
+    if(refused&&!eventRelevant(evInstance(ev),action)) continue;
+    E.fixedDone[key]=true; return evInstance(ev);
   }
+  if(refused) return null;
+  // 2. 事件链的下一章：到期就来
   for(const ch of E.chains.slice()){
     if(m<ch.due) continue;
     const ev=evById(ch.id),drop=()=>{E.chains=E.chains.filter(x=>x!==ch);};
     if(!ev){drop();continue;}
-    if(evMatch(ev,m,{chain:true,actor:ch.actor})){
-      const inst=evInstance(ev,ch.actor); if(eventRelevant(inst,action)){drop();return inst;}
-    }
+    if(evMatch(ev,m,{chain:true,actor:ch.actor})){drop();return evInstance(ev,ch.actor);}
     if(m>ch.due+3) drop();
   }
-  // 派系表态和争名额只在玩家主动涉及这些事时挑选，避免消耗日历后再丢掉。
-  if(!action||/派系|四派|表态|守旧派|革新派|务实派|逍遥派/.test(action)){
-    if(!eventSuppressed('evt_faction_demand',m)){const dm=makeDemand(m);if(dm)return dm;}
-  }
-  if((!action||/名额|争取|竞争/.test(action))&&!eventSuppressed('evt_rival_contest',m)&&num(S.turn)>=3&&Math.random()<0.7){const ct=makeContest(m);if(ct)return ct;}
-  const pool=XX_EVENTS.filter(e=>!e.fixed&&!e.chainOnly&&!e.filler&&evMatch(e,m)).map(e=>evInstance(e)).filter(i=>eventRelevant(i,action));
+  // 3. 四派表态每学期一回；同届相争按各人的节奏
+  if(!eventSuppressed('evt_faction_demand',m)){const dm=makeDemand(m);if(dm)return dm;}
+  if(!eventSuppressed('evt_rival_contest',m)&&num(S.turn)>=3&&Math.random()<0.7){const ct=makeContest(m);if(ct)return ct;}
+  const pool=XX_EVENTS.filter(e=>!e.fixed&&!e.chainOnly&&!e.filler&&evMatch(e,m)).map(e=>evInstance(e));
+  // 4. 暗线上的事：条件一到就排
   const line=pool.filter(e=>e.cat==='storyline');
   if(line.length) return wpick(line,i=>evWeight(evById(i.id)));
-  if(num(S.turn)>=2&&pool.length&&Math.random()<0.6) return wpick(pool,i=>evWeight(evById(i.id)));
-  if(num(S.turn)-num(E.lastFill)>=3&&Math.random()<0.3){
-    const fill=XX_EVENTS.filter(e=>e.filler&&evMatch(e,m,{ignoreCd:true})).map(e=>evInstance(e)).filter(i=>eventRelevant(i,action));
-    if(fill.length){E.lastFill=S.turn;const least=Math.min(...fill.map(e=>num(E.counts[e.id])));return pick(fill.filter(e=>num(E.counts[e.id])===least));}
+  // 5. 玩家自己往某件事上凑（随便逛、找某人叙旧、打听某事），对得上的优先；两件之间至少隔三天
+  const rel=pool.filter(i=>eventRelevant(i,action));
+  if(action&&rel.length&&m-num(E.lastRandM==null?-9:E.lastRandM)>=3*DAY_MONTH-1e-6&&Math.random()<0.5){ E.lastRandM=m; return wpick(rel,i=>evWeight(evById(i.id))); }
+  // 6. 其余按天数折算概率，两件随机事件之间至少隔五天
+  if(num(S.turn)>=2&&pool.length&&m-num(E.lastRandM==null?-9:E.lastRandM)>=5*DAY_MONTH-1e-6&&Math.random()<randEventChance(k)){ E.lastRandM=m; return wpick(pool,i=>evWeight(evById(i.id))); }
+  // 7. 隔二十来天给一件小事
+  if(m-num(E.lastFillM==null?-9:E.lastFillM)>=0.75&&Math.random()<Math.min(0.3,randEventChance(k)*2)){
+    const fill=XX_EVENTS.filter(e=>e.filler&&evMatch(e,m,{ignoreCd:true})).map(e=>evInstance(e));
+    if(fill.length){E.lastFill=S.turn;E.lastFillM=m;const least=Math.min(...fill.map(e=>num(E.counts[e.id])));return pick(fill.filter(e=>num(E.counts[e.id])===least));}
   }
   return null;
 }
@@ -1219,7 +1229,7 @@ function eventBlock(inst){
 场景：${inst.scene||'院中'}
 接下来主角要做的选择（引擎会把这几个选项原样摆给玩家，你不要写进options，也不要替主角选、不要写结果）：
 ${inst.opts.map(o=>`  ${o.id}. ${o.text}`).join('\n')}
-写法：从玩家本回合的行动顺下来，写到这件事发生、玩家可以选择参与或离开之时就收笔。起因里的话可以改写成你的叙述，但「必须发生的事」每一条都要发生，在场的人要出场。剧情的末尾就是这件事的开头，不要再接别的事。
+写法：先把玩家这次的行动写完、写出它的直接结果（玩家要做的事不许被这件事打断或吞掉），再让这件事找上门——有人来叫、迎面撞见、通知传到、日子到了。写到这件事摆在主角面前、他可以选择参与或离开之时就收笔。起因里的话可以改写成你的叙述，但「必须发生的事」每一条都要发生，在场的人要出场。剧情的末尾就是这件事的开头，不要再接别的事。
 `;
 }
 function evtResultBlock(r){
@@ -3583,7 +3593,7 @@ const JSON_RULE = `你必须只输出一个合法的JSON对象，不要输出任
 const NPC_SCHEMA = `NPC对象格式：{"name":"姓名","gender":"男/女","age":年龄数字,"identity":"身份，如：丹霞院·高一届弟子、膳堂杂役、主角的姐姐","faction":"所属学院或去处，如：丹霞院、院外","alignment":"正派/邪道/中立（正派=守规矩、心正；邪道=心术不正）","personality":["性格1","性格2"],"appearance":"大白话相貌简述","修为":数字(弟子一般4到40),"世故":数字,"signature":"惯用的术法或法器","relation":"与主角关系，如：同院同届/同乡/对头/萍水相逢","好感度":数字,"信任":数字,"爱恋值":null或数字,"mood":"当下心情两字","alive":true,"secret":"此人不为人知的秘密（一句话）","notes":"重要备注"}`;
 
 const OPTIONS_RULE=`options给3至5个，每个：{"text":"选项文字","hint":"一句直白的利弊提示","type":"normal|check|duel|talk|rest","months":耗时月数,"check":null或{"attr":"悟性/根骨/神识/心境/世故/修为","need":难度数字},"duel":null或{"opponent":"在场人物准确姓名","lethal":false或true},"target":null或"talk选项要深谈的人的姓名"}。
-时长：寻常行动都是一天，months 写1即可；要花几个月的修炼、闭关、苦学，必须把时长写进选项文字（如「闭关三个月，冲一冲瓶颈」），引擎只认文字里的时长。
+时长：寻常行动都只过一天，months 写1。修炼、闭关、养伤、苦学、备考这类要花几个月的，months 写2到6，并把时长写进选项文字（如「闭关三个月，冲一冲瓶颈」）；别的行动写了多个月也只按一天算。每回合最好有一个这样的长时长选项，好让玩家能把日子往前推。
 要求：至少1个稳妥的normal；至少1个有风险的check（need按40容易/55一般/70困难/85极难，hint写清若成若败各会怎样）；若在场有可切磋之人给1个duel；若在场有值得深谈的人给1个talk；主角受伤、疲惫或心魔重时给1个rest（静修/疗伤/闭关）。选项之间要有真正的分歧，不要都是好事。
 **至少有1个选项要把主角带到院里另一处，或者去找一个当前不在场的人**——别让五个选项都困在同一间屋子里。
 不要把上一回合已经给过的选项原样再给一遍；玩家刚做完的事，本回合不要再拿来当选项（连着修炼了两回，就别再给「继续修炼」）。
@@ -7259,6 +7269,9 @@ function durationText(months){
 }
 function optMonths(opt, action){
   const text=String(action||(opt&&opt.text)||'');
+  // 玩家点的是模型给的选项：长时长只认修炼、闭关、养伤、苦学、备考这类，最长六个月
+  if(opt&&opt.text&&num(opt.months)>=2&&/修炼|闭关|参悟|苦修|打坐|练功|静修|养伤|疗伤|将养|静养|苦学|备考|温书|跟.{1,6}学|苦练|蛰伏|潜修/.test(String(opt.text)+String(opt.hint||'')))
+    return Math.min(6,Math.round(num(opt.months)));
   // 仅玩家所选/所写的修炼行动明确标出时长，才允许跨月；模型的 months 字段不作授权。
   if(!/修炼|闭关|参悟|苦修|打坐|练功/.test(text)) return DAY_MONTH;
   const match=text.match(/([0-9]+|[一二两三四五六七八九十十二]+)\s*个?月/);
@@ -7432,10 +7445,10 @@ async function act(action, opt){
   const E=evS();
   dismissCurrentEvent(action);
   reopenRequestedEvents(action);
-  judge.event=judge.finale?null:pickEvent(num(S.months)+num(judge.months),action);
+  judge.event=judge.finale?null:pickEvent(num(S.months)+num(judge.months),action,num(judge.months));
   if(judge.event) judge.worldEvent=null;
   if(/退学/.test(action||'')) judge.maybeDropout=true;
-  await runTurn(action, judge, {});
+  await runTurn(action, judge, {opt});
 }
 async function evChoose(opt){
   const E=evS(), inst=E.cur;
@@ -7450,7 +7463,7 @@ async function evChoose(opt){
 async function runTurn(action, judge, extra){
   extra=extra||{};
   if(!judge.convo)notePlayerDirection(action,null);
-  if(num(judge.months)>0) judge.months=Math.min(optMonths(null,action),monthsToFixed(num(S.months)),GRAD_M-num(S.months));
+  if(num(judge.months)>0) judge.months=Math.min(optMonths(extra.opt||null,action),monthsToFixed(num(S.months)),GRAD_M-num(S.months));
   if(S&&!S.over&&num(judge.months)>0&&num(S.months)+num(judge.months)>=GRAD_M) judge.finale=true;
   $('choices').innerHTML='';
   setBusy(true, extra.duelData?'正在记下这一场斗法……':'正在推演……');

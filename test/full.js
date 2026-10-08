@@ -26,6 +26,7 @@ await page.route('**/chat/completions',async route=>{
   const body=pickBody(pr);
   if(body.playerChanges){ body.playerChanges['心魔']=1; body.playerChanges.money=8; body.playerChanges.hp=0; }
   if(body.npcUpdates) body.npcUpdates=body.npcUpdates.map(u=>({name:u.name,好感度:3,信任:6}));
+  if(body.scene) delete body.scene.unresolved;   // 假模型老写同一件旧事，会被「已了结的事不许复活」打回
   body.duel=null;
   if(body.options) body.options=body.options.filter(o=>o.type!=='duel'&&o.type!=='talk');
   await route.fulfill({status:200,headers:{'Content-Type':'text/event-stream'},body:sse(body)});
@@ -66,6 +67,9 @@ while(steps<320){
     const brk=bs.findIndex(b=>b.dataset.type==='break'); if(brk>=0&&num(S.player['心魔'])<70) return {i:brk,k:'break'};
     if(num(S.turn)%7===3&&num(S.player.money)>=5) return {craft:true};
     const ok=bs.map((b,i)=>({i,t:b.dataset.type})).filter(x=>x.t!=='break'&&x.t!=='duel'&&x.t!=='talk');
+    // 按日推进：寻常行动只过一天，多数时候挑那条要花几个月的修炼，日子才走得动
+    const long=ok.filter(x=>{ const o=(S.lastOptions||[]).find(y=>bs[x.i].textContent.includes(y.text)); return o&&optMonths(o)>=1; });
+    if(long.length&&Math.random()<0.75) return {i:long[0].i,k:'free'};
     return {i:(ok.length?ok[Math.floor(Math.random()*ok.length)]:{i:0}).i,k:'free'};
   });
   if(pick.craft){ crafts++; await page.evaluate(()=>{ const r=XX_RECIPES.filter(x=>recipeTierOk(x)&&x.cost<=num(S.player.money)&&x.craft==='pill'); doCraft((r.find(x=>/凝气|固元/.test(x.name))||r[0]).id); }); continue; }

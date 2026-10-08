@@ -7,7 +7,9 @@ vm.runInContext(`const DAY_MONTH=1/30; const num=x=>Number(x)||0; const XX={year
 let ticks=0;const upkeepPerMonth=()=>3,tickNpcs=()=>ticks++,sectTick=()=>{},clanTick=()=>{},agingTick=()=>{},npcYearTick=()=>{},fdm=()=>({starve:1}),tickAilments=()=>[],rebuildStatus=()=>{},ledger=()=>{};
 let S={months:0,player:{money:100,age:16,hp:100}};
 assert.equal(optMonths({months:4,text:'照常上课'}),DAY_MONTH);
-assert.equal(optMonths({type:'rest',months:2,text:'疗伤'}),DAY_MONTH);
+assert.equal(optMonths({type:'rest',months:2,text:'疗伤'}),2);
+assert.equal(optMonths({months:9,text:'闭关苦修'}),6);
+assert.equal(optMonths(null,'疗伤'),DAY_MONTH);
 assert.equal(optMonths(null,'闭关修炼三个月'),3);
 assert.equal(optMonths({text:'闭关 6 个月，参悟功法'}),6);
 advanceTime(DAY_MONTH);assert.equal(S.months,1/30);assert.equal(S.player.money,100);assert.ok(S.date.endsWith('九月2日'));

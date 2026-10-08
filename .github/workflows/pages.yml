@@ -36,6 +36,17 @@ jobs:
           node test/time-daily.js
           node test/prompt-guard.js
 
+      - name: 装浏览器
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+
+      - name: 端到端自测、整局跑到结业、手机五尺寸（假模型）
+        run: |
+          node test/run.js
+          node test/full.js
+          node test/mobile.js
+
       - name: 收拾要发布的文件
         run: |
           mkdir -p _site
