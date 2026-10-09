@@ -1,6 +1,6 @@
 {
   "name": "xianxia-academy-sim",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "修仙学院模拟器 · 云霄仙院 —— 单 HTML 文件，界面与回合引擎沿用《武侠江湖模拟器》，故事由你自己的模型推演，数值由页面里的引擎记账。",
   "private": true,
   "scripts": {

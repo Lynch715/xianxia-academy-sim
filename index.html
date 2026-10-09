@@ -1137,7 +1137,7 @@ function evApply(inst,grade,oc){
         const fa=up(n,'好感度',a); if(fa) out.push(`${n.name}好感${sgn(fa)}`);
         if(f.trust){ const t=up(n,'信任',sc(f.trust)); if(t) out.push(`${n.name}信任${sgn(t)}`); }
         if(f.romance) n.romanceOpen=true;
-        if(f.note){ n.memory=n.memory||[]; n.memory.push(`${S.date}：${f.note}`); while(n.memory.length>MEM().npcMem) n.memory.shift(); }
+        if(f.note) npcRemember(n,`${S.date}：${f.note}`);
         n.lastSeen=S.turn;
         break; }
       case 'attr':{ const k=f.key; if(p.attributes[k]==null||k==='悟性') break; const v=Math.max(-10,Math.min(10,f.v)); p.attributes[k]=clamp(num(p.attributes[k])+v); out.push(`${k}${sgn(v)}`); break; }
@@ -1317,7 +1317,8 @@ function demonPrompt(line){
   const p=S.player, c=convo, sh=c.shape?findNpc(c.shape):null;
   const log=c.msgs.map(m=>m.role==='me'?`${p.name}：${m.text}`:`心魔：${m.text}`).join('\n')||'（刚开口）';
   const hurt=(S.ledger||[]).slice(-16).join('\n');
-  return P(sysBase()+(fdm().convo?'\n'+fdm().convo:''), `你现在是主角${p.name}的心魔。${sh?`你借了「${sh.name}」的样子和声音（${sh.relation||''}，${npcPortrait(sh)}），说话的腔调像那个人，但说出口的全是${p.name}心里最怕、最痛、最不肯承认的东西。`:`你借了${p.name}自己的样子，像照镜子一样跟他说话。`}
+  return P(sysBase()+(fdm().convo?'\n'+fdm().convo:''), `${npcBook()}
+你现在是主角${p.name}的心魔。${sh?`你借了「${sh.name}」的样子和声音（${sh.relation||''}，${npcPortrait(sh)}），说话的腔调像那个人，但说出口的全是${p.name}心里最怕、最痛、最不肯承认的东西。`:`你借了${p.name}自己的样子，像照镜子一样跟他说话。`}
 【此刻】${c.mode==='break'?`${p.name}正在闭关冲击${nextRealmName()}，你趁他灵力翻涌的时候钻了出来`:`${p.name}的心魔已经重到压不住了，深夜里你找上了他`}。心魔${num(p['心魔'])}，心境${num(p.attributes['心境'])}，${realmOf(p.attributes['修为'])}。
 【他身上的事】身世：${p.backstory||''}
 宿命：${(S.quests||[]).filter(q=>q.status==='进行中').map(q=>q.title).join('；')||'无'}
@@ -1677,30 +1678,67 @@ function summaryText(){ return chunkSlice(S.history,SUM_KEEP,SUM_CH,0).map(h=>`�
 function memoryBlocks(){
   const M=MEM();
   const vols=(S.volumes||[]).slice(-M.vol).map(v=>`〔第${v.from}至${v.to}回〕${String(v.text||'').slice(0,M.volLen)}`).join('\n')||'（尚无）';
-  return `【前尘卷录（早先经历的概要）】
+  return `${npcBook()}
+【前尘卷录（早先经历的概要）】
 ${vols}
 【已成定局的旧事（引擎逐条记的账，全部为真，后文不得与之矛盾）】
 ${ledgerText()}
 【前情提要】
 ${summaryText()}`;
 }
-// 眼下要紧的人：一人一行，资料一样不少——性格、相貌、说话、喜恶、派系、来历、秘密、往来
-function npcLine(n){
-  const M=MEM();
-  const secretOk=n.secretKnown||num(n['信任'])>=fdm().secretGate;
-  const f=[];
-  f.push(`${n.name}（${n.gender||''}${n.age?'，'+n.age+'岁':''}，${n.identity||''}${n.faction&&!(n.identity||'').includes(n.faction)?'，'+n.faction:''}）`);
-  f.push(`${realmOf(n['修为'])}（修为${num(n['修为'])}）`);
-  f.push(`与主角：${n.relation||'相识'}，好感${num(n['好感度'])}，信任${num(n['信任'])}${n['爱恋值']!=null?'，爱恋值'+num(n['爱恋值']):''}`);
-  if(n.mood) f.push(`心情：${n.mood}`);
-  if(asArr(n.personality).length) f.push(`性格：${asArr(n.personality).join('、')}`);
+/* ================= 人物志 =================
+   每个见过的人（名录里的也算）第一次进人物志时，把底子定成一张卡：性别、初见年纪、身份、画像、性格、说话、喜恶、来历、秘密。
+   卡一旦写下就不改，人物志只往末尾加新人，所以整块一局里只会变长、不会变样，接口的前缀缓存一直命中。
+   会变的东西（关系、好感、信任、心情、现在的身份、补记、往来）放在【眼下要紧的人】里，每回合重写。 */
+const NPC_MEM_CAP=24;
+function npcCardText(n){
+  const f=[`${n.name}（${n.gender||'性别未明'}，初见时${n.age?n.age+'岁':'年纪不详'}）`];
+  f.push(`身份：${n.identity||'不详'}${n.faction&&!(n.identity||'').includes(n.faction)?'（'+n.faction+'）':''}`);
   const pt=npcPortrait(n); if(pt) f.push(`画像：${pt}`);
+  if(n.appearance&&n.appearance!==pt) f.push(`相貌补充：${n.appearance}`);
+  if(asArr(n.personality).length) f.push(`性格：${asArr(n.personality).join('、')}`);
   if(n.voice) f.push(`说话：${n.voice}`);
   if(asArr(n.likes).length) f.push(`喜欢：${asArr(n.likes).join('、')}`);
   if(asArr(n.dislikes).length) f.push(`讨厌：${asArr(n.dislikes).join('、')}`);
   if(n.party) f.push(`派系：${n.party}`);
-  if(n.notes) f.push(`来历/备注：${n.notes}`);
-  if(n.secret) f.push(`秘密：${n.secret}（${n.secretKnown?'主角已知':(secretOk?'信任已够，被真心问起可以说':'信任不够，绝不透露')}）`);
+  if(n.signature) f.push(`拿手：${n.signature}`);
+  if(n.notes) f.push(`来历：${n.notes}`);
+  if(n.secret) f.push(`秘密：${n.secret}`);
+  if(n.playerMade) f.push('（玩家亲口说出的人，以玩家原话为准）');
+  return '- '+f.join('｜');
+}
+function ensureCard(n){
+  if(!n.card){ n.card=npcCardText(n); n.cardIdentity=n.identity||''; n.cardTurn=num(S.turn); }
+  return n.card;
+}
+function npcBook(){
+  const L=(S.npcs||[]).filter(n=>{ ensureCard(n); return !n.canon; }).map(n=>n.card);
+  return `【人物志（名录以外、见过的每个人的底子；名录里的人看系统消息里的【院中名录】。，引擎定下的，一字不许改：性别、长相、性格、说话、来历、秘密都以这里为准；人不在眼前也照这里写，不许另编）】
+${L.join('\n')||'（尚无）'}`;
+}
+// 记一笔往来：去重，最多留 24 条
+function npcRemember(n,text){
+  if(!n||!text) return;
+  n.memory=n.memory||[];
+  const t=String(text).slice(0,120);
+  const core=t.replace(/^[^：]*：/,'');
+  if(n.memory.some(x=>String(x).replace(/^[^：]*：/,'')===core)) return;
+  n.memory.push(t);
+  while(n.memory.length>NPC_MEM_CAP) n.memory.shift();
+}
+// 眼下要紧的人：只写会变的东西；底子在人物志里
+function npcLine(n){
+  const M=MEM();
+  ensureCard(n);
+  const secretOk=n.secretKnown||num(n['信任'])>=fdm().secretGate;
+  const f=[n.name];
+  if((n.identity||'')!==(n.cardIdentity||'')) f.push(`如今的身份：${n.identity}`);
+  f.push(`${realmOf(n['修为'])}（修为${num(n['修为'])}）`);
+  if(n.age) f.push(`现年${n.age}岁`);
+  f.push(`与主角：${n.relation||'相识'}，好感${num(n['好感度'])}，信任${num(n['信任'])}${n['爱恋值']!=null?'，爱恋值'+num(n['爱恋值']):''}`);
+  if(n.mood) f.push(`心情：${n.mood}`);
+  if(n.secret) f.push(`秘密：${n.canon?n.secret+'（':''}${n.secretKnown?'主角已知':(secretOk?'信任已够，被真心问起可以说':'信任不够，绝不透露')}${n.canon?'）':''}`);
+  if((n.notesAdd||[]).length) f.push(`补记：${n.notesAdd.slice(-6).join('；')}`);
   if((n.fromPlayer||[]).length) f.push(`学自主角的功法：${n.fromPlayer.join('、')}`);
   const mem=(n.memory||[]).slice(-M.npcMem);
   if(mem.length) f.push(`与主角的往来：${mem.join('；')}`);
@@ -1726,6 +1764,8 @@ const TURN_REQ = `【常规回合的写法】（用户消息末尾的【本回�
   已经写在【主角面板】arts 里的功法，任何人都不可以再「传授」给主角一遍，也不可以把对应的典籍当礼物送他——
   那是他早就会的；其中有几门还是他自己教出去的，更不可能由对方回传。要给就给他没有的。
 - 寿元随境界走，由引擎记账；只有极罕见的奇遇（千年灵药、天材地宝）能另外加，写进playerChanges.lifespan与lifespanReason。寻常疗伤进补一律不许加寿元。
+- 玩家在行动里说出的人（「我哥叫林远」「有个叫周小满的同窗」），人物表里没有的，本回合必须写进newNpcs，关系、身份、性别照玩家原话，玩家没说的才由你补。
+- 已登场的人，底子以【人物志】为准，npcUpdates 只写会变的东西（好感、信任、心情、关系、身份变动、补记），不要改性别、长相、性格、来历、秘密。
 - 初次登场的新人物写入newNpcs（完整资料含secret，不得简化；身份只能是弟子、杂役、坊市的人、来客、家里人）；一回合最多添2人，宁可少不可滥。名录里的人不写newNpcs。已有人物的变化写入npcUpdates（好感、信任、心情、关系）；若剧情揭开了某人的秘密，写secretRevealed:true。
 - {{REQUEST_RULE}}
 - npcEvents写1-2条相识的人之间的互动琐事或进展（谁和谁结伴、谁考砸了、谁闭关了、谁闹翻了，须有因果）。
@@ -1754,7 +1794,7 @@ const HARD_CHECK=`【落笔前逐条核对（这几条比上面任何描写要�
 1. 判定照办：天命骰、属性判定、斗法、事件结果都由引擎定死。⟦严⟧成就是成，败就是败；失败要有真实代价，不许写成「失败反而更好」。⟦/严⟧
 2. 时间照办：只写引擎给的这段时间里的事（判定里写着历时多久，或者写着时间没有流逝）。一天就是一天，不许写「数日后」「转眼一月」。
 3. 数值照规矩：⟦严⟧修为小步走（一天的行动写0），心魔单回合最多+8，灵石进项几块到几十块；⟦/严⟧境界到顶卡住的，不许写突破；突破和走火只由引擎判。
-4. 人不乱改：名录里的人身份、境界、学院、性格、说话、秘密都照资料；不许新添教习、院首、长老、院主；已登场的人名字不改，相貌照画像。
+4. 人不乱改：每个见过的人都照【人物志】写，性别、长相、性格、说话、来历、秘密一样不许错，不在眼前的人也一样；名录里的人身份、境界、学院照名录；不许新添教习、院首、长老、院主；玩家说出的新人照原话登记进 newNpcs。
 5. 不揭暗线：怪事只能写到【已露出来的线索】为止，不许编真相。
 6. 斗法不写胜负：要动手就收在动手前，填 duel。
 7. 往前走一步：紧接上回合结尾；这回合要有新结果；【已成定局的旧事】一条也不能矛盾；已了结、已取消的事不许复活，除非玩家这回明说要重提。
@@ -2162,6 +2202,7 @@ function ledger(t){
   const line=`第${S.turn||0}回·${S.date||''}　${t}`;
   if(S.ledger.some(x=>x.slice(-t.length)===t)) return;      // 同一件事不重复记
   S.ledger.push(line);
+  for(const n of (S.npcs||[])) if(n.name&&String(n.name).length>=2&&t.includes(n.name)) npcRemember(n,`${S.date||''}：${t}`);
   const cap=MEM().ledger;
   while(S.ledger.length>cap){ S.ledger.shift(); S.ledgerOff=num(S.ledgerOff)+1; }
 }
@@ -2169,7 +2210,7 @@ function ledger(t){
 const MEM_PRESET={
   // recentFull：最近几回给全文。给太多会让模型顺着自己上一段的调子往下抄，
   // 六回全是练功，第七回还是练功——事实由台账兜着，正文不必留那么多。
-  long : {vol:10, volLen:600, fold:36, foldTake:14, sum:30, recent:5, recentFull:3, recentBrief:140, npcMem:8, ledger:80, convoRecent:3, convoRecentLen:600, convoSum:10, convoVol:3, convoLedger:20},
+  long : {vol:10, volLen:600, fold:36, foldTake:14, sum:30, recent:5, recentFull:3, recentBrief:140, npcMem:10, ledger:80, convoRecent:3, convoRecentLen:600, convoSum:10, convoVol:3, convoLedger:20},
   short: {vol:8,  volLen:400, fold:26, foldTake:12, sum:16, recent:4, recentFull:2, recentBrief:100, npcMem:4, ledger:30, convoRecent:2, convoRecentLen:300, convoSum:0,  convoVol:0, convoLedger:8}
 };
 function MEM(){ return (S&&S.memLong===false)?MEM_PRESET.short:MEM_PRESET.long; }
@@ -3664,7 +3705,7 @@ function seedWorld(){
 function canonDef(name){ name=String(name||'').trim(); return name?(XX.roster.find(d=>d.name===name)||null):null; }
 function canonAgeText(d){ const lk=d.look.match(/外貌([^，]+)/); return d.track==='faculty'?`${d.age?d.age+'岁':'年纪不详'}，看着${lk?lk[1]:'不显年纪'}`:`${d.age}岁`; }
 function rosterBlock(){
-  const lines=XX.roster.map(d=>`- ${d.name}（${d.title}，${realmOf(d.xw)}，${d.gender}，${canonAgeText(d)}${d.party?'，'+d.party:''}${d.romance?'，可动情':''}）：${d.personality}。说话：${d.voice}`);
+  const lines=XX.roster.map(d=>`- ${d.name}（${d.title}，${realmOf(d.xw)}，${d.gender}，${canonAgeText(d)}${d.party?'，'+d.party:''}${d.romance?'，可动情':''}）：${d.personality}。说话：${d.voice}。画像：${d.look}。喜欢：${asArr(d.likes).join('、')}；讨厌：${asArr(d.dislikes).join('、')}。来历：${d.origin}。${d.special}`);
   return `【院中名录（院里的高层与几位要紧的同窗，身份、境界不可改；没见过面的人主角只知道名字和身份）】\n${lines.join('\n')}`;
 }
 function canonRelation(d){
@@ -3712,8 +3753,17 @@ const ELDER_RE=/教习|院首|副院主|院主|长老|掌院|宗主|老祖/;
 function isCohortText(t){ return /同届|同窗|新生|新入|同年入院|这一届|一年级/.test(String(t||'')); }
 
 // 只把「眼下要紧的人」摊开写，其余的给个名册就够了
+let _curAction='';
+function mentionedNow(n){
+  if(!n||!n.name||String(n.name).length<2) return false;
+  const nm=n.name, hay=[_curAction, asArr(S.scene&&S.scene.unresolved).join('；')].join('｜');
+  if(hay.includes(nm)) return true;
+  try{ if((storyS().commitments||[]).some(c=>c.status==='待执行'&&(c.npc===nm||String(c.text||'').includes(nm)))) return true; }catch(_){}
+  return false;
+}
 function isRelevantNpc(n){
   if(!n.alive) return false;
+  if(mentionedNow(n)) return true;
   if(n['爱恋值']!=null) return true;
   if(S.turn-(n.lastSeen||0)<=6) return true;
   if(n['好感度']>=60||n['好感度']<=12) return true;
@@ -3774,7 +3824,7 @@ ${quests}
 ${linesBlock()}
 【眼下要紧的人】
 ${near.map(npcLine).join('\n')||'（无）'}
-【别处的旧识（要用到时可自行取用其细节，务必与前文相合）】${farText}
+【别处的旧识（不在眼前；要写到他们，底子照【人物志】，不许另编）】${farText}
 【已不在的人】${goneText}
 【仙院格局】${world}
 【刚做过的事（本回合不要重复这些，也不要把它们再当成选项）】
@@ -3854,6 +3904,7 @@ function evtAfterReq(){
 - duel 为 null；gameOver 为 false。`;
 }
 function turnPrompt(action, judge){
+  _curAction=String(action||'');
   return P(turnSys(), `${memoryBlocks()}
 
 ${stateBlocks()}
@@ -3869,6 +3920,7 @@ ${hardCheck()}`);
 }
 
 function duelAftermathPrompt(action, judge, duel){
+  _curAction=String(action||'')+'｜'+((duel&&duel.opp&&duel.opp.name)||'');
   const log=duel.log.map(r=>r.plain).join('\n');
   const res=duel.resultText;
   return P(sysBase(), `${memoryBlocks()}
@@ -3911,7 +3963,8 @@ function convoPrompt(npc, line, roll, gift){
   const convoVols=M.convoVol?((S.volumes||[]).slice(-M.convoVol).map(v=>`〔第${v.from}至${v.to}回〕${v.text}`).join('\n')):'';
   const convoSum=M.convoSum?(S.history.slice(-M.convoSum).map(h=>`第${h.turn}回｜${h.action}｜${h.summary}`).join('\n')):'';
   const convoLed=M.convoLedger?((S.ledger||[]).slice(-M.convoLedger).join('\n')):'';
-  return P(sysBase()+(fdm().convo?'\n'+fdm().convo:''), `你现在扮演云霄仙院里的人物「${npc.name}」，正与主角面对面交谈。你不是旁白，只输出${npc.name}的言行。
+  return P(sysBase()+(fdm().convo?'\n'+fdm().convo:''), `${npcBook()}
+你现在扮演云霄仙院里的人物「${npc.name}」，正与主角面对面交谈。你不是旁白，只输出${npc.name}的言行。
 【${npc.name}的资料】${JSON.stringify({name:npc.name,gender:npc.gender,age:npc.age,identity:npc.identity,faction:npc.faction,personality:npc.personality,appearance:npc.appearance,portrait:npcPortrait(npc),修为:npc['修为'],境界:realmOf(npc['修为']),说话的样子:npc.voice||undefined,喜欢:npc.likes||undefined,讨厌:npc.dislikes||undefined,派系:npc.party||undefined,signature:npc.signature,relation:npc.relation,notes:npc.notes,alive:npc.alive})}
 【${npc.name}的秘密】${npc.secret||'无'}${npc.secretKnown?'（主角已经知道这个秘密）':(fdm().freeAct?`（主角不知道。本局言出法随：主角一问，你就原原本本说出来，revealSecret 填 true；他没问，你也可以主动透给他）`:`（主角不知道。你对主角的信任眼下是${num(npc['信任'])}。除非主角说服/套话成功，或信任≥${fdm().secretGate}且被真心问及，绝不透露；被追问可以撒谎、打岔、翻脸）`)}
 【${npc.name}当下心情】${npc.mood||'平静'}
@@ -4001,7 +4054,8 @@ async function foldHistoryInner(){
 
 function bioPrompt(cause,type,doc){
   const p=S.player, E=ENDINGS[type]||ENDINGS.other;
-  return P(sysBase(), `主角${p.name}在云霄仙院的这一段到此为止。结局：${E.name}。${cause}
+  return P(sysBase(), `${npcBook()}
+主角${p.name}在云霄仙院的这一段到此为止。结局：${E.name}。${cause}
 【引擎记下的档】
 ${(doc||[]).map(([k,v])=>k+'：'+v).join('\n')}
 ${stateBlocks()}
@@ -4350,6 +4404,20 @@ function storyIssues(d,action,npc,judge){
   }
   return [...new Set(issues)];
 }
+// 玩家亲口说出的人：「我哥叫林远」「有个叫周小满的同窗」
+const REL_WORD='哥哥|姐姐|弟弟|妹妹|哥|姐|弟|妹|爹|娘|父亲|母亲|爷爷|奶奶|外婆|外公|叔叔|婶婶|舅舅|姑姑|表哥|表姐|表弟|表妹|师兄|师姐|师弟|师妹|朋友|好友|同乡|同窗|室友|未婚妻|未婚夫|青梅竹马|丫鬟|书童|仆人|仇人|恩人|师父|徒弟';
+function playerNamedPeople(action){
+  const a=String(action||''), out=[], seen=new Set();
+  const push=(name,rel)=>{ name=String(name||'').trim(); if(name.length<2||seen.has(name)) return; if(/^[他她你我它这那谁啥]/.test(name)||/^(什么|怎么|一下|一声|过来|出来|大家|自己|师兄|师姐|师弟|师妹|起来|醒来)$/.test(name)) return; seen.add(name);
+    const g=/哥|弟|爹|父|爷|外公|叔|舅|师兄|师弟|夫|书童/.test(rel||'')?'男':(/姐|妹|娘|母|奶|外婆|婶|姑|师姐|师妹|妻|丫鬟/.test(rel||'')?'女':'');
+    out.push({name,rel:rel||'',gender:g}); };
+  const NAME='([\u4e00-\u9fa5]{2,4}?)(?=[的，。,、；;！!？?\s」”]|$|是|在|也|今|从|他|她|，)';
+  let m; const r1=new RegExp('(?:我|我的|有个|有一个|一个|位)?('+REL_WORD+')(?:名)?叫(?:做)?'+NAME,'g');
+  while((m=r1.exec(a))) push(m[2],m[1]);
+  const r2=new RegExp('(?:名叫|名唤|唤作|叫做|名字叫|一个叫|一位叫|有个叫|个叫|位叫)'+NAME,'g');
+  while((m=r2.exec(a))) push(m[1],'');
+  return out;
+}
 // 软断言：只在第一稿上查，查到了退回重写一次；第二稿还犯也照收，不至于让这一回合作废
 function softIssues(d,action,npc,judge){
   if(npc||!judge) return [];
@@ -4358,6 +4426,10 @@ function softIssues(d,action,npc,judge){
   if(plain&&num(judge.months)>0&&num(judge.months)<1&&!/几天|数日|多日|半月|一个月|几个月|过些日子|以后再|改天/.test(action||'')
      &&/数日后|几天后|[两三四五六七八九十0-9]+[天日](?:之)?后|过了(?:好|几|数)[天日]|半个?月(?:后|过去)|一个?月(?:后|过去)|月余|转眼(?:间)?(?:已|就|过了|到了)|旬日/.test(text))
     issues.push('本回合只过了一天，剧情不许跳过几天或几个月；只写这一天里的事');
+  for(const pn of playerNamedPeople(action)){
+    if(S.npcs.find(x=>x.name===pn.name)||canonDef(pn.name)) continue;
+    if(!(d.newNpcs||[]).some(x=>x&&x.name===pn.name)) issues.push(`玩家这回说出了「${pn.name}」${pn.rel?'（'+pn.rel+'）':''}，人物表里还没有：必须写进newNpcs，资料照玩家原话（关系、身份、性别不许改），玩家没说的才由你补`);
+  }
   if(!judge.breakResult&&new RegExp('(?:你|'+String(p.name).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')[^。！？\\n]{0,10}(?:突破到|突破了|晋入|迈入|踏入|跨入|结成)(?:筑基|金丹|元婴|化神|练气[一二三四五六七八九]层)').test(text))
     issues.push('主角破境只由引擎判定（闭关冲关那一步），剧情不许写主角突破了境界');
   return issues;
@@ -4420,7 +4492,10 @@ function ageUnresolved(){
 function findNpc(name){
   if(!name) return null;
   name=String(name).trim();
-  return S.npcs.find(x=>x.name===name)||S.npcs.find(x=>x.name&&(name.includes(x.name)||x.name.includes(name)))||null;
+  const exact=S.npcs.find(x=>x.name===name); if(exact) return exact;
+  if(name.length<2) return null;
+  const c=S.npcs.filter(x=>x.name&&String(x.name).length>=2&&(name.includes(x.name)||x.name.includes(name)));
+  return c.length===1?c[0]:null;      // 对不上唯一一个人就不认，免得改到别人头上
 }
 
 function applyInit(d, opts){
@@ -4676,9 +4751,9 @@ function applyTurn(d, action, judge){
     if(u.mood) n.mood=u.mood;
     if(!n.canon){                                 // 名录里的人：身份、学院、境界、生死都不归模型管
       if(u.alive===false&&n.alive!==false){ n.alive=false; ledger(`${n.name}不在了`); }
-      if(u.identity&&!ELDER_RE.test(u.identity)) n.identity=u.identity;
-      if(u.faction) n.faction=u.faction;
-      if(u.notes) n.notes=u.notes;
+      if(u.identity&&!ELDER_RE.test(u.identity)&&u.identity!==n.identity){ n.identity=u.identity; ledger(`${n.name}如今是${u.identity}`); }
+      if(u.faction&&u.faction!==n.faction){ n.faction=u.faction; ledger(`${n.name}如今在${u.faction}`); }
+      if(u.notes){ ensureCard(n); n.notesAdd=n.notesAdd||[]; const t=plain(u.notes).slice(0,80); if(t&&!n.notesAdd.includes(t)&&!String(n.card).includes(t)){ n.notesAdd.push(t); while(n.notesAdd.length>12) n.notesAdd.shift(); } }
       if(u['修为']) n['修为']=clampW(n['修为']+Math.max(-5,Math.min(3,num(u['修为']))));
       if(u.age!=null&&num(u.age)>n.age) n.age=num(u.age);
     }
@@ -4696,6 +4771,18 @@ function applyTurn(d, action, judge){
   }
   d._met=meetFromText(d.narrative);
   for(const nm of d._met){ const c=findNpc(nm); if(c) c.lastSeen=S.turn; }
+  // 玩家亲口说出的人：模型没登记，引擎自己登记一个，往后一直在人物志里
+  for(const pn of playerNamedPeople(action)){
+    if(S.npcs.find(x=>x.name===pn.name)||canonDef(pn.name)) continue;
+    const o=normNpc({name:pn.name,gender:pn.gender||'',identity:pn.rel?`主角的${pn.rel}（玩家所述）`:'玩家所述',relation:pn.rel||'',notes:`玩家原话：${String(action).slice(0,80)}`,好感度:pn.rel&&/哥|姐|弟|妹|爹|娘|父|母|表/.test(pn.rel)?70:40});
+    o.playerMade=true; o.lastSeen=S.turn; S.npcs.push(o); ensureCard(o);
+    ledger(`记下玩家说的人：${pn.name}${pn.rel?'（'+pn.rel+'）':''}`);
+  }
+  // 这回合出场或有变动的人，各记一笔这回合的事
+  const touched=new Set((d.npcUpdates||[]).map(u=>{ const n=findNpc(u&&u.name); return n&&n.name; }).filter(Boolean));
+  for(const n of S.npcs) if(n.alive&&n.name&&String(n.name).length>=2&&String(d.narrative||'').includes(n.name)) touched.add(n.name);
+  if(d.summary) for(const nm of touched){ const n=S.npcs.find(x=>x.name===nm); if(n) npcRemember(n,`${S.date}：${plain(d.summary)}`); }
+  for(const n of S.npcs) ensureCard(n);
   // 宿命
   for(const q of (d.questUpdates||[])){
     const t=S.quests.find(x=>x.title===q.title)||S.quests.find(x=>q.title&&(x.title.includes(q.title)||q.title.includes(x.title)));
@@ -6229,7 +6316,7 @@ function endConvo(){
     const gains=convo.gains||[];
     const sum=(convo.summary||('与'+n.name+'交谈了一番'))+(gains.length?`（${gains.slice(0,3).join('；')}）`:'');
     n.lastSeen=S.turn;
-    n.memory=(n.memory||[]); n.memory.push(`${S.date}：${sum}`); while(n.memory.length>MEM().npcMem) n.memory.shift();
+    npcRemember(n,`${S.date}：${sum}`);
     const transcript=convo.msgs.map(m=>m.role==='me'?`${S.player.name}：「${m.text}」`:`${n.name}：${m.text}`).join('\n');
     S.recent.push({action:`与${n.name}面谈`,narrative:transcript.slice(0,1600)+(gains.length?`\n【这场谈话的结果（引擎已记账，后文须承认）】${gains.join('；')}`:'')});
     while(S.recent.length>MEM().recent) S.recent.shift();
