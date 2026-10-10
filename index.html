@@ -1805,7 +1805,7 @@ function recentLedger(){ const L=(S.ledger||[]).slice(-8); return L.length?`【�
 function turnReq(judge){
   if(judge.convo) return `【本回合要求】这一回合是谈话余波，不按常规回合的写法：\n${convoAfterReq()}`;
   if(judge.evtResult||judge.breakResult||judge.craftResult||judge.hauntResult) return `【本回合要求】这一回合只写结果，不按常规回合的写法：\n${evtAfterReq()}`;
-  if(judge.event) return `【本回合要求】请推演本回合，按常规回合的写法，另有三处不同：\n- 剧情收在主角要做选择的那一刻。\n- 事件的选项引擎会摆上，options只给1至2个：主角不接这件事、另做打算的去处（先不理会、转身走开、去找某人问问）。格式：{"text":"选项文字","hint":"一句利弊","type":"normal|rest","months":1,"check":null,"duel":null,"target":null}\n- duel 一律为 null。`;
+  if(judge.event) return `【本回合要求】请推演本回合，按常规回合的写法，另有三处不同：\n- 剧情收在主角要做选择的那一刻。\n- 事件的选项引擎会摆上，options只给1至2个：主角不接这件事、另做打算的去处（先不理会、转身走开、去找某人问问）。格式：{"text":"选项文字","hint":"一句利弊","type":"normal|rest","months":0.03333333333333333,"check":null,"duel":null,"target":null}\n- duel 一律为 null。`;
   return '【本回合要求】请推演本回合，按常规回合的写法。';
 }
 
@@ -3634,11 +3634,11 @@ const JSON_RULE = `你必须只输出一个合法的JSON对象，不要输出任
 const NPC_SCHEMA = `NPC对象格式：{"name":"姓名","gender":"男/女","age":年龄数字,"identity":"身份，如：丹霞院·高一届弟子、膳堂杂役、主角的姐姐","faction":"所属学院或去处，如：丹霞院、院外","alignment":"正派/邪道/中立（正派=守规矩、心正；邪道=心术不正）","personality":["性格1","性格2"],"appearance":"大白话相貌简述","修为":数字(弟子一般4到40),"世故":数字,"signature":"惯用的术法或法器","relation":"与主角关系，如：同院同届/同乡/对头/萍水相逢","好感度":数字,"信任":数字,"爱恋值":null或数字,"mood":"当下心情两字","alive":true,"secret":"此人不为人知的秘密（一句话）","notes":"重要备注"}`;
 
 const OPTIONS_RULE=`options给3至5个，每个：{"text":"选项文字","hint":"一句直白的利弊提示","type":"normal|check|duel|talk|rest","months":耗时月数,"check":null或{"attr":"悟性/根骨/神识/心境/世故/修为","need":难度数字},"duel":null或{"opponent":"在场人物准确姓名","lethal":false或true},"target":null或"talk选项要深谈的人的姓名"}。
-时长：寻常行动都只过一天，months 写1。修炼、闭关、养伤、苦学、备考这类要花几个月的，months 写2到6，并把时长写进选项文字（如「闭关三个月，冲一冲瓶颈」）；别的行动写了多个月也只按一天算。每回合最好有一个这样的长时长选项，好让玩家能把日子往前推。
+时长：months 的单位是月，寻常行动默认只过一天，months 填0.03333333333333333。数月修炼、闭关、养伤、苦学、备考等长行动，必须把时长写进选项文字，并在 text 和 hint 中明确写出具体月数（如「闭关三个月，冲一冲瓶颈」，months 填3，范围2到6），由玩家主动选择后才跨月；不要为了推进日期强行提供长时长选项。
 要求：至少1个稳妥的normal；至少1个有风险的check（need按40容易/55一般/70困难/85极难，hint写清若成若败各会怎样）；若在场有可切磋之人给1个duel；若在场有值得深谈的人给1个talk；主角受伤、疲惫或心魔重时给1个rest（静修/疗伤/闭关）。选项之间要有真正的分歧，不要都是好事。
 **至少有1个选项要把主角带到院里另一处，或者去找一个当前不在场的人**——别让五个选项都困在同一间屋子里。
 不要把上一回合已经给过的选项原样再给一遍；玩家刚做完的事，本回合不要再拿来当选项（连着修炼了两回，就别再给「继续修炼」）。
-普通行动、疗伤、外出、斗法默认只推进一天，months填0.03333333333333333。只有玩家明确要求或选择带有具体月数的修炼/闭关行动才允许跨月，须在text和hint写清时长。不得自行把日常行动写成数月后的结果。`;
+普通行动、疗伤、外出、斗法默认只推进一天。仅上述玩家主动选择的、已标明具体月数的长行动，或玩家自行输入明确月数的修炼/闭关行动，允许跨月；实际时长由引擎决定，不得自行把日常行动写成数月后的结果。`;
 
 function initSchemaPrompt(opts){
   opts=opts||{};
@@ -3890,7 +3890,7 @@ function convoAfterReq(){
 - 本回合结束时，把主角所在的具体地点写进scene.location；scene.unresolved 与 resolvedInfo 照常维护（只列眼下真正还悬着的事，至多4条；了结的写进 resolvedInfo）。
 - 数值变化只写这场谈话真正引起的（好感、关系、态度），写进npcUpdates；谈话里已落账的东西不要再写一遍。
 - npcEvents、rumors 可以留空。
-- options给3至5个，格式同常规：{"text":"","hint":"","type":"normal|check|duel|talk|rest","months":1,"check":null,"duel":null,"target":null}。选项要接着这场谈话往下走：他答应的事怎么办、他提的线索追不追、他托付的事接不接。可以有一个把主角带离当前地点的，但不强求。
+- options给3至5个，格式同常规：{"text":"","hint":"","type":"normal|check|duel|talk|rest","months":0.03333333333333333,"check":null,"duel":null,"target":null}。选项要接着这场谈话往下走：他答应的事怎么办、他提的线索追不追、他托付的事接不接。可以有一个把主角带离当前地点的，但不强求。
 - duel 为 null；gameOver 为 false。`;
 }
 // 院中事件结果那一回合的要求：只写结果，不套常规回合的推进与数值要求
